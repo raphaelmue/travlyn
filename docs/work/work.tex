@@ -1,0 +1,98 @@
+\input{content/00_Latex/praeambel}
+
+\usepackage{ifthen}
+\newboolean{e-Abgabe}
+\setboolean{e-Abgabe}{false}    % false=gedruckte Fassung
+
+% ---- Persönlichen Daten:
+\newcommand{\titel}{Digitalisierung von Reisen durch Entwicklung einer intelligenten Reiseführer App}
+\newcommand{\titelheader}{Entwicklung einer intelligenten Reiseführer App}
+\newcommand{\arbeit}{Studienarbeit}
+\newcommand{\studiengang}{Angewandte Informatik}
+\newcommand{\studienjahr}{2017}
+\newcommand{\autor}{Joshua Schulz und Raphael Müßeler}
+\newcommand{\autorReverse}{Schulz, Joshua; Müßeler, Raphael}
+\newcommand{\verfassungsort}{Karlsruhe}
+\newcommand{\matrikelnr}{4508858, 6801150}
+\newcommand{\kurs}{TINF15B1}
+\newcommand{\bearbeitungsmonat}{2020}
+\newcommand{\abgabe}{18. Mai 2020}
+\newcommand{\bearbeitungszeitraum}{01.10.2019 - 18.05.2020}
+\newcommand{\firmaName}{SAP SE}
+\newcommand{\firmaStrasse}{Dietmar-Hopp-Allee 16}
+\newcommand{\firmaPlz}{69190 Walldorf, Deutschland}
+\newcommand{\betreuerDhbw}{Thorsten Schlachter}
+
+\input{content/00_latex/kopfundFusszeile}
+
+% ---- Hilfreiches
+\newcommand{\zB}{z.\,B. }   % "z.B." mit kleinem Leeraum dazwischen (ohne wäre nicht korrekt)
+\newcommand{\dash}{d.\,h. }
+
+\newcommand{\code}[1]{\texttt{#1}} % Ist einfacher zu schreiben als ständig \texttt und erlaubt
+                                   % Änderungen im Nachhinein, wenn man z.B. Inline-Code anders stylen möchte.
+
+% ---- Beginn des Dokuments
+\begin{document}
+\setlength{\parindent}{0pt}              % Keine Paragraphen Einrückung.
+                                         % Dafür haben wir den Abstand zwischen den Paragraphen.
+\setcounter{secnumdepth}{2}              % Nummerierungstiefe fürs Inhaltsverzeichnis
+\setcounter{tocdepth}{1}                 % Tiefe des Inhaltsverzeichnisses. Ggf. so anpassen,
+                                         % dass das Verzeichnis auf eine Seite passt.
+\sffamily                                % Serifenlose Schrift verwenden.
+
+% ---- Vorspann
+% ------ Titelseite
+\singlespacing
+\include{content/01_standard/titelseite}  % Titelseite
+\newcounter{savepage}
+\pagenumbering{Roman}                    % Römische Seitenzahlen
+\onehalfspacing
+
+% ------ Erklärung, Sperrvermerk, Abstact
+\include{content/01_standard/erklaerung}
+\include{content/01_standard/sperrvermerk}
+\include{content/02_abstract/abstract-en}
+\include{content/02_abstract/abstract-de}
+
+% ------ Inhaltsverzeichnis
+\singlespacing
+\tableofcontents
+
+% ------ Verzeichnisse
+\renewcommand*{\chapterpagestyle}{plain}
+\pagestyle{plain}
+%\include{content/03_listings/formelgroessen}
+\include{content/03_listings/abkuerzungen}
+\listoffigures                          % Erzeugen des Abbildungsverzeichnisses 
+\listoftables                           % Erzeugen des Tabellenverzeichnisses
+\renewcommand{\lstlistlistingname}{Quellcodeverzeichnis}
+\lstlistoflistings                      % Erzeugen des Listenverzeichnisses
+\setcounter{savepage}{\value{page}}
+
+
+% ---- Inhalt der Arbeit
+\cleardoublepage
+\pagenumbering{arabic}                  % Arabische Seitenzahlen für den Hauptteil
+\setlength{\parskip}{0.5\baselineskip}  % Abstand zwischen Absätzen
+\rmfamily
+\renewcommand*{\chapterpagestyle}{scrheadings}
+\pagestyle{scrheadings}
+\onehalfspacing
+\include{content/04_content/einleitung}
+
+% ---- Literaturverzeichnis
+\cleardoublepage
+\renewcommand*{\chapterpagestyle}{plain}
+\pagestyle{plain}
+\pagenumbering{Roman}                   % Römische Seitenzahlen
+\setcounter{page}{\numexpr\value{savepage}+1}
+\printbibliography[title=Literaturverzeichnis]
+
+% ---- Anhang
+\appendix
+%\clearpage
+%\pagenumbering{Roman}  % römische Seitenzahlen für Anhang
+
+\newpage
+\end{document}
