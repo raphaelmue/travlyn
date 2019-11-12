@@ -2,6 +2,7 @@ Alternativen Google Places API:
 https://developer.foursquare.com/docs/api/endpoints
 
 99,500 regular calls and 500 premium calls per day.
+
 Maps:
 https://developer.here.com/products/maps
 
