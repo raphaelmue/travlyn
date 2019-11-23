@@ -9,7 +9,7 @@ public class Test {
 
     public Test(){
         try {
-           callPOISOpenRouteService();
+           callDetailsFoursquare();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -27,7 +27,12 @@ public class Test {
     }
 
     private void callPOISFoursquare() throws Exception{
-        APIRequest request = new APIRequest("https://api.foursquare.com/v2/venues/explore?ll=40.7243,-74.0018&query=coffee&v=20180323&limit=1&client_id=J2Z1OVD4XKVCKFMFOLPF2INOYVOOIT0NVV5COTNLNQFDWPYD&client_secret="+readKey("Foursquare"));
+        APIRequest request = new APIRequest("https://api.foursquare.com/v2/venues/explore?ll=49.012766,8.403854&categoryId=4d4b7104d754a06370d81259&v=20180323&limit=10&client_id=J2Z1OVD4XKVCKFMFOLPF2INOYVOOIT0NVV5COTNLNQFDWPYD&client_secret="+readKey("Foursquare"));
+        System.out.println(request.performAPIGetCall());
+    }
+
+    private void callDetailsFoursquare() throws Exception{
+        APIRequest request = new APIRequest("https://api.foursquare.com/v2/venues/4b782328f964a520b6b72ee3?client_id=J2Z1OVD4XKVCKFMFOLPF2INOYVOOIT0NVV5COTNLNQFDWPYD&v=20180323&client_secret="+readKey("Foursquare"));
         System.out.println(request.performAPIGetCall());
     }
     private String readKey(String service) {
