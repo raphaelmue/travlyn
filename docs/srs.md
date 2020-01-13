@@ -42,7 +42,7 @@ One core feature of _Travlyn_ is to generate trips by providing different parame
 
 The trips is created by selecting relevant suitable point of interests, collecting information about the points, putting them in order and finally storing them into database.
 
-In the process of taking the trip, additional information about the users current location or locations nearby (like e.g. special buildings, sights etc.) is displayed to the user directly. An optional extension would be that this information is read out to the user by text-to-speech mechanisms.
+In the process of taking the trip, additional information about the users current location or locations nearby (like e.g. special buildings, sights etc.) is displayed to the user directly. An optional extension would be that this information is read out to the user by text-to-speech mechanisms. Another optional extension would be that texts are concatenated by a machine learning model. 
 
 ### 3.2.2 User Management
 
