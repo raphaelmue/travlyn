@@ -58,7 +58,7 @@ paths:
     post:
       tags:
         - trip
-      summary: Rates a trip
+      summary: Rate a trip
       operationId: rateTrip
       security:
         - TokenAuth: []
@@ -86,7 +86,7 @@ paths:
     get:
       tags:
         - trip
-      summary: Searches for trips
+      summary: Search for trips
       operationId: findTrip
       security:
         - ApiKeyAuth: []
@@ -136,7 +136,7 @@ paths:
     post:
       tags:
         - trip
-      summary: Updates a trip
+      summary: Update a trip
       operationId: updateTrip
       security:
         - TokenAuth: []
@@ -188,7 +188,7 @@ paths:
     put:
       tags:
         - user
-      summary: Creates a new User
+      summary: Create a new User
       operationId: registerUser
       security: []
       parameters:
@@ -223,7 +223,7 @@ paths:
     post:
       tags:
         - user
-      summary: Updates users information
+      summary: Update users information
       operationId: updateUser
       security:
         - TokenAuth: []
@@ -243,7 +243,7 @@ paths:
     delete:
       tags:
         - user
-      summary: Logs out current logged in user session
+      summary: Log out current logged in user session
       operationId: logoutUser
       security:
         - TokenAuth: []
@@ -317,7 +317,7 @@ paths:
     post:
       tags:
         - stop
-      summary: Rates a stop
+      summary: Rate a stop
       operationId: rateStop
       security:
         - TokenAuth: []
@@ -372,7 +372,7 @@ components:
         user:
           $ref: '#/components/schemas/User'
         city:
-          type: string
+          $ref: '#/components/schemas/City'
         private:
           type: boolean
         stops:
@@ -383,6 +383,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Rating'
+        geoText:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeoText'
     User:
       type: object
       properties:
@@ -430,6 +434,19 @@ components:
             $ref: '#/components/schemas/Rating'
         category:
             $ref: '#/components/schemas/Category'
+    City:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        image:
+          type: string
+          description: URL to image
+        description:
+          type: string
     Category:
       type: object
       properties:
@@ -461,4 +478,14 @@ components:
         token:
           type: string
         ip_address:
+          type: string
+    GeoText:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        stop:
+          $ref: '#/components/schemas/Stop'
+        text:
           type: string
