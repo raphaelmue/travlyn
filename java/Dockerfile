@@ -13,4 +13,4 @@ RUN mvn clean install -DskipTests
 EXPOSE 3000
 
 # Run Travlyn server
-CMD ["java"]
+CMD ["java", "-jar", "org.travlyn.server/target/org.travlyn.server-1.0-SNAPSHOT.jar"]
