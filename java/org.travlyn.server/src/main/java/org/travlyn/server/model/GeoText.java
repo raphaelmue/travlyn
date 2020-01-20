@@ -3,6 +3,7 @@ package org.travlyn.server.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+import org.travlyn.server.db.model.GeoTextEntity;
 
 import javax.validation.Valid;
 import java.util.Objects;
@@ -11,33 +12,29 @@ import java.util.Objects;
  * GeoText
  */
 @Validated
-public class GeoText {
+public class GeoText extends AbstractDataTransferObject {
     @JsonProperty("id")
-    private Long id = null;
+    @ApiModelProperty(value = "Identifier")
+    private int id = -1;
 
     @JsonProperty("stop")
+    @ApiModelProperty(value = "Stop to which the text refers")
     private Stop stop = null;
 
     @JsonProperty("text")
+    @ApiModelProperty(value = "Text to be displayed")
     private String text = null;
 
-    public GeoText id(Long id) {
+    public GeoText id(int id) {
         this.id = id;
         return this;
     }
 
-    /**
-     * Get id
-     *
-     * @return id
-     **/
-    @ApiModelProperty(value = "")
-
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -45,13 +42,6 @@ public class GeoText {
         this.stop = stop;
         return this;
     }
-
-    /**
-     * Get stop
-     *
-     * @return stop
-     **/
-    @ApiModelProperty(value = "")
 
     @Valid
     public Stop getStop() {
@@ -66,13 +56,6 @@ public class GeoText {
         this.text = text;
         return this;
     }
-
-    /**
-     * Get text
-     *
-     * @return text
-     **/
-    @ApiModelProperty(value = "")
 
     public String getText() {
         return text;
@@ -103,25 +86,11 @@ public class GeoText {
     }
 
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class GeoText {\n");
-
-        sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    stop: ").append(toIndentedString(stop)).append("\n");
-        sb.append("    text: ").append(toIndentedString(text)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+    public GeoTextEntity toEntity() {
+        GeoTextEntity geoTextEntity = new GeoTextEntity();
+        geoTextEntity.setId(this.id);
+        geoTextEntity.setStop(this.stop.toEntity());
+        geoTextEntity.setText(this.text);
+        return geoTextEntity;
     }
 }

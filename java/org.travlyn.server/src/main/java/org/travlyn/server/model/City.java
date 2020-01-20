@@ -3,6 +3,7 @@ package org.travlyn.server.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+import org.travlyn.server.db.model.CityEntity;
 
 import java.util.Objects;
 
@@ -10,36 +11,34 @@ import java.util.Objects;
  * City
  */
 @Validated
-public class City {
+public class City extends AbstractDataTransferObject {
+
     @JsonProperty("id")
-    private Long id = null;
+    @ApiModelProperty(value = "Identifier")
+    private int id = -1;
 
     @JsonProperty("name")
+    @ApiModelProperty(value = "Name")
     private String name = null;
 
     @JsonProperty("image")
+    @ApiModelProperty(value = "URL to image")
     private String image = null;
 
     @JsonProperty("description")
+    @ApiModelProperty(value = "Description text")
     private String description = null;
 
-    public City id(Long id) {
+    public City id(int id) {
         this.id = id;
         return this;
     }
 
-    /**
-     * Get id
-     *
-     * @return id
-     **/
-    @ApiModelProperty(value = "")
-
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -47,13 +46,6 @@ public class City {
         this.name = name;
         return this;
     }
-
-    /**
-     * Get name
-     *
-     * @return name
-     **/
-    @ApiModelProperty(value = "")
 
     public String getName() {
         return name;
@@ -68,13 +60,6 @@ public class City {
         return this;
     }
 
-    /**
-     * URL to image
-     *
-     * @return image
-     **/
-    @ApiModelProperty(value = "URL to image")
-
     public String getImage() {
         return image;
     }
@@ -88,13 +73,6 @@ public class City {
         return this;
     }
 
-    /**
-     * Get description
-     *
-     * @return description
-     **/
-    @ApiModelProperty(value = "")
-
     public String getDescription() {
         return description;
     }
@@ -102,7 +80,6 @@ public class City {
     public void setDescription(String description) {
         this.description = description;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -125,26 +102,12 @@ public class City {
     }
 
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class City {\n");
-
-        sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    name: ").append(toIndentedString(name)).append("\n");
-        sb.append("    image: ").append(toIndentedString(image)).append("\n");
-        sb.append("    description: ").append(toIndentedString(description)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+    public CityEntity toEntity() {
+        CityEntity cityEntity = new CityEntity();
+        cityEntity.setId(this.id);
+        cityEntity.setName(this.name);
+        cityEntity.setImage(this.image);
+        cityEntity.setDescription(this.description);
+        return cityEntity;
     }
 }

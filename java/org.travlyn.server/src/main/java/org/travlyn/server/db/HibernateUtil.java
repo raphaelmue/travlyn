@@ -29,7 +29,7 @@ public class HibernateUtil {
         try {
             // Create the SessionFactory from hibernate.cfg.xml
             Configuration configuration = new Configuration();
-            configuration.configure(HibernateUtil.class.getResource("config/hibernate.cfg.xml"))
+            configuration.configure(HibernateUtil.class.getResource("hibernate.cfg.xml"))
                     .addAnnotatedClass(CategoryEntity.class)
                     .addAnnotatedClass(CityEntity.class)
                     .addAnnotatedClass(GeoTextEntity.class)

@@ -22,14 +22,14 @@ public class TripEntity implements DataEntity {
     @Column(name = "private")
     private boolean isPrivate;
 
-    @ManyToMany
-    @JoinTable(name = "trip_stop",
-            joinColumns = {@JoinColumn(name = "trip_id")},
-            inverseJoinColumns = {@JoinColumn(name = "stop_id")})
-    private Set<StopEntity> stops;
+    @OneToMany(mappedBy = "trip")
+    private Set<TripStopEntity> stops;
+
+    @OneToMany(mappedBy = "entity")
+    private List<RatingEntity> ratings;
 
     @OneToMany(mappedBy = "stop")
-    private List<RatingEntity> ratings;
+    private List<GeoTextEntity> geoTexts;
 
     @Override
     public int getId() {
@@ -64,11 +64,11 @@ public class TripEntity implements DataEntity {
         isPrivate = aPrivate;
     }
 
-    public Set<StopEntity> getStops() {
+    public Set<TripStopEntity> getStops() {
         return stops;
     }
 
-    public void setStops(Set<StopEntity> stops) {
+    public void setStops(Set<TripStopEntity> stops) {
         this.stops = stops;
     }
 
@@ -78,5 +78,13 @@ public class TripEntity implements DataEntity {
 
     public void setRatings(List<RatingEntity> ratings) {
         this.ratings = ratings;
+    }
+
+    public List<GeoTextEntity> getGeoTexts() {
+        return geoTexts;
+    }
+
+    public void setGeoTexts(List<GeoTextEntity> geoTexts) {
+        this.geoTexts = geoTexts;
     }
 }

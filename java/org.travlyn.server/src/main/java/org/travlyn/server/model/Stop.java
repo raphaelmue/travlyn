@@ -3,105 +3,110 @@ package org.travlyn.server.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+import org.travlyn.server.db.model.RatingEntity;
+import org.travlyn.server.db.model.StopEntity;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Stop
  */
 @Validated
-public class Stop {
+public class Stop extends AbstractDataTransferObject {
+
     @JsonProperty("id")
-    private Long id = null;
+    @ApiModelProperty(value = "Identifier")
+    private int id = -1;
 
     @JsonProperty("longitude")
-    private Double longitude = null;
+    @ApiModelProperty(value = "Longitude")
+    private double longitude = -1;
 
     @JsonProperty("latitude")
-    private Double latitude = null;
+    @ApiModelProperty(value = "Latitude")
+    private double latitude = -1;
 
     @JsonProperty("name")
+    @ApiModelProperty(value = "Name")
     private String name = null;
 
     @JsonProperty("description")
+    @ApiModelProperty(value = "Additional information about stop")
     private String description = null;
 
     @JsonProperty("pricing")
+    @ApiModelProperty(value = "Approximate price estimation for one person in USD")
     private Double pricing = null;
 
     @JsonProperty("time_effort")
+    @ApiModelProperty(value = "Approximate time estimation")
     private Double timeEffort = null;
 
     @JsonProperty("average_rating")
+    @ApiModelProperty(value = "Average percentage rating by user")
     private Double averageRating = null;
 
     @JsonProperty("ratings")
+    @ApiModelProperty(value = "List of Ratings by Users")
     @Valid
     private List<Rating> ratings = null;
 
     @JsonProperty("category")
+    @ApiModelProperty(value = "Category")
     private Category category = null;
 
-    public Stop id(Long id) {
+    public Stop id(int id) {
         this.id = id;
         return this;
     }
 
     /**
-     * Get id
+     * Get Identifier
      *
      * @return id
      **/
-    @ApiModelProperty(value = "")
-
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Stop longitude(Double longitude) {
+    public Stop longitude(double longitude) {
         this.longitude = longitude;
         return this;
     }
 
     /**
-     * Get longitude
+     * Get Longitude
      *
      * @return longitude
      **/
-    @ApiModelProperty(value = "")
-
-    public Double getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-    public Stop latitude(Double latitude) {
+    public Stop latitude(double latitude) {
         this.latitude = latitude;
         return this;
     }
 
     /**
-     * Get latitude
+     * Get Latitude
      *
      * @return latitude
      **/
-    @ApiModelProperty(value = "")
-
-    public Double getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Double latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
@@ -111,12 +116,10 @@ public class Stop {
     }
 
     /**
-     * Get name
+     * Get Name
      *
      * @return name
      **/
-    @ApiModelProperty(value = "")
-
     public String getName() {
         return name;
     }
@@ -135,8 +138,6 @@ public class Stop {
      *
      * @return description
      **/
-    @ApiModelProperty(value = "Additional information about stop")
-
     public String getDescription() {
         return description;
     }
@@ -155,8 +156,6 @@ public class Stop {
      *
      * @return pricing
      **/
-    @ApiModelProperty(value = "Average pricing for one person in USD")
-
     public Double getPricing() {
         return pricing;
     }
@@ -175,8 +174,6 @@ public class Stop {
      *
      * @return timeEffort
      **/
-    @ApiModelProperty(value = "Time effort in hours")
-
     public Double getTimeEffort() {
         return timeEffort;
     }
@@ -195,8 +192,6 @@ public class Stop {
      *
      * @return averageRating
      **/
-    @ApiModelProperty(value = "Average percentage rating by user")
-
     public Double getAverageRating() {
         return averageRating;
     }
@@ -223,7 +218,6 @@ public class Stop {
      *
      * @return ratings
      **/
-    @ApiModelProperty(value = "")
     @Valid
     public List<Rating> getRatings() {
         return ratings;
@@ -239,12 +233,10 @@ public class Stop {
     }
 
     /**
-     * Get category
+     * Get Category
      *
      * @return category
      **/
-    @ApiModelProperty(value = "")
-
     @Valid
     public Category getCategory() {
         return category;
@@ -282,32 +274,20 @@ public class Stop {
     }
 
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class Stop {\n");
-
-        sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    longitude: ").append(toIndentedString(longitude)).append("\n");
-        sb.append("    latitude: ").append(toIndentedString(latitude)).append("\n");
-        sb.append("    name: ").append(toIndentedString(name)).append("\n");
-        sb.append("    description: ").append(toIndentedString(description)).append("\n");
-        sb.append("    pricing: ").append(toIndentedString(pricing)).append("\n");
-        sb.append("    timeEffort: ").append(toIndentedString(timeEffort)).append("\n");
-        sb.append("    averageRating: ").append(toIndentedString(averageRating)).append("\n");
-        sb.append("    ratings: ").append(toIndentedString(ratings)).append("\n");
-        sb.append("    category: ").append(toIndentedString(category)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+    public StopEntity toEntity() {
+        StopEntity stopEntity = new StopEntity();
+        stopEntity.setId(this.id);
+        stopEntity.setLongitude(this.longitude);
+        stopEntity.setLatitude(this.latitude);
+        stopEntity.setName(this.name);
+        stopEntity.setDescription(this.description);
+        stopEntity.setPricing(this.pricing);
+        stopEntity.setTimeEffort(this.timeEffort);
+        stopEntity.setAverageRating(this.averageRating);
+        Set<RatingEntity> ratingEntities = new HashSet<>();
+        this.ratings.forEach(rating -> ratingEntities.add(rating.toEntity()));
+        stopEntity.setRatings(ratingEntities);
+        stopEntity.setCategory(this.category.toEntity());
+        return stopEntity;
     }
 }

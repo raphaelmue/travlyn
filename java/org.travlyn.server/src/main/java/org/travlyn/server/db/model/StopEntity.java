@@ -2,6 +2,7 @@ package org.travlyn.server.db.model;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "stop")
@@ -33,8 +34,8 @@ public class StopEntity implements DataEntity {
     @Column(name = "average_rating")
     private double averageRating;
 
-    @OneToMany(mappedBy = "stop")
-    private List<RatingEntity> ratings;
+    @OneToMany(mappedBy = "entity")
+    private Set<RatingEntity> ratings;
 
     @OneToOne(targetEntity = CategoryEntity.class)
     private CategoryEntity category;
@@ -104,11 +105,11 @@ public class StopEntity implements DataEntity {
         this.averageRating = averageRating;
     }
 
-    public List<RatingEntity> getRatings() {
+    public Set<RatingEntity> getRatings() {
         return ratings;
     }
 
-    public void setRatings(List<RatingEntity> ratings) {
+    public void setRatings(Set<RatingEntity> ratings) {
         this.ratings = ratings;
     }
 

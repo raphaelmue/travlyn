@@ -3,6 +3,7 @@ package org.travlyn.server.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+import org.travlyn.server.db.model.CategoryEntity;
 
 import java.util.Objects;
 
@@ -10,44 +11,28 @@ import java.util.Objects;
  * Category
  */
 @Validated
-public class Category {
+public class Category extends AbstractDataTransferObject {
+
     @JsonProperty("id")
-    private Long id = null;
+    @ApiModelProperty(value = "Identifier")
+    private int id = -1;
 
     @JsonProperty("name")
+    @ApiModelProperty(value = "Name")
     private String name = null;
 
-    public Category id(Long id) {
+    public Category id(int id) {
         this.id = id;
         return this;
     }
 
-    /**
-     * Get id
-     *
-     * @return id
-     **/
-    @ApiModelProperty(value = "")
-
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
-
-    public Category name(String name) {
-        this.name = name;
-        return this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return name
-     **/
-    @ApiModelProperty(value = "")
 
     public String getName() {
         return name;
@@ -57,6 +42,10 @@ public class Category {
         this.name = name;
     }
 
+    public Category name(String name) {
+        this.name = name;
+        return this;
+    }
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -77,24 +66,10 @@ public class Category {
     }
 
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class Category {\n");
-
-        sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    name: ").append(toIndentedString(name)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+    public CategoryEntity toEntity() {
+        CategoryEntity categoryEntity = new CategoryEntity();
+        categoryEntity.setId(this.id);
+        categoryEntity.setName(this.name);
+        return categoryEntity;
     }
 }

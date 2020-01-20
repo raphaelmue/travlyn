@@ -3,6 +3,7 @@ package org.travlyn.server.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+import org.travlyn.server.db.model.RatingEntity;
 
 import javax.validation.Valid;
 import java.util.Objects;
@@ -11,36 +12,33 @@ import java.util.Objects;
  * Rating
  */
 @Validated
-public class Rating {
+public class Rating extends AbstractDataTransferObject {
     @JsonProperty("id")
-    private Long id = null;
+    @ApiModelProperty(value = "Identifier")
+    private int id = -1;
 
     @JsonProperty("user")
+    @ApiModelProperty(value = "User that has created the Rating")
     private User user = null;
 
     @JsonProperty("rating")
-    private Double rating = null;
+    @ApiModelProperty(value = "Percentage rating")
+    private double rating = -1;
 
     @JsonProperty("description")
+    @ApiModelProperty(value = "Rating description")
     private String description = null;
 
-    public Rating id(Long id) {
+    public Rating id(int id) {
         this.id = id;
         return this;
     }
 
-    /**
-     * Get id
-     *
-     * @return id
-     **/
-    @ApiModelProperty(value = "")
-
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -48,13 +46,6 @@ public class Rating {
         this.user = user;
         return this;
     }
-
-    /**
-     * Get user
-     *
-     * @return user
-     **/
-    @ApiModelProperty(value = "")
 
     @Valid
     public User getUser() {
@@ -65,23 +56,16 @@ public class Rating {
         this.user = user;
     }
 
-    public Rating rating(Double rating) {
+    public Rating rating(double rating) {
         this.rating = rating;
         return this;
     }
 
-    /**
-     * Percentage rating
-     *
-     * @return rating
-     **/
-    @ApiModelProperty(value = "Percentage rating")
-
-    public Double getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(Double rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
@@ -90,13 +74,6 @@ public class Rating {
         return this;
     }
 
-    /**
-     * Get description
-     *
-     * @return description
-     **/
-    @ApiModelProperty(value = "")
-
     public String getDescription() {
         return description;
     }
@@ -104,7 +81,6 @@ public class Rating {
     public void setDescription(String description) {
         this.description = description;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -127,26 +103,12 @@ public class Rating {
     }
 
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class Rating {\n");
-
-        sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    user: ").append(toIndentedString(user)).append("\n");
-        sb.append("    rating: ").append(toIndentedString(rating)).append("\n");
-        sb.append("    description: ").append(toIndentedString(description)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+    public RatingEntity toEntity() {
+        RatingEntity ratingEntity = new RatingEntity();
+        ratingEntity.setId(this.id);
+        ratingEntity.setUser(this.user.toEntity());
+        ratingEntity.setRating(this.rating);
+        ratingEntity.setDescription(this.description);
+        return ratingEntity;
     }
 }
