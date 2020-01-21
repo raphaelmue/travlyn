@@ -102,14 +102,14 @@ pipeline {
                 }
             }
         }
-        stage('Deploy') {
+        /* stage('Deploy') {
             when {
                 branch 'deployment'
             }
             steps {
 
             }
-        }
+        } */
     }
     post {
         always {
