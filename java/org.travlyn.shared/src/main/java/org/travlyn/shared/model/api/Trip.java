@@ -1,60 +1,67 @@
-package org.travlyn.server.model;
+package org.travlyn.shared.model.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+import org.travlyn.shared.model.db.GeoTextEntity;
+import org.travlyn.shared.model.db.RatingEntity;
+import org.travlyn.shared.model.db.TripEntity;
+import org.travlyn.shared.model.db.TripStopEntity;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Trip
  */
 @Validated
-public class Trip {
+public class Trip extends AbstractDataTransferObject {
     @JsonProperty("id")
-    private Long id = null;
+    @ApiModelProperty(value = "Identifier")
+    private int id = -1;
 
     @JsonProperty("user")
+    @ApiModelProperty(value = "User that created the Trip")
     private User user = null;
 
     @JsonProperty("city")
+    @ApiModelProperty(value = "City where the Trip takes place")
     private City city = null;
 
     @JsonProperty("private")
-    private Boolean _private = null;
+    @ApiModelProperty(value = "Trip is accessible by others if true")
+    private Boolean isPrivate = null;
 
     @JsonProperty("stops")
+    @ApiModelProperty(value = "List of Stops")
     @Valid
     private List<Stop> stops = null;
 
     @JsonProperty("ratings")
+    @ApiModelProperty(value = "List of Ratings")
     @Valid
     private List<Rating> ratings = null;
 
     @JsonProperty("geoText")
+    @ApiModelProperty(value = "List of GeoTexts")
     @Valid
     private List<GeoText> geoText = null;
 
-    public Trip id(Long id) {
+    public Trip id(int id) {
         this.id = id;
         return this;
     }
 
     /**
-     * Get id
+     * Get Identifier
      *
      * @return id
      **/
-    @ApiModelProperty(value = "")
-
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -64,12 +71,10 @@ public class Trip {
     }
 
     /**
-     * Get user
+     * Get User that has created the Trip
      *
      * @return user
      **/
-    @ApiModelProperty(value = "")
-
     @Valid
     public User getUser() {
         return user;
@@ -85,7 +90,7 @@ public class Trip {
     }
 
     /**
-     * Get city
+     * Get City where the Trip takes place
      *
      * @return city
      **/
@@ -100,24 +105,22 @@ public class Trip {
         this.city = city;
     }
 
-    public Trip _private(Boolean _private) {
-        this._private = _private;
+    public Trip isPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
         return this;
     }
 
     /**
-     * Get _private
+     * Get private flag. Trip is accessible by others if true
      *
      * @return _private
      **/
-    @ApiModelProperty(value = "")
-
-    public Boolean isPrivate() {
-        return _private;
+    public Boolean getIsPrivate() {
+        return isPrivate;
     }
 
-    public void setPrivate(Boolean _private) {
-        this._private = _private;
+    public void setPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     public Trip stops(List<Stop> stops) {
@@ -134,11 +137,10 @@ public class Trip {
     }
 
     /**
-     * Get stops
+     * Get List of Stops
      *
      * @return stops
      **/
-    @ApiModelProperty(value = "")
     @Valid
     public List<Stop> getStops() {
         return stops;
@@ -162,11 +164,10 @@ public class Trip {
     }
 
     /**
-     * Get ratings
+     * Get List of Ratings
      *
      * @return ratings
      **/
-    @ApiModelProperty(value = "")
     @Valid
     public List<Rating> getRatings() {
         return ratings;
@@ -190,11 +191,10 @@ public class Trip {
     }
 
     /**
-     * Get geoText
+     * Get List of GeoTexts
      *
      * @return geoText
      **/
-    @ApiModelProperty(value = "")
     @Valid
     public List<GeoText> getGeoText() {
         return geoText;
@@ -217,7 +217,7 @@ public class Trip {
         return Objects.equals(this.id, trip.id) &&
                 Objects.equals(this.user, trip.user) &&
                 Objects.equals(this.city, trip.city) &&
-                Objects.equals(this._private, trip._private) &&
+                Objects.equals(this.isPrivate, trip.isPrivate) &&
                 Objects.equals(this.stops, trip.stops) &&
                 Objects.equals(this.ratings, trip.ratings) &&
                 Objects.equals(this.geoText, trip.geoText);
@@ -225,33 +225,29 @@ public class Trip {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, city, _private, stops, ratings, geoText);
+        return Objects.hash(id, user, city, isPrivate, stops, ratings, geoText);
     }
 
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class Trip {\n");
-
-        sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    user: ").append(toIndentedString(user)).append("\n");
-        sb.append("    city: ").append(toIndentedString(city)).append("\n");
-        sb.append("    _private: ").append(toIndentedString(_private)).append("\n");
-        sb.append("    stops: ").append(toIndentedString(stops)).append("\n");
-        sb.append("    ratings: ").append(toIndentedString(ratings)).append("\n");
-        sb.append("    geoText: ").append(toIndentedString(geoText)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
+    public TripEntity toEntity() {
+        TripEntity tripEntity = new TripEntity();
+        tripEntity.setId(this.id);
+        tripEntity.setCity(this.city.toEntity());
+        tripEntity.setPrivate(this.isPrivate);
+        Set<TripStopEntity> tripStopEntities = new HashSet<>();
+        for (int i = 0; i < this.stops.size(); i++) {
+            TripStopEntity tripStopEntity = new TripStopEntity();
+            tripStopEntity.setIndex(i);
+            tripStopEntity.setStop(this.stops.get(i).toEntity());
+            tripStopEntities.add(tripStopEntity);
         }
-        return o.toString().replace("\n", "\n    ");
+        tripEntity.setStops(tripStopEntities);
+        List<RatingEntity> ratingEntities = new ArrayList<>();
+        this.ratings.forEach(rating -> ratingEntities.add(rating.toEntity()));
+        tripEntity.setRatings(ratingEntities);
+        List<GeoTextEntity> geoTextEntities = new ArrayList<>();
+        this.geoText.forEach(geoText -> geoTextEntities.add(geoText.toEntity()));
+        tripEntity.setGeoTexts(geoTextEntities);
+        return tripEntity;
     }
 }

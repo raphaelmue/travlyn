@@ -1,8 +1,9 @@
-package org.travlyn.server.model;
+package org.travlyn.shared.model.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+import org.travlyn.shared.model.db.TokenEntity;
 
 import java.util.Objects;
 
@@ -10,17 +11,20 @@ import java.util.Objects;
  * Token
  */
 @Validated
-public class Token {
+public class Token extends AbstractDataTransferObject {
     @JsonProperty("id")
-    private Long id = null;
+    @ApiModelProperty(value = "Identifier")
+    private int id = -1;
 
     @JsonProperty("token")
+    @ApiModelProperty(value = "Token string")
     private String token = null;
 
     @JsonProperty("ip_address")
+    @ApiModelProperty(value = "IP Address of Token's User")
     private String ipAddress = null;
 
-    public Token id(Long id) {
+    public Token id(int id) {
         this.id = id;
         return this;
     }
@@ -30,13 +34,11 @@ public class Token {
      *
      * @return id
      **/
-    @ApiModelProperty(value = "")
-
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -50,8 +52,6 @@ public class Token {
      *
      * @return token
      **/
-    @ApiModelProperty(value = "")
-
     public String getToken() {
         return token;
     }
@@ -70,8 +70,6 @@ public class Token {
      *
      * @return ipAddress
      **/
-    @ApiModelProperty(value = "")
-
     public String getIpAddress() {
         return ipAddress;
     }
@@ -101,25 +99,11 @@ public class Token {
     }
 
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class Token {\n");
-
-        sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    token: ").append(toIndentedString(token)).append("\n");
-        sb.append("    ipAddress: ").append(toIndentedString(ipAddress)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+    public TokenEntity toEntity() {
+        TokenEntity tokenEntity = new TokenEntity();
+        tokenEntity.setId(this.id);
+        tokenEntity.setToken(this.token);
+        tokenEntity.setIpAddress(this.ipAddress);
+        return tokenEntity;
     }
 }

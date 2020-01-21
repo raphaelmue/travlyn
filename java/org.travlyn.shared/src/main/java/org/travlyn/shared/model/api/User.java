@@ -1,30 +1,37 @@
-package org.travlyn.server.model;
+package org.travlyn.shared.model.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+import org.travlyn.shared.model.db.UserEntity;
 
 import javax.validation.Valid;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
 
 /**
  * User
  */
 @Validated
-public class User {
+public class User extends AbstractDataTransferObject {
     @JsonProperty("id")
-    private Long id = null;
+    @ApiModelProperty(value = "Identifier")
+    private int id = -1;
 
     @JsonProperty("email")
+    @ApiModelProperty(value = "Email address")
     private String email = null;
 
     @JsonProperty("name")
+    @ApiModelProperty(value = "Name")
     private String name = null;
 
     @JsonProperty("token")
+    @ApiModelProperty(value = "Active Token for communication")
     private Token token = null;
 
-    public User id(Long id) {
+    public User id(int id) {
         this.id = id;
         return this;
     }
@@ -34,13 +41,11 @@ public class User {
      *
      * @return id
      **/
-    @ApiModelProperty(value = "")
-
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -54,8 +59,6 @@ public class User {
      *
      * @return email
      **/
-    @ApiModelProperty(value = "")
-
     public String getEmail() {
         return email;
     }
@@ -74,8 +77,6 @@ public class User {
      *
      * @return name
      **/
-    @ApiModelProperty(value = "")
-
     public String getName() {
         return name;
     }
@@ -94,8 +95,6 @@ public class User {
      *
      * @return token
      **/
-    @ApiModelProperty(value = "")
-
     @Valid
     public Token getToken() {
         return token;
@@ -127,26 +126,12 @@ public class User {
     }
 
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class User {\n");
-
-        sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    email: ").append(toIndentedString(email)).append("\n");
-        sb.append("    name: ").append(toIndentedString(name)).append("\n");
-        sb.append("    token: ").append(toIndentedString(token)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+    public UserEntity toEntity() {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(this.id);
+        userEntity.setEmail(this.email);
+        userEntity.setName(this.name);
+        userEntity.setTokens(new HashSet<>(Collections.singletonList(this.token.toEntity())));
+        return userEntity;
     }
 }

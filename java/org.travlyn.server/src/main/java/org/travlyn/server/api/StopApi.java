@@ -2,9 +2,12 @@ package org.travlyn.server.api;
 
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.travlyn.server.model.Rating;
-import org.travlyn.server.model.Stop;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.travlyn.shared.model.api.Rating;
+import org.travlyn.shared.model.api.Stop;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

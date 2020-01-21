@@ -3,8 +3,8 @@ package org.travlyn.server.api;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.travlyn.server.model.Rating;
-import org.travlyn.server.model.Trip;
+import org.travlyn.shared.model.api.Rating;
+import org.travlyn.shared.model.api.Trip;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
