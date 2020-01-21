@@ -1,0 +1,491 @@
+openapi: 3.0.0
+info:
+  description: >
+    Travlyn is an intelligent travel and city guide that provides interest-based
+    trips in cities and countries. Depending on available time, interests,
+    budget and many other parameters, Travlyn creates personalized routes with
+    additional information about the locations themselves and the sights.
+  version: 1.0.0
+  title: Travlyn API
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    name: Raphael Müßeler
+    email: raphael@muesseler.de
+  license:
+    name: BSD-3-Clause
+    url: 'https://github.com/raphaelmue/travlyn/blob/master/LICENSE'
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: 'https://virtserver.swaggerhub.com/travlyn/travlyn/1.0.0'
+tags:
+  - name: trip
+    description: Operations about Trips
+  - name: user
+    description: Operations about user
+  - name: stop
+    description: Operations about stops
+
+paths:
+  '/trip/{tripId}':
+    get:
+      tags:
+        - trip
+      summary: Get Trip by ID
+      operationId: getTripByID
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: tripId
+          in: path
+          description: ID of trip to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trip'
+        '400':
+          description: Invalid ID supplied
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          description: Trip not found
+    post:
+      tags:
+        - trip
+      summary: Rate a trip
+      operationId: rateTrip
+      security:
+        - TokenAuth: []
+      parameters:
+        - name: tripId
+          in: path
+          description: ID of the trip that will be rated
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: rating
+          in: query
+          description: Rating to be created
+          required: true
+          schema:
+            $ref: '#/components/schemas/Rating'
+      responses:
+        '200':
+          description: successful operation
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /trip:
+    get:
+      tags:
+        - trip
+      summary: Search for trips
+      operationId: findTrip
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: searchQuery
+          in: query
+          description: Search query for trips
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trip'
+    put:
+      tags:
+        - trip
+      summary: Generate a Trip
+      operationId: generateTrip
+      security:
+        - TokenAuth: []
+      parameters:
+        - name: userId
+          in: query
+          description: The user who generates the trip
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trip'
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '500':
+          description: Trip could not be generated
+
+    post:
+      tags:
+        - trip
+      summary: Update a trip
+      operationId: updateTrip
+      security:
+        - TokenAuth: []
+      parameters:
+        - name: trip
+          in: query
+          description: Updated trip
+          required: true
+          schema:
+            $ref: '#/components/schemas/Trip'
+      responses:
+        '200':
+          description:  successfull operation
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '500':
+          description: Trip could not be updated
+
+  /user:
+    get:
+      tags:
+        - user
+      summary: Logs user into the system
+      operationId: loginUser
+      security: []
+      parameters:
+        - name: email
+          in: query
+          description: The email for login
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Invalid username/password supplied
+
+    put:
+      tags:
+        - user
+      summary: Create a new User
+      operationId: registerUser
+      security: []
+      parameters:
+        - name: email
+          in: query
+          description: The email for registration
+          required: true
+          schema:
+            type: string
+        - name: Name
+          in: query
+          description: The name for registration
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for registration in clear text
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '409':
+          description: Email is already in use
+
+    post:
+      tags:
+        - user
+      summary: Update users information
+      operationId: updateUser
+      security:
+        - TokenAuth: []
+      parameters:
+        - name: user
+          in: query
+          description: Updated user object
+          required: true
+          schema:
+            $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: successful operation
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+
+    delete:
+      tags:
+        - user
+      summary: Log out current logged in user session
+      operationId: logoutUser
+      security:
+        - TokenAuth: []
+      parameters:
+        - name: user
+          in: query
+          description: The user to logout
+          required: true
+          schema:
+            $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: successful operation
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+
+  '/user/{userId}/trips':
+    get:
+      tags:
+        - user
+        - trip
+      summary: Get all Trips of user
+      operationId: getTripsByUserId
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user whose trips are to be returned
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trip'
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+
+  '/stop/{stopId}':
+    get:
+      tags:
+        - stop
+      summary: Get Stop by ID
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: stopId
+          in: path
+          description: ID of the stop that will be returned
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stop'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+    post:
+      tags:
+        - stop
+      summary: Rate a stop
+      operationId: rateStop
+      security:
+        - TokenAuth: []
+      parameters:
+        - name: stopId
+          in: path
+          description: ID of the stop that will be rated
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: rating
+          in: query
+          description: Rating to be created
+          required: true
+          schema:
+            $ref: '#/components/schemas/Rating'
+      responses:
+        '200':
+          description: successful operation
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: apiKey
+    TokenAuth:
+      type: apiKey
+      in: query
+      name: token
+
+  responses:
+    UnauthorizedError:
+      description: You are not authorized to perform this action
+      headers:
+        WWW_Authenticate:
+          schema:
+            type: string
+    NotImplementedError:
+      description: This functionality is not implemented yet
+
+  schemas:
+    Trip:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        user:
+          $ref: '#/components/schemas/User'
+        city:
+          $ref: '#/components/schemas/City'
+        private:
+          type: boolean
+        stops:
+          type: array
+          items:
+            $ref: '#/components/schemas/Stop'
+        ratings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rating'
+        geoText:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeoText'
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        email:
+          type: string
+        name:
+          type: string
+        token:
+          $ref: '#/components/schemas/Token'
+    Stop:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        longitude:
+          type: number
+          format: double
+        latitude:
+          type: number
+          format: double
+        name:
+          type: string
+        description:
+          type: string
+          description: Additional information about stop
+        pricing:
+          type: number
+          format: double
+          description: Average pricing for one person in USD
+        time_effort:
+          type: number
+          format: double
+          description: Time effort in hours
+        average_rating:
+          type: number
+          format: double
+          description: Average percentage rating by user
+        ratings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rating'
+        category:
+            $ref: '#/components/schemas/Category'
+    City:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        image:
+          type: string
+          description: URL to image
+        description:
+          type: string
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    Rating:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        user:
+          $ref: '#/components/schemas/User'
+        rating:
+          type: number
+          format: double
+          description: Percentage rating
+        description:
+          type: string
+    Token:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        token:
+          type: string
+        ip_address:
+          type: string
+    GeoText:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        stop:
+          $ref: '#/components/schemas/Stop'
+        text:
+          type: string
