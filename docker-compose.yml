@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+    server:
+        build: java/
+        container_name: travlyn-server
+        restart: always
+        ports:
+            - 3000:3000
+        links:
+            - travlyn-db
+        environment:
+            PORT: 3000
+            ENVIRONEMT: prod
+
+    travlyn-db:
+        image: mariadb:latest
+        container_name: travlyn-db
+        restart: always
+        environment:
+            MYSQL_DATABASE: travlyn_prod
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_PASSWORD: password

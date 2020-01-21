@@ -1,5 +1,7 @@
 # travlyn
 
+[![Build Status](https://jenkins.raphael-muesseler.de/job/travlyn/job/master/badge/icon)](https://jenkins.raphael-muesseler.de/job/travlyn/job/master/)
+
 ![Travlyn Logo](./docs/logo/travlyn_logo.png "Travlyn Logo")
 
 Travlyn is an intelligent travel and city guide that provides interest-based trips in cities and countries. Depending on available time, interests, budget and many other parameters, Travlyn creates personalized routes with additional information about the locations themselves and the sights.
