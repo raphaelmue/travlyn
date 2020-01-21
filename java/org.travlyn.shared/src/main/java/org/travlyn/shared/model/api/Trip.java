@@ -1,9 +1,12 @@
-package org.travlyn.server.model;
+package org.travlyn.shared.model.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
-import org.travlyn.server.db.model.*;
+import org.travlyn.shared.model.db.GeoTextEntity;
+import org.travlyn.shared.model.db.RatingEntity;
+import org.travlyn.shared.model.db.TripEntity;
+import org.travlyn.shared.model.db.TripStopEntity;
 
 import javax.validation.Valid;
 import java.util.*;

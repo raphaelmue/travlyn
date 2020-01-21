@@ -1,9 +1,9 @@
-package org.travlyn.server.model;
+package org.travlyn.shared.model.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
-import org.travlyn.server.db.model.UserEntity;
+import org.travlyn.shared.model.db.UserEntity;
 
 import javax.validation.Valid;
 import java.util.Collections;

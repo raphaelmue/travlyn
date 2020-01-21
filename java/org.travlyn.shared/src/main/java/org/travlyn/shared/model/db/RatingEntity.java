@@ -1,21 +1,21 @@
-package org.travlyn.server.db.model;
+package org.travlyn.shared.model.db;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "city")
-public class CityEntity implements DataEntity {
+@Table(name = "rating")
+public class RatingEntity implements DataEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
-    @Column(name = "name")
-    private String name;
+    @ManyToOne(targetEntity = UserEntity.class)
+    private UserEntity user;
 
-    @Column(name = "image")
-    private String image;
+    @Column(name = "rating")
+    private double rating;
 
     @Column(name = "description")
     private String description;
@@ -29,20 +29,20 @@ public class CityEntity implements DataEntity {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
-    public String getImage() {
-        return image;
+    public double getRating() {
+        return rating;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 
     public String getDescription() {

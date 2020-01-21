@@ -1,4 +1,4 @@
-package org.travlyn.server.db.model;
+package org.travlyn.shared.model.db;
 
 import java.io.Serializable;
 

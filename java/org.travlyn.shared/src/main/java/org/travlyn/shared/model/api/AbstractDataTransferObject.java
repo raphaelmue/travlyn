@@ -1,4 +1,4 @@
-package org.travlyn.server.model;
+package org.travlyn.shared.model.api;
 
 public abstract class AbstractDataTransferObject implements DataTransferObject {
     @Override

@@ -4,12 +4,12 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.jupiter.api.*;
 import org.travlyn.server.db.HibernateUtil;
-import org.travlyn.server.db.model.CityEntity;
-import org.travlyn.server.db.model.TripEntity;
-import org.travlyn.server.db.model.TripStopEntity;
-import org.travlyn.server.db.model.UserEntity;
-import org.travlyn.server.model.City;
-import org.travlyn.server.model.Stop;
+import org.travlyn.shared.model.api.City;
+import org.travlyn.shared.model.api.Stop;
+import org.travlyn.shared.model.db.CityEntity;
+import org.travlyn.shared.model.db.TripEntity;
+import org.travlyn.shared.model.db.TripStopEntity;
+import org.travlyn.shared.model.db.UserEntity;
 
 import java.io.IOException;
 import java.util.HashSet;

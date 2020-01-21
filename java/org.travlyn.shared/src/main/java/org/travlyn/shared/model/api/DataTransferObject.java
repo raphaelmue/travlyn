@@ -1,8 +1,8 @@
-package org.travlyn.server.model;
+package org.travlyn.shared.model.api;
 
 import com.google.gson.Gson;
 import org.springframework.validation.annotation.Validated;
-import org.travlyn.server.db.model.DataEntity;
+import org.travlyn.shared.model.db.DataEntity;
 
 import java.io.Serializable;
 

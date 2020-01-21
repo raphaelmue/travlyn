@@ -24,6 +24,7 @@
 
     <modules>
         <module>org.travlyn.server</module>
+        <module>org.travlyn.shared</module>
     </modules>
 
     <profiles>

@@ -1,7 +1,5 @@
 package org.travlyn.server.service;
 
-import org.travlyn.server.db.model.TripEntity;
-
 public class TravlynService {
 
     private static TravlynService instance;

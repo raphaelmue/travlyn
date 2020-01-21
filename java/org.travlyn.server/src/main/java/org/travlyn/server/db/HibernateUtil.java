@@ -4,7 +4,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-import org.travlyn.server.db.model.*;
+import org.travlyn.shared.model.db.*;
 
 import java.util.Properties;
 

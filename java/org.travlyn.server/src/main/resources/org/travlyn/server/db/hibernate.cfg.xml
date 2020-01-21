@@ -35,14 +35,14 @@
         <property name="hibernate.c3p0.preferredTestQuery">select 1;</property>
 
         <!-- mapping file, we can use Bean annotations too -->
-        <mapping class="org.travlyn.server.db.model.CategoryEntity"/>
-        <mapping class="org.travlyn.server.db.model.CityEntity"/>
-        <mapping class="org.travlyn.server.db.model.GeoTextEntity"/>
-        <mapping class="org.travlyn.server.db.model.RatingEntity"/>
-        <mapping class="org.travlyn.server.db.model.StopEntity"/>
-        <mapping class="org.travlyn.server.db.model.TokenEntity"/>
-        <mapping class="org.travlyn.server.db.model.TripEntity"/>
-        <mapping class="org.travlyn.server.db.model.UserEntity"/>
+        <mapping class="org.travlyn.shared.model.db.CategoryEntity"/>
+        <mapping class="org.travlyn.shared.model.db.CityEntity"/>
+        <mapping class="org.travlyn.shared.model.db.GeoTextEntity"/>
+        <mapping class="org.travlyn.shared.model.db.RatingEntity"/>
+        <mapping class="org.travlyn.shared.model.db.StopEntity"/>
+        <mapping class="org.travlyn.shared.model.db.TokenEntity"/>
+        <mapping class="org.travlyn.shared.model.db.TripEntity"/>
+        <mapping class="org.travlyn.shared.model.db.UserEntity"/>
 
     </session-factory>
 </hibernate-configuration>
