@@ -17,27 +17,28 @@ pipeline {
                 stage('Java') {
                     steps {
                         dir('java')
-                        'mvn clean install -DskipTests'
+                            sh 'mvn clean install -DskipTests'
+                        }
+                    }
+                    post {
+                        always {
+                            // archiveArtifacts artifacts: '**/*.msi, **/*.deb, **/*.dmg, **/*.apk', fingerprint: true
+                        }
                     }
                 }
-                post {
-                    always {
-                        // archiveArtifacts artifacts: '**/*.msi, **/*.deb, **/*.dmg, **/*.apk', fingerprint: true
+                stage('Android') {
+                    steps {
+                        dir('android') {
+                            // sh 'chmod +x gradlew'
+                            // sh 'echo "sdk.dir=$JENKINS_HOME/android-sdk" >> local.properties'
+                            // sh './gradlew clean assembleDebug'
+                            // sh 'mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/travlyn-debug.apk'
+                        }
                     }
-                }
-            }
-            stage('Android') {
-                steps {
-                    dir('android') {
-                        // sh 'chmod +x gradlew'
-                        // sh 'echo "sdk.dir=$JENKINS_HOME/android-sdk" >> local.properties'
-                        // sh './gradlew clean assembleDebug'
-                        // sh 'mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/travlyn-debug.apk'
-                    }
-                }
-                post {
-                    always {
-                        archiveArtifacts artifacts: '**/*.apk', fingerprint: true
+                    post {
+                        always {
+                            archiveArtifacts artifacts: '**/*.apk', fingerprint: true
+                        }
                     }
                 }
             }
