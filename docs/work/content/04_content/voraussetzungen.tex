@@ -1,16 +1,43 @@
 \chapter{Voraussetzungen}
 
-	\section{Machine Learning}
+%	\section{Machine Learning}
 	
-	\section{}
+%	\section{RESTful APIs}	
 
-	\section{Frameworks}
+	\section{Architektur}
 	
-		\subsection{Spring Boot}
+		\subsection{OpenAPI}
 		
+			Der OpenAPI Standard ist Open Source und dient der Beschreibung von RESTful APIs. Bis 2016 war OpenAPI Teil des Swagger Frameworks, wurde schließlich aber als separates Projekt unter Aufsicht der sog. OpenAPI Initiative ausgelagert. 
+			
+			Mit der deklarativen Ressourcenspezifikation von OpenAPI können Clients Dienste verstehen und konsumieren, ohne über Kenntnisse der eigentlichen Server-Implementierung bzw. Zugriff auf den Servercode zu verfügen. Dies erleichtert die Entwicklung Client-seitiger Applikationen, die RESTful APIs verwenden. Die OpenAPI-Spezifikation ist zudem sprachunabhängig und lässt sich in jeder Beschreibungssprache (YAML, XML etc.) definieren. 
+	
 		\subsection{Swagger}
 		
+			Swagger ist ein Framework das sich des OpenAPI Standards bedient. Swagger bietet ein Tooling an, mit dessen Hilfe APIs spezifiziert und beschreiben werden können. Neben einem entsprechenden Editor, bietet Swagger die Möglichkeit, aus der OpenAPI Spezifikation Code zu generieren und zwar unter Verwendung unterschiedlicher Frameworks -- z.B. eine vollständige Spring Applikation -- wobei nur noch die eigentliche Implementierung der Businesslogik erforderlich ist.
+			
+			Des Weiteren stellt Swagger eine Web-basierte Benutzeroberfläche zur Verfügung, welche nicht nur die direkte Anbindung von Live APIs ermöglicht, sondern auch eine visuelle Dokumentation der API darstellt. \cite{SmartBear.2020}
+	
+		\subsection{Spring}
+		
+			Spring ist ein Open Source Framework, welches in Java geschrieben wurde. Es gilt als de facto Standard bei der Entwicklung von RESTful API, da es in der Open Source Welt viel Zuspruch und Verwendung gefunden hat. Zudem integriert Spring mit fast allen Java Umgebungen und ist somit nicht nur für Anwendungen im kleinen Maßstab, sondern eben so für Anwendungen in großen Unternehmen geeignet. \cite{Walls.20162017} 
+			
+			Bei der Entwicklung dieses Frameworks wurden die in \cite{Johnson.2003} Design Prinzipien umgesetzt:
+			\begin{description}
+				\item[Dependency Injection] 
+					Der von Martin Fowler 2004 definierte Begriff der \textit{Dependency Injection} ist eine Präzisierung oder Spezialisierung des Begriffs \textit{Inversion of Control}. IoC bezeichnet ein Paradigma, welches den Kontrollfluss einer Applikation nicht mehr der Anwendung, sondern dem Framework -- in diesem Fall Spring -- überlässt. Ein Beispiel für IoC sind Listener (Beobachter Muster). \\
+					Dependency Injection beschreibt ein Entwurfsmuster, bei welchem festgelegte Abhängigkeiten nicht zur Kompilierzeit, sondern zur Laufzeit bereitgestellt werden. Dies lässt sich einem Beispiel erläutern: Besteht bei der Initialisierung eines Objektes eine Abhängigkeit zu einem anderen Objekt, so wird diese Abhängigkeit an einem zentralen Ort hinterlegt. Wenn nun die Initialisierung dieses Objektes erfolgt, fragt es den sog. Injector (dt. Injezierer), die Abhängigkeit aufzulösen. \cite{MartinFowler.23.01.2020}
+					
+					In Spring bietet der IoC Container mittels Reflexion ein konsistentes Werkzeug zur Konfiguration sowie Verwaltung von Java Objekten. Diese durch den Container erstellten Objekten heißen \textit{Beans}. Die Konfiguration des Containers erfolgt entweder über eine XML Datei oder über Java Annotationen. \cite{Walls.20162017} 
+				\item[Aspektorientierte Programmierung]
+					AOP beschreibt ein Paradigma und ermöglicht die klassenübergreifende Verwendung generischer Funktionalität. Die führt zu einer starken Modularisierung und es gibt eine klare Trennung zwischen der Anwendungslogik und der Businesslogik (Cross-cutting Concern). Das Schreiben von Logs stellt ein Beispiel für ein Cross-cutting Concern dar, da eine Logging-Strategie alle protokollierten Klassen und Methoden erfasst und somit durchaus mit der Anwendungs- sowie der Businesslogik in Berührung kommt. 
+			\end{description}
+		
+		
+		
 		\subsection{Android}
+		
+			\subsection{Kotlin}
 		
 	\section{Qualitätssichernde Maßnahmen}
 	
