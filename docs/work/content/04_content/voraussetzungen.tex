@@ -2,7 +2,29 @@
 
 %	\section{Machine Learning}
 	
-%	\section{RESTful APIs}	
+	\section{RESTful APIs}	
+	
+		Representational State Transfer beschreibt ein architektonisches Modell, um Web Services zu erstellen. Sogenannte REST Web Services bieten Interoperabilität zwischen Computersystemen im Internet -- geeignet für die Kommunikation von Maschine zu Maschine. So lässt sich REST auch als eine Abstraktion der Struktur und des Verhaltens des World Wide Webs beschreiben. 
+		
+		Neben REST gibt es weitere Alternativen, wie SOAP oder RPC; der Vorteil von REST besteht jedoch darin, dass durch das WWW ein Großteil der Infrastruktur für die Kommunikation bereits vorhanden und implementiert ist. Während bei RPC in der URI Methodeninformationen enthalten sind, gibt eine URI in der REST Architektur ausschließlich Ressourcen an und kodiert die Funktionalität mittels HTTP Methoden. Dieser Ansatz entspricht dem Konzept einer URI, da bei einer HTTP Anfrage ebenso nur Ressourcen und keine Funktionalität gefragt ist.
+		
+		Eine REST API muss insgesamt sechs Eigenschaften besitzen:
+		
+		\begin{description}
+			\item[Client-Server Architektur] 
+				Bei REST gilt im Allgemeinen, dass eine Client-Server Architektur herrschen soll: Die Client konsumiert die vom Server bereitgestellten Dienste. 
+			\item[Zustandslosigkeit] 
+				Eine RESTful API soll keine Zustände haben, sondern so konzipiert werden, dass benötigten Informationen in einer REST-Nachricht vorhanden sind. Dies begünstigt außerdem die Skalierbarkeit eines solchen Dienstes, da auf diese Weise einfach alle Anfragen auf mehrere Instanzen verteilt werden können.
+			\item[Caching] 
+				Server sowie Client können Antworten zwischenspeichern. Es muss jedoch vorher explizit definiert werden, welche Antworten zwischengespeichert und welche nicht zwischengespeichert werden, um zu verhindern, dass alte oder ungeeignete Daten versendet werden.
+			\item[Einheitliche Schnittstelle]
+				Die REST API muss eine einheitliche Schnittstelle zur Verfügung stellen, welche den von \cite{RoyThomasFielding.2000} definierten Auflagen entsprechen muss. Dies vereinfacht die Nutzung der API.
+			\item[Mehrschichtige Systeme]
+				 Die Struktur einer RESTful API soll mehrschichtig sein, sodass es ausreicht, dem Client lediglich eine Schnittstelle anzubieten. Die Architektur der API wird dadurch simplifiziert und die dahinterliegenden Schichten der Implementierung bleibt verborgen.
+			\item[Code on Demand] 
+				Fielding beschreibt diese Eigenschaft als optional: Der Server kann, durch das Übertragen von ausführbarem Code, die Funktionalität des Clients zeitweise erweitern oder anpassen. Vorstellbar wäre beispielsweise eine Übertragung von bereits kompilierten Komponenten oder Client-seitigen Skripten. 
+				
+		\end{description}
 
 	\section{Architektur}
 	
@@ -14,7 +36,7 @@
 	
 		\subsection{Swagger}
 		
-			Swagger ist ein Framework das sich des OpenAPI Standards bedient. Swagger bietet ein Tooling an, mit dessen Hilfe APIs spezifiziert und beschreiben werden können. Neben einem entsprechenden Editor, bietet Swagger die Möglichkeit, aus der OpenAPI Spezifikation Code zu generieren und zwar unter Verwendung unterschiedlicher Frameworks -- z.B. eine vollständige Spring Applikation -- wobei nur noch die eigentliche Implementierung der Businesslogik erforderlich ist.
+			Swagger ist ein Framework das sich des OpenAPI Standards bedient. Swagger bietet ein Tooling an, mit dessen Hilfe APIs spezifiziert und beschrieben werden können. Neben einem entsprechenden Editor, bietet Swagger die Möglichkeit, aus der OpenAPI Spezifikation Code zu generieren und zwar unter Verwendung unterschiedlicher Frameworks -- z.B. eine vollständige Spring Applikation -- wobei nur noch die eigentliche Implementierung der Businesslogik erforderlich ist.
 			
 			Des Weiteren stellt Swagger eine Web-basierte Benutzeroberfläche zur Verfügung, welche nicht nur die direkte Anbindung von Live APIs ermöglicht, sondern auch eine visuelle Dokumentation der API darstellt. \cite{SmartBear.2020}
 	
@@ -22,7 +44,7 @@
 		
 			Spring ist ein Open Source Framework, welches in Java geschrieben wurde. Es gilt als de facto Standard bei der Entwicklung von RESTful API, da es in der Open Source Welt viel Zuspruch und Verwendung gefunden hat. Zudem integriert Spring mit fast allen Java Umgebungen und ist somit nicht nur für Anwendungen im kleinen Maßstab, sondern eben so für Anwendungen in großen Unternehmen geeignet. \cite{Walls.20162017} 
 			
-			Bei der Entwicklung dieses Frameworks wurden die in \cite{Johnson.2003} Design Prinzipien umgesetzt:
+			Bei der Entwicklung dieses Frameworks wurden die in \cite{Johnson.2003} beschriebenen Design Prinzipien umgesetzt:
 			\begin{description}
 				\item[Dependency Injection] 
 					Der von Martin Fowler 2004 definierte Begriff der \textit{Dependency Injection} ist eine Präzisierung oder Spezialisierung des Begriffs \textit{Inversion of Control}. IoC bezeichnet ein Paradigma, welches den Kontrollfluss einer Applikation nicht mehr der Anwendung, sondern dem Framework -- in diesem Fall Spring -- überlässt. Ein Beispiel für IoC sind Listener (Beobachter Muster). \\
