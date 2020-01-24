@@ -1,1 +1,28 @@
 \chapter{Datengrundlage}
+(Joshua)
+
+Die Datengrundlage ist für einen Reiseführer sehr wichtig, da der gesamte Sinn eines Reiseführers darauf basiert Informationen aufzubereiten und an den Leser/Nutzer weiter zu geben. Aus diesem Grund wurden für diese Arbeit mehrere Datenquellen zu unterschiedlichen Themen herausgesucht und nach ihren Vor- und Nachteilen verglichen. Im Folgenden sollen diese Alternativen und die angestellten Überlegungen sowie die endgültige Entscheidung, welche Daten für travlyn verwendet werden sollen aufgezeigt.
+
+\section{Points of Interest}
+Travlyn soll laut Spezifikation Trips erstellen können, welche eine Abfolge von interessanten und sehenswerten Punkten in einer Stadt ist. Diese \ac{POIs} sollen über ein \ac{API} in die App integriert werden. Folgende Anforderungen sind an die Informationen und die API gestellt:
+
+\begin{itemize}
+	\item Die abgefragten Daten sollten möglichst für einen kommerziellen Nutzen zugelassen sein, damit während der Entwicklung keine schwierigen Lizenzfragen auftreten können und ggf. höhere Datenvolumen durch Nachfragen erreicht werden können.
+	\item Da diese Arbeit ein Uniprojekt ist, für welches sehr begrenzte Ressourcen zur Verfügung stehen sollte die API kostenfrei benutzbar sein.  
+	\item Die API sollte Daten für möglichst viele Städte/Orte zur Verfügung stellen, damit travlyn möglichst überall eingesetzt werden kann.
+	\item Zu den einzelnen POIs sollten neben dem Namen und er Position weitere Daten wie Beschreibungen, Öffnungszeiten und ggf. Bilder bereitgestellt werden.
+\end{itemize}
+
+\subsection{Google Places API}
+Google ist einer der größten Anbieter von Ortsbasierten services und stellt eine API für POIs zu Verfügung \cite{google2020}. Diese API hat sehr weit gefächerte Funktionen, die von einer einfachen Suche über ausführliche Details zu interessanten Orten bis hin zu "user check-in" an einzeln Orten reichen. Diese große Funktionalität wäre für travlyn sehr wertvoll. Allerdings sind die Google APIs nicht frei zugänglich und die Anzahl der Requests ist u.U. stark eingeschränkt \cite{singhal2012implementation}. Außerdem ist die Nutzung der erhaltenen Daten nur in Verbindung mit anderen von Google bereitgestellten Services erlaubt \cite{googleTerms2020}, somit wäre die ganze travlyn Applikation an Google gebunden.  
+
+\subsection{Openroute service}
+Openroute service \cite{openroute2019} wird vom Heidelberger Institut für Geoinformationstechnik angeboten. Es handelt sich um eine crowd sourced API, d.h. sie wird durch Benutzer über OpenStreetMap (OSM) \cite{openstreetmap2020} gespeist und ist damit frei zugänglich. Durch die Nutzung von OSM ergibt sich der weitere Vorteil, dass die API für Orte weltweit nutzbar ist. Leider sind die gelieferten Informationen nicht sehr umfangreich und beinhalten häufig keine genauere Beschreibung und keine Ratings o.Ä.. Weiterhin sind crowd sourced Informationen meist nicht offiziell verifiziert und könnten u.U. falsch sein. Die Limits für diese API sind relativ gering (500 POIs requests pro Tag), allerdings können diese auf Nachfrage erhöht werden (z.B. für Bildungszwecke).
+
+\subsection{Foursquare}
+Die Firma Foursquare bietet ebenfalls eine API an \cite{foursquare2019}, über die Informationen zu interessanten Orten gelesen werden können. Die API ist weltweit einsetzbar und liefert sehr viele Informationen zu einzelnen Orten, wie Ratings, kurze Beschreibungen oder Adressen von denen Bilder in der gewünschten Auflösung abgefragt werden können. Die Anzahl der möglichen requests kann durch die Registrierung einer Kreditkarte (trotz der kostenlosen Nutzung) auf ca. 100.000 pro Tag gesteigert werden. Allerdings können die kostenfreien Varianten dieser API nicht für kommerzielle Zwecke genutzt werden und die abgefragten Daten dürfen nicht länger als 24 Stunden persistiert werden. 
+
+\subsection{Evaluation der Alternativen}
+Für das Projekt wurde aus den obigen Alternativen gewählt. Die endgültige Entscheidung fiel auf den Openroute service, da es für unser relativ kurzes Projekt ein sehr großes Risiko darstellt, dass langwierige Nachforschungen zu Lizenzfragen und erlaubten Einsatzmöglichkeiten angestellt müssen. Openroute service ist selbst für kommerziellen Nutzen freigegeben und aus rechtlicher Perspektive damit sehr einfach zu nutzen. Im Gegensatz dazu stellen sowohl Google als auch Foursquare starke Einschränkungen auf, die ein nicht abzusehendes Risiko darstellen, z.B. sind bestimmte Funktionen unter diesen Einschränkungen umsetzbar. Trotz diesem entscheidenden Vorteil muss der Nachteil in Kauf genommen werden, dass nur mäßig ausführliche Informationen gelesen werden können. Im weiteren Verlauf dieser Arbeit werden weitere zusätzliche Datenquellen aufgezeigt, um diesen Nachteil möglichst gut aufzufangen.
+
+\section{Weiterführende Informationen zu POIs und Städten} 
