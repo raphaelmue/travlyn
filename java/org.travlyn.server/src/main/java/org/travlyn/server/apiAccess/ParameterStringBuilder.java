@@ -12,8 +12,10 @@ public class ParameterStringBuilder {
 
         for (Map.Entry<String, String> entry : parameters.entrySet()) {
             result.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8));
-            result.append("=");
-            result.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8));
+            if (entry.getValue() != null) {
+                result.append("=");
+                result.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8));
+            }
             result.append("&");
         }
 
