@@ -1,4 +1,4 @@
-package org.travlyn.server.APIAccess;
+package org.travlyn.server.apiAccess;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;

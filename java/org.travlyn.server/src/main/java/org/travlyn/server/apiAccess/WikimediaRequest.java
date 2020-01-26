@@ -1,4 +1,4 @@
-package org.travlyn.server.APIAccess;
+package org.travlyn.server.apiAccess;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
