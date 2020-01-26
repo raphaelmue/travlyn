@@ -18,8 +18,8 @@ public class ParameterStringBuilder {
             }
             result.append("&");
         }
-
         String resultString = result.toString();
+        resultString = resultString.replace("%3A",":").replace("%22","");
         if (resultString.length()>0) {
             //exclude last & if there were some parameters
             return resultString.substring(0, resultString.length() - 1);
