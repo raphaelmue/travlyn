@@ -1,6 +1,7 @@
 package org.travlyn.server.APIAccess;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -9,14 +10,15 @@ import java.util.Map;
 
 public class APIRequest {
     private final URL requestURL;
-    public APIRequest(URL apiURL, Map<String,String> parameters) throws MalformedURLException {
-        this.requestURL = new URL(apiURL,ParameterStringBuilder.getParamString(parameters));
+    public APIRequest(String apiURL, Map<String,String> parameters) throws MalformedURLException {
+        String completeURL = apiURL + ParameterStringBuilder.getParamString(parameters);
+        this.requestURL = new URL(completeURL);
     }
     public APIRequest(String apiURL)throws Exception{
         this.requestURL = new URL(apiURL);
     }
 
-    public String performAPICall() throws Exception{
+    public String performAPICall() throws IOException {
         HttpURLConnection con = (HttpURLConnection) requestURL.openConnection();
         con.setRequestMethod("GET");
         int responseCode = con.getResponseCode();
