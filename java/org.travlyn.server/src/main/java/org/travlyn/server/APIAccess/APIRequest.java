@@ -3,14 +3,14 @@ package org.travlyn.server.APIAccess;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
 public class APIRequest {
     private final URL requestURL;
-    //TODO: Handle Exceptions
-    public APIRequest(URL apiURL, Map<String,String> parameters) throws Exception{
-        this.requestURL =  apiURL;
+    public APIRequest(URL apiURL, Map<String,String> parameters) throws MalformedURLException {
+        this.requestURL = new URL(apiURL,ParameterStringBuilder.getParamString(parameters));
     }
     public APIRequest(String apiURL)throws Exception{
         this.requestURL = new URL(apiURL);
