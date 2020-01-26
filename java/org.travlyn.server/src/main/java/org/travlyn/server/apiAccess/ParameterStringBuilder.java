@@ -4,6 +4,11 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+/**
+ * Utility class to build the param string for API url from Map.
+ * @author Joshua Schulz
+ * @since 1.0
+ */
 public class ParameterStringBuilder {
     public static String getParamString(Map<String, String> parameters) {
         StringBuilder result = new StringBuilder();

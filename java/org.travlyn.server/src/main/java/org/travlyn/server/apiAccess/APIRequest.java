@@ -8,6 +8,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
+/**
+ * Generic utility class to fetch data from API via GET request.
+ * @author Joshua Schulz
+ * @since 1.0
+ */
 public class APIRequest {
     private final URL requestURL;
     public APIRequest(String apiURL, Map<String,String> parameters) throws MalformedURLException {
