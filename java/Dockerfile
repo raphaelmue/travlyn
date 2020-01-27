@@ -6,6 +6,7 @@ WORKDIR /usr/src/app/
 # Copy source files
 COPY org.travlyn.server ./org.travlyn.server
 COPY org.travlyn.shared ./org.travlyn.shared
+COPY org.travlyn.util ./org.travlyn.util
 COPY pom.xml .
 
 # Compile source files

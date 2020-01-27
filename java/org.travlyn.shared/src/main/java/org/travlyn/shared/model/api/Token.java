@@ -13,15 +13,15 @@ import java.util.Objects;
 @Validated
 public class Token extends AbstractDataTransferObject {
     @JsonProperty("id")
-    @ApiModelProperty(value = "Identifier")
+    @ApiModelProperty(value = "Identifier", required = true, example = "123")
     private int id = -1;
 
     @JsonProperty("token")
-    @ApiModelProperty(value = "Token string")
+    @ApiModelProperty(value = "Token string", required = true, example = "re7sr75a<7dfg8df6g84bcd5f1v6a8sx")
     private String token = null;
 
     @JsonProperty("ip_address")
-    @ApiModelProperty(value = "IP Address of Token's User")
+    @ApiModelProperty(value = "IP Address of Token's User", required = true, example = "192.168.0.1")
     private String ipAddress = null;
 
     public Token id(int id) {

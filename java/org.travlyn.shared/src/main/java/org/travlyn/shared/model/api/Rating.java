@@ -14,19 +14,19 @@ import java.util.Objects;
 @Validated
 public class Rating extends AbstractDataTransferObject {
     @JsonProperty("id")
-    @ApiModelProperty(value = "Identifier")
+    @ApiModelProperty(value = "Identifier", required = true, example = "123")
     private int id = -1;
 
     @JsonProperty("user")
-    @ApiModelProperty(value = "User that has created the Rating")
+    @ApiModelProperty(value = "User that has created the Rating", required = true)
     private User user = null;
 
     @JsonProperty("rating")
-    @ApiModelProperty(value = "Percentage rating")
+    @ApiModelProperty(value = "Percentage rating", required = true, example = "0.75")
     private double rating = -1;
 
     @JsonProperty("description")
-    @ApiModelProperty(value = "Rating description")
+    @ApiModelProperty(value = "Rating description", required = true, example = "This is a description of a Rating.")
     private String description = null;
 
     public Rating id(int id) {

@@ -1,87 +1,46 @@
 package org.travlyn.server.service;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.junit.jupiter.api.*;
-import org.travlyn.server.db.HibernateUtil;
-import org.travlyn.shared.model.api.City;
-import org.travlyn.shared.model.api.Stop;
-import org.travlyn.shared.model.db.CityEntity;
-import org.travlyn.shared.model.db.TripEntity;
-import org.travlyn.shared.model.db.TripStopEntity;
+import org.hibernate.SessionFactory;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.travlyn.server.TravlynServer;
+import org.travlyn.server.configuration.PersistenceConfiguration;
+import org.travlyn.server.configuration.TravlynServiceConfiguration;
+import org.travlyn.shared.model.api.User;
 import org.travlyn.shared.model.db.UserEntity;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
+import javax.transaction.Transactional;
 
 @Tag("unit")
+@SpringBootTest(
+        classes = {TravlynServer.class, TravlynServiceConfiguration.class, PersistenceConfiguration.class},
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TravlynServiceTest {
 
-    private Session session;
+    @Autowired
+    private SessionFactory sessionFactory;
 
-    @BeforeAll
-    public static void beforeAll() throws IOException {
-        Properties testProperties = new Properties();
-        testProperties.load(TravlynServiceTest.class.getResourceAsStream("/test.properties"));
-        HibernateUtil.setDatabaseProperties(testProperties);
-    }
+    @Autowired
+    private TravlynService service;
 
-    @BeforeEach
-    public void beforeEach() {
-        session = HibernateUtil.getSessionFactory().openSession();
-
+    @Test
+    @Transactional
+    public void testCheckCredentials() {
+        Session session = sessionFactory.getCurrentSession();
         UserEntity userEntity = new UserEntity();
         userEntity.setName("Test User");
-        userEntity.setEmail("test@test.com");
+        userEntity.setEmail("test@email.com");
         userEntity.setPassword("6406b2e97a97f64910aca76370ee35a92087806da1aa878e8a9ae0f4dc3949af");
         userEntity.setSalt("I2HoOYJmqKfGboyJAdCEQwulUkxmhVH5");
 
-        CityEntity cityEntity = new City().image("testURL").name("TestCity").toEntity();
-
-        Transaction transaction = session.beginTransaction();
         session.save(userEntity);
-        session.save(cityEntity);
-        transaction.commit();
 
-        TripEntity tripEntity = new TripEntity();
-
-        Set<TripStopEntity> tripStopEntities = new HashSet<>();
-        TripStopEntity tripStopEntity1 = new TripStopEntity();
-        tripStopEntity1.setTrip(tripEntity);
-        tripStopEntity1.setStop(new Stop().longitude(1).latitude(2).name("TestStop1").description("Description").toEntity());
-        tripStopEntity1.setIndex(1);
-        tripStopEntities.add(tripStopEntity1);
-        TripStopEntity tripStopEntity2 = new TripStopEntity();
-        tripStopEntity2.setTrip(tripEntity);
-        tripStopEntity2.setStop(new Stop().longitude(2).latitude(1).name("TestStop2").description("Description").toEntity());
-        tripStopEntity2.setIndex(2);
-        tripStopEntities.add(tripStopEntity2);
-
-        tripEntity.setPrivate(false);
-        tripEntity.setUser(userEntity);
-        tripEntity.setCity(cityEntity);
-        tripEntity.setStops(tripStopEntities);
-
-
-        transaction = session.beginTransaction();
-        session.save(tripEntity);
-        transaction.commit();
-
-        session.close();
-        session = HibernateUtil.getSessionFactory().openSession();
-    }
-
-    @Test
-    public void testTripModel() {
-        Transaction transaction = session.beginTransaction();
-        Assertions.assertEquals(2, session.get(TripEntity.class, 1).getStops().size());
-        transaction.commit();
-    }
-
-    @AfterEach
-    public void afterEach() {
-        session.close();
+        User userToAssert = service.checkCredentials("test@test.com", "password");
+        Assertions.assertNotNull(userToAssert);
+        Assertions.assertEquals("test@email.com", userToAssert.getEmail());
     }
 }

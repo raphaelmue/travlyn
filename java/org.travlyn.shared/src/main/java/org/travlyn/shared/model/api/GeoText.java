@@ -14,15 +14,15 @@ import java.util.Objects;
 @Validated
 public class GeoText extends AbstractDataTransferObject {
     @JsonProperty("id")
-    @ApiModelProperty(value = "Identifier")
+    @ApiModelProperty(value = "Identifier", required = true, example = "123")
     private int id = -1;
 
     @JsonProperty("stop")
-    @ApiModelProperty(value = "Stop to which the text refers")
+    @ApiModelProperty(value = "Stop to which the text refers", required = true)
     private Stop stop = null;
 
     @JsonProperty("text")
-    @ApiModelProperty(value = "Text to be displayed")
+    @ApiModelProperty(value = "Text to be displayed", required = true, example = "123")
     private String text = null;
 
     public GeoText id(int id) {

@@ -26,7 +26,7 @@ public interface TripApi {
     @GetMapping(
             value = "/trip",
             produces = {"application/json"})
-    ResponseEntity<List<Trip>> findTrip(@NotNull @ApiParam(value = "Search query for trips", required = true) @Valid @RequestParam(value = "searchQuery") String searchQuery);
+    ResponseEntity<List<Trip>> findTrip(@NotNull @ApiParam(value = "Search query for trips", required = true, example = "New York") @Valid @RequestParam(value = "searchQuery") String searchQuery);
 
     @ApiOperation(
             value = "Generate a Trip",
@@ -42,7 +42,7 @@ public interface TripApi {
     @PutMapping(
             value = "/trip",
             produces = {"application/json"})
-    ResponseEntity<Trip> generateTrip(@NotNull @ApiParam(value = "The user who generates the trip", required = true) @Valid @RequestParam(value = "userId") Long userId);
+    ResponseEntity<Trip> generateTrip(@NotNull @ApiParam(value = "The user who generates the trip", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "userId") Long userId);
 
     @ApiOperation(
             value = "Get Trip by ID",
@@ -59,7 +59,7 @@ public interface TripApi {
     @GetMapping(
             value = "/trip/{tripId}",
             produces = {"application/json"})
-    ResponseEntity<Trip> getTripByID(@ApiParam(value = "ID of trip to return", required = true) @PathVariable("tripId") Long tripId);
+    ResponseEntity<Trip> getTripByID(@ApiParam(value = "ID of trip to return", required = true, defaultValue = "-1", example = "123") @PathVariable("tripId") Long tripId);
 
     @ApiOperation(
             value = "Rate a trip",
@@ -72,8 +72,8 @@ public interface TripApi {
             @ApiResponse(code = 401, message = "You are not authorized to perform this action")})
     @PostMapping(
             value = "/trip/{tripId}")
-    ResponseEntity<Void> rateTrip(@ApiParam(value = "ID of the trip that will be rated", required = true) @PathVariable("tripId") Long tripId,
-                                  @NotNull @ApiParam(value = "Rating to be created", required = true) @Valid @RequestParam(value = "rating") Rating rating);
+    ResponseEntity<Void> rateTrip(@ApiParam(value = "ID of the trip that will be rated", required = true, defaultValue = "-1", example = "123") @PathVariable("tripId") Long tripId,
+                                  @NotNull @ApiParam(value = "Rating to be created", required = true, defaultValue = "-1", example = "0.75") @Valid @RequestParam(value = "rating") Rating rating);
 
 
     @ApiOperation(
@@ -88,6 +88,6 @@ public interface TripApi {
             @ApiResponse(code = 500, message = "Trip could not be updated")})
     @PostMapping(
             value = "/trip")
-    ResponseEntity<Void> updateTrip(@NotNull @ApiParam(value = "Updated trip", required = true) @Valid @RequestParam(value = "trip") Trip trip);
-
+    ResponseEntity<Void> updateTrip(@NotNull @ApiParam(value = "Updated trip", required = true, example = "{id: 123, private: true, city: {id: 123, name: \"New York\", description: \"This is a description of New York.\"}}}")
+                                    @Valid @RequestParam(value = "trip") Trip trip);
 }

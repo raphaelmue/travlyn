@@ -25,11 +25,12 @@ public class TripEntity implements DataEntity {
     @OneToMany(mappedBy = "trip")
     private Set<TripStopEntity> stops;
 
-    @OneToMany(mappedBy = "entity")
-    private List<RatingEntity> ratings;
+    @OneToMany()
+    @JoinColumn(name = "ratable")
+    private Set<TripRatingEntity> ratings;
 
-    @OneToMany(mappedBy = "stop")
-    private List<GeoTextEntity> geoTexts;
+    @OneToMany(mappedBy = "trip")
+    private Set<GeoTextEntity> geoTexts;
 
     @Override
     public int getId() {
@@ -72,19 +73,19 @@ public class TripEntity implements DataEntity {
         this.stops = stops;
     }
 
-    public List<RatingEntity> getRatings() {
+    public Set<TripRatingEntity> getRatings() {
         return ratings;
     }
 
-    public void setRatings(List<RatingEntity> ratings) {
+    public void setRatings(Set<TripRatingEntity> ratings) {
         this.ratings = ratings;
     }
 
-    public List<GeoTextEntity> getGeoTexts() {
+    public Set<GeoTextEntity> getGeoTexts() {
         return geoTexts;
     }
 
-    public void setGeoTexts(List<GeoTextEntity> geoTexts) {
+    public void setGeoTexts(Set<GeoTextEntity> geoTexts) {
         this.geoTexts = geoTexts;
     }
 }

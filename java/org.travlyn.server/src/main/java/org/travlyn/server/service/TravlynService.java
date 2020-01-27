@@ -1,17 +1,60 @@
 package org.travlyn.server.service;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.travlyn.shared.model.api.User;
+import org.travlyn.shared.model.db.UserEntity;
+import org.travlyn.util.security.Hash;
+import org.travlyn.util.security.RandomString;
+
+import javax.persistence.NoResultException;
+
+
+@Service
 public class TravlynService {
 
-    private static TravlynService instance;
+    private final Logger logger = LoggerFactory.getLogger(TravlynService.class);
+    private final RandomString tokenGenerator = new RandomString(64);
 
-    public static TravlynService getInstance() {
-        if (instance == null) {
-            instance = new TravlynService();
-        }
-        return instance;
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    public TravlynService() {
     }
 
-    private TravlynService() {
+    /**
+     * Checks the users credentials. Returns true, if the credentials are correct.
+     *
+     * @param email    email to verify
+     * @param password password to verify
+     * @return true if credentials are correct
+     */
+    @Transactional(readOnly = true)
+    public User checkCredentials(String email, String password) {
+        logger.info("Checking credentials ...");
+
+        Session session = sessionFactory.getCurrentSession();
+        UserEntity user;
+
+        try {
+            user = session.createQuery("from UserEntity where email = :email", UserEntity.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+            String hashedPassword = Hash.create(password, user.getSalt());
+            if (hashedPassword.equals(user.getPassword())) {
+                logger.info("Credentials of user {} (id: {}) are approved.", user.getName(), user.getId());
+                return user.toDataTransferObject();
+            }
+        } catch (NoResultException ignored) {
+        }
+
+        logger.info("Credentials are incorrect.");
+        return null;
     }
 
 }
