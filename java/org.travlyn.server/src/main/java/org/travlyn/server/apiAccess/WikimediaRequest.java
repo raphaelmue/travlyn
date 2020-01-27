@@ -38,6 +38,8 @@ public class WikimediaRequest {
         params.put("action","query");
         params.put("prop","extracts");
         params.put("exintro",null);
+        params.put("explaintext",null);
+        params.put("redirects","1");
         params.put("format","json");
         params.put("titles",serachterm);
         try {
@@ -53,16 +55,17 @@ public class WikimediaRequest {
             return null;
         }
         formattedResult = gson.fromJson(result, JsonObject.class);
-        String innerContent= formattedResult.getAsJsonObject("query").getAsJsonObject("pages").toString();
-        //TODO: examine alternative ways to get correct tag
-        String[] arr = innerContent.split("extract\":");
-        //TODO: do not just delete html tags but parse string in correct way
-        return arr[1].split("}")[0].replaceAll("\\<.*?\\>", "");
+        JsonObject innerContent= formattedResult.getAsJsonObject("query").getAsJsonObject("pages");
+        String title = null;
+        for(Map.Entry<String, JsonElement> entry : innerContent.entrySet()){
+            title =  entry.getValue().getAsJsonObject().getAsJsonPrimitive("extract").toString();
+        }
+        return title;
     }
 
     /**
      * Returns URL to image from wiki. Experimental, because we can not get the main picture, but have to choose from
-     * all pictures of the corresponding wiki page. Takes long time to complete.
+     * all pictures of the corresponding wiki page. Can take a long time to complete.
      *
      * @return URL to image
      */
