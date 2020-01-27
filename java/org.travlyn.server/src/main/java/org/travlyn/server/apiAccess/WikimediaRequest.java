@@ -3,6 +3,7 @@ package org.travlyn.server.apiAccess;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.travlyn.server.util.Pair;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -31,19 +32,18 @@ public class WikimediaRequest {
      * @return Content of first paragraph as string.
      */
     public String getIntro(){
-        Set<Map.Entry<String,String>> params = new HashSet();
+        Set<Pair<String,String>> params = new HashSet();
         String result;
         JsonObject formattedResult;
         APIRequest request;
 
-        params.add(new Map.Entry<String, String>() {
-        }"action", "query");
-        params.put("prop","extracts");
-        params.put("exintro",null);
-        params.put("explaintext",null);
-        params.put("redirects","1");
-        params.put("format","json");
-        params.put("titles",serachterm);
+        params.add(new Pair<>("action", "query"));
+        params.add(new Pair<>("prop","extracts"));
+        params.add(new Pair<>("exintro",null));
+        params.add(new Pair<>("explaintext",null));
+        params.add(new Pair<>("redirects","1"));
+        params.add(new Pair<>("format","json"));
+        params.add(new Pair<>("titles",serachterm));
         try {
             request = new APIRequest(BASEAPI,params);
         }catch (MalformedURLException ex){
@@ -72,16 +72,16 @@ public class WikimediaRequest {
      * @return URL to image
      */
     public String getImage(){
-        Map<String,String> params = new HashMap<>();
+        Set<Pair<String,String>> params = new HashSet();
         String result;
         String title = "";
         JsonObject formattedResult;
         APIRequest request;
 
-        params.put("action","query");
-        params.put("prop","images");
-        params.put("format","json");
-        params.put("titles",serachterm);
+        params.add(new Pair<>("action", "query"));
+        params.add(new Pair<>("prop","images"));
+        params.add(new Pair<>("format","json"));
+        params.add(new Pair<>("titles",serachterm));
         try {
             request = new APIRequest(BASEAPI,params);
         }catch (MalformedURLException ex){
@@ -100,11 +100,11 @@ public class WikimediaRequest {
                 title =  entry.getValue().getAsJsonObject().getAsJsonArray("images").get(0).getAsJsonObject().get("title").toString().split(":")[1];
         }
         params.clear();
-        params.put("action","query");
-        params.put("prop","imageinfo");
-        params.put("iiprop","url");
-        params.put("format","json");
-        params.put("titles","Image:"+ title.replace(" ","_"));
+        params.add(new Pair<>("action", "query"));
+        params.add(new Pair<>("prop","imageinfo"));
+        params.add(new Pair<>("iiprop","url"));
+        params.add(new Pair<>("format","json"));
+        params.add(new Pair<>("titles","Image:"+ title.replace(" ","_")));
         try {
             request = new APIRequest(BASEAPI,params);
         }catch (MalformedURLException ex){

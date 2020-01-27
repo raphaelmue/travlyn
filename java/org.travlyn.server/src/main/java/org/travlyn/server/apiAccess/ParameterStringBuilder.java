@@ -1,5 +1,7 @@
 package org.travlyn.server.apiAccess;
 
+import org.travlyn.server.util.Pair;
+
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
@@ -12,12 +14,12 @@ import java.util.Set;
  * @since 1.0
  */
 public class ParameterStringBuilder {
-    public static String getParamString(Set<Map.Entry<String,String>> parameters) {
+    public static String getParamString(Set<Pair<String,String>> parameters) {
         StringBuilder result = new StringBuilder();
 
         result.append("?");
 
-        for (Iterator<Map.Entry<String, String>> it = parameters.iterator(); it.hasNext(); ) {
+        for (Iterator<Pair<String, String>> it = parameters.iterator(); it.hasNext(); ) {
             Map.Entry<String, String> entry = it.next();
             result.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8));
             if (entry.getValue() != null) {
