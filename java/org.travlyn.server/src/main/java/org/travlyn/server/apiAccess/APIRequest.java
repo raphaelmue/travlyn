@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Generic utility class to fetch data from API via GET request.
@@ -15,7 +16,7 @@ import java.util.Map;
  */
 public class APIRequest {
     private final URL requestURL;
-    public APIRequest(String apiURL, Map<String,String> parameters) throws MalformedURLException {
+    public APIRequest(String apiURL, Set<Map.Entry<String,String>> parameters) throws MalformedURLException {
         String completeURL = apiURL + ParameterStringBuilder.getParamString(parameters);
         this.requestURL = new URL(completeURL);
     }

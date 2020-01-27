@@ -2,7 +2,9 @@ package org.travlyn.server.apiAccess;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Utility class to build the param string for API url from Map.
@@ -10,12 +12,13 @@ import java.util.Map;
  * @since 1.0
  */
 public class ParameterStringBuilder {
-    public static String getParamString(Map<String, String> parameters) {
+    public static String getParamString(Set<Map.Entry<String,String>> parameters) {
         StringBuilder result = new StringBuilder();
 
         result.append("?");
 
-        for (Map.Entry<String, String> entry : parameters.entrySet()) {
+        for (Iterator<Map.Entry<String, String>> it = parameters.iterator(); it.hasNext(); ) {
+            Map.Entry<String, String> entry = it.next();
             result.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8));
             if (entry.getValue() != null) {
                 result.append("=");

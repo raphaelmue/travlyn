@@ -6,9 +6,10 @@ import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Utility class for making requests on various actions of the wikimedia api.
@@ -30,12 +31,13 @@ public class WikimediaRequest {
      * @return Content of first paragraph as string.
      */
     public String getIntro(){
-        Map<String,String> params = new HashMap<>();
+        Set<Map.Entry<String,String>> params = new HashSet();
         String result;
         JsonObject formattedResult;
         APIRequest request;
 
-        params.put("action","query");
+        params.add(new Map.Entry<String, String>() {
+        }"action", "query");
         params.put("prop","extracts");
         params.put("exintro",null);
         params.put("explaintext",null);
