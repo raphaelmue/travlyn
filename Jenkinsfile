@@ -19,11 +19,11 @@ pipeline {
                         dir('java')
                         sh 'mvn clean install -DskipTests'
                     }
-                    post {
-                        always {
-                            // archiveArtifacts artifacts: '**/*.msi, **/*.deb, **/*.dmg, **/*.apk', fingerprint: true
-                        }
-                    }
+                    // post {
+                    //     always {
+                    //         archiveArtifacts artifacts: '**/*.msi, **/*.deb, **/*.dmg, **/*.apk', fingerprint: true
+                    //     }
+                    // }
                 }
                 stage('Android') {
                     steps {
