@@ -7,13 +7,12 @@ import org.travlyn.server.util.Pair;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Utility class for making requests on various actions of the wikimedia api.
+ *
  * @author Joshua Schulz
  * @since 1.0
  */
@@ -29,24 +28,25 @@ public class WikimediaRequest {
 
     /**
      * Gets the first paragraph of the corresponding wiki article and returns it after cleaning all HTML-tags.
+     *
      * @return Content of first paragraph as string.
      */
-    public String getIntro(){
-        Set<Pair<String,String>> params = new HashSet();
+    public String getIntro() {
+        HashSet<Pair<String, String>> params = new HashSet<>();
         String result;
         JsonObject formattedResult;
         APIRequest request;
 
         params.add(new Pair<>("action", "query"));
-        params.add(new Pair<>("prop","extracts"));
-        params.add(new Pair<>("exintro",null));
-        params.add(new Pair<>("explaintext",null));
-        params.add(new Pair<>("redirects","1"));
-        params.add(new Pair<>("format","json"));
-        params.add(new Pair<>("titles",serachterm));
+        params.add(new Pair<>("prop", "extracts"));
+        params.add(new Pair<>("exintro", null));
+        params.add(new Pair<>("explaintext", null));
+        params.add(new Pair<>("redirects", "1"));
+        params.add(new Pair<>("format", "json"));
+        params.add(new Pair<>("titles", serachterm));
         try {
-            request = new APIRequest(BASEAPI,params);
-        }catch (MalformedURLException ex){
+            request = new APIRequest(BASEAPI, params);
+        } catch (MalformedURLException ex) {
             //request could not be build due to a malformed URL
             return null;
         }
@@ -57,10 +57,10 @@ public class WikimediaRequest {
             return null;
         }
         formattedResult = gson.fromJson(result, JsonObject.class);
-        JsonObject innerContent= formattedResult.getAsJsonObject("query").getAsJsonObject("pages");
+        JsonObject innerContent = formattedResult.getAsJsonObject("query").getAsJsonObject("pages");
         String title = null;
-        for(Map.Entry<String, JsonElement> entry : innerContent.entrySet()){
-            title =  entry.getValue().getAsJsonObject().getAsJsonPrimitive("extract").toString();
+        for (Map.Entry<String, JsonElement> entry : innerContent.entrySet()) {
+            title = entry.getValue().getAsJsonObject().getAsJsonPrimitive("extract").toString();
         }
         return title;
     }
@@ -71,20 +71,20 @@ public class WikimediaRequest {
      *
      * @return URL to image
      */
-    public String getImage(){
-        Set<Pair<String,String>> params = new HashSet();
+    public String getImage() {
+        HashSet<Pair<String, String>> params = new HashSet<>();
         String result;
         String title = "";
         JsonObject formattedResult;
         APIRequest request;
 
         params.add(new Pair<>("action", "query"));
-        params.add(new Pair<>("prop","images"));
-        params.add(new Pair<>("format","json"));
-        params.add(new Pair<>("titles",serachterm));
+        params.add(new Pair<>("prop", "images"));
+        params.add(new Pair<>("format", "json"));
+        params.add(new Pair<>("titles", serachterm));
         try {
-            request = new APIRequest(BASEAPI,params);
-        }catch (MalformedURLException ex){
+            request = new APIRequest(BASEAPI, params);
+        } catch (MalformedURLException ex) {
             //request could not be build due to a malformed URL
             return null;
         }
@@ -95,19 +95,19 @@ public class WikimediaRequest {
             return null;
         }
         formattedResult = gson.fromJson(result, JsonObject.class);
-        JsonObject innerContent= formattedResult.getAsJsonObject("query").getAsJsonObject("pages");
-        for(Map.Entry<String, JsonElement> entry : innerContent.entrySet()){
-                title =  entry.getValue().getAsJsonObject().getAsJsonArray("images").get(0).getAsJsonObject().get("title").toString().split(":")[1];
+        JsonObject innerContent = formattedResult.getAsJsonObject("query").getAsJsonObject("pages");
+        for (Map.Entry<String, JsonElement> entry : innerContent.entrySet()) {
+            title = entry.getValue().getAsJsonObject().getAsJsonArray("images").get(0).getAsJsonObject().get("title").toString().split(":")[1];
         }
         params.clear();
         params.add(new Pair<>("action", "query"));
-        params.add(new Pair<>("prop","imageinfo"));
-        params.add(new Pair<>("iiprop","url"));
-        params.add(new Pair<>("format","json"));
-        params.add(new Pair<>("titles","Image:"+ title.replace(" ","_")));
+        params.add(new Pair<>("prop", "imageinfo"));
+        params.add(new Pair<>("iiprop", "url"));
+        params.add(new Pair<>("format", "json"));
+        params.add(new Pair<>("titles", "Image:" + title.replace(" ", "_")));
         try {
-            request = new APIRequest(BASEAPI,params);
-        }catch (MalformedURLException ex){
+            request = new APIRequest(BASEAPI, params);
+        } catch (MalformedURLException ex) {
             //request could not be build due to a malformed URL
             return null;
         }
@@ -117,9 +117,9 @@ public class WikimediaRequest {
             //request could not be made due to some network errors
             return null;
         }
-        innerContent = gson.fromJson(result,JsonObject.class).getAsJsonObject("query").getAsJsonObject("pages");
-        for(Map.Entry<String, JsonElement> entry : innerContent.entrySet()){
-            return entry.getValue().getAsJsonObject().getAsJsonArray("imageinfo").get(0).getAsJsonObject().get("url").toString().replace("\"","");
+        innerContent = gson.fromJson(result, JsonObject.class).getAsJsonObject("query").getAsJsonObject("pages");
+        for (Map.Entry<String, JsonElement> entry : innerContent.entrySet()) {
+            return entry.getValue().getAsJsonObject().getAsJsonArray("imageinfo").get(0).getAsJsonObject().get("url").toString().replace("\"", "");
         }
         return null;
     }

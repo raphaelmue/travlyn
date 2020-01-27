@@ -12,16 +12,19 @@ import java.util.Set;
 
 /**
  * Generic utility class to fetch data from API via GET request.
+ *
  * @author Joshua Schulz
  * @since 1.0
  */
 public class APIRequest {
     private final URL requestURL;
-    public APIRequest(String apiURL, Set<Pair<String,String>> parameters) throws MalformedURLException {
+
+    public APIRequest(String apiURL, Set<Pair<String, String>> parameters) throws MalformedURLException {
         String completeURL = apiURL + ParameterStringBuilder.getParamString(parameters);
         this.requestURL = new URL(completeURL);
     }
-    public APIRequest(String apiURL)throws Exception{
+
+    public APIRequest(String apiURL) throws Exception {
         this.requestURL = new URL(apiURL);
     }
 
