@@ -41,7 +41,7 @@ public class PersistenceConfiguration {
         Properties properties = new Properties();
         try {
             properties.load(getClass().getResourceAsStream("/application.properties"));
-            dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+            dataSource.setDriverClassName(properties.getProperty("travlyn.database.driver"));
             dataSource.setUrl("jdbc:" +
                     properties.getProperty("travlyn.database.engine") + "://" +
                     properties.getProperty("travlyn.database.host") + ":3306/" +
