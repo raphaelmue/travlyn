@@ -2,23 +2,21 @@ package org.travlyn.server.service;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.travlyn.server.TravlynServer;
-import org.travlyn.server.configuration.PersistenceConfiguration;
-import org.travlyn.server.configuration.TravlynServiceConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.travlyn.shared.model.api.User;
 import org.travlyn.shared.model.db.UserEntity;
 
 import javax.transaction.Transactional;
 
 @Tag("unit")
-@SpringBootTest(
-        classes = {TravlynServer.class, TravlynServiceConfiguration.class, PersistenceConfiguration.class},
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TravlynServiceTest {
 
     @Autowired
@@ -39,8 +37,16 @@ public class TravlynServiceTest {
 
         session.save(userEntity);
 
-        User userToAssert = service.checkCredentials("test@test.com", "password");
+        User userToAssert = service.checkCredentials("test@email.com", "password");
         Assertions.assertNotNull(userToAssert);
         Assertions.assertEquals("test@email.com", userToAssert.getEmail());
+
+        // wrong password
+        userToAssert = service.checkCredentials("test@email.com", "wrong");
+        Assertions.assertNull(userToAssert);
+
+        // wrong email
+        userToAssert = service.checkCredentials("test@wrong.com", "password");
+        Assertions.assertNull(userToAssert);
     }
 }

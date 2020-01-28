@@ -5,13 +5,12 @@ import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@SpringBootApplication(exclude = HibernateJpaAutoConfiguration.class)
+@SpringBootApplication(
+        exclude = {HibernateJpaAutoConfiguration.class},
+        scanBasePackages = {"io.swagger", "org.travlyn.server.service", "org.travlyn.server.api", "org.travlyn.server.configuration"})
 @EnableSwagger2
-@ComponentScan(basePackages =
-        {"io.swagger", "org.travlyn.server.service", "org.travlyn.server.api", "org.travlyn.server.configuration"})
 public class TravlynServer implements CommandLineRunner {
 
     @Override

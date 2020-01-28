@@ -44,12 +44,12 @@ pipeline {
             }
         }
 
-        stage('Unit Tests') {
+        stage('Tests') {
             parallel {
                 stage('Java') {
                     steps {
                         dir('java') {
-                            sh 'mvn test -P unit-tests'
+                            sh 'mvn test'
                         }
                     }
                 }
@@ -60,13 +60,6 @@ pipeline {
                             // sh './gradlew test'
                         }
                     }
-                }
-            }
-        }
-        stage('Integration Tests') {
-            steps {
-                dir('java') {
-                    sh 'mvn test -P integration-tests'
                 }
             }
         }
