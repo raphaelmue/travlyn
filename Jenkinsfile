@@ -16,8 +16,9 @@ pipeline {
             parallel {
                 stage('Java') {
                     steps {
-                        dir('java')
-                        sh 'mvn clean install -DskipTests'
+                        dir('java') {
+                            sh 'mvn clean install -DskipTests'
+                        }
                     }
                 }
                 stage('Android') {
