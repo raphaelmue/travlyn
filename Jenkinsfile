@@ -19,11 +19,6 @@ pipeline {
                         dir('java')
                         sh 'mvn clean install -DskipTests'
                     }
-                    post {
-                        always {
-                            // archiveArtifacts artifacts: '**/*.msi, **/*.deb, **/*.dmg, **/*.apk', fingerprint: true
-                        }
-                    }
                 }
                 stage('Android') {
                     steps {
@@ -76,28 +71,29 @@ pipeline {
             }
             steps {
                 dir('java') {
-                    // sh 'cp target/jacoco.exec org.travlyn.server/target/'
-                    // sh 'mvn dependency:copy-dependencies'
-                    // withSonarQubeEnv('SonarQubeServer') {
-                    //     script {
-                    //         if (env.CHANGE_ID) {
-                    //             sh "${scannerHome}/bin/sonar-scanner " +
-                    //                     "-Dsonar.pullrequest.base=master " +
-                    //                     "-Dsonar.pullrequest.key=${env.CHANGE_ID} " +
-                    //                     "-Dsonar.pullrequest.branch=${env.BRANCH_NAME} " +
-                    //                     "-Dsonar.pullrequest.provider=github " +
-                    //                     "-Dsonar.pullrequest.github.repository=raphaelmue/travlyn"
-                    //         } else {
-                    //             if (env.BRANCH_NAME != 'master') {
-                    //                 sh "${scannerHome}/bin/sonar-scanner " +
-                    //                         "-Dsonar.branch.name=${env.BRANCH_NAME} " +
-                    //                         "-Dsonar.branch.target=master"
-                    //             } else {
-                    //                 sh "${scannerHome}/bin/sonar-scanner"
-                    //             }
-                    //         }
-                    //     }
-                    // }
+                    sh 'cp target/jacoco.exec org.travlyn.server/target/'
+                    sh 'cp target/jacoco.exec org.travlyn.shared/target/'
+                    sh 'mvn dependency:copy-dependencies'
+                    withSonarQubeEnv('SonarQubeServer') {
+                        script {
+                            if (env.CHANGE_ID) {
+                                sh "${scannerHome}/bin/sonar-scanner " +
+                                        "-Dsonar.pullrequest.base=master " +
+                                        "-Dsonar.pullrequest.key=${env.CHANGE_ID} " +
+                                        "-Dsonar.pullrequest.branch=${env.BRANCH_NAME} " +
+                                        "-Dsonar.pullrequest.provider=github " +
+                                        "-Dsonar.pullrequest.github.repository=raphaelmue/travlyn"
+                            } else {
+                                if (env.BRANCH_NAME != 'master') {
+                                    sh "${scannerHome}/bin/sonar-scanner " +
+                                            "-Dsonar.branch.name=${env.BRANCH_NAME} " +
+                                            "-Dsonar.branch.target=master"
+                                } else {
+                                    sh "${scannerHome}/bin/sonar-scanner"
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
