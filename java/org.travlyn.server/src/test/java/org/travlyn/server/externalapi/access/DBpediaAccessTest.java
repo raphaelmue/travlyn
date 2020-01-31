@@ -3,8 +3,8 @@ package org.travlyn.server.apiAccess;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.Tag;
+import org.travlyn.server.externalapi.DBpediaCityRequest;
 import org.travlyn.shared.model.api.City;
-import org.travlyn.shared.model.db.CityEntity;
 
 @Tag("unit")
 public class DBpediaAccessTest {

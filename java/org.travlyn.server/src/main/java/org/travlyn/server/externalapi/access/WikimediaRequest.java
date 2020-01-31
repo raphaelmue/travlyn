@@ -1,4 +1,4 @@
-package org.travlyn.server.apiAccess;
+package org.travlyn.server.externalapi;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;

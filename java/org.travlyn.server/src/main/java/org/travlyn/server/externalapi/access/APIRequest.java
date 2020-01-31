@@ -1,4 +1,4 @@
-package org.travlyn.server.apiAccess;
+package org.travlyn.server.externalapi;
 
 import okhttp3.*;
 import org.travlyn.server.util.Pair;

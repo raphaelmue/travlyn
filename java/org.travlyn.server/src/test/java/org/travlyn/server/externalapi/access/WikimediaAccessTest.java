@@ -3,6 +3,7 @@ package org.travlyn.server.apiAccess;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.Tag;
+import org.travlyn.server.externalapi.WikimediaRequest;
 
 @Tag("unit")
 public class WikimediaAccessTest {

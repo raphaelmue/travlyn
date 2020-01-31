@@ -1,4 +1,4 @@
-package org.travlyn.server.apiAccess;
+package org.travlyn.server.externalapi;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -6,7 +6,6 @@ import org.travlyn.server.util.Pair;
 import org.travlyn.shared.model.api.City;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.Set;
 
