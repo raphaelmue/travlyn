@@ -1,18 +1,9 @@
 package org.travlyn.server.apiAccess;
 
-import okhttp3.Call;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import org.jetbrains.annotations.NotNull;
+import okhttp3.*;
 import org.travlyn.server.util.Pair;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -24,10 +15,13 @@ import java.util.Set;
  * @since 1.0
  */
 public class APIRequest {
+    public static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
+
     private final String requestURL;
     private final OkHttpClient client;
+    private String postBody;
 
-    public APIRequest(String apiURL, Set<Pair<String, String>> parameters) throws MalformedURLException {
+    public APIRequest(String apiURL, Set<Pair<String, String>> parameters) {
         HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(apiURL)).newBuilder();
         for (Map.Entry<String, String> entry : parameters) {
             urlBuilder.addQueryParameter(entry.getKey(),entry.getValue());
@@ -36,13 +30,28 @@ public class APIRequest {
         this.requestURL = urlBuilder.build().toString();
     }
 
+    public APIRequest(String apiURL, Set<Pair<String, String>> parameters, String postBody){
+        this(apiURL,parameters);
+        this.postBody = postBody;
+    }
+
     public APIRequest(String apiURL) throws Exception {
         this.requestURL = apiURL;
         client = new OkHttpClient();
     }
 
-    public String performAPICall() throws IOException {
+    public String performAPICallGET() throws IOException {
         Request request = new Request.Builder().header("Accept","application/json").url(requestURL).build();
         return client.newCall(request).execute().body().string();
+    }
+
+    public String performAPICallPOST() throws IOException {
+        Request request = new Request.Builder()
+                .url(requestURL)
+                .post(RequestBody.create(postBody, MEDIA_TYPE_JSON))
+                .build();
+
+        Response response = client.newCall(request).execute();
+        return response.body().string();
     }
 }

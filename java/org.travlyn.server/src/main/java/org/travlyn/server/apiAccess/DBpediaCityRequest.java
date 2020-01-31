@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.travlyn.server.util.Pair;
 import org.travlyn.shared.model.api.City;
-import org.travlyn.shared.model.db.CityEntity;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -57,7 +56,7 @@ public class DBpediaCityRequest implements DBpediaRequest<City> {
             return null;
         }
         try {
-            result = request.performAPICall();
+            result = request.performAPICallGET();
         } catch (IOException e) {
             //request could not be made due to some network errors
             return null;

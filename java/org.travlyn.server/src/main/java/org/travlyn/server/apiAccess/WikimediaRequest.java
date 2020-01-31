@@ -51,7 +51,7 @@ public class WikimediaRequest {
             return null;
         }
         try {
-            result = request.performAPICall();
+            result = request.performAPICallGET();
         } catch (IOException e) {
             //request could not be made due to some network errors
             return null;
@@ -89,7 +89,7 @@ public class WikimediaRequest {
             return null;
         }
         try {
-            result = request.performAPICall();
+            result = request.performAPICallGET();
         } catch (IOException e) {
             //request could not be made due to some network errors
             return null;
@@ -113,7 +113,7 @@ public class WikimediaRequest {
             return null;
         }
         try {
-            result = request.performAPICall();
+            result = request.performAPICallGET();
         } catch (IOException e) {
             //request could not be made due to some network errors
             return null;
