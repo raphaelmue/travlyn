@@ -1,5 +1,10 @@
 package org.travlyn.server.apiAccess;
 
+import okhttp3.Call;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import org.jetbrains.annotations.NotNull;
 import org.travlyn.server.util.Pair;
 
 import java.io.BufferedReader;
@@ -8,6 +13,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -17,31 +24,25 @@ import java.util.Set;
  * @since 1.0
  */
 public class APIRequest {
-    private final URL requestURL;
+    private final String requestURL;
+    private final OkHttpClient client;
 
     public APIRequest(String apiURL, Set<Pair<String, String>> parameters) throws MalformedURLException {
-        String completeURL = apiURL + ParameterStringBuilder.getParamString(parameters);
-        this.requestURL = new URL(completeURL);
+        HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(apiURL)).newBuilder();
+        for (Map.Entry<String, String> entry : parameters) {
+            urlBuilder.addQueryParameter(entry.getKey(),entry.getValue());
+        }
+        client = new OkHttpClient();
+        this.requestURL = urlBuilder.build().toString();
     }
 
     public APIRequest(String apiURL) throws Exception {
-        this.requestURL = new URL(apiURL);
+        this.requestURL = apiURL;
+        client = new OkHttpClient();
     }
 
     public String performAPICall() throws IOException {
-        HttpURLConnection con = (HttpURLConnection) requestURL.openConnection();
-        con.setRequestMethod("GET");
-        int responseCode = con.getResponseCode();
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuilder content = new StringBuilder();
-        while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
-        }
-        in.close();
-        con.disconnect();
-
-        return content.toString();
+        Request request = new Request.Builder().header("Accept","application/json").url(requestURL).build();
+        return client.newCall(request).execute().body().string();
     }
 }

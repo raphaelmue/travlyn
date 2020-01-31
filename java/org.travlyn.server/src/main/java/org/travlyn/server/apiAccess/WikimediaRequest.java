@@ -17,7 +17,7 @@ import java.util.Map;
  * @since 1.0
  */
 public class WikimediaRequest {
-    private static final String BASEAPI = "https://en.wikipedia.org/w/api.php";
+    private static final String BASE_API = "https://en.wikipedia.org/w/api.php";
 
     private String serachterm;
     private Gson gson = new Gson();
@@ -45,7 +45,7 @@ public class WikimediaRequest {
         params.add(new Pair<>("format", "json"));
         params.add(new Pair<>("titles", serachterm));
         try {
-            request = new APIRequest(BASEAPI, params);
+            request = new APIRequest(BASE_API, params);
         } catch (MalformedURLException ex) {
             //request could not be build due to a malformed URL
             return null;
@@ -83,7 +83,7 @@ public class WikimediaRequest {
         params.add(new Pair<>("format", "json"));
         params.add(new Pair<>("titles", serachterm));
         try {
-            request = new APIRequest(BASEAPI, params);
+            request = new APIRequest(BASE_API, params);
         } catch (MalformedURLException ex) {
             //request could not be build due to a malformed URL
             return null;
@@ -98,6 +98,7 @@ public class WikimediaRequest {
         JsonObject innerContent = formattedResult.getAsJsonObject("query").getAsJsonObject("pages");
         for (Map.Entry<String, JsonElement> entry : innerContent.entrySet()) {
             title = entry.getValue().getAsJsonObject().getAsJsonArray("images").get(0).getAsJsonObject().get("title").toString().split(":")[1];
+            title = title.substring(0, title.length()-1);
         }
         params.clear();
         params.add(new Pair<>("action", "query"));
@@ -106,7 +107,7 @@ public class WikimediaRequest {
         params.add(new Pair<>("format", "json"));
         params.add(new Pair<>("titles", "Image:" + title.replace(" ", "_")));
         try {
-            request = new APIRequest(BASEAPI, params);
+            request = new APIRequest(BASE_API, params);
         } catch (MalformedURLException ex) {
             //request could not be build due to a malformed URL
             return null;

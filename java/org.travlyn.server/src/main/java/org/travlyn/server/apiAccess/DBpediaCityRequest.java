@@ -3,6 +3,7 @@ package org.travlyn.server.apiAccess;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.travlyn.server.util.Pair;
+import org.travlyn.shared.model.api.City;
 import org.travlyn.shared.model.db.CityEntity;
 
 import java.io.IOException;
@@ -15,8 +16,8 @@ import java.util.Set;
  *
  * @author Joshua Schulz
  */
-public class DBpediaCityRequest implements DBpediaRequest<CityEntity> {
-    private static final String BASEAPI = "http://vmdbpedia.informatik.uni-leipzig.de:8080/api/1.0.0/values";
+public class DBpediaCityRequest implements DBpediaRequest<City> {
+    private static final String BASE_API = "http://vmdbpedia.informatik.uni-leipzig.de:8080/api/1.0.0/values";
 
     private String serachterm;
     private Gson gson = new Gson();
@@ -35,7 +36,7 @@ public class DBpediaCityRequest implements DBpediaRequest<CityEntity> {
      *
      * @return Filled CityEntity with the fetched data.
      */
-    public CityEntity getBasicInfo() {
+    public City getResult() {
         Set<Pair<String, String>> params = new HashSet<>();
         String result;
         APIRequest request;
@@ -50,7 +51,7 @@ public class DBpediaCityRequest implements DBpediaRequest<CityEntity> {
         params.add(new Pair<>("property", "dbo:abstract"));
         params.add(new Pair<>("property", "dbo:thumbnail"));
         try {
-            request = new APIRequest(BASEAPI, params);
+            request = new APIRequest(BASE_API, params);
         } catch (MalformedURLException ex) {
             //request could not be build due to a malformed URL
             return null;
@@ -65,7 +66,7 @@ public class DBpediaCityRequest implements DBpediaRequest<CityEntity> {
                 getAsJsonArray("bindings").get(0).getAsJsonObject();
         String description = englishContent.getAsJsonObject("dboabstract").getAsJsonPrimitive("value").getAsString();
         String imageURL = englishContent.getAsJsonObject("dbothumbnail").getAsJsonPrimitive("value").getAsString();
-        CityEntity returnValue = new CityEntity();
+        City returnValue = new City();
         returnValue.setDescription(description);
         returnValue.setImage(imageURL);
         returnValue.setName(serachterm);
