@@ -49,12 +49,8 @@ public class DBpediaCityRequest implements DBpediaRequest<City> {
         params.add(new Pair<>("key", "1234"));
         params.add(new Pair<>("property", "dbo:abstract"));
         params.add(new Pair<>("property", "dbo:thumbnail"));
-        try {
-            request = new APIRequest(BASE_API, params);
-        } catch (MalformedURLException ex) {
-            //request could not be build due to a malformed URL
-            return null;
-        }
+        request = new APIRequest(BASE_API, params);
+
         try {
             result = request.performAPICallGET();
         } catch (IOException e) {
