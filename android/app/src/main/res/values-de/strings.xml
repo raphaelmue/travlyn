@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Travlyn</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="invalid_credentials">Deine Anmeldedaten sind inkorrekt.</string>
+    <string name="menu_gallery">Gallerie</string>
+    <string name="menu_home">Start</string>
+    <string name="menu_send">Senden</string>
+    <string name="menu_share">Teilen</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Tools</string>
+    <string name="navigation_drawer_close">Navigation schließen</string>
+    <string name="navigation_drawer_open">Navigation öffnen</string>
+    <string name="sign_in">Anmelden</string>
+    <string name="email">Email Addresse</string>
+    <string name="password">Passwort</string>
+</resources>
