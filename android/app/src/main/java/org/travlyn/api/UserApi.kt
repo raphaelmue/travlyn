@@ -11,9 +11,9 @@
  */
 package org.travlyn.api
 
+import org.travlyn.api.model.Trip
+import org.travlyn.api.model.User
 import org.travlyn.infrastructure.*
-import org.travlyn.shared.model.api.Trip
-import org.travlyn.shared.model.api.User
 
 class UserApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/travlyn/1.0.0") :
     ApiClient(basePath) {
@@ -45,7 +45,6 @@ class UserApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
             ResponseType.ServerError -> throw ServerException(
                 (response as ServerError<*>).message ?: "Server error"
             )
-            else -> throw kotlin.IllegalStateException("Undefined ResponseType.")
         }
     }
 
@@ -59,7 +58,7 @@ class UserApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
     @Suppress("UNCHECKED_CAST")
     fun loginUser(email: String, password: String): User {
         val localVariableQuery: MultiValueMap =
-            mapOf("email" to listOf("$email"), "password" to listOf("$password"))
+            mapOf("email" to listOf(email), "password" to listOf(password))
         val localVariableConfig = RequestConfig(
             RequestMethod.GET,
             "/user", query = localVariableQuery
@@ -78,7 +77,6 @@ class UserApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
             ResponseType.ServerError -> throw ServerException(
                 (response as ServerError<*>).message ?: "Server error"
             )
-            else -> throw kotlin.IllegalStateException("Undefined ResponseType.")
         }
     }
 
@@ -108,7 +106,6 @@ class UserApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
             ResponseType.ServerError -> throw ServerException(
                 (response as ServerError<*>).message ?: "Server error"
             )
-            else -> throw kotlin.IllegalStateException("Undefined ResponseType.")
         }
     }
 
@@ -123,9 +120,9 @@ class UserApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
     @Suppress("UNCHECKED_CAST")
     fun registerUser(email: String, name: String, password: String): User {
         val localVariableQuery: MultiValueMap = mapOf(
-            "email" to listOf("$email"),
-            "Name" to listOf("$name"),
-            "password" to listOf("$password")
+            "email" to listOf(email),
+            "Name" to listOf(name),
+            "password" to listOf(password)
         )
         val localVariableConfig = RequestConfig(
             RequestMethod.PUT,
@@ -145,7 +142,6 @@ class UserApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
             ResponseType.ServerError -> throw ServerException(
                 (response as ServerError<*>).message ?: "Server error"
             )
-            else -> throw kotlin.IllegalStateException("Undefined ResponseType.")
         }
     }
 
@@ -175,7 +171,6 @@ class UserApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
             ResponseType.ServerError -> throw ServerException(
                 (response as ServerError<*>).message ?: "Server error"
             )
-            else -> throw kotlin.IllegalStateException("Undefined ResponseType.")
         }
     }
 

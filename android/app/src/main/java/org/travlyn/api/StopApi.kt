@@ -12,9 +12,9 @@
 package org.travlyn.api
 
 import android.media.Rating
+import org.travlyn.api.model.Stop
 
 import org.travlyn.infrastructure.*
-import org.travlyn.shared.model.api.Stop
 
 class StopApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/travlyn/1.0.0") :
     ApiClient(basePath) {
@@ -46,7 +46,6 @@ class StopApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
             ResponseType.ServerError -> throw ServerException(
                 (response as ServerError<*>).message ?: "Server error"
             )
-            else -> throw kotlin.IllegalStateException("Undefined ResponseType.")
         }
     }
 
@@ -77,7 +76,6 @@ class StopApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
             ResponseType.ServerError -> throw ServerException(
                 (response as ServerError<*>).message ?: "Server error"
             )
-            else -> throw kotlin.IllegalStateException("Undefined ResponseType.")
         }
     }
 

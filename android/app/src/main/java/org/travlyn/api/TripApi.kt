@@ -11,9 +11,9 @@
  */
 package org.travlyn.api
 
+import org.travlyn.api.model.Rating
+import org.travlyn.api.model.Trip
 import org.travlyn.infrastructure.*
-import org.travlyn.shared.model.api.Rating
-import org.travlyn.shared.model.api.Trip
 
 class TripApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/travlyn/1.0.0") :
     ApiClient(basePath) {
@@ -45,7 +45,6 @@ class TripApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
             ResponseType.ServerError -> throw ServerException(
                 (response as ServerError<*>).message ?: "Server error"
             )
-            else -> throw kotlin.IllegalStateException("Undefined ResponseType.")
         }
     }
 
@@ -76,7 +75,6 @@ class TripApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
             ResponseType.ServerError -> throw ServerException(
                 (response as ServerError<*>).message ?: "Server error"
             )
-            else -> throw kotlin.IllegalStateException("Undefined ResponseType.")
         }
     }
 
@@ -107,7 +105,6 @@ class TripApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
             ResponseType.ServerError -> throw ServerException(
                 (response as ServerError<*>).message ?: "Server error"
             )
-            else -> throw kotlin.IllegalStateException("Undefined ResponseType.")
         }
     }
 
@@ -138,7 +135,6 @@ class TripApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
             ResponseType.ServerError -> throw ServerException(
                 (response as ServerError<*>).message ?: "Server error"
             )
-            else -> throw kotlin.IllegalStateException("Undefined ResponseType.")
         }
     }
 
@@ -169,7 +165,6 @@ class TripApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
             ResponseType.ServerError -> throw ServerException(
                 (response as ServerError<*>).message ?: "Server error"
             )
-            else -> throw kotlin.IllegalStateException("Undefined ResponseType.")
         }
     }
 
@@ -199,7 +194,6 @@ class TripApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
             ResponseType.ServerError -> throw ServerException(
                 (response as ServerError<*>).message ?: "Server error"
             )
-            else -> throw kotlin.IllegalStateException("Undefined ResponseType.")
         }
     }
 
