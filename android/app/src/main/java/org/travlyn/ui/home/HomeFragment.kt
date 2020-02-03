@@ -1,5 +1,6 @@
 package org.travlyn.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import org.travlyn.R
+import org.travlyn.ui.login.LoginActivity
 
 class HomeFragment : Fragment() {
 
@@ -26,6 +28,12 @@ class HomeFragment : Fragment() {
         homeViewModel.text.observe(this, Observer {
             textView.text = it
         })
+
+        textView.setOnClickListener {
+            val intent: Intent = Intent(context, LoginActivity::class.java)
+            startActivity(intent)
+        }
+
         return root
     }
 }

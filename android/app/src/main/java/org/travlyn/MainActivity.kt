@@ -3,7 +3,6 @@ package org.travlyn
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -28,11 +27,6 @@ class MainActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
@@ -47,11 +41,6 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        val etEmail: TextView = findViewById(R.id.nav_user_email)
-        etEmail.setOnClickListener(View.OnClickListener { view ->
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
