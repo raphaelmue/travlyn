@@ -15,7 +15,7 @@ import org.travlyn.api.model.Trip
 import org.travlyn.api.model.User
 import org.travlyn.infrastructure.*
 
-class UserApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/travlyn/1.0.0") :
+class UserApi(basePath: String = "http://localhost:3000/travlyn/travlyn/1.0.0") :
     ApiClient(basePath) {
 
     /**
