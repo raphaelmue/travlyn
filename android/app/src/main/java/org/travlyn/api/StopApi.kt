@@ -26,7 +26,7 @@ class StopApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
      * @param rating Rating to be created
      * @return void
      */
-    fun rateStop(stopId: Long, rating: Rating): Unit {
+    suspend fun rateStop(stopId: Long, rating: Rating): Unit {
         val localVariableQuery: MultiValueMap = mapOf("rating" to listOf("$rating"))
         val localVariableConfig = RequestConfig(
             RequestMethod.POST,
@@ -56,7 +56,7 @@ class StopApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
      * @return Stop
      */
     @Suppress("UNCHECKED_CAST")
-    fun stopStopIdGet(stopId: Long): Stop {
+    suspend fun stopStopIdGet(stopId: Long): Stop {
 
         val localVariableConfig = RequestConfig(
             RequestMethod.GET,

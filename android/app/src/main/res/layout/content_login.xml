@@ -14,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="133dp"
         android:layout_marginTop="16dp"
+        android:contentDescription="@string/app_name"
         android:scaleType="fitCenter"
         android:src="@drawable/travlyn_lettering"
         app:layout_constraintEnd_toEndOf="parent"
@@ -28,12 +29,11 @@
         android:ems="12"
         app:layout_constraintTop_toBottomOf="@+id/login_logo">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_email"
             style="@style/Widget.AppCompat.EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorPrimary"
             android:focusableInTouchMode="true"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
@@ -50,7 +50,7 @@
         android:ems="10"
         app:layout_constraintTop_toBottomOf="@id/layout_login_email">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_password"
             style="@style/Widget.AppCompat.EditText"
             android:layout_width="match_parent"
@@ -70,6 +70,19 @@
         android:text="@string/sign_in"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_login_password" />
+
+    <ProgressBar
+        android:id="@+id/pb_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:progressTint="@color/colorPrimary"
+        android:scaleX="0"
+        android:scaleY="0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_login_password" />
 
 

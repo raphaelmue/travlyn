@@ -25,7 +25,7 @@ class TripApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
      * @return kotlin.Array<Trip>
      */
     @Suppress("UNCHECKED_CAST")
-    fun findTrip(searchQuery: String): Array<Trip> {
+    suspend fun findTrip(searchQuery: String): Array<Trip> {
         val localVariableQuery: MultiValueMap = mapOf("searchQuery" to listOf("$searchQuery"))
         val localVariableConfig = RequestConfig(
             RequestMethod.GET,
@@ -55,7 +55,7 @@ class TripApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
      * @return Trip
      */
     @Suppress("UNCHECKED_CAST")
-    fun generateTrip(userId: Long): Trip {
+    suspend fun generateTrip(userId: Long): Trip {
         val localVariableQuery: MultiValueMap = mapOf("userId" to listOf("$userId"))
         val localVariableConfig = RequestConfig(
             RequestMethod.PUT,
@@ -85,7 +85,7 @@ class TripApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
      * @return Trip
      */
     @Suppress("UNCHECKED_CAST")
-    fun getTripByID(tripId: Long): Trip {
+    suspend fun getTripByID(tripId: Long): Trip {
 
         val localVariableConfig = RequestConfig(
             RequestMethod.GET,
@@ -115,7 +115,7 @@ class TripApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
      * @return kotlin.Array<Trip>
      */
     @Suppress("UNCHECKED_CAST")
-    fun getTripsByUserId(userId: Long): Array<Trip> {
+    suspend fun getTripsByUserId(userId: Long): Array<Trip> {
 
         val localVariableConfig = RequestConfig(
             RequestMethod.GET,
@@ -145,7 +145,7 @@ class TripApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
      * @param rating Rating to be created
      * @return void
      */
-    fun rateTrip(tripId: Long, rating: Rating): Unit {
+    suspend fun rateTrip(tripId: Long, rating: Rating): Unit {
         val localVariableQuery: MultiValueMap = mapOf("rating" to listOf("$rating"))
         val localVariableConfig = RequestConfig(
             RequestMethod.POST,
@@ -174,7 +174,7 @@ class TripApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/trav
      * @param trip Updated trip
      * @return void
      */
-    fun updateTrip(trip: Trip): Unit {
+    suspend fun updateTrip(trip: Trip): Unit {
         val localVariableQuery: MultiValueMap = mapOf("trip" to listOf("$trip"))
         val localVariableConfig = RequestConfig(
             RequestMethod.POST,

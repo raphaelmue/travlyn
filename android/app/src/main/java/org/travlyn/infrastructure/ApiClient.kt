@@ -3,6 +3,7 @@ package org.travlyn.infrastructure
 import okhttp3.*
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import ru.gildor.coroutines.okhttp.await
 import java.io.File
 
 open class ApiClient(val baseUrl: String) {
@@ -76,7 +77,7 @@ open class ApiClient(val baseUrl: String) {
         }
     }
 
-    protected inline fun <reified T : Any?> request(
+    protected suspend inline fun <reified T : Any?> request(
         requestConfig: RequestConfig,
         body: Any? = null
     ): ApiInfrastructureResponse<T?> {
@@ -103,7 +104,6 @@ open class ApiClient(val baseUrl: String) {
             throw kotlin.IllegalStateException("Missing Accept header. This is required.")
         }
 
-        // TODO: support multiple contentType,accept options here.
         val contentType = (headers[ContentType] as String).substringBefore(";").toLowerCase()
         val accept = (headers[Accept] as String).substringBefore(";").toLowerCase()
 
@@ -120,7 +120,7 @@ open class ApiClient(val baseUrl: String) {
         headers.forEach { header -> request = request.addHeader(header.key, header.value) }
 
         val realRequest = request.build()
-        val response = client.newCall(realRequest).execute()
+        val response = client.newCall(realRequest).await()
 
         // TODO: handle specific mapping types. e.g. Map<int, Class<?>>
         when {

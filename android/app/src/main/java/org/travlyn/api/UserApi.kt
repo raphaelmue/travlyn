@@ -15,7 +15,7 @@ import org.travlyn.api.model.Trip
 import org.travlyn.api.model.User
 import org.travlyn.infrastructure.*
 
-class UserApi(basePath: String = "http://localhost:3000/travlyn/travlyn/1.0.0") :
+class UserApi(basePath: String = "http://10.178.114.189:3000/travlyn/travlyn/1.0.0") :
     ApiClient(basePath) {
 
     /**
@@ -25,7 +25,7 @@ class UserApi(basePath: String = "http://localhost:3000/travlyn/travlyn/1.0.0") 
      * @return kotlin.Array<Trip>
      */
     @Suppress("UNCHECKED_CAST")
-    fun getTripsByUserId(userId: Long): Array<Trip> {
+    suspend fun getTripsByUserId(userId: Long): Array<Trip> {
 
         val localVariableConfig = RequestConfig(
             RequestMethod.GET,
@@ -56,7 +56,7 @@ class UserApi(basePath: String = "http://localhost:3000/travlyn/travlyn/1.0.0") 
      * @return User
      */
     @Suppress("UNCHECKED_CAST")
-    fun loginUser(email: String, password: String): User {
+    suspend fun loginUser(email: String, password: String): User {
         val localVariableQuery: MultiValueMap =
             mapOf("email" to listOf(email), "password" to listOf(password))
         val localVariableConfig = RequestConfig(
@@ -67,6 +67,7 @@ class UserApi(basePath: String = "http://localhost:3000/travlyn/travlyn/1.0.0") 
             localVariableConfig
         )
 
+        println(response)
         return when (response.responseType) {
             ResponseType.Success -> (response as Success<*>).data as User
             ResponseType.Informational -> TODO()
@@ -86,7 +87,7 @@ class UserApi(basePath: String = "http://localhost:3000/travlyn/travlyn/1.0.0") 
      * @param user The user to logout
      * @return void
      */
-    fun logoutUser(user: User): Unit {
+    suspend fun logoutUser(user: User): Unit {
         val localVariableQuery: MultiValueMap = mapOf("user" to listOf("$user"))
         val localVariableConfig = RequestConfig(
             RequestMethod.DELETE,
@@ -118,7 +119,7 @@ class UserApi(basePath: String = "http://localhost:3000/travlyn/travlyn/1.0.0") 
      * @return User
      */
     @Suppress("UNCHECKED_CAST")
-    fun registerUser(email: String, name: String, password: String): User {
+    suspend fun registerUser(email: String, name: String, password: String): User {
         val localVariableQuery: MultiValueMap = mapOf(
             "email" to listOf(email),
             "Name" to listOf(name),
@@ -151,7 +152,7 @@ class UserApi(basePath: String = "http://localhost:3000/travlyn/travlyn/1.0.0") 
      * @param user Updated user object
      * @return void
      */
-    fun updateUser(user: User): Unit {
+    suspend fun updateUser(user: User): Unit {
         val localVariableQuery: MultiValueMap = mapOf("user" to listOf("$user"))
         val localVariableConfig = RequestConfig(
             RequestMethod.POST,

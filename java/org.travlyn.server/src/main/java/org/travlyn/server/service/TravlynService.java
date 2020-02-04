@@ -45,10 +45,12 @@ public class TravlynService {
             user = session.createQuery("from UserEntity where email = :email", UserEntity.class)
                     .setParameter("email", email)
                     .getSingleResult();
-            String hashedPassword = Hash.create(password, user.getSalt());
-            if (hashedPassword.equals(user.getPassword())) {
-                logger.info("Credentials of user {} (id: {}) are approved.", user.getName(), user.getId());
-                return user.toDataTransferObject();
+            if (user != null) {
+                String hashedPassword = Hash.create(password, user.getSalt());
+                if (hashedPassword.equals(user.getPassword())) {
+                    logger.info("Credentials of user {} (id: {}) are approved.", user.getName(), user.getId());
+                    return user.toDataTransferObject();
+                }
             }
         } catch (NoResultException ignored) {
         }
