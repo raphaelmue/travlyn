@@ -87,7 +87,7 @@ class UserApi(basePath: String = "http://10.178.114.189:3000/travlyn/travlyn/1.0
      * @param user The user to logout
      * @return void
      */
-    suspend fun logoutUser(user: User): Unit {
+    suspend fun logoutUser(user: User) {
         val localVariableQuery: MultiValueMap = mapOf("user" to listOf("$user"))
         val localVariableConfig = RequestConfig(
             RequestMethod.DELETE,

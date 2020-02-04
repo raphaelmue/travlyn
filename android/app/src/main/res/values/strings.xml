@@ -14,4 +14,8 @@
     <string name="invalid_credentials">Your credentials are invalid.</string>
     <string name="email">Email Address</string>
     <string name="password">Password</string>
+    <string name="welcome">Welcome, %1$s!</string>
+    <string name="logout">Logout</string>
+    <string name="successfully_logged_out">You have successfully logged out.</string>
+    <string name="undo">Undo</string>
 </resources>

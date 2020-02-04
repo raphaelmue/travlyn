@@ -1,7 +1,10 @@
 package org.travlyn
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -11,10 +14,31 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import org.travlyn.api.UserApi
+import org.travlyn.api.model.User
+import org.travlyn.local.LocalStorage
+import org.travlyn.ui.login.LoginActivity
+import kotlin.coroutines.CoroutineContext
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(), CoroutineScope {
+    val tag: String = "MainActivity"
+
+    private var job: Job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
+    var api: UserApi = UserApi()
 
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private var user: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,16 +60,68 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        user = LocalStorage(this).readObject<User>("user")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
+
+        // show sign in when user is not signed in and hide otherwise
+        menu.findItem(R.id.menu_sign_in).isVisible = (user == null)
+        // show logout when user is logged in and hide otherwise
+        menu.findItem(R.id.menu_logout).isVisible = (user != null)
+
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            R.id.menu_sign_in -> {
+                openLoginActivity()
+                true
+            }
+            R.id.menu_logout -> {
+                handleLogout()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    private fun openLoginActivity() {
+        if (user == null) {
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
+    }
+
+    private fun handleLogout() {
+        val context = this
+        val snackBar = Snackbar.make(
+            window.decorView,
+            getString(R.string.successfully_logged_out),
+            Snackbar.LENGTH_LONG
+        ).setAction(getString(R.string.undo)) {}
+            .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                    super.onDismissed(transientBottomBar, event)
+
+                    Log.v(tag, "Logging user out")
+                    LocalStorage(context).deleteObject("user")
+                    launch {
+                        handleLogoutRequest()
+                    }
+                }
+            })
+        snackBar.show()
+    }
+
+    private suspend fun handleLogoutRequest() {
+        // TODO needs to be implemented on server side
+        // api.logoutUser(this.user!!)
     }
 }

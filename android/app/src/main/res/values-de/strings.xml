@@ -14,4 +14,8 @@
     <string name="sign_in">Anmelden</string>
     <string name="email">Email Addresse</string>
     <string name="password">Passwort</string>
+    <string name="welcome">Willkommen, %1$s!</string>
+    <string name="logout">Abmelden</string>
+    <string name="successfully_logged_out">Du hast dich erfolgreich ausgeloggt.</string>
+    <string name="undo">Rückgängig</string>
 </resources>

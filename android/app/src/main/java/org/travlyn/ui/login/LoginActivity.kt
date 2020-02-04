@@ -1,24 +1,26 @@
 package org.travlyn.ui.login
 
 import android.os.Bundle
+import android.util.Log
 import android.view.animation.AnticipateInterpolator
-import android.view.animation.BounceInterpolator
 import android.view.animation.Interpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.*
 import org.travlyn.R
 import org.travlyn.api.UserApi
 import org.travlyn.api.model.User
+import org.travlyn.local.LocalStorage
 import kotlin.coroutines.CoroutineContext
 import kotlin.math.abs
 
 
 class LoginActivity : AppCompatActivity(), CoroutineScope {
+    private val tag: String = "LoginActivity"
+
     private var job: Job = Job()
 
     override val coroutineContext: CoroutineContext
@@ -26,7 +28,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
 
     private val animationTime: Long = 500
 
-    lateinit var api: UserApi
+    var api: UserApi = UserApi()
 
     private lateinit var etEmail: TextInputEditText
     private lateinit var etPassword: TextInputEditText
@@ -37,28 +39,35 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        api = UserApi()
-
         etEmail = findViewById(R.id.et_email)
         etPassword = findViewById(R.id.et_password)
         btnSignIn = findViewById(R.id.btn_sign_in)
         progressIndicator = findViewById(R.id.pb_login)
 
+        val context = this
         btnSignIn.setOnClickListener {
-            toggleProgressIndicator()
-            launch {
-                val user = handleLogin()
-                if (user != null) {
-                    println("login user in ")
-                } else {
-                    println("wrong credentials")
-                }
+            handleLogin(context)
+        }
+    }
+
+    private fun handleLogin(context: AppCompatActivity) {
+        Log.v(tag, "Checking credentials...")
+        toggleProgressIndicator()
+        launch {
+            val user: User? = handleLoginRequest()
+            if (user != null) {
+                Log.v(tag, "Credentials are approved. User [${user.id}] is logged into the system.")
+                LocalStorage(context).writeObject("user", user)
+                toggleProgressIndicator()
+                context.finish()
+            } else {
+                Log.v(tag, "Credentials are invalid.")
                 toggleProgressIndicator()
             }
         }
     }
 
-    private suspend fun handleLogin(): User {
+    private suspend fun handleLoginRequest(): User {
         val user: User = api.loginUser(etEmail.text.toString(), etPassword.text.toString())
         delay(2000)
         return user
