@@ -1,12 +1,12 @@
-package org.travlyn.server.externalapi;
+package org.travlyn.server.externalapi.access;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.travlyn.server.externalapi.APIRequest;
 import org.travlyn.server.util.Pair;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -44,12 +44,7 @@ public class WikimediaRequest {
         params.add(new Pair<>("redirects", "1"));
         params.add(new Pair<>("format", "json"));
         params.add(new Pair<>("titles", serachterm));
-        try {
-            request = new APIRequest(BASE_API, params);
-        } catch (MalformedURLException ex) {
-            //request could not be build due to a malformed URL
-            return null;
-        }
+        request = new APIRequest(BASE_API, params);
         try {
             result = request.performAPICallGET();
         } catch (IOException e) {
@@ -82,12 +77,7 @@ public class WikimediaRequest {
         params.add(new Pair<>("prop", "images"));
         params.add(new Pair<>("format", "json"));
         params.add(new Pair<>("titles", serachterm));
-        try {
-            request = new APIRequest(BASE_API, params);
-        } catch (MalformedURLException ex) {
-            //request could not be build due to a malformed URL
-            return null;
-        }
+        request = new APIRequest(BASE_API, params);
         try {
             result = request.performAPICallGET();
         } catch (IOException e) {
@@ -98,7 +88,7 @@ public class WikimediaRequest {
         JsonObject innerContent = formattedResult.getAsJsonObject("query").getAsJsonObject("pages");
         for (Map.Entry<String, JsonElement> entry : innerContent.entrySet()) {
             title = entry.getValue().getAsJsonObject().getAsJsonArray("images").get(0).getAsJsonObject().get("title").toString().split(":")[1];
-            title = title.substring(0, title.length()-1);
+            title = title.substring(0, title.length() - 1);
         }
         params.clear();
         params.add(new Pair<>("action", "query"));
@@ -106,12 +96,7 @@ public class WikimediaRequest {
         params.add(new Pair<>("iiprop", "url"));
         params.add(new Pair<>("format", "json"));
         params.add(new Pair<>("titles", "Image:" + title.replace(" ", "_")));
-        try {
-            request = new APIRequest(BASE_API, params);
-        } catch (MalformedURLException ex) {
-            //request could not be build due to a malformed URL
-            return null;
-        }
+        request = new APIRequest(BASE_API, params);
         try {
             result = request.performAPICallGET();
         } catch (IOException e) {
