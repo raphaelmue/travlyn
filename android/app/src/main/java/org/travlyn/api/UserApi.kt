@@ -15,7 +15,7 @@ import org.travlyn.api.model.Trip
 import org.travlyn.api.model.User
 import org.travlyn.infrastructure.*
 
-class UserApi(basePath: String = "http://10.178.114.189:3000/travlyn/travlyn/1.0.0") :
+class UserApi(basePath: String = "https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/") :
     ApiClient(basePath) {
 
     /**

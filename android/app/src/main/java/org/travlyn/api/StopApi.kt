@@ -16,7 +16,7 @@ import org.travlyn.api.model.Stop
 
 import org.travlyn.infrastructure.*
 
-class StopApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/travlyn/1.0.0") :
+class StopApi(basePath: String = "https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/") :
     ApiClient(basePath) {
 
     /**

@@ -32,6 +32,12 @@ class ClientError<T>(
     override val headers: Map<String, List<String>> = mapOf()
 ) : ApiInfrastructureResponse<T>(ResponseType.ClientError)
 
+class Forbidden<T>(
+    val data: T,
+    override val statusCode: Int = -1,
+    override val headers: Map<String, List<String>> = mapOf()
+) : ApiInfrastructureResponse<T>(ResponseType.Success)
+
 class ServerError<T>(
     val message: String? = null,
     val body: Any? = null,

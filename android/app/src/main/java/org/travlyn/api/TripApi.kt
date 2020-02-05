@@ -15,7 +15,7 @@ import org.travlyn.api.model.Rating
 import org.travlyn.api.model.Trip
 import org.travlyn.infrastructure.*
 
-class TripApi(basePath: String = "https://virtserver.swaggerhub.com/travlyn/travlyn/1.0.0") :
+class TripApi(basePath: String = "https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/") :
     ApiClient(basePath) {
 
     /**

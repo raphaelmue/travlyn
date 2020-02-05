@@ -13,6 +13,7 @@ import kotlinx.coroutines.*
 import org.travlyn.R
 import org.travlyn.api.UserApi
 import org.travlyn.api.model.User
+import org.travlyn.infrastructure.ServerException
 import org.travlyn.local.LocalStorage
 import kotlin.coroutines.CoroutineContext
 import kotlin.math.abs
@@ -22,9 +23,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
     private val tag: String = "LoginActivity"
 
     private var job: Job = Job()
-
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
+    override val coroutineContext: CoroutineContext get() = Dispatchers.Main + job
 
     private val animationTime: Long = 500
 
@@ -39,6 +38,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        // initialize elements on view
         etEmail = findViewById(R.id.et_email)
         etPassword = findViewById(R.id.et_password)
         btnSignIn = findViewById(R.id.btn_sign_in)
@@ -51,6 +51,21 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private fun handleLogin(context: AppCompatActivity) {
+        var error: Boolean = false
+
+        // check whether fields are empty
+        if (etEmail.text == null || etEmail.text!!.isEmpty()) {
+            etEmail.error = getString(R.string.error_field_required)
+            error = true
+        }
+        if (etPassword.text == null || etPassword.text!!.isEmpty()) {
+            etPassword.error = getString(R.string.error_field_required)
+            error = true
+        }
+
+        // stop processing if error occurred
+        if (error) return
+
         Log.v(tag, "Checking credentials...")
         toggleProgressIndicator()
         launch {
@@ -58,21 +73,31 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
             if (user != null) {
                 Log.v(tag, "Credentials are approved. User [${user.id}] is logged into the system.")
                 LocalStorage(context).writeObject("user", user)
-                toggleProgressIndicator()
                 context.finish()
             } else {
                 Log.v(tag, "Credentials are invalid.")
-                toggleProgressIndicator()
+                etEmail.error = getString(R.string.error_invalid_credentials)
+                etPassword.error = getString(R.string.error_invalid_credentials)
+
             }
+            toggleProgressIndicator()
         }
     }
 
-    private suspend fun handleLoginRequest(): User {
-        val user: User = api.loginUser(etEmail.text.toString(), etPassword.text.toString())
+    private suspend fun handleLoginRequest(): User? {
         delay(2000)
-        return user
+        return try {
+            api.loginUser(etEmail.text.toString(), etPassword.text.toString())
+        } catch (e: ServerException) {
+            null
+        }
     }
 
+    /**
+     * Toggles whether to show the progress indicator and hide the sign in button and vice versa.
+     *
+     * @return void
+     */
     private fun toggleProgressIndicator() {
         val interpolator: Interpolator = if (btnSignIn.scaleX <= 0f) {
             OvershootInterpolator()

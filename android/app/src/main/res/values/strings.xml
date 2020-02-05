@@ -11,11 +11,12 @@
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
     <string name="sign_in">"Sign in "</string>
-    <string name="invalid_credentials">Your credentials are invalid.</string>
+    <string name="error_invalid_credentials">Your credentials are invalid.</string>
     <string name="email">Email Address</string>
     <string name="password">Password</string>
     <string name="welcome">Welcome, %1$s!</string>
     <string name="logout">Logout</string>
     <string name="successfully_logged_out">You have successfully logged out.</string>
     <string name="undo">Undo</string>
+    <string name="error_field_required">This field is required.</string>
 </resources>
