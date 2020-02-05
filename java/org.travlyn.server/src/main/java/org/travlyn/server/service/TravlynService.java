@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.travlyn.server.externalapi.DBpediaCityRequest;
+import org.travlyn.shared.model.api.City;
 import org.travlyn.shared.model.api.User;
 import org.travlyn.shared.model.db.UserEntity;
 import org.travlyn.util.security.Hash;
@@ -59,4 +61,13 @@ public class TravlynService {
         return null;
     }
 
+    /**
+     * Searches for city by name using DBmedia and returns city object with all infos.
+     * @param cityName Name of city that should be searched for
+     * @return City with description, thumbnail, ...
+     */
+    public City getCityWithInformation(String cityName) {
+        DBpediaCityRequest request = new DBpediaCityRequest(cityName);
+        return request.getResult();
+    }
 }
