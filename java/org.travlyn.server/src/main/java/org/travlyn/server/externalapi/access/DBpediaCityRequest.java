@@ -1,7 +1,9 @@
-package org.travlyn.server.externalapi;
+package org.travlyn.server.externalapi.access;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.travlyn.server.externalapi.APIRequest;
+import org.travlyn.server.externalapi.DBpediaRequest;
 import org.travlyn.server.util.Pair;
 import org.travlyn.shared.model.api.City;
 
@@ -48,7 +50,7 @@ public class DBpediaCityRequest implements DBpediaRequest<City> {
         params.add(new Pair<>("key", "1234"));
         params.add(new Pair<>("property", "dbo:abstract"));
         params.add(new Pair<>("property", "dbo:thumbnail"));
-        request = new APIRequest(BASE_API, params);
+        request = new org.travlyn.server.externalapi.APIRequest(BASE_API, params);
 
         try {
             result = request.performAPICallGET();

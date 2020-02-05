@@ -24,6 +24,6 @@ public interface CityApi {
     @GetMapping(
             value = "/city/",
             produces = {"application/json"})
-    ResponseEntity<City> getCity(@ApiParam(value = "Name of the city that should be searched for", required = true, defaultValue = "", example = "Düsseldorf") @Valid @RequestParam(value = "city") String cityName);
+    ResponseEntity<City> getCity(@ApiParam(value = "Name of the city that should be searched for", required = true, defaultValue = "", example = "Düsseldorf") @Valid @RequestParam(value = "city") String city);
 
 }

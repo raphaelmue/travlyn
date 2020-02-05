@@ -11,6 +11,8 @@ import org.travlyn.server.service.TravlynService;
 import org.travlyn.shared.model.api.City;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Controller
 public class CityApiController implements CityApi{
@@ -28,10 +30,10 @@ public class CityApiController implements CityApi{
     }
 
     @Override
-    public ResponseEntity<City> getCity(String cityName) {
+    public ResponseEntity<City> getCity(@NotNull @Valid String city) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            return new ResponseEntity<>(travlynService.getCityWithInformation(cityName), HttpStatus.OK);
+            return new ResponseEntity<>(travlynService.getCityWithInformation(city), HttpStatus.OK);
         }
 
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
