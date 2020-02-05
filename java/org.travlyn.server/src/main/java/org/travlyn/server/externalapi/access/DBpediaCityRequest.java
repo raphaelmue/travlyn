@@ -60,12 +60,17 @@ public class DBpediaCityRequest implements DBpediaRequest<City> {
         }
         JsonObject englishContent = gson.fromJson(result, JsonObject.class).getAsJsonObject("results").
                 getAsJsonArray("bindings").get(0).getAsJsonObject();
-        String description = englishContent.getAsJsonObject("dboabstract").getAsJsonPrimitive("value").getAsString();
-        String imageURL = englishContent.getAsJsonObject("dbothumbnail").getAsJsonPrimitive("value").getAsString();
-        City returnValue = new City();
-        returnValue.setDescription(description);
-        returnValue.setImage(imageURL);
-        returnValue.setName(serachterm);
-        return returnValue;
+        try {
+            String description = englishContent.getAsJsonObject("dboabstract").getAsJsonPrimitive("value").getAsString();
+            String imageURL = englishContent.getAsJsonObject("dbothumbnail").getAsJsonPrimitive("value").getAsString();
+            City returnValue = new City();
+            returnValue.setDescription(description);
+            returnValue.setImage(imageURL);
+            returnValue.setName(serachterm);
+            return returnValue;
+        }catch (NullPointerException exception){
+            //invalid search term leads to no results
+            return null;
+        }
     }
 }
