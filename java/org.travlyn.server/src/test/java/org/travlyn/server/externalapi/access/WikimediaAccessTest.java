@@ -11,7 +11,7 @@ public class WikimediaAccessTest {
     public void testIntroCall() {
         WikimediaRequest request = new WikimediaRequest("Wesel");
         String result = request.getIntro();
-        Assert.assertEquals("\"Wesel (German pronunciation: [ˈveːzl̩]) is a city in North Rhine-Westphalia, Germany. It is the capital of the Wesel district.\\n\\n\"", result);
+        Assert.assertEquals("\"Wesel (German pronunciation: [ˈveːzl̩]) is a city in North Rhine-Westphalia, Germany. It is the capital of the Wesel district.\"", result);
     }
 
     @Test
