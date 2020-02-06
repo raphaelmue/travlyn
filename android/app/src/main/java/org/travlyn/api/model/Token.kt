@@ -21,7 +21,7 @@ package org.travlyn.api.model
  */
 data class Token(
 
-    val id: Long? = null,
+    val id: Int? = null,
     val token: String? = null,
     val ipAddress: String? = null
 )

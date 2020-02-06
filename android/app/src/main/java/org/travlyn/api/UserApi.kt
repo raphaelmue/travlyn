@@ -15,7 +15,7 @@ import org.travlyn.api.model.Trip
 import org.travlyn.api.model.User
 import org.travlyn.infrastructure.*
 
-class UserApi(basePath: String = "https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/") :
+class UserApi(basePath: String = "http://10.178.114.189:3000/travlyn/travlyn/1.0.0/") :
     ApiClient(basePath) {
 
     /**
@@ -56,7 +56,7 @@ class UserApi(basePath: String = "https://travlyn.raphael-muesseler.de/travlyn/t
      * @return User
      */
     @Suppress("UNCHECKED_CAST")
-    suspend fun loginUser(email: String, password: String): User {
+    suspend fun loginUser(email: String, password: String): User? {
         val localVariableQuery: MultiValueMap =
             mapOf("email" to listOf(email), "password" to listOf(password))
         val localVariableConfig = RequestConfig(
@@ -69,7 +69,13 @@ class UserApi(basePath: String = "https://travlyn.raphael-muesseler.de/travlyn/t
 
         println(response)
         return when (response.responseType) {
-            ResponseType.Success -> (response as Success<*>).data as User
+            ResponseType.Success -> {
+                if ((response as Success<*>).data != null) {
+                    (response as Success<*>).data as User
+                } else {
+                    null
+                }
+            }
             ResponseType.Informational -> TODO()
             ResponseType.Redirection -> TODO()
             ResponseType.ClientError -> throw ClientException(
@@ -88,7 +94,7 @@ class UserApi(basePath: String = "https://travlyn.raphael-muesseler.de/travlyn/t
      * @return void
      */
     suspend fun logoutUser(user: User) {
-        val localVariableQuery: MultiValueMap = mapOf("user" to listOf("$user"))
+        val localVariableQuery: MultiValueMap = user.serializeToMap().toQueryParameters()
         val localVariableConfig = RequestConfig(
             RequestMethod.DELETE,
             "/user", query = localVariableQuery
@@ -105,7 +111,7 @@ class UserApi(basePath: String = "https://travlyn.raphael-muesseler.de/travlyn/t
                 (response as ClientError<*>).body as? String ?: "Client error"
             )
             ResponseType.ServerError -> throw ServerException(
-                (response as ServerError<*>).message ?: "Server error"
+                (response as ServerError<*>).message ?: "Server error (code: ${response.statusCode})"
             )
         }
     }

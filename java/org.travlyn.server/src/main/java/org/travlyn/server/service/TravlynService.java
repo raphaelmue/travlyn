@@ -36,8 +36,8 @@ public class TravlynService {
      * @param password password to verify
      * @return User DTO if credentials are valid or null otherwise
      */
-    @Transactional(readOnly = true)
-    public User checkCredentials(String email, String password) {
+    @Transactional()
+    public User checkCredentials(String email, String password, String ipAddress) {
         logger.info("Checking credentials ...");
 
         Session session = sessionFactory.getCurrentSession();
@@ -52,7 +52,7 @@ public class TravlynService {
                 if (hashedPassword.equals(user.getPassword())) {
                     logger.info("Credentials of user {} (id: {}) are approved.", user.getName(), user.getId());
                     return user.toDataTransferObject()
-                            .token(generateToken(user));
+                            .token(generateToken(user, ipAddress));
                 }
             }
         } catch (NoResultException ignored) {
@@ -69,18 +69,31 @@ public class TravlynService {
      * @return generated Token DTO
      */
     @Transactional
-    Token generateToken(UserEntity user) {
-        logger.info("Generating token for user {} (id: {})", user.getName(), user.getId());
+    Token generateToken(UserEntity user, String ipAddress) {
+        logger.info("Generating token for user {} (id: {}).", user.getName(), user.getId());
 
         Session session = sessionFactory.getCurrentSession();
 
         TokenEntity token = new TokenEntity();
         token.setUser(user);
         token.setToken(tokenGenerator.nextString());
-        token.setIpAddress("");
+        token.setIpAddress(ipAddress);
 
         session.save(token);
 
         return token.toDataTransferObject();
+    }
+
+    /**
+     * Deletes the respective token from database in order to log the user out.
+     *
+     * @param user User to log out
+     */
+    @Transactional
+    public void logoutUser(User user) {
+        logger.info("Logging out user {} (id: {}) from {}.", user.getName(), user.getId(), user.getToken().getIpAddress());
+
+        Session session = sessionFactory.getCurrentSession();
+        session.delete(user.getToken().toEntity());
     }
 }

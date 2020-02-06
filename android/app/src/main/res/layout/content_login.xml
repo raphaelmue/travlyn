@@ -10,7 +10,7 @@
     tools:showIn="@layout/activity_login">
 
     <ImageView
-        android:id="@+id/login_logo"
+        android:id="@+id/loginImageView"
         android:layout_width="wrap_content"
         android:layout_height="133dp"
         android:layout_marginTop="16dp"
@@ -22,15 +22,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/layout_login_email"
+        android:id="@+id/loginEmailLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/fab_margin"
         android:ems="12"
-        app:layout_constraintTop_toBottomOf="@+id/login_logo">
+        app:layout_constraintTop_toBottomOf="@+id/loginImageView">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_email"
+            android:id="@+id/emailTextEdit"
             style="@style/Widget.AppCompat.EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,15 +43,15 @@
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/layout_login_password"
+        android:id="@+id/loginPasswordLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/fab_margin"
         android:ems="10"
-        app:layout_constraintTop_toBottomOf="@id/layout_login_email">
+        app:layout_constraintTop_toBottomOf="@id/loginEmailLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_password"
+            android:id="@+id/passwordTextEdit"
             style="@style/Widget.AppCompat.EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_sign_in"
+        android:id="@+id/signInBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/fab_margin"
@@ -71,10 +71,10 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_login_password" />
+        app:layout_constraintTop_toBottomOf="@+id/loginPasswordLayout" />
 
     <ProgressBar
-        android:id="@+id/pb_login"
+        android:id="@+id/loginProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/fab_margin"
@@ -83,7 +83,7 @@
         android:scaleY="0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_login_password" />
+        app:layout_constraintTop_toBottomOf="@+id/loginPasswordLayout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

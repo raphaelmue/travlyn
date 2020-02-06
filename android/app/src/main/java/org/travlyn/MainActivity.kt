@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.travlyn.api.UserApi
+import org.travlyn.api.model.Token
 import org.travlyn.api.model.User
 import org.travlyn.local.LocalStorage
 import org.travlyn.ui.login.LoginActivity
@@ -60,18 +61,22 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        user = LocalStorage(this).readObject<User>("user")
+//        user = LocalStorage(this).readObject<User>("user")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
-
-        // show sign in when user is not signed in and hide otherwise
-        menu.findItem(R.id.menu_sign_in).isVisible = (user == null)
-        // show logout when user is logged in and hide otherwise
-        menu.findItem(R.id.menu_logout).isVisible = (user != null)
-
         return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        if (menu != null) {
+            // show sign in when user is not signed in and hide otherwise
+            menu.findItem(R.id.menu_sign_in).isVisible = (user == null)
+            // show logout when user is logged in and hide otherwise
+            menu.findItem(R.id.menu_logout).isVisible = true//(user != null)
+        }
+        return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -93,6 +98,13 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+    override fun onStart() {
+        super.onStart()
+//        user = LocalStorage(this).readObject<User>("user")
+        user = User(id = 1, email = "raphael@muesseler.de", name = "Raphael Müßeler", token = Token(id = 1, token = "asjkdlföa sjkaölsdfköasdfkaö"))
+        invalidateOptionsMenu()
+    }
+
     private fun openLoginActivity() {
         if (user == null) {
             startActivity(Intent(this, LoginActivity::class.java))
@@ -111,17 +123,17 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                     super.onDismissed(transientBottomBar, event)
 
                     Log.v(tag, "Logging user out")
-                    LocalStorage(context).deleteObject("user")
                     launch {
                         handleLogoutRequest()
                     }
+                    LocalStorage(context).deleteObject("user")
+                    invalidateOptionsMenu()
                 }
             })
         snackBar.show()
     }
 
     private suspend fun handleLogoutRequest() {
-        // TODO needs to be implemented on server side
-        // api.logoutUser(this.user!!)
+        api.logoutUser(this.user!!)
     }
 }

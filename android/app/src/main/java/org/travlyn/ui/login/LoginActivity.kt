@@ -1,14 +1,14 @@
 package org.travlyn.ui.login
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.animation.AnticipateInterpolator
 import android.view.animation.Interpolator
 import android.view.animation.OvershootInterpolator
-import android.widget.ProgressBar
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.textfield.TextInputEditText
+import kotlinx.android.synthetic.main.content_login.*
 import kotlinx.coroutines.*
 import org.travlyn.R
 import org.travlyn.api.UserApi
@@ -29,37 +29,34 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
 
     var api: UserApi = UserApi()
 
-    private lateinit var etEmail: TextInputEditText
-    private lateinit var etPassword: TextInputEditText
-    private lateinit var btnSignIn: MaterialButton
-    private lateinit var progressIndicator: ProgressBar
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // initialize elements on view
-        etEmail = findViewById(R.id.et_email)
-        etPassword = findViewById(R.id.et_password)
-        btnSignIn = findViewById(R.id.btn_sign_in)
-        progressIndicator = findViewById(R.id.pb_login)
-
         val context = this
-        btnSignIn.setOnClickListener {
+        signInBtn.setOnClickListener {
             handleLogin(context)
         }
     }
 
     private fun handleLogin(context: AppCompatActivity) {
-        var error: Boolean = false
+        // close virtual keyboard
+        val imm: InputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(
+            passwordTextEdit.windowToken,
+            InputMethodManager.RESULT_UNCHANGED_SHOWN
+        )
+
+        var error = false
 
         // check whether fields are empty
-        if (etEmail.text == null || etEmail.text!!.isEmpty()) {
-            etEmail.error = getString(R.string.error_field_required)
+        if (emailTextEdit.text == null || emailTextEdit.text!!.isEmpty()) {
+            emailTextEdit.error = getString(R.string.error_field_required)
             error = true
         }
-        if (etPassword.text == null || etPassword.text!!.isEmpty()) {
-            etPassword.error = getString(R.string.error_field_required)
+        if (passwordTextEdit.text == null || passwordTextEdit.text!!.isEmpty()) {
+            passwordTextEdit.error = getString(R.string.error_field_required)
             error = true
         }
 
@@ -76,8 +73,8 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
                 context.finish()
             } else {
                 Log.v(tag, "Credentials are invalid.")
-                etEmail.error = getString(R.string.error_invalid_credentials)
-                etPassword.error = getString(R.string.error_invalid_credentials)
+                emailTextEdit.error = getString(R.string.error_invalid_credentials)
+                passwordTextEdit.error = getString(R.string.error_invalid_credentials)
 
             }
             toggleProgressIndicator()
@@ -87,7 +84,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
     private suspend fun handleLoginRequest(): User? {
         delay(2000)
         return try {
-            api.loginUser(etEmail.text.toString(), etPassword.text.toString())
+            api.loginUser(emailTextEdit.text.toString(), passwordTextEdit.text.toString())
         } catch (e: ServerException) {
             null
         }
@@ -99,22 +96,22 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
      * @return void
      */
     private fun toggleProgressIndicator() {
-        val interpolator: Interpolator = if (btnSignIn.scaleX <= 0f) {
+        val interpolator: Interpolator = if (signInBtn.scaleX <= 0f) {
             OvershootInterpolator()
         } else {
             AnticipateInterpolator()
         }
 
-        btnSignIn.animate()
-            .scaleX(abs(btnSignIn.scaleX - 1))
-            .scaleY(abs(btnSignIn.scaleY - 1))
+        signInBtn.animate()
+            .scaleX(abs(signInBtn.scaleX - 1))
+            .scaleY(abs(signInBtn.scaleY - 1))
             .setDuration(animationTime)
             .setInterpolator(interpolator)
             .setListener(null)
 
-        progressIndicator.animate()
-            .scaleX(abs(progressIndicator.scaleX - 1))
-            .scaleY(abs(progressIndicator.scaleY - 1))
+        loginProgressBar.animate()
+            .scaleX(abs(loginProgressBar.scaleX - 1))
+            .scaleY(abs(loginProgressBar.scaleY - 1))
             .setDuration(animationTime)
             .setInterpolator(interpolator)
             .setListener(null)

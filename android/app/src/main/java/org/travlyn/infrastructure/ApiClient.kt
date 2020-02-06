@@ -1,8 +1,11 @@
 package org.travlyn.infrastructure
 
+import com.google.gson.Gson
 import okhttp3.*
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import ru.gildor.coroutines.okhttp.await
 import java.io.File
 
@@ -36,9 +39,8 @@ open class ApiClient(val baseUrl: String) {
     ): RequestBody {
         when {
             content is File -> {
-                return RequestBody.create(
-                    mediaType.toMediaTypeOrNull(), content
-                )
+                return content
+                    .asRequestBody(mediaType.toMediaTypeOrNull())
             }
             mediaType == FormDataMediaType -> {
                 var builder = FormBody.Builder()
@@ -50,10 +52,7 @@ open class ApiClient(val baseUrl: String) {
                 return builder.build()
             }
             mediaType == JsonMediaType -> {
-                return RequestBody.create(
-                    mediaType.toMediaTypeOrNull(),
-                    Serializer.moshi.adapter(T::class.java).toJson(content)
-                )
+                return Gson().toJson(content).toRequestBody(mediaType.toMediaTypeOrNull())
             }
             mediaType == XmlMediaType -> {
                 TODO("xml not currently supported.")
@@ -72,8 +71,13 @@ open class ApiClient(val baseUrl: String) {
     ): T? {
         if (body == null) return null
         return when (mediaType) {
-            JsonMediaType -> Serializer.moshi.adapter(T::class.java).fromJson(body.source())
-            else -> TODO()
+            JsonMediaType -> {
+//                Gson().fromJson(body.charStream(), T::class.java)
+                Serializer.moshi.adapter(T::class.java).fromJson(body.source())
+            }
+            else -> {
+                throw UnsupportedOperationException("Other formats than JSON cannot be converted to objects as of now.")
+            }
         }
     }
 
@@ -122,7 +126,6 @@ open class ApiClient(val baseUrl: String) {
         val realRequest = request.build()
         val response = client.newCall(realRequest).await()
 
-        // TODO: handle specific mapping types. e.g. Map<int, Class<?>>
         when {
             response.isRedirect -> return Redirection(
                 response.code,

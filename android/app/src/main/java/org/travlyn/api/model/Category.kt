@@ -20,6 +20,6 @@ package org.travlyn.api.model
  */
 data class Category(
 
-    val id: Long? = null,
+    val id: Int? = null,
     val name: String? = null
 )

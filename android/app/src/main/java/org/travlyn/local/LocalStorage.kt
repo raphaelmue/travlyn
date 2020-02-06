@@ -34,7 +34,7 @@ class LocalStorage(context: Context) {
         // return null if value is null
         if (sharedPreferences.contains(key)) {
             val value: String = sharedPreferences.getString(key, "") ?: return null
-            return Serializer.moshi.adapter(T::class.java).fromJson(value)
+            return Gson().fromJson(value, T::class.java)
         }
         return null
     }

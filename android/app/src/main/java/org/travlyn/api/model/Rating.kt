@@ -20,7 +20,7 @@ package org.travlyn.api.model
  */
 data class Rating(
 
-    val id: Long? = null,
+    val id: Int? = null,
     val user: User? = null,
     /* Percentage rating */
     val rating: Double? = null,

@@ -20,7 +20,7 @@ package org.travlyn.api.model
  */
 data class GeoText(
 
-    val id: Long? = null,
+    val id: Int? = null,
     val stop: Stop? = null,
     val text: String? = null
 )
