@@ -1,32 +1,24 @@
 package org.travlyn.infrastructure
 
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
+import org.codehaus.jackson.map.ObjectMapper
+import org.codehaus.jackson.type.TypeReference
 
-
-var gson = GsonBuilder().create()
-
-//convert a data class to a map
-fun <T> T.serializeToMap(): Map<String, Any> {
-    return convert()
-}
-
-//convert a map to a data class
-inline fun <reified T> Map<String, Any>.toDataClass(): T {
-    return convert()
-}
-
-//convert an object of type I to type O
-inline fun <I, reified O> I.convert(): O {
-    val json = gson.toJson(this)
-    return gson.fromJson(json, object : TypeToken<O>() {}.type)
+/**
+ * Creates a map of the given data object. This map contains all properties that this data class has
+ * defined and transfers their values.
+ *
+ * @return map of data object
+ */
+fun <T> T.toMap(): Map<String, Any> {
+    return ObjectMapper().convertValue(this, object :
+        TypeReference<Map<String, Any>>() {})
 }
 
 /**
  * Creates from a tree structure based on a map, a single map whose values are separated by '.'.
  * The respective test represents a good example.
  *
- * @return map
+ * @return query parameters
  */
 fun <K, V> Map<K, V>.toQueryParameters(): Map<String, List<String>> {
     val map: MutableMap<String, List<String>> = mutableMapOf()
@@ -35,7 +27,7 @@ fun <K, V> Map<K, V>.toQueryParameters(): Map<String, List<String>> {
             is Map<*, *> -> {
                 (entry.value as Map<*, *>).toQueryParameters().forEach { innerEntry ->
                     map[entry.key.toString() + "." + innerEntry.key] =
-                        listOf(innerEntry.value.toString())
+                        listOf(innerEntry.value[0])
                 }
             }
             is ArrayList<*> -> {
@@ -43,7 +35,7 @@ fun <K, V> Map<K, V>.toQueryParameters(): Map<String, List<String>> {
                 (entry.value as ArrayList<*>).forEach { listEntry ->
                     (listEntry as Map<*, *>).toQueryParameters().forEach { innerEntry ->
                         map[entry.key.toString() + "[" + index + "]." + innerEntry.key] =
-                            listOf(innerEntry.value.toString())
+                            listOf(innerEntry.value[0])
                     }
                     index++
                 }

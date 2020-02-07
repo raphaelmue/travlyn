@@ -15,7 +15,7 @@ import org.travlyn.api.model.Trip
 import org.travlyn.api.model.User
 import org.travlyn.infrastructure.*
 
-class UserApi(basePath: String = "http://10.178.114.189:3000/travlyn/travlyn/1.0.0/") :
+class UserApi(basePath: String = "http://192.168.1.64:3000/travlyn/travlyn/1.0.0/") :
     ApiClient(basePath) {
 
     /**
@@ -42,9 +42,11 @@ class UserApi(basePath: String = "http://10.178.114.189:3000/travlyn/travlyn/1.0
             ResponseType.ClientError -> throw ClientException(
                 (response as ClientError<*>).body as? String ?: "Client error"
             )
-            ResponseType.ServerError -> throw ServerException(
-                (response as ServerError<*>).message ?: "Server error"
-            )
+            ResponseType.ServerError -> {
+                throw ServerException(
+                    (response as ServerError<*>).message ?: "Server error"
+                )
+            }
         }
     }
 
@@ -94,7 +96,7 @@ class UserApi(basePath: String = "http://10.178.114.189:3000/travlyn/travlyn/1.0
      * @return void
      */
     suspend fun logoutUser(user: User) {
-        val localVariableQuery: MultiValueMap = user.serializeToMap().toQueryParameters()
+        val localVariableQuery: MultiValueMap = user.toMap().toQueryParameters()
         val localVariableConfig = RequestConfig(
             RequestMethod.DELETE,
             "/user", query = localVariableQuery
@@ -111,7 +113,8 @@ class UserApi(basePath: String = "http://10.178.114.189:3000/travlyn/travlyn/1.0
                 (response as ClientError<*>).body as? String ?: "Client error"
             )
             ResponseType.ServerError -> throw ServerException(
-                (response as ServerError<*>).message ?: "Server error (code: ${response.statusCode})"
+                (response as ServerError<*>).message
+                    ?: "Server error (code: ${response.statusCode})"
             )
         }
     }

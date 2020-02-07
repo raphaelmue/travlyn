@@ -1,5 +1,7 @@
 package org.travlyn
 
+import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -16,19 +18,21 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.travlyn.api.UserApi
-import org.travlyn.api.model.Token
 import org.travlyn.api.model.User
+import org.travlyn.local.Application
+import org.travlyn.local.Formatter
 import org.travlyn.local.LocalStorage
 import org.travlyn.ui.login.LoginActivity
 import kotlin.coroutines.CoroutineContext
 
 
-class MainActivity : AppCompatActivity(), CoroutineScope {
+class MainActivity : AppCompatActivity(), CoroutineScope, Application {
     val tag: String = "MainActivity"
 
     private var job: Job = Job()
@@ -40,6 +44,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private var user: User? = null
+    private var formatter: Formatter = Formatter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +66,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-//        user = LocalStorage(this).readObject<User>("user")
+        user = LocalStorage(this).readObject<User>("user")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -74,7 +79,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             // show sign in when user is not signed in and hide otherwise
             menu.findItem(R.id.menu_sign_in).isVisible = (user == null)
             // show logout when user is logged in and hide otherwise
-            menu.findItem(R.id.menu_logout).isVisible = true//(user != null)
+            menu.findItem(R.id.menu_logout).isVisible = (user != null)
         }
         return super.onPrepareOptionsMenu(menu)
     }
@@ -100,8 +105,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     override fun onStart() {
         super.onStart()
-//        user = LocalStorage(this).readObject<User>("user")
-        user = User(id = 1, email = "raphael@muesseler.de", name = "Raphael Müßeler", token = Token(id = 1, token = "asjkdlföa sjkaölsdfköasdfkaö"))
+        user = LocalStorage(this).readObject<User>("user")
         invalidateOptionsMenu()
     }
 
@@ -116,7 +120,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         val snackBar = Snackbar.make(
             window.decorView,
             getString(R.string.successfully_logged_out),
-            Snackbar.LENGTH_LONG
+            2000
         ).setAction(getString(R.string.undo)) {}
             .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
                 override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
@@ -125,8 +129,10 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                     Log.v(tag, "Logging user out")
                     launch {
                         handleLogoutRequest()
+                        user = null
                     }
                     LocalStorage(context).deleteObject("user")
+                    welcomeTextView.text = null
                     invalidateOptionsMenu()
                 }
             })
@@ -135,5 +141,23 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     private suspend fun handleLogoutRequest() {
         api.logoutUser(this.user!!)
+    }
+
+    override fun showErrorDialog(throwable: Throwable) {
+        Log.e(tag, throwable.message, throwable)
+        AlertDialog.Builder(this)
+            .setTitle("Financer")
+            .setMessage(formatter.format(throwable))
+            .setPositiveButton(R.string.ok, null)
+            .setIcon(R.drawable.ic_error)
+            .show()
+    }
+
+    override fun getContext(): Context {
+        return this
+    }
+
+    override fun getFormatter(): Formatter {
+        return formatter
     }
 }

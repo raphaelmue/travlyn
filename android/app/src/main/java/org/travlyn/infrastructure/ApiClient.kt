@@ -65,15 +65,15 @@ open class ApiClient(val baseUrl: String) {
         TODO("requestBody currently only supports JSON body and File body.")
     }
 
-    protected inline fun <reified T : Any?> responseBody(
+    protected suspend inline fun <reified T : Any?> responseBody(
         body: ResponseBody?,
         mediaType: String = JsonMediaType
     ): T? {
         if (body == null) return null
         return when (mediaType) {
             JsonMediaType -> {
-//                Gson().fromJson(body.charStream(), T::class.java)
-                Serializer.moshi.adapter(T::class.java).fromJson(body.source())
+                Gson().fromJson(body.charStream(), T::class.java)
+//                Serializer.moshi.adapter(T::class.java).fromJson(body.source())
             }
             else -> {
                 throw UnsupportedOperationException("Other formats than JSON cannot be converted to objects as of now.")
