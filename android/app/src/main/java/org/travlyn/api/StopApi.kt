@@ -15,9 +15,13 @@ import android.media.Rating
 import org.travlyn.api.model.Stop
 
 import org.travlyn.infrastructure.*
+import org.travlyn.local.Application
 
-class StopApi(basePath: String = "https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/") :
-    ApiClient(basePath) {
+class StopApi(
+    basePath: String = "https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
+    application: Application
+) :
+    ApiClient(basePath, application) {
 
     /**
      * Rate a stop

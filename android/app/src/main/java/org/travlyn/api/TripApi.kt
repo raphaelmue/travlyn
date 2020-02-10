@@ -14,9 +14,13 @@ package org.travlyn.api
 import org.travlyn.api.model.Rating
 import org.travlyn.api.model.Trip
 import org.travlyn.infrastructure.*
+import org.travlyn.local.Application
 
-class TripApi(basePath: String = "https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/") :
-    ApiClient(basePath) {
+class TripApi(
+    basePath: String = "https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
+    application: Application
+) :
+    ApiClient(basePath, application) {
 
     /**
      * Search for trips

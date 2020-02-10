@@ -19,6 +19,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.nav_header_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    var api: UserApi = UserApi()
+    var api: UserApi = UserApi(application = this)
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private var user: User? = null
@@ -105,7 +106,11 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
 
     override fun onStart() {
         super.onStart()
-        user = LocalStorage(this).readObject<User>("user")
+        user = LocalStorage(this).readObject("user")
+        if (user != null) {
+            emailNavTextView.text = user!!.email
+            nameNavTextView.text = user!!.name
+        }
         invalidateOptionsMenu()
     }
 
@@ -146,7 +151,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
     override fun showErrorDialog(throwable: Throwable) {
         Log.e(tag, throwable.message, throwable)
         AlertDialog.Builder(this)
-            .setTitle("Financer")
+            .setTitle("Travlyn")
             .setMessage(formatter.format(throwable))
             .setPositiveButton(R.string.ok, null)
             .setIcon(R.drawable.ic_error)

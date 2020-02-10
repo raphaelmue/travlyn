@@ -1,5 +1,6 @@
 package org.travlyn.ui.login
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -14,20 +15,20 @@ import org.travlyn.R
 import org.travlyn.api.UserApi
 import org.travlyn.api.model.User
 import org.travlyn.infrastructure.ServerException
+import org.travlyn.local.Application
+import org.travlyn.local.Formatter
 import org.travlyn.local.LocalStorage
-import kotlin.coroutines.CoroutineContext
 import kotlin.math.abs
 
 
-class LoginActivity : AppCompatActivity(), CoroutineScope {
+class LoginActivity : AppCompatActivity(), Application {
     private val tag: String = "LoginActivity"
 
-    private var job: Job = Job()
-    override val coroutineContext: CoroutineContext get() = Dispatchers.Main + job
+    private var formatter: Formatter = Formatter(this)
 
     private val animationTime: Long = 500
 
-    var api: UserApi = UserApi()
+    var api: UserApi = UserApi(application = this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +66,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
 
         Log.v(tag, "Checking credentials...")
         toggleProgressIndicator()
-        launch {
+        CoroutineScope(Dispatchers.IO).launch {
             val user: User? = handleLoginRequest()
             if (user != null) {
                 Log.v(tag, "Credentials are approved. User [${user.id}] is logged into the system.")
@@ -73,11 +74,12 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
                 context.finish()
             } else {
                 Log.v(tag, "Credentials are invalid.")
-                emailTextEdit.error = getString(R.string.error_invalid_credentials)
-                passwordTextEdit.error = getString(R.string.error_invalid_credentials)
-
+                withContext(Dispatchers.Main) {
+                    emailTextEdit.error = getString(R.string.error_invalid_credentials)
+                    passwordTextEdit.error = getString(R.string.error_invalid_credentials)
+                    toggleProgressIndicator()
+                }
             }
-            toggleProgressIndicator()
         }
     }
 
@@ -115,6 +117,24 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
             .setDuration(animationTime)
             .setInterpolator(interpolator)
             .setListener(null)
+    }
+
+    override fun showErrorDialog(throwable: Throwable) {
+        Log.e(tag, throwable.message, throwable)
+        AlertDialog.Builder(this)
+            .setTitle("Travlyn")
+            .setMessage(formatter.format(throwable))
+            .setPositiveButton(R.string.ok, null)
+            .setIcon(R.drawable.ic_error)
+            .show()
+    }
+
+    override fun getContext(): Context {
+        return this
+    }
+
+    override fun getFormatter(): Formatter {
+        return formatter
     }
 }
 

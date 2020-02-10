@@ -14,9 +14,13 @@ package org.travlyn.api
 import org.travlyn.api.model.Trip
 import org.travlyn.api.model.User
 import org.travlyn.infrastructure.*
+import org.travlyn.local.Application
 
-class UserApi(basePath: String = "http://192.168.1.64:3000/travlyn/travlyn/1.0.0/") :
-    ApiClient(basePath) {
+class UserApi(
+    basePath: String = "http://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
+    application: Application
+) :
+    ApiClient(basePath, application) {
 
     /**
      * Get all Trips of user

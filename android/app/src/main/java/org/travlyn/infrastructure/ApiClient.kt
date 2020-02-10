@@ -1,15 +1,22 @@
 package org.travlyn.infrastructure
 
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import okhttp3.*
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import ru.gildor.coroutines.okhttp.await
+import org.travlyn.local.Application
 import java.io.File
+import java.io.IOException
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
-open class ApiClient(val baseUrl: String) {
+open class ApiClient(val baseUrl: String, open val application: Application) {
     companion object {
         protected const val ContentType = "Content-Type"
         protected const val Accept = "Accept"
@@ -65,15 +72,14 @@ open class ApiClient(val baseUrl: String) {
         TODO("requestBody currently only supports JSON body and File body.")
     }
 
-    protected suspend inline fun <reified T : Any?> responseBody(
-        body: ResponseBody?,
+    protected inline fun <reified T : Any?> responseBody(
+        result: String?,
         mediaType: String = JsonMediaType
     ): T? {
-        if (body == null) return null
+        if (result == null) return null
         return when (mediaType) {
             JsonMediaType -> {
-                Gson().fromJson(body.charStream(), T::class.java)
-//                Serializer.moshi.adapter(T::class.java).fromJson(body.source())
+                GsonBuilder().create().fromJson(result, T::class.java)
             }
             else -> {
                 throw UnsupportedOperationException("Other formats than JSON cannot be converted to objects as of now.")
@@ -126,6 +132,10 @@ open class ApiClient(val baseUrl: String) {
         val realRequest = request.build()
         val response = client.newCall(realRequest).await()
 
+        val content: String? = withContext(Dispatchers.IO) {
+            response.body?.string()
+        }
+
         when {
             response.isRedirect -> return Redirection(
                 response.code,
@@ -137,21 +147,50 @@ open class ApiClient(val baseUrl: String) {
                 response.headers.toMultimap()
             )
             response.isSuccessful -> return Success(
-                responseBody(response.body, accept),
+                responseBody(content, accept),
                 response.code,
                 response.headers.toMultimap()
             )
             response.isClientError -> return ClientError(
-                response.body?.string(),
+                content,
                 response.code,
                 response.headers.toMultimap()
             )
             else -> return ServerError(
                 null,
-                response.body?.string(),
+                content,
                 response.code,
                 response.headers.toMultimap()
             )
+        }
+    }
+}
+
+/**
+ * Suspend extension that allows suspend [Call] inside coroutine.
+ *
+ * @return Result of request or throw exception
+ */
+suspend fun Call.await(): Response {
+    return suspendCancellableCoroutine { continuation ->
+        enqueue(object : Callback {
+            override fun onResponse(call: Call, response: Response) {
+                continuation.resume(response)
+            }
+
+            override fun onFailure(call: Call, e: IOException) {
+                // Don't bother with resuming the continuation if it is already cancelled.
+                if (continuation.isCancelled) return
+                continuation.resumeWithException(e)
+            }
+        })
+
+        continuation.invokeOnCancellation {
+            try {
+                cancel()
+            } catch (ex: Throwable) {
+                println(ex.printStackTrace())
+            }
         }
     }
 }

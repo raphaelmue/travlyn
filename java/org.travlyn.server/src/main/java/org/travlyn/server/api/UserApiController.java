@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.travlyn.server.service.TravlynService;
 import org.travlyn.shared.model.api.Trip;
 import org.travlyn.shared.model.api.User;
@@ -82,7 +81,7 @@ public class UserApiController implements UserApi {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> updateUser(@NotNull @Valid  User user) {
+    public ResponseEntity<Void> updateUser(@NotNull @Valid User user) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
