@@ -61,6 +61,9 @@ open class ApiClient(val baseUrl: String, open val application: Application) {
             mediaType == JsonMediaType -> {
                 return Gson().toJson(content).toRequestBody(mediaType.toMediaTypeOrNull())
             }
+            else -> {
+                throw UnsupportedOperationException("Other formats than JSON cannot be converted to objects as of now.")
+            }
         }
     }
 
