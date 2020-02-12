@@ -95,7 +95,28 @@
 				Um eine Session mittels des Sessionmanagements zu erstellt, wird sich der \textit{SessionFactory} bedient, von welcher meist nur eine Instanz in der Applikation existiert. Diese beinhaltet die Konfiguration, die den Verbindungsaufbau und die Verbindung selbst definiert.
 				
 				Eine Session ermöglicht es eine \textit{Transaction} -- Abstraktion der Implementation von \ac{JTA} -- zu starten und zu beenden. Wie bereits in \autoref{frameworks.spring.transaktionsmanagement} beschrieben, lässt sich hierbei das Transaktionsmanagement sehr gut integrieren, sodass Spring das Starten und Beenden von Transaktionen handhabt. Dies führt zu einer Simplifizierung des Codes, der zum einen lesbarer und zum anderen einfach wird. 
-
+				
+		\subsection{Docker} % Raphael
+			
+			Docker ist eine Open Source Virtualisierungssoftware, die der Isolierung von Anwendungen dient und von Docker Inc. bereitgestellt wird. Die Motivation hinter der Verwendung von Docker liegt im Deployment Prozess begründet: 
+			
+			Der noch vor einigen Jahren vorherrschende Auslieferungsprozess war zumeist eine Installationsanleitung, welche die einzelnen Anweisungsschritte beinhaltete, die es auszuführen galt, um die Applikation zu starten. Da dies jedoch auf Dauer zu komplex wurde, wurden Anwendungen mittels virtueller Maschinen ausgeliefert. Hierbei bestand der Vorteil darin, dass keine Abhängigkeiten o.Ä. installiert, sondern lediglich die virtuelle Maschine mit dem ausgelieferten Image gestartet werden mussten. Jedoch beinhaltet ein solches Image ein vollständiges Gastbetriebssystem, dessen Größe die der Anwendung um einiges überstieg und somit kaum realisierbar war. Des Weiteren stellt die Dauer des Starts einer virtuellen Maschine auch ein Problem dar. \\
+			Um nun all diesen Problemen entgegenzuwirken, wurde Docker ins Leben gerufen. So werden alle Abhängigkeiten einer Anwendung in einem sog. Docker Image zusammengefasst, aus welchem wiederum Instanzen -- sog. Docker Container -- erzeugt werden. Diese leichtgewichtigen Images können nun sehr einfach ausgeliefert werden und sind darüber hinaus in der Lage, sehr schnell zu starten. \cite{ThomasClaudiusHuber.2019}
+			
+			Der Unterschied zwischen Docker und einer virtuellen Maschine besteht darin, dass, anstelle eines vollständigen Gastsystems, ein Docker Container sich dem Betriebssystems des Hosts bedient, dem sog. Host OS. Mittels der Docker Engine wird der Zugriff auf den Kernel des Betriebssystems sichergestellt und bietet zudem die Möglichkeit Container zu erstellen, zu stoppen oder zu starten. \autoref{fig:dockerComparison} stellt diesen Unterschied graphisch dar. \cite{Turnbull.2014}
+			
+			\begin{figure}[ht!]
+				\centering
+				\includegraphics[width=1\textwidth]{images/docker-containerized-and-vm-transparent-bg.png}
+				\caption{Docker Virtualisierung verglichen mit virtuellen Maschinen \cite{DockerInc..2020}}
+				\label{fig:dockerComparison}
+			\end{figure} 
+			
+			\subsubsection{DockerHub}		
+				
+				Eine Platform, die ebenfalls von Docker Inc. bereitgestellt wird, ist der sog. DockerHub. Dieser stellt eine Registry für Docker Images und Repositories dar und bietet dem Nutzer die Möglichkeit selbst erstellte Images hochzuladen und somit anderen Nutzern zur Verfügung zu stellen. 
+				
+				Ferner bietet Docker eine Versionsverwaltung, welche es ermöglicht verschiedene Versionen eines Images zu erstellen. So sind die verschiedenen Versionen eines Images auf dem DockerHub einsehbar.
 		
 		\subsection{Android}
 		
