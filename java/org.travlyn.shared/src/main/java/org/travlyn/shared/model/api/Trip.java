@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 import org.travlyn.shared.model.db.GeoTextEntity;
-import org.travlyn.shared.model.db.RatingEntity;
 import org.travlyn.shared.model.db.TripEntity;
+import org.travlyn.shared.model.db.TripRatingEntity;
 import org.travlyn.shared.model.db.TripStopEntity;
 
 import javax.validation.Valid;
@@ -17,23 +17,23 @@ import java.util.*;
 @Validated
 public class Trip extends AbstractDataTransferObject {
     @JsonProperty("id")
-    @ApiModelProperty(value = "Identifier")
+    @ApiModelProperty(value = "Identifier", required = true, example = "123")
     private int id = -1;
 
     @JsonProperty("user")
-    @ApiModelProperty(value = "User that created the Trip")
+    @ApiModelProperty(value = "User that created the Trip", required = true)
     private User user = null;
 
     @JsonProperty("city")
-    @ApiModelProperty(value = "City where the Trip takes place")
+    @ApiModelProperty(value = "City where the Trip takes place", required = true)
     private City city = null;
 
     @JsonProperty("private")
-    @ApiModelProperty(value = "Trip is accessible by others if true")
+    @ApiModelProperty(value = "Trip is accessible by others if true", required = true, example = "true")
     private Boolean isPrivate = null;
 
     @JsonProperty("stops")
-    @ApiModelProperty(value = "List of Stops")
+    @ApiModelProperty(value = "List of Stops", required = true)
     @Valid
     private List<Stop> stops = null;
 
@@ -234,19 +234,27 @@ public class Trip extends AbstractDataTransferObject {
         tripEntity.setId(this.id);
         tripEntity.setCity(this.city.toEntity());
         tripEntity.setPrivate(this.isPrivate);
-        Set<TripStopEntity> tripStopEntities = new HashSet<>();
+        List<TripStopEntity> tripStopEntities = new ArrayList<>();
         for (int i = 0; i < this.stops.size(); i++) {
             TripStopEntity tripStopEntity = new TripStopEntity();
-            tripStopEntity.setIndex(i);
             tripStopEntity.setStop(this.stops.get(i).toEntity());
             tripStopEntities.add(tripStopEntity);
+            if (i == 0) {
+                tripStopEntity.setPredecessor(null);
+            } else {
+                tripStopEntity.setPredecessor(tripStopEntities.get(i - 1));
+            }
         }
-        tripEntity.setStops(tripStopEntities);
-        List<RatingEntity> ratingEntities = new ArrayList<>();
-        this.ratings.forEach(rating -> ratingEntities.add(rating.toEntity()));
+        tripEntity.setStops(new HashSet<>(tripStopEntities));
+        Set<TripRatingEntity> ratingEntities = new HashSet<>();
+        this.ratings.forEach(rating -> {
+            TripRatingEntity tripRatingEntity = (TripRatingEntity) rating.toEntity();
+            tripRatingEntity.setTrip(tripEntity);
+            ratingEntities.add(tripRatingEntity);
+        });
         tripEntity.setRatings(ratingEntities);
-        List<GeoTextEntity> geoTextEntities = new ArrayList<>();
-        this.geoText.forEach(geoText -> geoTextEntities.add(geoText.toEntity()));
+        Set<GeoTextEntity> geoTextEntities = new HashSet<>();
+        this.geoText.forEach(geoTextObject -> geoTextEntities.add(geoTextObject.toEntity()));
         tripEntity.setGeoTexts(geoTextEntities);
         return tripEntity;
     }

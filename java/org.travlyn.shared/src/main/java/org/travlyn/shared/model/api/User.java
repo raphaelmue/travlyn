@@ -16,19 +16,19 @@ import java.util.Objects;
 @Validated
 public class User extends AbstractDataTransferObject {
     @JsonProperty("id")
-    @ApiModelProperty(value = "Identifier")
+    @ApiModelProperty(value = "Identifier", required = true, example = "123")
     private int id = -1;
 
     @JsonProperty("email")
-    @ApiModelProperty(value = "Email address")
+    @ApiModelProperty(value = "Email address", required = true, example = "test@email.com")
     private String email = null;
 
     @JsonProperty("name")
-    @ApiModelProperty(value = "Name")
+    @ApiModelProperty(value = "Name", required = true, example = "Test User")
     private String name = null;
 
     @JsonProperty("token")
-    @ApiModelProperty(value = "Active Token for communication")
+    @ApiModelProperty(value = "Active Token for communication", required = true)
     private Token token = null;
 
     public User id(int id) {

@@ -19,28 +19,14 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
-        <project.testing.tags>unit, integration</project.testing.tags>
+        <spring.version>4.3.25.RELEASE</spring.version>
     </properties>
 
     <modules>
         <module>org.travlyn.server</module>
         <module>org.travlyn.shared</module>
+        <module>org.travlyn.util</module>
     </modules>
-
-    <profiles>
-        <profile>
-            <id>unit-tests</id>
-            <properties>
-                <project.testing.tags>unit</project.testing.tags>
-            </properties>
-        </profile>
-        <profile>
-            <id>integration-tests</id>
-            <properties>
-                <project.testing.tags>integration</project.testing.tags>
-            </properties>
-        </profile>
-    </profiles>
 
     <build>
         <plugins>
@@ -50,9 +36,33 @@
                 <version>3.0.0-M4</version>
                 <configuration>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                    <excludedGroups>skip</excludedGroups>
-                    <groups>${project.testing.tags}</groups>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.4</version>
+                <configuration>
+                    <destFile>${project.basedir}/../target/jacoco.exec</destFile>
+                    <append>true</append>
+                    <excludes>
+                        <exclude>android/**/*</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -61,13 +71,19 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.5.2</version>
+            <version>5.6.0-M1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.5.2</version>
+            <version>5.6.0-M1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>5.6.0-M1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

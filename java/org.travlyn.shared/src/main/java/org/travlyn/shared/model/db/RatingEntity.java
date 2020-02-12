@@ -2,9 +2,8 @@ package org.travlyn.shared.model.db;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "rating")
-public class RatingEntity implements DataEntity{
+@MappedSuperclass
+public class RatingEntity implements DataEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +20,7 @@ public class RatingEntity implements DataEntity{
     private String description;
 
     @Override
-    public int getId() {
+    public final int getId() {
         return id;
     }
 

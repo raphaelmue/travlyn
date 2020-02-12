@@ -1,11 +1,13 @@
 package org.travlyn.shared.model.db;
 
+import org.travlyn.shared.model.api.User;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "user")
-public class UserEntity implements DataEntity{
+public class UserEntity implements DataEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -74,5 +76,10 @@ public class UserEntity implements DataEntity{
 
     public void setTokens(Set<TokenEntity> tokens) {
         this.tokens = tokens;
+    }
+
+    @Override
+    public User toDataTransferObject() {
+        return new User().id(this.id).email(this.email).name(this.name).token(null);
     }
 }

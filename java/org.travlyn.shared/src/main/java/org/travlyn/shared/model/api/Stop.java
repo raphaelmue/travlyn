@@ -3,8 +3,8 @@ package org.travlyn.shared.model.api;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
-import org.travlyn.shared.model.db.RatingEntity;
 import org.travlyn.shared.model.db.StopEntity;
+import org.travlyn.shared.model.db.StopRatingEntity;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -16,35 +16,35 @@ import java.util.*;
 public class Stop extends AbstractDataTransferObject {
 
     @JsonProperty("id")
-    @ApiModelProperty(value = "Identifier")
+    @ApiModelProperty(value = "Identifier", required = true, example = "123")
     private int id = -1;
 
     @JsonProperty("longitude")
-    @ApiModelProperty(value = "Longitude")
+    @ApiModelProperty(value = "Longitude", required = true, example = "123.456")
     private double longitude = -1;
 
     @JsonProperty("latitude")
-    @ApiModelProperty(value = "Latitude")
+    @ApiModelProperty(value = "Latitude", required = true, example = "123.456")
     private double latitude = -1;
 
     @JsonProperty("name")
-    @ApiModelProperty(value = "Name")
+    @ApiModelProperty(value = "Name", required = true, example = "Statue of Liberty")
     private String name = null;
 
     @JsonProperty("description")
-    @ApiModelProperty(value = "Additional information about stop")
+    @ApiModelProperty(value = "Additional information about stop", required = true, example = "This is a description about the Statue of Liberty")
     private String description = null;
 
     @JsonProperty("pricing")
-    @ApiModelProperty(value = "Approximate price estimation for one person in USD")
+    @ApiModelProperty(value = "Approximate price estimation for one person in USD", required = true, example = "50")
     private Double pricing = null;
 
     @JsonProperty("time_effort")
-    @ApiModelProperty(value = "Approximate time estimation")
+    @ApiModelProperty(value = "Approximate time estimation", required = true, example = "2")
     private Double timeEffort = null;
 
     @JsonProperty("average_rating")
-    @ApiModelProperty(value = "Average percentage rating by user")
+    @ApiModelProperty(value = "Average percentage rating by user", required = true, example = "0.98")
     private Double averageRating = null;
 
     @JsonProperty("ratings")
@@ -53,7 +53,7 @@ public class Stop extends AbstractDataTransferObject {
     private List<Rating> ratings = null;
 
     @JsonProperty("category")
-    @ApiModelProperty(value = "Category")
+    @ApiModelProperty(value = "Category", required = true)
     private Category category = null;
 
     public Stop id(int id) {
@@ -284,8 +284,12 @@ public class Stop extends AbstractDataTransferObject {
         stopEntity.setPricing(this.pricing);
         stopEntity.setTimeEffort(this.timeEffort);
         stopEntity.setAverageRating(this.averageRating);
-        Set<RatingEntity> ratingEntities = new HashSet<>();
-        this.ratings.forEach(rating -> ratingEntities.add(rating.toEntity()));
+        Set<StopRatingEntity> ratingEntities = new HashSet<>();
+        this.ratings.forEach(rating -> {
+            StopRatingEntity stopRatingEntity = (StopRatingEntity) rating.toEntity();
+            stopRatingEntity.setStop(stopEntity);
+            ratingEntities.add(stopRatingEntity);
+        });
         stopEntity.setRatings(ratingEntities);
         stopEntity.setCategory(this.category.toEntity());
         return stopEntity;

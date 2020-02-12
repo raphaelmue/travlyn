@@ -1,8 +1,10 @@
 package org.travlyn.shared.model.db;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Objects;
 
-@Embeddable
+@Entity
 @Table(name = "trip_stop")
 public class TripStopEntity implements DataEntity {
 
@@ -11,24 +13,35 @@ public class TripStopEntity implements DataEntity {
     @Column(name = "id")
     private int id;
 
+    @Embedded
+    private TripStopId tripStopId = new TripStopId();
+
     @ManyToOne
-    @JoinColumn(name = "trip_id")
+    @MapsId(value = "tripId")
     private TripEntity trip;
 
     @ManyToOne
-    @JoinColumn(name = "stop_id")
+    @MapsId(value = "stopId")
     private StopEntity stop;
 
-    @Column(name = "index")
-    private int index;
+    @OneToOne(targetEntity = TripStopEntity.class)
+    @JoinColumn(name = "predecessor", referencedColumnName = "id")
+    private TripStopEntity predecessor;
 
-    @Override
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public TripStopId getTripStopId() {
+        return tripStopId;
+    }
+
+    public void setTripStopId(TripStopId id) {
+        this.tripStopId = id;
     }
 
     public TripEntity getTrip() {
@@ -47,11 +60,47 @@ public class TripStopEntity implements DataEntity {
         this.stop = stop;
     }
 
-    public int getIndex() {
-        return index;
+    public TripStopEntity getPredecessor() {
+        return predecessor;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
+    public void setPredecessor(TripStopEntity predecessor) {
+        this.predecessor = predecessor;
+    }
+
+    @Embeddable
+    public static class TripStopId implements Serializable {
+        private int tripId;
+        private int stopId;
+
+        public int getTripId() {
+            return tripId;
+        }
+
+        public void setTripId(int tripId) {
+            this.tripId = tripId;
+        }
+
+        public int getStopId() {
+            return stopId;
+        }
+
+        public void setStopId(int stopId) {
+            this.stopId = stopId;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            TripStopId that = (TripStopId) o;
+            return tripId == that.tripId &&
+                    stopId == that.stopId;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(tripId, stopId);
+        }
     }
 }

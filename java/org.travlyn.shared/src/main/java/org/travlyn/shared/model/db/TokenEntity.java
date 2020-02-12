@@ -1,5 +1,7 @@
 package org.travlyn.shared.model.db;
 
+import org.travlyn.shared.model.api.Token;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -63,5 +65,10 @@ public class TokenEntity implements DataEntity {
 
     public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
+    }
+
+    @Override
+    public Token toDataTransferObject() {
+        return new Token().id(this.id).token(this.token).ipAddress(this.ipAddress);
     }
 }

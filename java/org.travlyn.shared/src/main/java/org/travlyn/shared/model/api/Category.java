@@ -14,11 +14,11 @@ import java.util.Objects;
 public class Category extends AbstractDataTransferObject {
 
     @JsonProperty("id")
-    @ApiModelProperty(value = "Identifier")
+    @ApiModelProperty(value = "Identifier", required = true, example = "123")
     private int id = -1;
 
     @JsonProperty("name")
-    @ApiModelProperty(value = "Name")
+    @ApiModelProperty(value = "Name", required = true, example = "tourism")
     private String name = null;
 
     public Category id(int id) {
