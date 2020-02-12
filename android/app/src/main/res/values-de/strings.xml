@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Travlyn</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="error_invalid_credentials">Deine Anmeldedaten sind inkorrekt.</string>
+    <string name="menu_gallery">Gallerie</string>
+    <string name="menu_home">Start</string>
+    <string name="menu_send">Senden</string>
+    <string name="menu_share">Teilen</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Tools</string>
+    <string name="navigation_drawer_close">Navigation schließen</string>
+    <string name="navigation_drawer_open">Navigation öffnen</string>
+    <string name="sign_in">Anmelden</string>
+    <string name="email">Email Addresse</string>
+    <string name="password">Passwort</string>
+    <string name="welcome">Willkommen, %1$s!</string>
+    <string name="logout">Abmelden</string>
+    <string name="successfully_logged_out">Du hast dich erfolgreich ausgeloggt.</string>
+    <string name="undo">Rückgängig</string>
+    <string name="error_field_required">Dieses Feld wird benötigt.</string>
+    <string name="error_unknown">Ein unbekannter Fehler ist aufgetreten. Bei Problemen, bitte an den Support wenden.</string>
+</resources>

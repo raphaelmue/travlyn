@@ -27,7 +27,7 @@ public interface UserApi {
     @GetMapping(
             value = "/user/{userId}/trips",
             produces = {"application/json"})
-    ResponseEntity<List<Trip>> getTripsByUserId(@ApiParam(value = "ID of the user whose trips are to be returned", required = true) @PathVariable("userId") Long userId);
+    ResponseEntity<List<Trip>> getTripsByUserId(@ApiParam(value = "ID of the user whose trips are to be returned", required = true, defaultValue = "-1", example = "123") @PathVariable("userId") Long userId);
 
     @ApiOperation(
             value = "Logs user into the system",
@@ -41,8 +41,8 @@ public interface UserApi {
     @GetMapping(
             value = "/user",
             produces = {"application/json"})
-    ResponseEntity<User> loginUser(@NotNull @ApiParam(value = "The email for login", required = true) @Valid @RequestParam(value = "email") String email,
-                                   @NotNull @ApiParam(value = "The password for login in clear text", required = true) @Valid @RequestParam(value = "password") String password);
+    ResponseEntity<User> loginUser(@NotNull @ApiParam(value = "The email for login", required = true, example = "test@email.com") @Valid @RequestParam(value = "email") String email,
+                                   @NotNull @ApiParam(value = "The password for login in clear text", required = true, example = "secret") @Valid @RequestParam(value = "password") String password);
 
     @ApiOperation(
             value = "Log out current logged in user session",
@@ -55,7 +55,8 @@ public interface UserApi {
             @ApiResponse(code = 401, message = "You are not authorized to perform this action")})
     @DeleteMapping(
             value = "/user")
-    ResponseEntity<Void> logoutUser(@NotNull @ApiParam(value = "The user to logout", required = true) @Valid @RequestParam(value = "user") User user);
+    ResponseEntity<Void> logoutUser(@NotNull @ApiParam(value = "The user to logout", required = true, example = "{id: 123, email: \"test@email.com\", name: \"Test User\"}")
+                                    @Valid @RequestParam(value = "user") User user);
 
     @ApiOperation(
             value = "Create a new User",
@@ -69,9 +70,9 @@ public interface UserApi {
     @PutMapping(
             value = "/user",
             produces = {"application/json"})
-    ResponseEntity<User> registerUser(@NotNull @ApiParam(value = "The email for registration", required = true) @Valid @RequestParam(value = "email") String email,
-                                      @NotNull @ApiParam(value = "The name for registration", required = true) @Valid @RequestParam(value = "Name") String name,
-                                      @NotNull @ApiParam(value = "The password for registration in clear text", required = true) @Valid @RequestParam(value = "password") String password);
+    ResponseEntity<User> registerUser(@NotNull @ApiParam(value = "The email for registration", required = true, example = "test@email.com") @Valid @RequestParam(value = "email") String email,
+                                      @NotNull @ApiParam(value = "The name for registration", required = true, example = "Test User") @Valid @RequestParam(value = "Name") String name,
+                                      @NotNull @ApiParam(value = "The password for registration in clear text", required = true, example = "secret") @Valid @RequestParam(value = "password") String password);
 
     @ApiOperation(
             value = "Update users information",
@@ -83,6 +84,7 @@ public interface UserApi {
             @ApiResponse(code = 200, message = "successful operation"),
             @ApiResponse(code = 401, message = "You are not authorized to perform this action")})
     @PostMapping(value = "/user")
-    ResponseEntity<Void> updateUser(@NotNull @ApiParam(value = "Updated user object", required = true) @Valid @RequestParam(value = "user") User user);
+    ResponseEntity<Void> updateUser(@NotNull @ApiParam(value = "Updated user object", required = true, example = "{id: 123, email: \"test@email.com\", name: \"Test User\"}")
+                                    @Valid @RequestParam(value = "user") User user);
 
 }

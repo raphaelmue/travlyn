@@ -14,19 +14,19 @@ import java.util.Objects;
 public class City extends AbstractDataTransferObject {
 
     @JsonProperty("id")
-    @ApiModelProperty(value = "Identifier")
+    @ApiModelProperty(value = "Identifier", required = true, example = "123")
     private int id = -1;
 
     @JsonProperty("name")
-    @ApiModelProperty(value = "Name")
+    @ApiModelProperty(value = "Name", required = true, example = "New York")
     private String name = null;
 
     @JsonProperty("image")
-    @ApiModelProperty(value = "URL to image")
+    @ApiModelProperty(value = "URL to image", required = true, example = "https://example.org/image")
     private String image = null;
 
     @JsonProperty("description")
-    @ApiModelProperty(value = "Description text")
+    @ApiModelProperty(value = "Description text", required = true, example = "This is a description text for New York.")
     private String description = null;
 
     public City id(int id) {

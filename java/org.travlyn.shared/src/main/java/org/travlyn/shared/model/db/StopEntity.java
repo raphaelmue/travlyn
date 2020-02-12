@@ -33,8 +33,9 @@ public class StopEntity implements DataEntity {
     @Column(name = "average_rating")
     private double averageRating;
 
-    @OneToMany(mappedBy = "entity")
-    private Set<RatingEntity> ratings;
+    @OneToMany
+    @JoinColumn(name = "ratable")
+    private Set<StopRatingEntity> ratings;
 
     @OneToOne(targetEntity = CategoryEntity.class)
     private CategoryEntity category;
@@ -104,11 +105,11 @@ public class StopEntity implements DataEntity {
         this.averageRating = averageRating;
     }
 
-    public Set<RatingEntity> getRatings() {
+    public Set<StopRatingEntity> getRatings() {
         return ratings;
     }
 
-    public void setRatings(Set<RatingEntity> ratings) {
+    public void setRatings(Set<StopRatingEntity> ratings) {
         this.ratings = ratings;
     }
 

@@ -26,8 +26,8 @@ public interface StopApi {
             @ApiResponse(code = 401, message = "You are not authorized to perform this action")})
     @PostMapping(
             value = "/stop/{stopId}")
-    ResponseEntity<Void> rateStop(@ApiParam(value = "ID of the stop that will be rated", required = true) @PathVariable("stopId") Long stopId,
-                                  @NotNull @ApiParam(value = "Rating to be created", required = true) @Valid @RequestParam(value = "rating") Rating rating);
+    ResponseEntity<Void> rateStop(@ApiParam(value = "ID of the stop that will be rated", required = true, defaultValue = "-1", example = "123") @PathVariable("stopId") Long stopId,
+                                  @NotNull @ApiParam(value = "Rating to be created", required = true, defaultValue = "-1", example = "0.75") @Valid @RequestParam(value = "rating") Rating rating);
 
     @ApiOperation(
             value = "Get Stop by ID",
@@ -42,6 +42,6 @@ public interface StopApi {
     @GetMapping(
             value = "/stop/{stopId}",
             produces = {"application/json"})
-    ResponseEntity<Stop> stopStopIdGet(@ApiParam(value = "ID of the stop that will be returned", required = true) @PathVariable("stopId") Long stopId);
+    ResponseEntity<Stop> stopStopIdGet(@ApiParam(value = "ID of the stop that will be returned", required = true, defaultValue = "-1", example = "123") @PathVariable("stopId") Long stopId);
 
 }

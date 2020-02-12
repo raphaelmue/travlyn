@@ -24,14 +24,14 @@ public class APIRequest {
     public APIRequest(String apiURL, Set<Pair<String, String>> parameters) {
         HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(apiURL)).newBuilder();
         for (Map.Entry<String, String> entry : parameters) {
-            urlBuilder.addQueryParameter(entry.getKey(),entry.getValue());
+            urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
         }
         client = new OkHttpClient();
         this.requestURL = urlBuilder.build().toString();
     }
 
-    public APIRequest(String apiURL, Set<Pair<String, String>> parameters, String postBody){
-        this(apiURL,parameters);
+    public APIRequest(String apiURL, Set<Pair<String, String>> parameters, String postBody) {
+        this(apiURL, parameters);
         this.postBody = postBody;
     }
 
@@ -41,7 +41,7 @@ public class APIRequest {
     }
 
     public String performAPICallGET() throws IOException {
-        Request request = new Request.Builder().header("Accept","application/json").url(requestURL).build();
+        Request request = new Request.Builder().header("Accept", "application/json").url(requestURL).build();
         return client.newCall(request).execute().body().string();
     }
 

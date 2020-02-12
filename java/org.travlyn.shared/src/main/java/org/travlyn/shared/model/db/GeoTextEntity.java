@@ -4,12 +4,15 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "geo_text")
-public class GeoTextEntity implements DataEntity{
+public class GeoTextEntity implements DataEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+
+    @ManyToOne
+    private TripEntity trip;
 
     @ManyToOne(targetEntity = StopEntity.class)
     private StopEntity stop;
@@ -24,6 +27,14 @@ public class GeoTextEntity implements DataEntity{
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public TripEntity getTrip() {
+        return trip;
+    }
+
+    public void setTrip(TripEntity trip) {
+        this.trip = trip;
     }
 
     public StopEntity getStop() {

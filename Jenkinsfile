@@ -19,6 +19,11 @@ pipeline {
                         dir('java') {
                             sh 'mvn clean install -DskipTests'
                         }
+                        // post {
+                        //     always {
+                        //         archiveArtifacts artifacts: '**/*.msi, **/*.deb, **/*.dmg, **/*.apk', fingerprint: true
+                        //     }
+                        // }
                     }
                 }
                 stage('Android') {
@@ -39,29 +44,22 @@ pipeline {
             }
         }
 
-        stage('Unit Tests') {
+        stage('Tests') {
             parallel {
                 stage('Java') {
                     steps {
                         dir('java') {
-                            sh 'mvn test -P unit-tests'
+                            sh 'mvn test'
                         }
                     }
                 }
                 stage('Android') {
                     steps {
                         dir('android') {
-                            // sh 'chmod +x gradlew'
-                            // sh './gradlew test'
+                             sh 'chmod +x gradlew'
+                             sh './gradlew test'
                         }
                     }
-                }
-            }
-        }
-        stage('Integration Tests') {
-            steps {
-                dir('java') {
-                    sh 'mvn test -P integration-tests'
                 }
             }
         }
@@ -98,14 +96,6 @@ pipeline {
                 }
             }
         }
-        /* stage('Deploy') {
-            when {
-                branch 'deployment'
-            }
-            steps {
-
-            }
-        } */
     }
     post {
         always {
