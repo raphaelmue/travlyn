@@ -61,15 +61,7 @@ open class ApiClient(val baseUrl: String, open val application: Application) {
             mediaType == JsonMediaType -> {
                 return Gson().toJson(content).toRequestBody(mediaType.toMediaTypeOrNull())
             }
-            mediaType == XmlMediaType -> {
-                TODO("xml not currently supported.")
-            }
-
-            // TODO: this should be extended with other serializers
         }
-
-        // TODO: this should be extended with other serializers
-        TODO("requestBody currently only supports JSON body and File body.")
     }
 
     protected inline fun <reified T : Any?> responseBody(

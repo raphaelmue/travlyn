@@ -14,7 +14,6 @@ import kotlinx.coroutines.*
 import org.travlyn.R
 import org.travlyn.api.UserApi
 import org.travlyn.api.model.User
-import org.travlyn.infrastructure.ServerException
 import org.travlyn.local.Application
 import org.travlyn.local.Formatter
 import org.travlyn.local.LocalStorage
@@ -85,11 +84,7 @@ class LoginActivity : AppCompatActivity(), Application {
 
     private suspend fun handleLoginRequest(): User? {
         delay(2000)
-        return try {
-            api.loginUser(emailTextEdit.text.toString(), passwordTextEdit.text.toString())
-        } catch (e: ServerException) {
-            null
-        }
+        return api.loginUser(emailTextEdit.text.toString(), passwordTextEdit.text.toString())
     }
 
     /**
