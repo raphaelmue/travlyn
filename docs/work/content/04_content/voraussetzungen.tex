@@ -112,15 +112,36 @@
 				\label{fig:dockerComparison}
 			\end{figure} 
 			
-			\subsubsection{DockerHub}		
+			\subsubsection{DockerHub} % Raphael		
 				
 				Eine Platform, die ebenfalls von Docker Inc. bereitgestellt wird, ist der sog. DockerHub. Dieser stellt eine Registry für Docker Images und Repositories dar und bietet dem Nutzer die Möglichkeit selbst erstellte Images hochzuladen und somit anderen Nutzern zur Verfügung zu stellen. 
 				
 				Ferner bietet Docker eine Versionsverwaltung, welche es ermöglicht verschiedene Versionen eines Images zu erstellen. So sind die verschiedenen Versionen eines Images auf dem DockerHub einsehbar.
 		
-		\subsection{Android}
+		\subsection{Android} % Raphael
+	
+			Google stellt für die Entwicklung von Client-Applikation auf dem Android Betriebssystem für mobile Endgeräte ein Software Development Kit \ac{SDK} zur Verfügung. Dies ermöglicht die Entwicklung von Android-Apps in den Programmiersprachen Kotlin, Java und C++. 
+			
+			Die Entscheidung, welche Programmiersprache zu verwenden, beschränkte sich auf Java und das auf der\ac{JVM} basierende Kotlin, da bereits die genannte Frameworks ebenfalls in Java geschrieben sind und so Einheitlichkeit herrscht. Die in \cite{AnnieDossey.2019} beschriebenen Argumente sprechen für die Verwendung von Kotlin bei der Entwicklung von Android Apps. Da Kotlin zwar ähnlich, aber nicht identisch zu Java ist, folgt aus dieser Entscheidung zudem ein Lernprozess und eine Weiterbildungsmaßnahme -- es sind keine Kenntnisse und Erfahrungen über Kotlin vorhanden --, welche durch von einer wissenschaftlichen Arbeit wie dieser auch gefordert sind. 
 		
-			\subsection{Kotlin}
+			\subsubsection{Kotlin} % Raphael
+			
+				Kotlin ist eine plattformunabhängige und statisch typisierte Programmiersprache, die von JetBrains entwickelt wurde. Beim Kompilieren wird der Quellcode in einen Bytecode übersetzt, der unter Anderem auf der JVM laufen kann. Seit 2017 wurde Kotlin offiziell von Google für die Entwicklung von Android Apps unterstützt \cite{JetBrains.2017}. 
+				
+				Ein Vorteil von Kotlin gegenüber Java sing sog. Coroutines. Coroutines erleichtern die asynchrone Programmierung, indem die Java verwendeten Callbacks -- meist durch anonyme Klassen oder seit Java 8 durch Lambdas -- ersetzt werden. Coroutines lassen sich als leichtgewichtige Threads bezeichnen und verhalten sich ähnlich wie Jobs: Auf einem Thread können mehrere Coroutines existieren und unabhängig agieren. Der Vorteil ist hierbei, dass diese deutlich performanter bzgl. Start und Erhalt. Zudem können Coroutines auch den aktuellen Thread zur Laufzeit mehrfach wechseln. Dies ermöglicht es, beispielsweise asynchron Daten von einer API abzurufen, und diese auf dem aktuellen UI Thread anzuzeigen und zwar innerhalb einer Coroutine und ohne den UI Thread zu blockieren. 
+				
+				Zu diesem Zweck hat Kotlin drei verschiedene Kontexte eingeführt unter denen eine Coroutine laufen kann:
+				
+				\begin{enumerate}
+					\item 
+						\textbf{Main: }Unter dem \textit{Main} Kontext laufen alle Operationen, die mit dem \ac{UI} interagieren. 
+					\item 
+						\textbf{IO}: Mithilfe des \textit{\ac{IO}} Kontextes werden Input/Output Operationen, wie beispielsweise der Zugriff auf eine Datei oder eine Web Ressource, ausgeführt.
+					\item 
+						\textbf{Default}: Coroutinen mit diesem Kontext stellen schwere Berechnungen an, um nicht den \ac{UI} Thread zu blockieren. 
+				\end{enumerate}
+				
+				Das Schlüsselwort \textit{suspend} in Methodenköpfen definiert, dass diese Methode in der Lage ist, asynchron zu arbeiten. Diese Methoden können entweder von weiteren \textit{suspend} Methoden aufgerufen werden, oder aber innerhalb einer Coroutine. 
 		
 	\section{Qualitätssichernde Maßnahmen}
 	
