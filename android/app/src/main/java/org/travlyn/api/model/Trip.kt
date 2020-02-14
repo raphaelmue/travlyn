@@ -24,12 +24,11 @@ package org.travlyn.api.model
  */
 data class Trip(
 
-    val id: Long? = null,
+    val id: Int? = null,
     val user: User? = null,
     val city: City? = null,
     val `private`: Boolean? = null,
     val stops: Array<Stop>? = null,
     val ratings: Array<Rating>? = null,
     val geoText: Array<GeoText>? = null
-) {
-}
+)

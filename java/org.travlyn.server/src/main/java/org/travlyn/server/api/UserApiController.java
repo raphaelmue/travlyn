@@ -50,15 +50,21 @@ public class UserApiController implements UserApi {
     public ResponseEntity<User> loginUser(@NotNull @Valid String email, @NotNull @Valid String password) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            return new ResponseEntity<>(travlynService.checkCredentials(email, password), HttpStatus.OK);
+            return new ResponseEntity<>(travlynService.checkCredentials(email, password, request.getRemoteAddr()), HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<Void> logoutUser(@NotNull @Valid User user) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        if (accept != null && accept.contains("application/json")) {
+            System.out.println(request.getQueryString());
+            System.out.println(user);
+            travlynService.logoutUser(user);
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<User> registerUser(@NotNull @Valid String email, @NotNull @Valid String name, @NotNull @Valid String password) {
@@ -79,5 +85,4 @@ public class UserApiController implements UserApi {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
-
 }

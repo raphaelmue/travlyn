@@ -22,7 +22,7 @@ package org.travlyn.api.model
  */
 data class City(
 
-    val id: Long? = null,
+    val id: Int? = null,
     val name: String? = null,
     /* URL to image */
     val image: String? = null,

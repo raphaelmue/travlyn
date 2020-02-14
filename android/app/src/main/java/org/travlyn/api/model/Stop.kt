@@ -27,7 +27,7 @@ package org.travlyn.api.model
  */
 data class Stop(
 
-    val id: Long? = null,
+    val id: Int? = null,
     val longitude: Double? = null,
     val latitude: Double? = null,
     val name: String? = null,

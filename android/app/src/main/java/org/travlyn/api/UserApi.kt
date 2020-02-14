@@ -14,9 +14,13 @@ package org.travlyn.api
 import org.travlyn.api.model.Trip
 import org.travlyn.api.model.User
 import org.travlyn.infrastructure.*
+import org.travlyn.local.Application
 
-class UserApi(basePath: String = "http://10.178.114.189:3000/travlyn/travlyn/1.0.0") :
-    ApiClient(basePath) {
+class UserApi(
+    basePath: String = "http://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
+    application: Application
+) :
+    ApiClient(basePath, application) {
 
     /**
      * Get all Trips of user
@@ -42,9 +46,11 @@ class UserApi(basePath: String = "http://10.178.114.189:3000/travlyn/travlyn/1.0
             ResponseType.ClientError -> throw ClientException(
                 (response as ClientError<*>).body as? String ?: "Client error"
             )
-            ResponseType.ServerError -> throw ServerException(
-                (response as ServerError<*>).message ?: "Server error"
-            )
+            ResponseType.ServerError -> {
+                throw ServerException(
+                    (response as ServerError<*>).message ?: "Server error"
+                )
+            }
         }
     }
 
@@ -56,7 +62,7 @@ class UserApi(basePath: String = "http://10.178.114.189:3000/travlyn/travlyn/1.0
      * @return User
      */
     @Suppress("UNCHECKED_CAST")
-    suspend fun loginUser(email: String, password: String): User {
+    suspend fun loginUser(email: String, password: String): User? {
         val localVariableQuery: MultiValueMap =
             mapOf("email" to listOf(email), "password" to listOf(password))
         val localVariableConfig = RequestConfig(
@@ -69,7 +75,13 @@ class UserApi(basePath: String = "http://10.178.114.189:3000/travlyn/travlyn/1.0
 
         println(response)
         return when (response.responseType) {
-            ResponseType.Success -> (response as Success<*>).data as User
+            ResponseType.Success -> {
+                if ((response as Success<*>).data != null) {
+                    (response as Success<*>).data as User
+                } else {
+                    null
+                }
+            }
             ResponseType.Informational -> TODO()
             ResponseType.Redirection -> TODO()
             ResponseType.ClientError -> throw ClientException(
@@ -88,7 +100,7 @@ class UserApi(basePath: String = "http://10.178.114.189:3000/travlyn/travlyn/1.0
      * @return void
      */
     suspend fun logoutUser(user: User) {
-        val localVariableQuery: MultiValueMap = mapOf("user" to listOf("$user"))
+        val localVariableQuery: MultiValueMap = user.toMap().toQueryParameters()
         val localVariableConfig = RequestConfig(
             RequestMethod.DELETE,
             "/user", query = localVariableQuery
@@ -105,7 +117,8 @@ class UserApi(basePath: String = "http://10.178.114.189:3000/travlyn/travlyn/1.0
                 (response as ClientError<*>).body as? String ?: "Client error"
             )
             ResponseType.ServerError -> throw ServerException(
-                (response as ServerError<*>).message ?: "Server error"
+                (response as ServerError<*>).message
+                    ?: "Server error (code: ${response.statusCode})"
             )
         }
     }
