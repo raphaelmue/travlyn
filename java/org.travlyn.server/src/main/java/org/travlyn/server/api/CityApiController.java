@@ -33,9 +33,14 @@ public class CityApiController implements CityApi{
     public ResponseEntity<City> getCity(@NotNull @Valid String city) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            return new ResponseEntity<>(travlynService.getCityWithInformation(city), HttpStatus.OK);
+            City result = travlynService.getCityWithInformation(city);
+            if (result != null) {
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

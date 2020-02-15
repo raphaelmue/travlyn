@@ -66,7 +66,7 @@ public class TravlynService {
     }
 
     /**
-     * Searches for city by name using DBmedia and returns city object with all infos.
+     * Searches for city by name using db cache / DBmedia and returns city object with all infos.
      * @param city Name of city that should be searched for
      * @return City with description, thumbnail, ...
      */
