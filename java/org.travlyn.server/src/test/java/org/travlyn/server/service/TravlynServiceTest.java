@@ -74,6 +74,7 @@ public class TravlynServiceTest {
     }
 
     @Test
+    @Transactional
     public void testGetCityWithInformation() {
         //valid search term
         City cityToAssert = service.getCityWithInformation("Wesel");

@@ -11,6 +11,7 @@ import org.travlyn.server.externalapi.access.DBpediaCityRequest;
 import org.travlyn.shared.model.api.City;
 import org.travlyn.shared.model.api.Token;
 import org.travlyn.shared.model.api.User;
+import org.travlyn.shared.model.db.CityEntity;
 import org.travlyn.shared.model.db.TokenEntity;
 import org.travlyn.shared.model.db.UserEntity;
 import org.travlyn.util.security.Hash;
@@ -69,9 +70,29 @@ public class TravlynService {
      * @param city Name of city that should be searched for
      * @return City with description, thumbnail, ...
      */
+    @Transactional
     public City getCityWithInformation(String city) {
-        DBpediaCityRequest request = new DBpediaCityRequest(city);
-        return request.getResult();
+        Session session = sessionFactory.getCurrentSession();
+        try {
+            CityEntity entity = session.createQuery("from CityEntity where name = :name", CityEntity.class)
+                    .setParameter("name", city)
+                    .getSingleResult();
+            //return cached city
+            assert entity != null;
+            City result = (City) entity.toDataTransferObject();
+            return result;
+
+        }catch (NoResultException noResult) {
+            //city is not cached --> get from api
+            DBpediaCityRequest request = new DBpediaCityRequest(city);
+            City result = request.getResult();
+            if (result != null) {
+                //valid city was found --> cache result
+                session.save(result.toEntity());
+                return result;
+            }
+        }
+        return null;
     }
 /**
      * Generates a token object with a random token string for a given user and stores it in the database.

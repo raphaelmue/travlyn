@@ -1,5 +1,8 @@
 package org.travlyn.shared.model.db;
 
+import org.travlyn.shared.model.api.City;
+import org.travlyn.shared.model.api.Token;
+
 import javax.persistence.*;
 
 @Entity
@@ -51,5 +54,10 @@ public class CityEntity implements DataEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public City toDataTransferObject() {
+        return new City().id(this.id).name(this.name).image(this.image).description(this.description);
     }
 }
