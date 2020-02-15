@@ -76,8 +76,7 @@ Unter funktionalen Eigenschaften wird alles spezifiziert, was ein System tun und
 \vspace{0.25cm}
 
 Zur Visualisierung der erwarteten funktionalen Eigenschaften wurde ein Use Case Diagramm erstellt.
-
-\begin{figure}[ht!]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=1\textwidth]{images/UCD.pdf}
 	\caption{Darstellung aller geplanten use cases mit den assoziierten Nutzerprofilen.}
@@ -85,3 +84,29 @@ Zur Visualisierung der erwarteten funktionalen Eigenschaften wurde ein Use Case 
 \end{figure}
 
 \newpage
+
+Alle in \autoref{fig:UCD} dargestellten use cases wurden auf ihre Kompatibilität zu Zielen und Rahmenbedingungen geprüft und für passend befunden. Zusätzlich wurden sie bereits grob priorisiert. Es ist wichtig zu erwähnen, dass viele der dargestellten use cases im Laufe der Entwicklung zu kleinen Einheiten aufteilt werden, die hier im Sinne der Übersichtlichkeit nicht dargestellt sind.
+
+Abschließend ist zu erwähnen, dass die funktionalen Anforderungen der in der Einführung geschilderten Funktionalität folgen soll.
+
+\subsection{Non-Funktionale Eigenschaften}
+Neben den geschilderten funktionalen Eigenschaften gibt es weitere Anforderungen, welche sich nicht direkt auf die Funktionalität und den Funktionalitätsumfang auswirken. Diese Eigenschaften werden auch \enquote{Quality of Service} (QoS) genannt und beinhalten häufig Eigenschaften wie  Genauigkeit, Verfügbarkeit und  Konsumierbarkeit. Es ist zu erwähnen, dass einige dieser Anforderungen miteinander in Konflikt stehen und ein geeigneter Mittelweg gefunden werden muss z.B. bestimmte Trade-offs eingegangen werden müssen, z.B. schränkt die Eigenschaft der möglichst hohen Sicherheit meist die Eigenschaft der Benutzbarkeit oder der Speichereffizienz ein \cite{Balzert.2009}.  
+
+\vspace{0.25cm}
+
+Für diese Softwareentwicklung soll für die non-funktionalen Eigenschaften als Orientierung die internationale ISO/IEC 25010 Norm gelten. Diese Norm setzt Standards für die Qualitätskriterien und -bewertung von Software und ist in drei Bereiche aufgeteilt\cite{ISO.2011} \cite{Braun.2016}:
+
+\begin{itemize}
+	\item \textbf{Quality In Use Model}: Dieser Teil beschreibt alle Merkmale, welche die Interaktion zwischen Mensch und System beschreiben, wie z.B. Effektivität und Freiheit von Risiken.
+	\item \textbf{Product Qualitiy Model}: Der zweite Teil der Norm beschreibt acht Charakteristiken, welche ein Softwareprodukt erfüllen sollte, u.a. Wartbarkeit, Sicherheit und Benutzbarkeit.
+	\item \textbf{Data Quality Model}: Der dritte und letzte Teil beschreibt Ansprüche, welche an das Datenmodel gestellt werden sollten um eine möglichst konsistente Benutzung der Daten zu ermöglichen.
+\end{itemize}
+
+Diese Norm ist sehr umfangreich und für ein Studienprojekt nicht vollständig umsetzbar, ohne den Zeit- und Aufwandsrahmen zu sprengen, deshalb wurde einige wichtige Punkte heraus gefiltert auf die ein besonderes Augenmerk gelegt werden soll. Zusätzlich wurden einige themenspezifische Anforderungen hinzugefügt. Daraus ergibt sich folgende Liste:
+
+\begin{itemize}
+	\item \textbf{Benutzbarkeit}: Durch die intensive mobile Benutzung der \textit{Travyln} App sollte diese für alle gängigen Gerätetypen eine gute Nutzungserfahrung bieten, die Nutzer überzeugen kann und die Reise angenehm verlaufen lässt. Explizit soll an dieser Stelle die Performance der Software genannt werden, welche bei anderen Applikationen häufig für eine schlechte Benutzbarkeit sorgt.
+	\item \textbf{Sicherheit}: Der Schutz persönlicher Daten wir immer wichtiger und soll auch bei \textit{Travyln} nicht vernachlässigt werden.
+	\item \textbf{Wartbarkeit}: Die Software sollte über die bereits beschriebenen qualitätssichernden Maßnahmen und durch eine entsprechende Architektur gut wart- und erweiterbar sein.
+	\item \textbf{Datenquellen}: Da diese Software im Rahmen eines Studienprojekts mit sehr begrenzten Ressourcen erstellt wird, können keine kostenpflichtige Services eingebunden werden. Außerdem sollen schwierige Lizenzfragen vermieden werden, indem komplett auf Opensource Dienste gesetzt wird, bei denen die Nutzung der Daten vollständig erlaubt und frei ist. 
+\end{itemize} 
