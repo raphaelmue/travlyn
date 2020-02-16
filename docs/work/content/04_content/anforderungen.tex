@@ -41,8 +41,9 @@ Folgend diesem Prinzip sind folgende Ziele entstanden:
 
 \begin{itemize}
 	\item Ein Nutzer soll sich vor einer Reise über \textit{Travlyn} folgende Informationen zu seiner Zielstadt einholen können: Name, Lage, Beschreibung und ein Bild, welches einen ersten Eindruck der Stadt vermittelt.
-	\item Vor und während der Reise wird \textit{Travlyn} den Nutzer entlang einer vorher festlegten Route durch die Stadt leiten und Informationen, wie Beschreibungen, Bilder und Kosten anzeigen.
-	\item Während der Führung durch \textit{Travlyn} werden einzelne Texte per machine learning zu einer zusammenhängenden Führung zusammengefasst und von Android vorgelesen um den Eindruck eines realen Guides zu schaffen.  
+	\item Vor und während der Reise wird \textit{Travlyn} den Nutzer entlang einer vorher festlegten Route durch die Stadt leiten und Informationen, wie Beschreibungen, Bilder und Kosten anzeigen. Die Route beinhaltet Stops an interessanten Orten der Stadt, wie Sehenswürdigkeiten und spannenden Aktivitäten.
+	\item Während der Führung durch \textit{Travlyn} werden einzelne Texte per machine learning zu einer zusammenhängenden Führung zusammengefasst und von Android vorgelesen um den Eindruck eines realen Guides zu schaffen.
+	\item Der Nutzer kann Reisepläne teilen und Pläne von anderen Nutzern einsehen können, um sich inspirieren zu lassen und seinen eigenen Plan an den existierenden Plänen orientieren zu können. 
 \end{itemize}
 
 \section{Rahmenbedingungen}
@@ -85,12 +86,31 @@ Zur Visualisierung der erwarteten funktionalen Eigenschaften wurde ein Use Case 
 
 \newpage
 
+In der vorliegenden Grafik wird der Begriff \enquote{Trip} geprägt, welcher sich durch die gesamte Softwareentwicklung und Arbeit ziehen wird.
+
+\begin{defStrich}[Trip]
+	Ein Trip ist eine durch den Server erstellte Abfolge von sehenswerten Punkten in einer Stadt. Damit ist jeder Trip eindeutig einer Stadt zugeordnet. Neben den Punkten und der Route um sich entlang der Punkte zu bewegen, werden weitere Metainformationen zu den Punkten geliefert, die einen Besuch noch interessanter machen.
+\end{defStrich} 
+
+\vspace{0.25cm}
+
+\autoref{fig:UCD} zeigt neben den use cases auch die Nutzerprofile, denen die use cases zugeordnet sind. Für \textit{Travyln} sind vier Nutzerprofile geplant. Der \enquote{interessierte Nutzer} benutzt die App eher zufällig und ohne die Intention sie aktiv für eine Reise einzusetzen. Sein Ziel ist es sich über die Funktionalität und bereits bestehende Trips zu informieren. Sollte der Nutzer in dieser Phase ansprechende Informationen finden und sich entscheiden \textins{Travyln} für die nächste Reise einzusetzen entwickelt er sich zum \enquote{Öffentlichen Nutzer}, welcher ohne sich anzumelden oder registrieren alle Aktionen auf Trips ausführen kann und die volle Funktionalität zur Durchführung von Trips nutzt. Darauf aufbauend ist eine freiwillige Registrierung möglich, um persönliche Daten zu hinterlegen und alle eigenen Trips in an einem persönlichen Platz zu speichern. Alle Nutzer die sich dafür entscheiden liegen im Profil \enquote{registrierter Nutzer}.
+
+\vspace{0.25cm}
+
+Da die RESTAPI, die im Zuge dieser Softwareentwicklung erstellt wird öffentlich angeboten wird, ist es möglich diese API in fremden Applikationen zu eigenen Zwecken zu Nutzen, in dieser Form bildet sich das Profil \enquote{API Nutzer}.
+
+\vspace{0.25cm}
+
+ 
 Alle in \autoref{fig:UCD} dargestellten use cases wurden auf ihre Kompatibilität zu Zielen und Rahmenbedingungen geprüft und für passend befunden. Zusätzlich wurden sie bereits grob priorisiert. Es ist wichtig zu erwähnen, dass viele der dargestellten use cases im Laufe der Entwicklung zu kleinen Einheiten aufteilt werden, die hier im Sinne der Übersichtlichkeit nicht dargestellt sind.
+
+
 
 Abschließend ist zu erwähnen, dass die funktionalen Anforderungen der in der Einführung geschilderten Funktionalität folgen soll.
 
 \subsection{Non-Funktionale Eigenschaften}
-Neben den geschilderten funktionalen Eigenschaften gibt es weitere Anforderungen, welche sich nicht direkt auf die Funktionalität und den Funktionalitätsumfang auswirken. Diese Eigenschaften werden auch \enquote{Quality of Service} (QoS) genannt und beinhalten häufig Eigenschaften wie  Genauigkeit, Verfügbarkeit und  Konsumierbarkeit. Es ist zu erwähnen, dass einige dieser Anforderungen miteinander in Konflikt stehen und ein geeigneter Mittelweg gefunden werden muss z.B. bestimmte Trade-offs eingegangen werden müssen, z.B. schränkt die Eigenschaft der möglichst hohen Sicherheit meist die Eigenschaft der Benutzbarkeit oder der Speichereffizienz ein \cite{Balzert.2009}.  
+Neben den geschilderten funktionalen Eigenschaften gibt es weitere Anforderungen, welche sich nicht direkt auf die Funktionalität und den Funktionalitätsumfang auswirken. Diese Eigenschaften werden auch \enquote{Quality of Service} (QoS) genannt und beinhalten häufig Eigenschaften wie  Genauigkeit, Verfügbarkeit und  Konsumierbarkeit. Es ist zu erwähnen, dass einige dieser Anforderungen miteinander in Konflikt stehen und ein geeigneter Mittelweg gefunden werden muss bzw. bestimmte Trade-offs eingegangen werden müssen, z.B. schränkt die Eigenschaft der möglichst hohen Sicherheit meist die Eigenschaft der Benutzbarkeit oder der Speichereffizienz ein \cite{Balzert.2009}.  
 
 \vspace{0.25cm}
 
@@ -102,11 +122,13 @@ Für diese Softwareentwicklung soll für die non-funktionalen Eigenschaften als 
 	\item \textbf{Data Quality Model}: Der dritte und letzte Teil beschreibt Ansprüche, welche an das Datenmodel gestellt werden sollten um eine möglichst konsistente Benutzung der Daten zu ermöglichen.
 \end{itemize}
 
-Diese Norm ist sehr umfangreich und für ein Studienprojekt nicht vollständig umsetzbar, ohne den Zeit- und Aufwandsrahmen zu sprengen, deshalb wurde einige wichtige Punkte heraus gefiltert auf die ein besonderes Augenmerk gelegt werden soll. Zusätzlich wurden einige themenspezifische Anforderungen hinzugefügt. Daraus ergibt sich folgende Liste:
+Diese Norm ist sehr umfangreich und für ein Studienprojekt nicht vollständig umsetzbar, ohne den Zeit- und Aufwandsrahmen zu sprengen, deshalb wurde einige wichtige Punkte ausgewählt auf die ein besonderes Augenmerk gelegt werden soll. Zusätzlich wurden einige themenspezifische Anforderungen hinzugefügt. Daraus ergibt sich folgende Liste:
 
 \begin{itemize}
-	\item \textbf{Benutzbarkeit}: Durch die intensive mobile Benutzung der \textit{Travyln} App sollte diese für alle gängigen Gerätetypen eine gute Nutzungserfahrung bieten, die Nutzer überzeugen kann und die Reise angenehm verlaufen lässt. Explizit soll an dieser Stelle die Performance der Software genannt werden, welche bei anderen Applikationen häufig für eine schlechte Benutzbarkeit sorgt.
-	\item \textbf{Sicherheit}: Der Schutz persönlicher Daten wir immer wichtiger und soll auch bei \textit{Travyln} nicht vernachlässigt werden.
-	\item \textbf{Wartbarkeit}: Die Software sollte über die bereits beschriebenen qualitätssichernden Maßnahmen und durch eine entsprechende Architektur gut wart- und erweiterbar sein.
-	\item \textbf{Datenquellen}: Da diese Software im Rahmen eines Studienprojekts mit sehr begrenzten Ressourcen erstellt wird, können keine kostenpflichtige Services eingebunden werden. Außerdem sollen schwierige Lizenzfragen vermieden werden, indem komplett auf Opensource Dienste gesetzt wird, bei denen die Nutzung der Daten vollständig erlaubt und frei ist. 
+	\item \textbf{Benutzbarkeit}: Durch die intensive mobile Benutzung der \textit{Travyln} App sollte diese für alle gängigen Gerätetypen eine gute Nutzungserfahrung bieten, die Nutzer überzeugen kann und die Reise angenehm verlaufen lässt. Explizit soll an dieser Stelle die Performance der Software genannt werden, welche bei anderen Applikationen häufig für eine schlechte Benutzbarkeit sorgt. Außerdem sollen ansprechende User Interfaces designed werden, die den Nutzer zur Nutzung einladen und z.B. über Spracheinstellungen für möglichst viele Personen anpassbar sind.
+	\item \textbf{Sicherheit}: Der Schutz persönlicher Daten wir immer wichtiger und soll auch bei \textit{Travyln} nicht vernachlässigt werden. Sowohl die API als auch der Client sollen nicht anfällig für gängige Angriffe, wie Injections oder Denail of Service sein und sicherstellen, dass persönliche Daten nur an authentifizierte Nutzer ausgeliefert/angezeigt werden.
+	\item \textbf{Wartbarkeit}: Die Software sollte über die bereits beschriebenen qualitätssichernden Maßnahmen und durch eine entsprechende Architektur gut wart- und erweiterbar sein. An dieser Stelle ist der Verzicht auf \enquote{code ownership} besonders hervorzuheben, d.h. alle Teilnehmer des Entwicklungsteams haben Einblicke in alle Teile des Codes und können im Notfall Korrekturen und Erweiterungen vornehmen. Es ist nicht erwünscht, dass einzelne Code Teile nur von einer Person geschrieben, gepflegt und gewartet werden. Außerdem soll durch den Server eine ausführliche Dokumentation der Benutzung angefertigt werden, um auftretende Fehler identifizieren und beheben zu können. Hierzu sollen alle Aktionen und ihr Ergebnis in geeigneter Weise persistiert werden.
+	\item \textbf{Datenquellen}: Da diese Software im Rahmen eines Studienprojekts mit sehr begrenzten Ressourcen erstellt wird, können keine kostenpflichtige Services eingebunden werden. Außerdem sollen schwierige Lizenzfragen vermieden werden, indem komplett auf Opensource Dienste gesetzt wird, bei denen die Nutzung der Daten vollständig erlaubt und frei ist. In den folgenden Kapiteln wird genauer auf dieses Thema eingegangen und die verschiedenen Alternativen um Daten zu beschaffen genauer vorgestellt.
+	\item \textbf{Zuverlässigkeit}: Der Nutzer soll sich auf \textit{Travyln} verlassen können. Es ist wichtig, dass vor allem während einer Reise alle Funktionen zur Verfügung stehen und verhindern, dass der Nutzer alleine gelassen bzw. gezwungen wird auf andere Diensten zurückgreifen zu müssen.
+	Außerdem sollten die downtimes für die API und den Client so gering wie möglich sein.
 \end{itemize} 
