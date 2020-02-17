@@ -1,4 +1,4 @@
-package org.travlyn.server.externalapi;
+package org.travlyn.server.externalapi.access;
 
 import okhttp3.*;
 import org.travlyn.server.util.Pair;
@@ -20,6 +20,10 @@ public class APIRequest {
     private final String requestURL;
     private final OkHttpClient client;
     private String postBody;
+
+    public APIRequest(String apiURL, Set<Pair<String, String>> parameters,Set<Pair<String,String>> header){
+        this(apiURL,parameters);
+    }
 
     public APIRequest(String apiURL, Set<Pair<String, String>> parameters) {
         HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(apiURL)).newBuilder();
@@ -48,6 +52,7 @@ public class APIRequest {
     public String performAPICallPOST() throws IOException {
         Request request = new Request.Builder()
                 .url(requestURL)
+                .header("Accept", "application/json")
                 .post(RequestBody.create(postBody, MEDIA_TYPE_JSON))
                 .build();
 

@@ -3,7 +3,6 @@ package org.travlyn.server.externalapi.access;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.travlyn.server.externalapi.APIRequest;
 import org.travlyn.server.util.Pair;
 
 import java.io.IOException;
