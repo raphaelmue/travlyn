@@ -19,7 +19,12 @@ import androidx.core.content.PermissionChecker
 import androidx.core.content.PermissionChecker.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.arlib.floatingsearchview.FloatingSearchView
+import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.osmdroid.config.Configuration
 import org.osmdroid.library.BuildConfig
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -29,7 +34,10 @@ import org.osmdroid.views.overlay.compass.CompassOverlay
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
+import org.travlyn.MainActivity
 import org.travlyn.R
+import org.travlyn.api.CityApi
+import org.travlyn.api.model.City
 
 
 class HomeFragment : Fragment() {
@@ -39,7 +47,7 @@ class HomeFragment : Fragment() {
     private val animationSpeed: Long = 300
 
     private lateinit var currentLocation: GeoPoint
-
+    private lateinit var cityApi: CityApi
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,6 +60,8 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        this.cityApi = CityApi(application = activity as MainActivity)
 
         Configuration.getInstance()
             .load(context, PreferenceManager.getDefaultSharedPreferences(context))
@@ -79,6 +89,18 @@ class HomeFragment : Fragment() {
             focusCurrentLocation()
         }
 
+        searchBarHome.setOnSearchListener(object: FloatingSearchView.OnSearchListener{
+            override fun onSearchAction(currentQuery: String?) {
+                if (currentQuery != null) {
+                    handleSearchCity(currentQuery)
+                }
+            }
+
+            override fun onSuggestionClicked(searchSuggestion: SearchSuggestion?) {
+                handleSearchCity(searchSuggestion.toString())
+            }
+        })
+
         setLocationListener()
     }
 
@@ -90,6 +112,17 @@ class HomeFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         mapView.onPause()
+    }
+
+    private fun handleSearchCity(query: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val city: City? = cityApi.getCity(query)
+            if (city != null) {
+                TODO("show detailed bottom dialog and and zoom to city")
+            } else {
+                TODO("show toast")
+            }
+        }
     }
 
     private fun focusCurrentLocation() {

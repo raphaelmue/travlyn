@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Controller
-public class CityApiController implements CityApi{
+public class CityApiController implements CityApi {
     private static final Logger log = LoggerFactory.getLogger(StopApiController.class);
     private final ObjectMapper objectMapper;
     private final HttpServletRequest request;
@@ -30,16 +30,16 @@ public class CityApiController implements CityApi{
     }
 
     @Override
-    public ResponseEntity<City> getCity(@NotNull @Valid String city) {
+    public ResponseEntity<City> getCity(@NotNull @Valid String query) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            City result = travlynService.getCityWithInformation(city);
+            City result = travlynService.getCityWithInformation(query);
             if (result != null) {
                 return new ResponseEntity<>(result, HttpStatus.OK);
-            }else{
+            } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-        }else{
+        } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

@@ -67,6 +67,7 @@ public class TravlynService {
 
     /**
      * Searches for city by name using db cache / DBmedia and returns city object with all infos.
+     *
      * @param city Name of city that should be searched for
      * @return City with description, thumbnail, ...
      */
@@ -77,24 +78,23 @@ public class TravlynService {
             CityEntity entity = session.createQuery("from CityEntity where name = :name", CityEntity.class)
                     .setParameter("name", city)
                     .getSingleResult();
-            //return cached city
-            assert entity != null;
-            City result = (City) entity.toDataTransferObject();
-            return result;
 
-        }catch (NoResultException noResult) {
-            //city is not cached --> get from api
+            //return cached city
+            return entity.toDataTransferObject();
+        } catch (NoResultException noResult) {
+            // city is not cached --> get from api
             DBpediaCityRequest request = new DBpediaCityRequest(city);
             City result = request.getResult();
             if (result != null) {
-                //valid city was found --> cache result
+                // valid city was found --> cache result
                 session.save(result.toEntity());
                 return result;
             }
         }
         return null;
     }
-/**
+
+    /**
      * Generates a token object with a random token string for a given user and stores it in the database.
      *
      * @param user user to which the token belongs

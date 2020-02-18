@@ -20,7 +20,7 @@ public class CityEntity implements DataEntity {
     @Column(name = "image")
     private String image;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 65536)
     private String description;
 
     @Override

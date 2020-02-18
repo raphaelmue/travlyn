@@ -22,8 +22,8 @@ public interface CityApi {
             @ApiResponse(code = 200, message = "successful operation", response = City.class),
             @ApiResponse(code = 401, message = "You are not authorized to perform this action")})
     @GetMapping(
-            value = "/city/",
+            value = "/city",
             produces = {"application/json"})
-    ResponseEntity<City> getCity(@ApiParam(value = "Name of the city that should be searched for", required = true, defaultValue = "", example = "Düsseldorf") @Valid @RequestParam(value = "city") String city);
+    ResponseEntity<City> getCity(@ApiParam(value = "Name of the city that should be searched for", required = true, defaultValue = "", example = "Düsseldorf") @Valid @RequestParam(value = "query") String query);
 
 }
