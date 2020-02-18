@@ -1,14 +1,17 @@
 package org.travlyn
 
+import android.Manifest
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -18,8 +21,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.nav_header_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -106,10 +107,22 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
 
     override fun onStart() {
         super.onStart()
+
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            Log.v(tag, "Permission is granted")
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                1
+            )
+            Log.v(tag, "Permission is revoked")
+        }
+
         user = LocalStorage(this).readObject("user")
         if (user != null) {
-            emailNavTextView.text = user!!.email
-            nameNavTextView.text = user!!.name
+//            emailNavTextView.text = user!!.email
+//            nameNavTextView.text = user!!.name
         }
         invalidateOptionsMenu()
     }
@@ -137,7 +150,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
                         user = null
                     }
                     LocalStorage(context).deleteObject("user")
-                    welcomeTextView.text = null
                     invalidateOptionsMenu()
                 }
             })
