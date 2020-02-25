@@ -1,9 +1,14 @@
 package org.travlyn.api
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.Request
 import org.travlyn.api.model.City
-import org.travlyn.api.model.User
 import org.travlyn.infrastructure.*
 import org.travlyn.local.Application
+import java.io.InputStream
 
 class CityApi(
     basePath: String = "http://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
@@ -36,12 +41,27 @@ class CityApi(
             }
             ResponseType.Informational -> TODO()
             ResponseType.Redirection -> TODO()
-            ResponseType.ClientError -> throw ClientException(
-                (response as ClientError<*>).body as? String ?: "Client error"
-            )
+            ResponseType.ClientError -> {
+                if ((response as ClientError<*>).statusCode == 404) {
+                    null
+                } else {
+                    throw ClientException(
+                        (response as ClientError<*>).body as? String ?: "Client error"
+                    )
+                }
+            }
             ResponseType.ServerError -> throw ServerException(
                 (response as ServerError<*>).message ?: "Server error"
             )
+        }
+    }
+
+    suspend fun getImage(url: String): Bitmap? {
+        val request: Request = Request.Builder().url(url).build()
+        val response = client.newCall(request).await()
+        return withContext(Dispatchers.IO) {
+            val inputStream: InputStream = response.body!!.byteStream()
+            BitmapFactory.decodeStream(inputStream)
         }
     }
 }

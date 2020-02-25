@@ -20,4 +20,7 @@
     <string name="undo">Rückgängig</string>
     <string name="error_field_required">Dieses Feld wird benötigt.</string>
     <string name="error_unknown">Ein unbekannter Fehler ist aufgetreten. Bei Problemen, bitte an den Support wenden.</string>
+    <string name="points_of_interests">Sehenswürdigkeiten</string>
+    <string name="trips">Trips</string>
+    <string name="error_no_city_found">Keine Stadt mit dem Namen \"%1$s\" gefunden.</string>
 </resources>

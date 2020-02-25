@@ -1,7 +1,6 @@
 package org.travlyn.shared.model.db;
 
 import org.travlyn.shared.model.api.City;
-import org.travlyn.shared.model.api.Token;
 
 import javax.persistence.*;
 
@@ -13,6 +12,12 @@ public class CityEntity implements DataEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+
+    @Column(name = "longitude")
+    private double longitude;
+
+    @Column(name = "latitude")
+    private double latitude;
 
     @Column(name = "name")
     private String name;
@@ -30,6 +35,22 @@ public class CityEntity implements DataEntity {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
     public String getName() {
@@ -58,6 +79,12 @@ public class CityEntity implements DataEntity {
 
     @Override
     public City toDataTransferObject() {
-        return new City().id(this.id).name(this.name).image(this.image).description(this.description);
+        return new City()
+                .id(this.id)
+                .longitude(this.longitude)
+                .latitude(this.latitude)
+                .name(this.name)
+                .image(this.image)
+                .description(this.description);
     }
 }

@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.view.animation.AnticipateInterpolator
 import android.view.animation.Interpolator
 import android.view.animation.OvershootInterpolator
+import android.widget.Toast
 import androidx.core.content.PermissionChecker
 import androidx.core.content.PermissionChecker.checkSelfPermission
 import androidx.fragment.app.Fragment
@@ -31,6 +32,7 @@ import org.osmdroid.library.BuildConfig
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
+import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.compass.CompassOverlay
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
@@ -39,6 +41,8 @@ import org.travlyn.MainActivity
 import org.travlyn.R
 import org.travlyn.api.CityApi
 import org.travlyn.api.model.City
+import org.travlyn.local.LocalStorage
+import java.util.*
 
 
 class HomeFragment : Fragment() {
@@ -49,6 +53,8 @@ class HomeFragment : Fragment() {
 
     private var currentLocation: GeoPoint? = null
     private lateinit var cityApi: CityApi
+
+    private lateinit var suggestions: MutableList<String>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -90,6 +96,23 @@ class HomeFragment : Fragment() {
             focusCurrentLocation()
         }
 
+        suggestions = LocalStorage(context!!).readObject("searchCitySuggestions")!!
+        val suggestionObjects: MutableList<Suggestion> = mutableListOf()
+
+        searchBarHome.swapSuggestions(suggestionObjects)
+        updateSuggestions()
+
+        searchBarHome.setOnQueryChangeListener { oldQuery, newQuery ->
+            if (oldQuery != "" && newQuery == "") {
+                searchBarHome.clearSuggestions();
+            } else {
+                suggestions = LocalStorage(context!!).readObject("searchCitySuggestions")!!
+                suggestions = suggestions.filter { f ->
+                    f.toLowerCase(Locale.ROOT).contains(newQuery.toLowerCase(Locale.ROOT))
+                }.toMutableList()
+                updateSuggestions()
+            }
+        }
         searchBarHome.setOnSearchListener(object : FloatingSearchView.OnSearchListener {
             override fun onSearchAction(currentQuery: String?) {
                 if (currentQuery != null) {
@@ -98,7 +121,11 @@ class HomeFragment : Fragment() {
             }
 
             override fun onSuggestionClicked(searchSuggestion: SearchSuggestion?) {
-                handleSearchCity(searchSuggestion.toString())
+                if (searchSuggestion != null) {
+                    handleSearchCity(searchSuggestion.body)
+                    searchBarHome.setSearchText(searchSuggestion.body)
+                    searchBarHome.clearSearchFocus()
+                }
             }
         })
 
@@ -115,18 +142,50 @@ class HomeFragment : Fragment() {
         mapView.onPause()
     }
 
+    private fun updateSuggestions() {
+        val suggestionObjects: MutableList<Suggestion> = mutableListOf()
+        suggestions.forEach { s -> suggestionObjects.add(Suggestion(s)) }
+        searchBarHome.swapSuggestions(suggestionObjects)
+    }
+
     private fun handleSearchCity(query: String) {
         CoroutineScope(Dispatchers.IO).launch {
             val city: City? = cityApi.getCity(query)
             if (city != null) {
-                val sheet = CityInformationFragment()
+                val suggestions: MutableList<String>? =
+                    LocalStorage(context!!).readObject("searchCitySuggestions")
+                if (suggestions != null) {
+                    if (!suggestions.contains(city.name)) {
+                        city.name?.let { suggestions.add(it) }
+                    }
+                }
+                LocalStorage(context!!).writeObject("searchCitySuggestions", suggestions)
+
+                val sheet = CityInformationFragment.newInstance(city)
                 if (activity != null) {
                     withContext(Dispatchers.Main) {
                         sheet.show(activity!!.supportFragmentManager, "CityInformationFragment")
+
+                        if (city.longitude != null && city.latitude != null) {
+                            mapView.overlay.clear()
+                            val cityLocation = GeoPoint(city.latitude, city.longitude)
+                            val startMarker = Marker(mapView)
+                            startMarker.position = cityLocation
+                            startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                            mapView.overlays.add(startMarker)
+                            mapView.controller.animateTo(
+                                GeoPoint(
+                                    cityLocation.latitude - 0.2,
+                                    cityLocation.longitude
+                                )
+                            )
+                        }
                     }
                 }
             } else {
-                TODO("show toast")
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(activity, getString(R.string.error_no_city_found, query), Toast.LENGTH_LONG)
+                }
             }
         }
     }

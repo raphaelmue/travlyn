@@ -25,10 +25,10 @@ public class DBpediaCityRequest implements DBpediaRequest<City> {
     /**
      * Construct DBpedia request
      *
-     * @param serachterm specify what should be searched for
+     * @param query specify what should be searched for
      */
-    public DBpediaCityRequest(String serachterm) {
-        this.serachterm = serachterm;
+    public DBpediaCityRequest(String query) {
+        this.serachterm = query;
     }
 
     /**
@@ -50,6 +50,7 @@ public class DBpediaCityRequest implements DBpediaRequest<City> {
         params.add(new Pair<>("key", "1234"));
         params.add(new Pair<>("property", "dbo:abstract"));
         params.add(new Pair<>("property", "dbo:thumbnail"));
+        params.add(new Pair<>("property", "georss:point"));
         request = new org.travlyn.server.externalapi.APIRequest(BASE_API, params);
 
         try {
@@ -63,12 +64,15 @@ public class DBpediaCityRequest implements DBpediaRequest<City> {
         try {
             String description = englishContent.getAsJsonObject("dboabstract").getAsJsonPrimitive("value").getAsString();
             String imageURL = englishContent.getAsJsonObject("dbothumbnail").getAsJsonPrimitive("value").getAsString();
-            City returnValue = new City();
-            returnValue.setDescription(description);
-            returnValue.setImage(imageURL);
-            returnValue.setName(serachterm);
-            return returnValue;
-        }catch (NullPointerException exception){
+            String[] location = englishContent.getAsJsonObject("georsspoint").getAsJsonPrimitive("value").getAsString().split(" ");
+
+            return new City()
+                    .longitude(Double.parseDouble(location[1]))
+                    .latitude(Double.parseDouble(location[0]))
+                    .name(serachterm)
+                    .description(description)
+                    .image(imageURL);
+        } catch (NullPointerException exception) {
             //invalid search term leads to no results
             return null;
         }

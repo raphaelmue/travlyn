@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
@@ -48,6 +50,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
     private var user: User? = null
     private var formatter: Formatter = Formatter(this)
 
+    private lateinit var navEmailTextField: TextView
+    private lateinit var navNameTextField: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -68,7 +73,15 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        user = LocalStorage(this).readObject<User>("user")
+        val headerView: View = navView.getHeaderView(0)
+        navEmailTextField = headerView.findViewById(R.id.emailNavTextView)
+        navNameTextField = headerView.findViewById(R.id.nameNavTextView)
+
+        val localStorage = LocalStorage(this)
+        user = localStorage.readObject<User>("user")
+        if (!localStorage.contains("searchCitySuggestions")) {
+            localStorage.writeObject("searchCitySuggestions", mutableListOf<String>())
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -130,11 +143,12 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
             Log.v(tag, "Location Permission is revoked")
         }
 
-        user = LocalStorage(this).readObject("user")
+        user = LocalStorage(this).readObject<User>("user")
         if (user != null) {
-//            emailNavTextView.text = user!!.email
-//            nameNavTextView.text = user!!.name
+            navEmailTextField.text = user!!.email
+            navNameTextField.text = user!!.name
         }
+
         invalidateOptionsMenu()
     }
 
@@ -161,6 +175,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
                         user = null
                     }
                     LocalStorage(context).deleteObject("user")
+                    navEmailTextField.text = null
+                    navNameTextField.text = null
                     invalidateOptionsMenu()
                 }
             })
