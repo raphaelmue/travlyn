@@ -20,9 +20,11 @@ public class APIRequest {
     private final String requestURL;
     private final OkHttpClient client;
     private String postBody;
+    private Set<Pair<String, String>> header;
 
-    public APIRequest(String apiURL, Set<Pair<String, String>> parameters,Set<Pair<String,String>> header){
-        this(apiURL,parameters);
+    public APIRequest(String apiURL, Set<Pair<String, String>> parameters, String postBody, Set<Pair<String, String>> header) {
+        this(apiURL, parameters, postBody);
+        this.header = header;
     }
 
     public APIRequest(String apiURL, Set<Pair<String, String>> parameters) {
@@ -45,18 +47,30 @@ public class APIRequest {
     }
 
     public String performAPICallGET() throws IOException {
-        Request request = new Request.Builder().header("Accept", "application/json").url(requestURL).build();
+        Request.Builder builder = new Request.Builder();
+        this.setHeader(builder);
+        Request request = builder.url(requestURL).build();
         return client.newCall(request).execute().body().string();
     }
 
     public String performAPICallPOST() throws IOException {
-        Request request = new Request.Builder()
-                .url(requestURL)
-                .header("Accept", "application/json")
-                .post(RequestBody.create(postBody, MEDIA_TYPE_JSON))
-                .build();
+        Request.Builder builder = new Request.Builder();
+        this.setHeader(builder);
+        Request request = builder.url(requestURL)
+                                    .post(RequestBody.create(postBody, MEDIA_TYPE_JSON))
+                                    .build();
 
         Response response = client.newCall(request).execute();
         return response.body().string();
+    }
+
+    private void setHeader(Request.Builder builder) {
+        builder.header("Accept", "application/json");
+        if (header != null && !header.isEmpty()) {
+            //if header are provided
+            for (Map.Entry<String, String> entry : header) {
+                builder.header(entry.getKey(), entry.getValue());
+            }
+        }
     }
 }

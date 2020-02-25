@@ -1,9 +1,8 @@
-package org.travlyn.server.apiAccess;
+package org.travlyn.server.externalapi.access;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.Tag;
-import org.travlyn.server.externalapi.DBpediaCityRequest;
 import org.travlyn.shared.model.api.City;
 
 @Tag("unit")
