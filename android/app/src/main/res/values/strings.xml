@@ -21,4 +21,7 @@
     <string name="error_field_required">This field is required.</string>
     <string name="error_unknown">An unknown error has occurred. In case of problems, please contact the support.</string>
     <string name="ok" translatable="false">OK</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

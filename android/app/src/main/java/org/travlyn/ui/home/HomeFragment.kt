@@ -25,6 +25,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.osmdroid.config.Configuration
 import org.osmdroid.library.BuildConfig
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -46,7 +47,7 @@ class HomeFragment : Fragment() {
 
     private val animationSpeed: Long = 300
 
-    private lateinit var currentLocation: GeoPoint
+    private var currentLocation: GeoPoint? = null
     private lateinit var cityApi: CityApi
 
     override fun onCreateView(
@@ -89,7 +90,7 @@ class HomeFragment : Fragment() {
             focusCurrentLocation()
         }
 
-        searchBarHome.setOnSearchListener(object: FloatingSearchView.OnSearchListener{
+        searchBarHome.setOnSearchListener(object : FloatingSearchView.OnSearchListener {
             override fun onSearchAction(currentQuery: String?) {
                 if (currentQuery != null) {
                     handleSearchCity(currentQuery)
@@ -118,7 +119,12 @@ class HomeFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             val city: City? = cityApi.getCity(query)
             if (city != null) {
-                TODO("show detailed bottom dialog and and zoom to city")
+                val sheet = CityInformationFragment()
+                if (activity != null) {
+                    withContext(Dispatchers.Main) {
+                        sheet.show(activity!!.supportFragmentManager, "CityInformationFragment")
+                    }
+                }
             } else {
                 TODO("show toast")
             }
@@ -126,9 +132,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun focusCurrentLocation() {
-        mapView.controller.animateTo(
-            this.currentLocation
-        )
+        if (this.currentLocation != null) {
+            mapView.controller.animateTo(
+                this.currentLocation
+            )
+        }
     }
 
     private fun setLocationListener() {
@@ -137,7 +145,7 @@ class HomeFragment : Fragment() {
                 context!!.getSystemService(LOCATION_SERVICE) as LocationManager
             if (checkSelfPermission(
                     context!!,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    Manifest.permission.ACCESS_FINE_LOCATION
                 ) == PermissionChecker.PERMISSION_GRANTED
             ) {
                 locationManager.requestLocationUpdates(
@@ -183,6 +191,8 @@ class HomeFragment : Fragment() {
                         }
 
                     })
+            } else {
+                toggleLocationButton(false)
             }
         }
     }

@@ -109,14 +109,25 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
         super.onStart()
 
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            Log.v(tag, "Permission is granted")
+            Log.v(tag, "External Storage Permission is granted")
         } else {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 1
             )
-            Log.v(tag, "Permission is revoked")
+            Log.v(tag, "External Storage Permission is revoked")
+        }
+
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Log.v(tag, "Location Permission is granted")
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                1
+            )
+            Log.v(tag, "Location Permission is revoked")
         }
 
         user = LocalStorage(this).readObject("user")
