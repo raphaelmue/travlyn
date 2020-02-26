@@ -136,11 +136,12 @@ public class City extends AbstractDataTransferObject {
         return stops;
     }
 
-    public void setStops(Set<Stop> stops) {
+    public City setStops(Set<Stop> stops) {
         if (this.stops == null) {
             this.stops = new HashSet<>();
         }
         this.stops = stops;
+        return this;
     }
 
     @Override

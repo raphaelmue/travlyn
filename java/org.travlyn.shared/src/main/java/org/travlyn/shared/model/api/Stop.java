@@ -37,24 +37,24 @@ public class Stop extends AbstractDataTransferObject {
 
     @JsonProperty("pricing")
     @ApiModelProperty(value = "Approximate price estimation for one person in USD", required = true, example = "50")
-    private Double pricing = null;
+    private Double pricing = -1.0;
 
     @JsonProperty("time_effort")
     @ApiModelProperty(value = "Approximate time estimation", required = true, example = "2")
-    private Double timeEffort = null;
+    private Double timeEffort = -1.0;
 
     @JsonProperty("average_rating")
     @ApiModelProperty(value = "Average percentage rating by user", required = true, example = "0.98")
-    private Double averageRating = null;
+    private Double averageRating = 0.0;
 
     @JsonProperty("ratings")
     @ApiModelProperty(value = "List of Ratings by Users")
     @Valid
-    private List<Rating> ratings = null;
+    private List<Rating> ratings = new ArrayList<>();
 
     @JsonProperty("category")
     @ApiModelProperty(value = "Category", required = true)
-    private Category category = null;
+    private Category category = new Category();
 
     public Stop id(int id) {
         this.id = id;

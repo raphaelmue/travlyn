@@ -87,6 +87,8 @@ public class TravlynService {
             DBpediaCityRequest request = new DBpediaCityRequest(city);
             City result = request.getResult();
             if (result != null) {
+                //get Stops for city
+                result = this.getPOISForCity(result);
                 // valid city was found --> cache result
                 session.save(result.toEntity());
                 return result;
@@ -132,7 +134,7 @@ public class TravlynService {
 
     public City getPOISForCity(City city){
         OpenrouteRequest request = new OpenrouteRequest();
-        city.setStops(request.getPOIS(8.404435,49.013513));
+        city.setStops(request.getPOIS(city.getLongitude(),city.getLatitude()));
         return city;
     }
 }

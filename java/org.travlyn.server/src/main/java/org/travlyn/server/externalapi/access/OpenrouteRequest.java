@@ -29,12 +29,12 @@ public class OpenrouteRequest {
         for (int row = -1; row <= 1 ; row++) {
             for (int column = -1; column <= 1; column++) {
                 APIRequest request = new APIRequest(BASE_URL, new HashSet<>(), this.genPostBody(
-                        new BigDecimal(lat).setScale(2, RoundingMode.HALF_UP).doubleValue() + ((row+1) * 0.05),
-                        new BigDecimal(lon).setScale(2, RoundingMode.HALF_UP).doubleValue() + ((column+1) * 0.05),
-                        new BigDecimal(lat).setScale(2, RoundingMode.HALF_UP).doubleValue()+(row*0.05),
-                        new BigDecimal(lon).setScale(2, RoundingMode.HALF_UP).doubleValue() + (column * 0.05),
-                        lat + (row * 0.05),
-                        lon + (column * 0.05)), header);
+                        new BigDecimal(lat + (row * 0.04)).setScale(2, RoundingMode.FLOOR).doubleValue(),
+                        new BigDecimal(lon + (column * 0.04)).setScale(2, RoundingMode.FLOOR).doubleValue(),
+                        new BigDecimal(lat+((row+1)*0.04)).setScale(2, RoundingMode.FLOOR).doubleValue(),
+                        new BigDecimal(lon + ((column+1) * 0.04)).setScale(2, RoundingMode.FLOOR).doubleValue(),
+                        lat + (row * 0.04),
+                        lon + (column * 0.04)), header);
                 String apiResult;
                 try {
                     apiResult = request.performAPICallPOST();
