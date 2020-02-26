@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 public class OpenrouteRequest {
     private static final String BASE_URL = "https://api.openrouteservice.org/pois";
@@ -19,8 +20,8 @@ public class OpenrouteRequest {
 
     private Gson gson = new Gson();
 
-    public ArrayList<Stop> getPOIS(double lon, double lat){
-        ArrayList<Stop> resultList = new ArrayList<>();
+    public Set<Stop> getPOIS(double lon, double lat){
+        HashSet<Stop> resultList = new HashSet<>();
 
         HashSet<Pair<String,String>> header = new HashSet<>();
         header.add(new Pair<>("Authorization","5b3ce3597851110001cf62487839b1884ada4627bbe7c52c372087fd"));

@@ -33,6 +33,9 @@ public class StopEntity implements DataEntity {
     @Column(name = "average_rating")
     private double averageRating;
 
+    @ManyToOne(targetEntity = CityEntity.class)
+    private CityEntity city;
+
     @OneToMany
     @JoinColumn(name = "ratable")
     private Set<StopRatingEntity> ratings;

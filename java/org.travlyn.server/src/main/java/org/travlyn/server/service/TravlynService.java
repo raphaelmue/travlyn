@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.travlyn.server.externalapi.access.OpenrouteRequest;
+import org.travlyn.shared.model.api.City;
+import org.travlyn.shared.model.api.Stop;
 import org.travlyn.shared.model.api.Token;
 import org.travlyn.shared.model.api.User;
 import org.travlyn.shared.model.db.TokenEntity;
@@ -15,6 +18,7 @@ import org.travlyn.util.security.Hash;
 import org.travlyn.util.security.RandomString;
 
 import javax.persistence.NoResultException;
+import java.util.ArrayList;
 
 
 @Service
@@ -95,5 +99,11 @@ public class TravlynService {
 
         Session session = sessionFactory.getCurrentSession();
         session.delete(user.getToken().toEntity());
+    }
+
+    public City getPOISForCity(City city){
+        OpenrouteRequest request = new OpenrouteRequest();
+        city.setStops(request.getPOIS(8.404435,49.013513));
+        return city;
     }
 }
