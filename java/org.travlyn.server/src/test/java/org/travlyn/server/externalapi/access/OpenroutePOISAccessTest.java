@@ -12,7 +12,7 @@ public class OpenroutePOISAccessTest {
     @Test
     public void testPOISCall(){
         OpenrouteRequest request = new OpenrouteRequest();
-        ArrayList<Stop> result = request.getPOIS(0.1,2.0);
+        ArrayList<Stop> result = request.getPOIS(8.404435,49.013513);
         System.out.println(result.toString());
     }
 }
