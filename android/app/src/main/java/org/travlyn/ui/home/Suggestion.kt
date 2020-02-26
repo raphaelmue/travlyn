@@ -6,7 +6,7 @@ import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion
 
 class Suggestion : SearchSuggestion {
     private var name: String
-    var isHistory = false
+    var isHistory = true
 
     constructor(suggestion: String) {
         name = suggestion

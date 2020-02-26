@@ -150,13 +150,13 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
         invalidateOptionsMenu()
     }
 
-    private fun openLoginActivity() {
+    internal fun openLoginActivity() {
         if (user == null) {
             startActivity(Intent(this, LoginActivity::class.java))
         }
     }
 
-    private fun handleLogout() {
+    internal fun handleLogout() {
         val context = this
         val snackBar = Snackbar.make(
             window.decorView,

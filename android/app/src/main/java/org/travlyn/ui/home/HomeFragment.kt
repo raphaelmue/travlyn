@@ -10,12 +10,14 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnticipateInterpolator
 import android.view.animation.Interpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.PermissionChecker
 import androidx.core.content.PermissionChecker.checkSelfPermission
 import androidx.fragment.app.Fragment
@@ -33,10 +35,6 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.Marker
-import org.osmdroid.views.overlay.compass.CompassOverlay
-import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import org.travlyn.MainActivity
 import org.travlyn.R
 import org.travlyn.api.CityApi
@@ -75,18 +73,8 @@ class HomeFragment : Fragment() {
         Configuration.getInstance().userAgentValue = BuildConfig.APPLICATION_ID
 
         mapView.setTileSource(TileSourceFactory.MAPNIK)
-
         mapView.zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
         mapView.setMultiTouchControls(true)
-
-        val locationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(context), mapView)
-        locationOverlay.enableMyLocation()
-        mapView.overlays.add(locationOverlay)
-
-        val mCompassOverlay =
-            CompassOverlay(context, InternalCompassOrientationProvider(context), mapView)
-        mCompassOverlay.enableCompass()
-        mapView.overlays.add(mCompassOverlay)
 
         val mapController = mapView.controller
         mapController.setZoom(9.5)
@@ -101,7 +89,7 @@ class HomeFragment : Fragment() {
 
         searchBarHome.swapSuggestions(suggestionObjects)
         updateSuggestions()
-
+        searchBarHome.attachNavigationDrawerToMenuButton((activity as MainActivity).findViewById(R.id.drawer_layout))
         searchBarHome.setOnQueryChangeListener { oldQuery, newQuery ->
             if (oldQuery != "" && newQuery == "") {
                 searchBarHome.clearSuggestions();
@@ -129,23 +117,55 @@ class HomeFragment : Fragment() {
             }
         })
 
+        searchBarHome.setOnMenuItemClickListener { item ->
+            when (item?.itemId) {
+                R.id.menu_sign_in -> {
+                    (activity as MainActivity).openLoginActivity()
+                }
+                R.id.menu_logout -> {
+                    (activity as MainActivity).handleLogout()
+                }
+                else -> super.onOptionsItemSelected(item)
+            }
+        }
+
+        searchBarHome.setOnCreateContextMenuListener { _, _, _ ->
+            updateMenuItems()
+        }
+
         setLocationListener()
     }
 
     override fun onResume() {
         super.onResume()
         mapView.onResume()
+        (activity as AppCompatActivity).supportActionBar?.hide()
     }
 
     override fun onPause() {
         super.onPause()
         mapView.onPause()
+        (activity as AppCompatActivity).supportActionBar?.show()
     }
 
     private fun updateSuggestions() {
         val suggestionObjects: MutableList<Suggestion> = mutableListOf()
         suggestions.forEach { s -> suggestionObjects.add(Suggestion(s)) }
         searchBarHome.swapSuggestions(suggestionObjects)
+    }
+
+    private fun updateMenuItems() {
+        searchBarHome.currentMenuItems.forEach { item ->
+            when ((item as MenuItem).itemId) {
+                R.id.menu_sign_in -> {
+                    (item as MenuItem).isVisible = LocalStorage(context!!).contains("user")
+                }
+                R.id.menu_logout -> {
+                    (item as MenuItem).isVisible = !LocalStorage(context!!).contains("user")
+
+                }
+            }
+        }
     }
 
     private fun handleSearchCity(query: String) {
@@ -170,6 +190,7 @@ class HomeFragment : Fragment() {
                             mapView.overlay.clear()
                             val cityLocation = GeoPoint(city.latitude, city.longitude)
                             val startMarker = Marker(mapView)
+                            startMarker.icon = context!!.getDrawable(R.drawable.ic_location_marker)
                             startMarker.position = cityLocation
                             startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
                             mapView.overlays.add(startMarker)
@@ -184,11 +205,16 @@ class HomeFragment : Fragment() {
                 }
             } else {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(activity, getString(R.string.error_no_city_found, query), Toast.LENGTH_LONG)
+                    Toast.makeText(
+                        activity,
+                        getString(R.string.error_no_city_found, query),
+                        Toast.LENGTH_LONG
+                    )
                 }
             }
         }
     }
+
 
     private fun focusCurrentLocation() {
         if (this.currentLocation != null) {
