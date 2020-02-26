@@ -22,6 +22,14 @@ public class City extends AbstractDataTransferObject {
     @ApiModelProperty(value = "Identifier", required = true, example = "123")
     private int id = -1;
 
+    @JsonProperty("longitude")
+    @ApiModelProperty(value = "Longitude", required = true, example = "123.456")
+    private double longitude = -1;
+
+    @JsonProperty("latitude")
+    @ApiModelProperty(value = "Latitude", required = true, example = "123.456")
+    private double latitude = -1;
+
     @JsonProperty("name")
     @ApiModelProperty(value = "Name", required = true, example = "New York")
     private String name = null;
@@ -50,6 +58,42 @@ public class City extends AbstractDataTransferObject {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public City longitude(double longitude) {
+        this.longitude = longitude;
+        return this;
+    }
+
+    /**
+     * Get Longitude
+     *
+     * @return longitude
+     **/
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public City latitude(double latitude) {
+        this.latitude = latitude;
+        return this;
+    }
+
+    /**
+     * Get Latitude
+     *
+     * @return latitude
+     **/
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
     public City name(String name) {
@@ -124,6 +168,8 @@ public class City extends AbstractDataTransferObject {
     public CityEntity toEntity() {
         CityEntity cityEntity = new CityEntity();
         cityEntity.setId(this.id);
+        cityEntity.setLongitude(this.longitude);
+        cityEntity.setLatitude(this.latitude);
         cityEntity.setName(this.name);
         cityEntity.setImage(this.image);
         cityEntity.setDescription(this.description);

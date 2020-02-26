@@ -1,14 +1,19 @@
 package org.travlyn
 
+import android.Manifest
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -18,8 +23,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.nav_header_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -47,6 +50,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
     private var user: User? = null
     private var formatter: Formatter = Formatter(this)
 
+    private lateinit var navEmailTextField: TextView
+    private lateinit var navNameTextField: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -59,15 +65,21 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send
-            ), drawerLayout
+            setOf(R.id.nav_home, R.id.nav_favorites, R.id.nav_account, R.id.nav_settings),
+            drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        user = LocalStorage(this).readObject<User>("user")
+        val headerView: View = navView.getHeaderView(0)
+        navEmailTextField = headerView.findViewById(R.id.emailNavTextView)
+        navNameTextField = headerView.findViewById(R.id.nameNavTextView)
+
+        val localStorage = LocalStorage(this)
+        user = localStorage.readObject<User>("user")
+        if (!localStorage.contains("searchCitySuggestions")) {
+            localStorage.writeObject("searchCitySuggestions", mutableListOf<String>())
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -106,11 +118,35 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
 
     override fun onStart() {
         super.onStart()
-        user = LocalStorage(this).readObject("user")
-        if (user != null) {
-            emailNavTextView.text = user!!.email
-            nameNavTextView.text = user!!.name
+
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            Log.v(tag, "External Storage Permission is granted")
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                1
+            )
+            Log.v(tag, "External Storage Permission is revoked")
         }
+
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Log.v(tag, "Location Permission is granted")
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                1
+            )
+            Log.v(tag, "Location Permission is revoked")
+        }
+
+        user = LocalStorage(this).readObject<User>("user")
+        if (user != null) {
+            navEmailTextField.text = user!!.email
+            navNameTextField.text = user!!.name
+        }
+
         invalidateOptionsMenu()
     }
 
@@ -137,7 +173,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
                         user = null
                     }
                     LocalStorage(context).deleteObject("user")
-                    welcomeTextView.text = null
+                    navEmailTextField.text = null
+                    navNameTextField.text = null
                     invalidateOptionsMenu()
                 }
             })

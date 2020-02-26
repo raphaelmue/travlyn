@@ -7,18 +7,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.travlyn.server.externalapi.access.DBpediaCityRequest;
 import org.travlyn.server.externalapi.access.OpenrouteRequest;
 import org.travlyn.shared.model.api.City;
-import org.travlyn.shared.model.api.Stop;
 import org.travlyn.shared.model.api.Token;
 import org.travlyn.shared.model.api.User;
+import org.travlyn.shared.model.db.CityEntity;
 import org.travlyn.shared.model.db.TokenEntity;
 import org.travlyn.shared.model.db.UserEntity;
 import org.travlyn.util.security.Hash;
 import org.travlyn.util.security.RandomString;
 
 import javax.persistence.NoResultException;
-import java.util.ArrayList;
 
 
 @Service
@@ -63,6 +63,35 @@ public class TravlynService {
         }
 
         logger.info("Credentials are incorrect.");
+        return null;
+    }
+
+    /**
+     * Searches for city by name using db cache / DBmedia and returns city object with all infos.
+     *
+     * @param city Name of city that should be searched for
+     * @return City with description, thumbnail, ...
+     */
+    @Transactional
+    public City getCityWithInformation(String city) {
+        Session session = sessionFactory.getCurrentSession();
+        try {
+            CityEntity entity = session.createQuery("from CityEntity where name = :name", CityEntity.class)
+                    .setParameter("name", city)
+                    .getSingleResult();
+
+            //return cached city
+            return entity.toDataTransferObject();
+        } catch (NoResultException noResult) {
+            // city is not cached --> get from api
+            DBpediaCityRequest request = new DBpediaCityRequest(city);
+            City result = request.getResult();
+            if (result != null) {
+                // valid city was found --> cache result
+                session.save(result.toEntity());
+                return result;
+            }
+        }
         return null;
     }
 

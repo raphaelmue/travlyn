@@ -64,4 +64,11 @@ class LocalStorage(context: Context) {
             remove(key)
         }
     }
+
+    /**
+     * Checks if the local storage contains an object with the key
+     */
+    fun contains(key: String): Boolean {
+        return sharedPreferences.contains(key)
+    }
 }
