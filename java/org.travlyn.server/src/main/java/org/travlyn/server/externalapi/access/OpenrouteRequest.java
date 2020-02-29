@@ -5,12 +5,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.travlyn.server.util.Pair;
+import org.travlyn.shared.model.api.City;
 import org.travlyn.shared.model.api.Stop;
+import org.travlyn.shared.model.db.CityEntity;
+import org.travlyn.shared.model.db.StopEntity;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,8 +22,8 @@ public class OpenrouteRequest {
 
     private Gson gson = new Gson();
 
-    public Set<Stop> getPOIS(double lon, double lat){
-        HashSet<Stop> resultList = new HashSet<>();
+    public Set<StopEntity> getPOIS(double lon, double lat, CityEntity city){
+        HashSet<StopEntity> resultList = new HashSet<>();
 
         HashSet<Pair<String,String>> header = new HashSet<>();
         header.add(new Pair<>("Authorization","5b3ce3597851110001cf62487839b1884ada4627bbe7c52c372087fd"));
@@ -44,7 +46,7 @@ public class OpenrouteRequest {
                 JsonArray jsonArray = gson.fromJson(apiResult, JsonObject.class).getAsJsonArray("features");
                 for (JsonElement poi : jsonArray) {
                     JsonObject poiObject = poi.getAsJsonObject();
-                    Stop stop = new Stop();
+                    StopEntity stop = new StopEntity();
                     try {
                         String name = poiObject.getAsJsonObject("properties").getAsJsonObject("osm_tags").getAsJsonPrimitive("name").getAsString();
                         stop.setName(name);
@@ -54,6 +56,8 @@ public class OpenrouteRequest {
                     }
                     stop.setLatitude(poiObject.getAsJsonObject("geometry").getAsJsonArray("coordinates").get(0).getAsDouble());
                     stop.setLongitude(poiObject.getAsJsonObject("geometry").getAsJsonArray("coordinates").get(1).getAsDouble());
+                    stop.setCity(city);
+                    //stop.getCity().setStops(null);
                     resultList.add(stop);
                 }
             }

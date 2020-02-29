@@ -81,6 +81,8 @@ public class TravlynService {
                     .getSingleResult();
 
             //return cached city
+            City city1 = entity.toDataTransferObject();
+            city1.toEntity();
             return entity.toDataTransferObject();
         } catch (NoResultException noResult) {
             // city is not cached --> get from api
@@ -88,10 +90,11 @@ public class TravlynService {
             City result = request.getResult();
             if (result != null) {
                 //get Stops for city
-                result = this.getPOISForCity(result);
+                CityEntity entity = result.toEntity();
+                entity = this.getPOISForCity(result);
                 // valid city was found --> cache result
-                session.save(result.toEntity());
-                return result;
+                session.save(entity);
+                return entity.toDataTransferObject();
             }
         }
         return null;
@@ -132,9 +135,13 @@ public class TravlynService {
         session.delete(user.getToken().toEntity());
     }
 
-    public City getPOISForCity(City city){
+    public CityEntity getPOISForCity(City city){
         OpenrouteRequest request = new OpenrouteRequest();
-        city.setStops(request.getPOIS(city.getLongitude(),city.getLatitude()));
-        return city;
+        CityEntity cityEntity = new CityEntity();
+        cityEntity.setName(city.getName());
+        cityEntity.setLatitude(city.getLatitude());
+        cityEntity.setLongitude(city.getLongitude());
+        cityEntity.setStops(request.getPOIS(cityEntity.getLongitude(),cityEntity.getLatitude(), cityEntity));
+        return cityEntity;
     }
 }

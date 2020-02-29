@@ -56,6 +56,10 @@ public class Stop extends AbstractDataTransferObject {
     @ApiModelProperty(value = "Category", required = true)
     private Category category = new Category();
 
+    @JsonProperty("city")
+    @ApiModelProperty(value = "City the stop belongs to", required = true)
+    private City city = null;
+
     public Stop id(int id) {
         this.id = id;
         return this;
@@ -88,8 +92,9 @@ public class Stop extends AbstractDataTransferObject {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public Stop setLongitude(double longitude) {
         this.longitude = longitude;
+        return this;
     }
 
     public Stop latitude(double latitude) {
@@ -106,8 +111,9 @@ public class Stop extends AbstractDataTransferObject {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public Stop setLatitude(double latitude) {
         this.latitude = latitude;
+        return this;
     }
 
     public Stop name(String name) {
@@ -124,8 +130,9 @@ public class Stop extends AbstractDataTransferObject {
         return name;
     }
 
-    public void setName(String name) {
+    public Stop setName(String name) {
         this.name = name;
+        return this;
     }
 
     public Stop description(String description) {
@@ -160,8 +167,9 @@ public class Stop extends AbstractDataTransferObject {
         return pricing;
     }
 
-    public void setPricing(Double pricing) {
+    public Stop setPricing(Double pricing) {
         this.pricing = pricing;
+        return this;
     }
 
     public Stop timeEffort(Double timeEffort) {
@@ -178,8 +186,9 @@ public class Stop extends AbstractDataTransferObject {
         return timeEffort;
     }
 
-    public void setTimeEffort(Double timeEffort) {
+    public Stop setTimeEffort(Double timeEffort) {
         this.timeEffort = timeEffort;
+        return this;
     }
 
     public Stop averageRating(Double averageRating) {
@@ -196,8 +205,9 @@ public class Stop extends AbstractDataTransferObject {
         return averageRating;
     }
 
-    public void setAverageRating(Double averageRating) {
+    public Stop setAverageRating(Double averageRating) {
         this.averageRating = averageRating;
+        return this;
     }
 
     public Stop ratings(List<Rating> ratings) {
@@ -246,6 +256,13 @@ public class Stop extends AbstractDataTransferObject {
         this.category = category;
     }
 
+    public City getCity() {
+        return city;
+    }
+
+    public void city(City city) {
+        this.city = city;
+    }
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -292,6 +309,7 @@ public class Stop extends AbstractDataTransferObject {
         });
         stopEntity.setRatings(ratingEntities);
         stopEntity.setCategory(this.category.toEntity());
+        stopEntity.setCity( this.city.toEntity());
         return stopEntity;
     }
 }

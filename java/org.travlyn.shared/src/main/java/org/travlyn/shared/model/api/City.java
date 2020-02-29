@@ -177,6 +177,8 @@ public class City extends AbstractDataTransferObject {
         if ( stops != null ) {
             HashSet<StopEntity> stopEntityHashSet = new HashSet<>();
             for (Stop stop : stops) {
+                City city = new City().id(stop.getCity().id);
+                stop.city(city);
                 stopEntityHashSet.add(stop.toEntity());
             }
             cityEntity.setStops(stopEntityHashSet);
