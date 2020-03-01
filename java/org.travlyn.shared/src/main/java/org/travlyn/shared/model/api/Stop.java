@@ -35,6 +35,10 @@ public class Stop extends AbstractDataTransferObject {
     @ApiModelProperty(value = "Additional information about stop", required = true, example = "This is a description about the Statue of Liberty")
     private String description = null;
 
+    @JsonProperty("image")
+    @ApiModelProperty(value = "Thumbnail for Stop", required = true, example = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Karlsruhe_town_centre_air.jpg/300px-Karlsruhe_town_centre_air.jpg")
+    private String image = null;
+
     @JsonProperty("pricing")
     @ApiModelProperty(value = "Approximate price estimation for one person in USD", required = true, example = "50")
     private Double pricing = -1.0;
@@ -149,8 +153,13 @@ public class Stop extends AbstractDataTransferObject {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public String getImage() {
+        return image;
+    }
+
+    public Stop image(String image) {
+        this.image = image;
+        return this;
     }
 
     public Stop pricing(Double pricing) {
@@ -310,6 +319,7 @@ public class Stop extends AbstractDataTransferObject {
         stopEntity.setRatings(ratingEntities);
         stopEntity.setCategory(this.category.toEntity());
         stopEntity.setCity( this.city.toEntity());
+        stopEntity.setImage(this.image);
         return stopEntity;
     }
 }

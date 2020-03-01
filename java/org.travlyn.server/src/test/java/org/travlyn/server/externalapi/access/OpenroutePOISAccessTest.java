@@ -16,4 +16,10 @@ public class OpenroutePOISAccessTest {
         //Set<Stop> result = request.getPOIS(8.404435,49.013513,city);
         //System.out.println(result.toString());
     }
+    @Test
+    public void testDBpediaPOI(){
+        DBpediaPOIRequest request = new DBpediaPOIRequest("Karlsruhe_Palace");
+        Stop stop = request.getResult();
+        System.out.println(stop.toString());
+    }
 }

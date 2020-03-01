@@ -28,6 +28,9 @@ public class StopEntity implements DataEntity {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "image")
+    private String image;
+
     @Column(name = "pricing")
     private double pricing;
 
@@ -89,6 +92,14 @@ public class StopEntity implements DataEntity {
         this.description = description;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public double getPricing() {
         return pricing;
     }
@@ -141,6 +152,8 @@ public class StopEntity implements DataEntity {
                             .setAverageRating(this.averageRating)
                             .setName(this.name)
                             .setPricing(this.pricing)
-                            .setTimeEffort(this.timeEffort);
+                            .setTimeEffort(this.timeEffort)
+                            .image(this.image)
+                            .description(this.description);
     }
 }

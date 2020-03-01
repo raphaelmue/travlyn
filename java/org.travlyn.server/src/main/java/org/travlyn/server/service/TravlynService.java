@@ -8,17 +8,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.travlyn.server.externalapi.access.DBpediaCityRequest;
+import org.travlyn.server.externalapi.access.DBpediaPOIRequest;
 import org.travlyn.server.externalapi.access.OpenrouteRequest;
 import org.travlyn.shared.model.api.City;
+import org.travlyn.shared.model.api.Stop;
 import org.travlyn.shared.model.api.Token;
 import org.travlyn.shared.model.api.User;
 import org.travlyn.shared.model.db.CityEntity;
+import org.travlyn.shared.model.db.StopEntity;
 import org.travlyn.shared.model.db.TokenEntity;
 import org.travlyn.shared.model.db.UserEntity;
 import org.travlyn.util.security.Hash;
 import org.travlyn.util.security.RandomString;
 
 import javax.persistence.NoResultException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 
 @Service
@@ -81,8 +87,8 @@ public class TravlynService {
                     .getSingleResult();
 
             //return cached city
-            City city1 = entity.toDataTransferObject();
-            city1.toEntity();
+            //City city1 = entity.toDataTransferObject();
+            //city1.toEntity();
             return entity.toDataTransferObject();
         } catch (NoResultException noResult) {
             // city is not cached --> get from api
@@ -90,7 +96,7 @@ public class TravlynService {
             City result = request.getResult();
             if (result != null) {
                 //get Stops for city
-                CityEntity entity = result.toEntity();
+                CityEntity entity;
                 entity = this.getPOISForCity(result);
                 // valid city was found --> cache result
                 session.save(entity);
@@ -141,7 +147,21 @@ public class TravlynService {
         cityEntity.setName(city.getName());
         cityEntity.setLatitude(city.getLatitude());
         cityEntity.setLongitude(city.getLongitude());
-        cityEntity.setStops(request.getPOIS(cityEntity.getLongitude(),cityEntity.getLatitude(), cityEntity));
+        cityEntity.setImage(city.getImage());
+        cityEntity.setDescription(city.getDescription());
+        Set<StopEntity> stopEntities = request.getPOIS(cityEntity.getLongitude(),cityEntity.getLatitude(), cityEntity);
+        for (Iterator<StopEntity> stopEntityIterator = stopEntities.iterator(); stopEntityIterator.hasNext();){
+            StopEntity entity = stopEntityIterator.next();
+            DBpediaPOIRequest poiRequest = new DBpediaPOIRequest(entity.getName());
+            Stop stop = poiRequest.getResult();
+            if (stop != null) {
+                entity.setImage(stop.getImage());
+                entity.setDescription(stop.getDescription());
+            }else {
+                stopEntityIterator.remove();
+            }
+        }
+        cityEntity.setStops(stopEntities);
         return cityEntity;
     }
 }
