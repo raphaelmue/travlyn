@@ -10,14 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.travlyn.server.externalapi.access.DBpediaCityRequest;
 import org.travlyn.server.externalapi.access.DBpediaPOIRequest;
 import org.travlyn.server.externalapi.access.OpenrouteRequest;
-import org.travlyn.shared.model.api.City;
-import org.travlyn.shared.model.api.Stop;
-import org.travlyn.shared.model.api.Token;
-import org.travlyn.shared.model.api.User;
-import org.travlyn.shared.model.db.CityEntity;
-import org.travlyn.shared.model.db.StopEntity;
-import org.travlyn.shared.model.db.TokenEntity;
-import org.travlyn.shared.model.db.UserEntity;
+import org.travlyn.shared.model.api.*;
+import org.travlyn.shared.model.db.*;
 import org.travlyn.util.security.Hash;
 import org.travlyn.util.security.RandomString;
 
@@ -163,5 +157,19 @@ public class TravlynService {
         }
         cityEntity.setStops(stopEntities);
         return cityEntity;
+    }
+
+    @Transactional
+    public Category getAssociatedCategory(int categoryId){
+        Session session = sessionFactory.getCurrentSession();
+        CategoryEntity categoryEntity;
+        try {
+            categoryEntity = session.createQuery("from CategoryEntity where id = :id", CategoryEntity.class)
+                    .setParameter("id", categoryId)
+                    .getSingleResult();
+            return categoryEntity.toDataTransferObject();
+        }catch (NoResultException noResult){
+            return null;
+        }
     }
 }

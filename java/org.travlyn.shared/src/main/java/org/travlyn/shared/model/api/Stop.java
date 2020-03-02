@@ -21,11 +21,11 @@ public class Stop extends AbstractDataTransferObject {
 
     @JsonProperty("longitude")
     @ApiModelProperty(value = "Longitude", required = true, example = "123.456")
-    private double longitude = -1;
+    private double longitude;
 
     @JsonProperty("latitude")
     @ApiModelProperty(value = "Latitude", required = true, example = "123.456")
-    private double latitude = -1;
+    private double latitude;
 
     @JsonProperty("name")
     @ApiModelProperty(value = "Name", required = true, example = "Statue of Liberty")
@@ -41,11 +41,11 @@ public class Stop extends AbstractDataTransferObject {
 
     @JsonProperty("pricing")
     @ApiModelProperty(value = "Approximate price estimation for one person in USD", required = true, example = "50")
-    private Double pricing = -1.0;
+    private Double pricing= null;
 
     @JsonProperty("time_effort")
     @ApiModelProperty(value = "Approximate time estimation", required = true, example = "2")
-    private Double timeEffort = -1.0;
+    private Double timeEffort = null;
 
     @JsonProperty("average_rating")
     @ApiModelProperty(value = "Average percentage rating by user", required = true, example = "0.98")

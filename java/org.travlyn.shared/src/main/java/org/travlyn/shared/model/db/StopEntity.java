@@ -25,7 +25,7 @@ public class StopEntity implements DataEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 65536)
     private String description;
 
     @Column(name = "image")
@@ -48,7 +48,7 @@ public class StopEntity implements DataEntity {
     @JoinColumn(name = "ratable")
     private Set<StopRatingEntity> ratings;
 
-    @OneToOne(targetEntity = CategoryEntity.class)
+    @OneToOne(targetEntity = CategoryEntity.class, cascade = {CascadeType.ALL}, orphanRemoval = true)
     private CategoryEntity category;
 
     @Override
@@ -154,6 +154,7 @@ public class StopEntity implements DataEntity {
                             .setPricing(this.pricing)
                             .setTimeEffort(this.timeEffort)
                             .image(this.image)
-                            .description(this.description);
+                            .description(this.description)
+                            .category(this.category.toDataTransferObject());
     }
 }

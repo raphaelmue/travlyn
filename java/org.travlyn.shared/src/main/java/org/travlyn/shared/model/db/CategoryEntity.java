@@ -1,5 +1,8 @@
 package org.travlyn.shared.model.db;
 
+import org.travlyn.shared.model.api.Category;
+import org.travlyn.shared.model.api.City;
+
 import javax.persistence.*;
 
 @Entity
@@ -7,7 +10,6 @@ import javax.persistence.*;
 public class CategoryEntity implements DataEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
@@ -29,5 +31,11 @@ public class CategoryEntity implements DataEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public Category toDataTransferObject() {
+        return new Category().name(this.name)
+                             .id(this.id);
     }
 }
