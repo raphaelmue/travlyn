@@ -1,6 +1,4 @@
 \chapter{Voraussetzungen}
-
-%	\section{Machine Learning}
 	
 	\section{RESTful APIs} % Raphael
 	
@@ -164,8 +162,9 @@
 				Dies setzt natürlich voraus, dass es ein Framework zum Testen von Benutzeroberflächen gibt. Das von Google bereitgestellte Test Framework Espresso stellt genau diese Funktionalität zum Testen von \acs{UI}s bereit. 
 			
 			\subsubsection{Testabdeckung}
+			\label{qm.tests.testabdeckung}
 			
-				Um nun die Qualität von Software mittels Tests zu messen, wurde die sog. Testabdeckung (engl. Code Coverage) eingeführt. Diese Metrik beschreibt den Anteil des Quellcodes, der während eines Testlaufes durchlaufen wird. Die Testabdeckung wird prozentual gemessen. Wenn die Testabdeckung einer Applikation hoch ist, bedeutet dies, dass der Anteil des durchlaufenen Codes hoch ist und somit die Wahrscheinlichkeit für einen Fehler geringer ist und umgekehrt. Eine hohe Abdeckung ist jedoch kein Garant für fehlerfreien Quellcode, da auch Tests fehlerhaft seien können, oder nicht unbedingt den Fehler hervorrufen. \cite{MartinFowler.2292020}
+				Um nun die Qualität von Software mittels Tests zu messen, wurde die sog. Testabdeckung (engl. Code Coverage) eingeführt. Diese Metrik beschreibt den Anteil des Quellcodes, der während eines Testlaufes durchlaufen wird. Die Testabdeckung wird prozentual gemessen. Wenn die Testabdeckung einer Applikation hoch ist, bedeutet dies, dass der Anteil des durchlaufenen Codes hoch ist und somit die Wahrscheinlichkeit für einen Fehler geringer ist und umgekehrt. Eine hohe Abdeckung ist jedoch kein Garant für fehlerfreien Quellcode, da auch Tests fehlerhaft seien können, oder nicht unbedingt den Fehler hervorrufen. \cite{MartinFowler.2292020b}
 				
 				Man unterscheidet bei der Testabdeckung unter Anderem zwischen den in \cite{Myers.2004} beschriebenen Metriken:
 				
@@ -184,9 +183,32 @@
 				
 		\subsection{Code Reviews}
 		
+			Um sicher zu stellen, dass der Code nahezu fehlerfrei ist, werden häufig sog. Code Reviews durchgeführt. Hierbei setzen sich der Entwickler, der diesen Code geschrieben hat sowie ein oder mehrere weitere Entwickler zusammen und lesen den Code gemeinsam. Somit werden zum einen Fehler oder Performance-Verbesserungen erkannt, die der Entwickler nicht im Blick hatte und zum anderen wird der Code auf Verständlichkeit geprüft. Da Code häufig mehrfach gelesen und abgeändert wird, ist dies ein essentieller Bestandteil der qualitätssichernden Maßnahmen. Dies erspart Entwicklern häufig Zeit, da verständlicher Code viel leichter zu lesen ist.
+			
+			GitHub bietet genau zu diesem Zweck mittels sog. Pull Request -- eine Vorgehensweise in der Versionsverwaltung, den Code aus einem Feature Branch und dem Hauptbranch zusammenzuführen -- anderen Entwicklern die Möglichkeit zu geben, den Code zu begutachten und zu verbessern.			
+		
 		\subsection{SonarQube}
-	
+		
+			SonarQube ist eine in Java geschriebene Plattform, welche Quellcode hinsichtlich  technischer Qualität analysiert und bewertet. Die Ergebnisse dieser Analyse werden über eine Weboberfläche dargestellt. \cite{SonarSourceS.A.2142020} 
+			
+			SonarQube analysiert den Code hinsichtlich folgender Qualitätsmerkmale:
+			
+			\begin{itemize}
+				\item Code Duplikationen
+				\item Testabdeckung (siehe \autoref{qm.tests.testabdeckung})
+				\item Komplexität
+				\item Potentielle Fehler
+				\item Kodierrichtlinien
+				\item Kommentare
+			\end{itemize}
+		
 		\subsection{Continuous Integration}
+		
+			\ac{CI} ist ein Automatisierungsprozess in der Entwicklung. Wenn Änderungen zum Versionskontrollsystem hinzugefügt und veröffentlicht werden, startet automatisiert auf einem \acs{CI} Server ein bestimmter Prozess. Dieser Prozess beinhaltet häufig Kompilation und Testen der Applikation. Dies bietet den Vorteil, dass Fehler noch schneller entdeckt und behoben werden können. Außerdem ist eine Effizienzsteigerung in der Entwicklungsphase zu erkennen \cite{MartinFowler.2292020}. 
+			
+			Ein Tool, das genau dies umsetzt, ist Jenkins. Jenkins ist eine Open Source Software, welche als Nachfolger der Software Hudson gilt. Jenkins' Multibranch Pipeline bietet die Möglichkeit, die einzelnen Schritte dieses Prozesses auf den unterschiedlichen Branches des Versionskontrollsystems auszuführen. Dies ermöglicht es \zB, dass die Zusammenführung dieses Branches mit dem Hauptbranch fast fehlerfrei erfolgt. \cite{CloudBees.322020}
+			
+			
 		
 		\subsection{Continuous Delivery}
 		
