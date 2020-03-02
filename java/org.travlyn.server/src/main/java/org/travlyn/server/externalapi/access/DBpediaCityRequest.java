@@ -28,7 +28,7 @@ public class DBpediaCityRequest implements DBpediaRequest<City> {
      * @param query specify what should be searched for
      */
     public DBpediaCityRequest(String query) {
-        this.serachterm = query;
+        this.serachterm = query.replace(" ","_");
     }
 
     /**
