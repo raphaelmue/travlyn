@@ -158,4 +158,17 @@ public class TravlynService {
         cityEntity.setStops(stopEntities);
         return cityEntity;
     }
+
+    @Transactional
+    public Stop getStopById(Long stopId) {
+        Session session = sessionFactory.getCurrentSession();
+        try {
+            StopEntity entity = session.createQuery("from StopEntity where id = :id", StopEntity.class)
+                    .setParameter("id", Math.toIntExact(stopId))
+                    .getSingleResult();
+            return entity.toDataTransferObject();
+        }catch (NoResultException noResult){
+            return null;
+        }
+    }
 }
