@@ -141,7 +141,7 @@
 				
 				Das Schlüsselwort \textit{suspend} in Methodenköpfen definiert, dass diese Methode in der Lage ist, asynchron zu arbeiten. Diese Methoden können entweder von weiteren \textit{suspend} Methoden aufgerufen werden, oder aber innerhalb einer Coroutine.
 				
-	\section{Build Tools} % Raphael
+	\section{Build Management Tools} % Raphael
 	
 		\subsection{Maven} % Raphael
 			
@@ -164,8 +164,10 @@
 			 \end{enumerate}
 			 
 		\subsection{Gradle}
-		
 			
+			Gradle ist ebenso wie Maven ein Build-Management-Tool. Statt XML wie bei Maven verwendet Gradle eine Groovy basierende domänenspezifische Sprache. Außerdem sind Gradle Skripte direkt ausführbarer Code und keine Projektbeschreibung oder -definition. Die von Gradle definierten Build Prozesse unterscheiden sich jedoch nur minimal von den von Maven verwendeten. 
+			
+			Mitte 2013 hat Google Gradle als Build-Management-Tool für Entwicklung von Android Applikationen festgesetzt. So wurde das Android Gradle Plugin eingeführt, welches es ermöglicht, außerhalb der für die Android Entwicklung bereitgestellten \acs{IDE} \textit{Android Studio} die Applikation zu bauen. \cite{Google.2282020}
 		
 	\section{Qualitätssichernde Maßnahmen} % Raphael
 	
@@ -216,6 +218,7 @@
 			GitHub bietet genau zu diesem Zweck mittels sog. Pull Request -- eine Vorgehensweise in der Versionsverwaltung, den Code aus einem Feature Branch und dem Hauptbranch zusammenzuführen -- anderen Entwicklern die Möglichkeit zu geben, den Code zu begutachten und zu verbessern.			
 		
 		\subsection{SonarQube}
+		\label{qm.sonarqube}
 		
 			SonarQube ist eine in Java geschriebene Plattform, welche Quellcode hinsichtlich  technischer Qualität analysiert und bewertet. Die Ergebnisse dieser Analyse werden über eine Weboberfläche dargestellt. \cite{SonarSourceS.A.2142020} 
 			
@@ -234,7 +237,7 @@
 		
 			\ac{CI} ist ein Automatisierungsprozess in der Entwicklung. Wenn Änderungen zum Versionskontrollsystem hinzugefügt und veröffentlicht werden, startet automatisiert auf einem \acs{CI} Server ein bestimmter Prozess. Dieser Prozess beinhaltet häufig Kompilation und Testen der Applikation. Dies bietet den Vorteil, dass Fehler noch schneller entdeckt und behoben werden können. Außerdem ist eine Effizienzsteigerung in der Entwicklungsphase zu erkennen \cite{MartinFowler.2292020}. 
 			
-			Ein Tool, das genau dies umsetzt, ist Jenkins. Jenkins ist eine Open Source Software, welche als Nachfolger der Software Hudson gilt. Jenkins' Multibranch Pipeline bietet die Möglichkeit, die einzelnen Schritte dieses Prozesses auf den unterschiedlichen Branches des Versionskontrollsystems auszuführen. Dies ermöglicht es \zB, dass die Zusammenführung dieses Branches mit dem Hauptbranch fast fehlerfrei erfolgt. \cite{CloudBees.322020}
+			Ein Tool, das genau dies umsetzt, ist Jenkins. Jenkins ist eine Open Source Software, welche als Nachfolger der Software Hudson gilt. Jenkins' Multibranch Pipeline bietet die Möglichkeit, die einzelnen Schritte dieses Prozesses auf den unterschiedlichen Branches des Versionskontrollsystems auszuführen. Dies ermöglicht es \zB, dass die Zusammenführung dieses Branches mit dem Hauptbranch fast fehlerfrei erfolgt. Falls ein Prozess fehlschlägt, gilt die ganze Ausführung der Pipeline als fehlgeschlagen. \cite{CloudBees.322020}
 			
 			\begin{figure}[ht!]
 				\centering
@@ -243,10 +246,10 @@
 				\label{fig:jenkinsPipeline}
 			\end{figure} 
 		
-			\autoref{fig:jenkinsPipeline} zeigt die für diese Arbeit erstellte Pipeline. Die Abbildung besteht aus drei Schritten: Zunächst werden Frontend und Backend kompiliert. So können Syntax- und Kompilierfehler erkannt werden. 
+			\autoref{fig:jenkinsPipeline} zeigt die für diese Arbeit erstellte Pipeline. Die Abbildung besteht aus drei Schritten: Zunächst werden Frontend und Backend kompiliert. So können Syntax- und Kompilierfehler erkannt werden. Im darauffolgenden Schritt werden die sich sowohl im Frontend als auch im Backend befindlichen Tests ausgeführt. Anschließend die Analyse der Code Qualität mittels SonarQube (siehe \autoref{qm.sonarqube}) durchgeführt. 
 		
 		\subsection{Continuous Delivery}
 		
-		
+			\ac{CD} bezeichnet die kontinuierliche und im Besonderen automatisierte Auslieferung einer Applikation. Ziel ist, dass, nachdem ein Build die Pipeline erfolgreich durchlaufen hat, der Build Server -- z.B. Jenkins -- Artefakte der Applikation speichert und zur Verfügung stellt. Diese Artefakte sind häufig das Kompilat der Applikation, die sich Kunden und Nutzer herunterladen können. Artefakte können aber ebenso gut Docker Images sein, mit deren Hilfe der Auslieferungsprozess simplifiziert wird. \cite{Humble.2011}
 		                                                                                                                                                                                                                                                                                                                                         
 	
