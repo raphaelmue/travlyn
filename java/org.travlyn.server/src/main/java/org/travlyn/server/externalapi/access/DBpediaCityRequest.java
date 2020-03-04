@@ -1,6 +1,8 @@
 package org.travlyn.server.externalapi.access;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.travlyn.server.externalapi.APIRequest;
 import org.travlyn.server.externalapi.DBpediaRequest;
@@ -28,7 +30,7 @@ public class DBpediaCityRequest implements DBpediaRequest<City> {
      * @param query specify what should be searched for
      */
     public DBpediaCityRequest(String query) {
-        this.serachterm = query.replace(" ","_");
+        this.serachterm = query.replace(" ", "_");
     }
 
     /**
@@ -59,22 +61,34 @@ public class DBpediaCityRequest implements DBpediaRequest<City> {
             //request could not be made due to some network errors
             return null;
         }
-        JsonObject englishContent = gson.fromJson(result, JsonObject.class).getAsJsonObject("results").
-                getAsJsonArray("bindings").get(0).getAsJsonObject();
-        try {
-            String description = englishContent.getAsJsonObject("dboabstract").getAsJsonPrimitive("value").getAsString();
-            String imageURL = englishContent.getAsJsonObject("dbothumbnail").getAsJsonPrimitive("value").getAsString();
-            String[] location = englishContent.getAsJsonObject("georsspoint").getAsJsonPrimitive("value").getAsString().split(" ");
+        JsonArray resultArray = gson.fromJson(result, JsonObject.class).getAsJsonObject("results").
+                getAsJsonArray("bindings");
 
-            return new City()
-                    .longitude(Double.parseDouble(location[1]))
-                    .latitude(Double.parseDouble(location[0]))
-                    .name(serachterm)
-                    .description(description)
-                    .image(imageURL);
-        } catch (NullPointerException exception) {
-            //invalid search term leads to no results
-            return null;
+        JsonObject englishContent = null;
+
+        // filter for english language
+        for (JsonElement content : resultArray) {
+            if (content.getAsJsonObject().getAsJsonObject("dboabstract").getAsJsonPrimitive("xml:lang").getAsString().equals("en")) {
+                englishContent = content.getAsJsonObject();
+            }
         }
+
+        try {
+            if (englishContent != null) {
+                String description = englishContent.getAsJsonObject("dboabstract").getAsJsonPrimitive("value").getAsString();
+                String imageURL = englishContent.getAsJsonObject("dbothumbnail").getAsJsonPrimitive("value").getAsString();
+                String[] location = englishContent.getAsJsonObject("georsspoint").getAsJsonPrimitive("value").getAsString().split(" ");
+
+                return new City()
+                        .longitude(Double.parseDouble(location[1]))
+                        .latitude(Double.parseDouble(location[0]))
+                        .name(serachterm)
+                        .description(description)
+                        .image(imageURL);
+            }
+        } catch (NullPointerException exception) {
+            // invalid search term leads to no results
+        }
+        return null;
     }
 }
