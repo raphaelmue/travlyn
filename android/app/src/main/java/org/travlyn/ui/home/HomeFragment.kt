@@ -103,7 +103,7 @@ class HomeFragment : Fragment() {
         searchBarHome.attachNavigationDrawerToMenuButton((activity as MainActivity).findViewById(R.id.drawer_layout))
         searchBarHome.setOnQueryChangeListener { oldQuery, newQuery ->
             if (oldQuery != "" && newQuery == "") {
-                searchBarHome.clearSuggestions();
+                searchBarHome.clearSuggestions()
             } else {
                 suggestions = LocalStorage(context!!).readObject("searchCitySuggestions")!!
                 suggestions = suggestions.filter { f ->
@@ -205,9 +205,10 @@ class HomeFragment : Fragment() {
                             startMarker.position = cityLocation
                             startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
                             mapView.overlays.add(startMarker)
+                            mapView.controller.setZoom(13.0)
                             mapView.controller.animateTo(
                                 GeoPoint(
-                                    cityLocation.latitude - 0.2,
+                                    cityLocation.latitude - 0.03,
                                     cityLocation.longitude
                                 )
                             )
@@ -226,12 +227,10 @@ class HomeFragment : Fragment() {
         }
     }
 
-
     private fun focusCurrentLocation() {
         if (this.currentLocation != null) {
-            mapView.controller.animateTo(
-                this.currentLocation
-            )
+            mapView.controller.zoomTo(18, animationSpeed)
+            mapView.controller.animateTo(this.currentLocation)
         }
     }
 

@@ -19,10 +19,9 @@
         app:floatingSearch_leftActionMode="showHamburger"
         app:floatingSearch_menu="@menu/main"
         app:floatingSearch_searchHint="@string/search"
-        app:floatingSearch_showSearchKey="false"
+        app:floatingSearch_showSearchKey="true"
         app:floatingSearch_showVoiceInput="true"
-        app:floatingSearch_suggestionsListAnimDuration="250">
-    </com.arlib.floatingsearchview.FloatingSearchView>
+        app:floatingSearch_suggestionsListAnimDuration="250" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/currentLocationFab"
