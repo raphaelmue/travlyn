@@ -139,11 +139,38 @@
 						\textbf{Default}: Coroutinen mit diesem Kontext stellen schwere Berechnungen an, und blockieren damit nicht den \acs{UI} Thread.
 				\end{enumerate}
 				
-				Das Schlüsselwort \textit{suspend} in Methodenköpfen definiert, dass diese Methode in der Lage ist, asynchron zu arbeiten. Diese Methoden können entweder von weiteren \textit{suspend} Methoden aufgerufen werden, oder aber innerhalb einer Coroutine. 
+				Das Schlüsselwort \textit{suspend} in Methodenköpfen definiert, dass diese Methode in der Lage ist, asynchron zu arbeiten. Diese Methoden können entweder von weiteren \textit{suspend} Methoden aufgerufen werden, oder aber innerhalb einer Coroutine.
+				
+	\section{Build Tools} % Raphael
+	
+		\subsection{Maven} % Raphael
+			
+			 Maven ist ein von der Apache Software Foundation entwickeltes Build-Management-Tool. Es ist Open Source und basiert auf Java. Das Ziel von Maven ist zweiteilig: auf der einen Seite soll mittels Maven eine Applikation automatisiert gebaut werden und auf der anderen Seite dient Maven der Verwaltung von Abhängigkeiten. 
+			 
+			 In einer XML basierten Konfigurationsdatei werden -- gemäß des Paradigma \textit{Convention over Configuration} -- ausschließlich Ausnahmen definiert, wie Abhängigkeiten auf externe Module und Komponenten, benötigte Plugins oder die Build Reihenfolge. Alle für das Projekt benötigten Bibliotheken und Plugins werden von Maven dynamisch von einem oder mehreren Repositories heruntergeladen und in einem lokalen Cache zwischengespeichert. \cite{Company.2009}
+			 
+			 Der Build Prozess einer Maven Applikation besteht aus folgenden Schritten:
+			 
+			 \begin{enumerate}
+			 	\item \textit{archetype}: Alle Abhängigkeiten des Projektes werden aufgelöst und bei Bedarf heruntergeladen.
+			 	\item \textit{validate}: Prüfung, ob die Projektstruktur valide und vollständig ist.
+			 	\item \textit{compile}: Das Projekt wird in dieser Phase kompiliert. 
+			 	\item \textit{test}: Alle sich in dem Projekt befindlichen Tests (siehe \autoref{qm.tests}) -- diese werden in einem von Maven definierten Verzeichnis gespeichert -- werden ausgeführt und evaluiert.
+			 	\item \textit{package}: Das Kompilat wird mit anderen nicht kompilierbaren Dateien zum Zwecke der Weitervergabe verpackt, meist in Form einer Jar-Datei.
+			 	\item \textit{integration-test}: Alle sich in dem Projekt befindlichen Integration Tests (siehe \autoref{qm.integration_tests})werden ausgeführt. 
+			 	\item \textit{verify}: In dieser Phase wird eine Gültigkeitsprüfung des Software-Pakets durchgeführt.
+			 	\item \textit{install}: Das Projekt wird im lokalen Zwischenspeicher installiert, sodass die Verwendung dieses Projektes durch andere ermöglicht wird. 
+			 	\item \textit{deploy}: Das Projekt wird im zentralen Repository von Maven installiert, sodass es zum Herunterladen zur Verfügung steht. 
+			 \end{enumerate}
+			 
+		\subsection{Gradle}
+		
+			
 		
 	\section{Qualitätssichernde Maßnahmen} % Raphael
 	
 		\subsection{Tests} % Raphael
+		\label{qm.tests}
 		
 			Eine der am häufigsten verwendeten Maßnahmen, um die Qualität von Code zu bewerten, sind automatisierte Tests. Tests dienen dem Zweck, dass sobald eine Änderung im Versionskontrollsystem vorliegt, diese Tests automatisch ausgeführt werden und somit auf eventuelle, durch die Änderung entstandene Fehler hinweisen. Dies ermöglicht es, noch vor der Veröffentlichung einer Applikation diese durch Tests aufgedeckten Fehler zu beheben und spart unter Umständen auch Kosten, da diese Fehler sonst im Produktivbetrieb erst aufgefallen wären. \cite{Huizinga.2007} Es existieren verschiedene Ansätze Tests zu implementieren. Im Folgenden werden die für diese Arbeit relevanten Ansätze beschrieben. 
 			
@@ -156,6 +183,7 @@
 				Spring unterstützt die Implementierung von JUnit Tests durch die Bereitstellung eines Testsframeworks, mit dessen Hilfe der Spring Server gemockt werden kann. 
 				
 			\subsubsection{Integration Tests}
+			\label{qm.integration_tests}
 			
 				Da bei Unit Tests nur einzelne Einheiten getestet werden und nicht jedoch deren Integration, werden Tests, die mehrere Komponenten einer Software testen, Integration Tests genannt. Ein Beispiel für einen solchen Test ist der Test einer Benutzeroberfläche in Verbindung mit einem dahinterstehenden Server. Dabei wird der Server und die dazugehörige Datenbank in einer Testumgebung gestartet, sodass der Produktivbetrieb dabei nicht gestört wird. 
 				
@@ -208,7 +236,14 @@
 			
 			Ein Tool, das genau dies umsetzt, ist Jenkins. Jenkins ist eine Open Source Software, welche als Nachfolger der Software Hudson gilt. Jenkins' Multibranch Pipeline bietet die Möglichkeit, die einzelnen Schritte dieses Prozesses auf den unterschiedlichen Branches des Versionskontrollsystems auszuführen. Dies ermöglicht es \zB, dass die Zusammenführung dieses Branches mit dem Hauptbranch fast fehlerfrei erfolgt. \cite{CloudBees.322020}
 			
-			
+			\begin{figure}[ht!]
+				\centering
+				\includegraphics[width=1\textwidth]{images/jenkins-pipeline.png}
+				\caption{Darstellung der für das Projekt \textit{Travlyn} erstellten Jenkins Pipeline}
+				\label{fig:jenkinsPipeline}
+			\end{figure} 
+		
+			\autoref{fig:jenkinsPipeline} zeigt die für diese Arbeit erstellte Pipeline. Die Abbildung besteht aus drei Schritten: Zunächst werden Frontend und Backend kompiliert. So können Syntax- und Kompilierfehler erkannt werden. 
 		
 		\subsection{Continuous Delivery}
 		
