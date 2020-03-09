@@ -65,7 +65,19 @@ In diesem Kapitel soll beschrieben werden, wie die in \autoref{sec:frameworks} b
 		
 	\section{Server Architektur}
 	
-	Wie in \autoref{sec:swagger} beschrieben 
+	Wie in \autoref{sec:swagger} beschrieben ist es möglich aus der oben beschriebenen Swagger Beschreibung ein komplettes Code-Gerüst für eine Spring Applikation zu generieren. Diese Funktionalität wurde sich für das vorliegende Projekt zunutze gemacht. Damit entstand eine Spring Applikation, welche die in \autoref{sec:spring} beschriebenen Patterns verwendet und implementiert.
+	
+	
+	\begin{figure}[ht!]
+		\centering
+		\includegraphics[width=1\textwidth]{images/UML_Diagram.pdf}
+		\caption{Struktur des \textit{Travlyn} Servers als UML Diagramm. Zu Beachten ist, dass dieses Diagramm stark vereinfacht und nicht vollständig ist, um die Übersichtlichkeit zu wahren.}
+		\label{fig:UML}
+	\end{figure}
+
+	\clearpage
+
 	
 	\section{Client Architektur}
+	Neben der automatischen Generierung von Javacode, welcher das Spring Framework nutzt, ist es mit Swagger ebenfalls möglich, Clientcode zu generieren. Da diese Generierung viel Arbeit und Einrichtungsaufwand spart wurde auch das Grundgerüst für den \textit{Travlyn} Client automatisch generiert.
 	
