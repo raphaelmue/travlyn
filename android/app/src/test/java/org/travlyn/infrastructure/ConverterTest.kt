@@ -40,7 +40,7 @@ internal class ConverterTest {
         val parameters = map.toQueryParameters()
 
         // 34 is the total number of attributes of the trip including null properties
-        Assertions.assertEquals(34, parameters.size)
+        Assertions.assertEquals(36, parameters.size)
         Assertions.assertEquals("1", parameters["stops[0].id"]?.get(0))
         parameters["stop[1].name"]?.isNotEmpty()?.let { Assertions.assertTrue(it) }
     }
