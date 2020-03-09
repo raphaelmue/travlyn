@@ -56,6 +56,9 @@ public class WikimediaRequest {
         for (Map.Entry<String, JsonElement> entry : innerContent.entrySet()) {
             title = entry.getValue().getAsJsonObject().getAsJsonPrimitive("extract").toString();
         }
+        if (title != null) {
+            title = title.replace("\\n", "");
+        }
         return title;
     }
 

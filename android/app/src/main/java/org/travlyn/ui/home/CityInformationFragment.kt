@@ -5,7 +5,6 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_city_information.*
@@ -18,7 +17,6 @@ import org.travlyn.R
 import org.travlyn.api.CityApi
 import org.travlyn.api.model.City
 
-
 class CityInformationFragment : SuperBottomSheetFragment() {
 
     override fun onCreateView(
@@ -26,13 +24,8 @@ class CityInformationFragment : SuperBottomSheetFragment() {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        val root: View = inflater.inflate(R.layout.fragment_city_information, container, false)
 
-        (activity as AppCompatActivity?)!!.setSupportActionBar(root.findViewById(R.id.cityInformationToolbar))
-        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayShowHomeEnabled(true)
-
-        return root
+        return inflater.inflate(R.layout.fragment_city_information, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
