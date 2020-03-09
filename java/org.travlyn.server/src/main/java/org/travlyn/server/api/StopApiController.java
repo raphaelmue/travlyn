@@ -15,7 +15,6 @@ import org.travlyn.shared.model.api.Stop;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
 
 @Controller
 public class StopApiController implements StopApi {
@@ -37,13 +36,13 @@ public class StopApiController implements StopApi {
     public ResponseEntity<Void> rateStop(Long stopId, @NotNull @Valid Rating rating) {
         String accept = request.getHeader("Accept");
         //if (accept != null && accept.contains("application/json")) {
-            if(this.travlynService.addRatingToStop(stopId,rating)){
-                return new ResponseEntity<>(HttpStatus.OK);
-            }else {
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+        if (this.travlynService.addRatingToStop(stopId, rating)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         //}else{
-            //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         //}
     }
 
@@ -52,12 +51,12 @@ public class StopApiController implements StopApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             Stop result = travlynService.getStopById(stopId);
-            if (result != null){
-                return new ResponseEntity<>(result,HttpStatus.OK);
-            }else{
+            if (result != null) {
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-        }else{
+        } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

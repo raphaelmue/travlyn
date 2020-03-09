@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.travlyn.server.externalapi.access.DBpediaCityRequest;
-import org.travlyn.server.externalapi.access.DBpediaPOIRequest;
-import org.travlyn.server.externalapi.access.OpenrouteRequest;
+import org.travlyn.server.externalapi.access.DBPediaCityRequest;
+import org.travlyn.server.externalapi.access.DBPediaStopRequest;
+import org.travlyn.server.externalapi.access.OpenRouteRequest;
 import org.travlyn.shared.model.api.*;
 import org.travlyn.shared.model.db.*;
 import org.travlyn.util.security.Hash;
@@ -85,12 +85,12 @@ public class TravlynService {
             return entity.toDataTransferObject();
         } catch (NoResultException noResult) {
             // city is not cached --> get from api
-            DBpediaCityRequest request = new DBpediaCityRequest(city);
+            DBPediaCityRequest request = new DBPediaCityRequest(city);
             City result = request.getResult();
             if (result != null) {
                 //get Stops for city
                 CityEntity entity;
-                entity = this.getPOISForCity(result);
+                entity = this.getStopsForCity(result);
                 // valid city was found --> cache result
                 session.save(entity);
                 return entity.toDataTransferObject();
@@ -134,18 +134,18 @@ public class TravlynService {
         session.delete(user.getToken().toEntity());
     }
 
-    public CityEntity getPOISForCity(City city) {
-        OpenrouteRequest request = new OpenrouteRequest();
+    public CityEntity getStopsForCity(City city) {
         CityEntity cityEntity = new CityEntity();
         cityEntity.setName(city.getName());
         cityEntity.setLatitude(city.getLatitude());
         cityEntity.setLongitude(city.getLongitude());
         cityEntity.setImage(city.getImage());
         cityEntity.setDescription(city.getDescription());
-        Set<StopEntity> stopEntities = request.getPOIS(cityEntity.getLongitude(), cityEntity.getLatitude(), cityEntity);
+        OpenRouteRequest request = new OpenRouteRequest(cityEntity.getLongitude(), cityEntity.getLatitude(), cityEntity);
+        Set<StopEntity> stopEntities = request.getResult();
         for (Iterator<StopEntity> stopEntityIterator = stopEntities.iterator(); stopEntityIterator.hasNext(); ) {
             StopEntity entity = stopEntityIterator.next();
-            DBpediaPOIRequest poiRequest = new DBpediaPOIRequest(entity.getName());
+            DBPediaStopRequest poiRequest = new DBPediaStopRequest(entity.getName());
             Stop stop = poiRequest.getResult();
             if (stop != null) {
                 entity.setImage(stop.getImage());

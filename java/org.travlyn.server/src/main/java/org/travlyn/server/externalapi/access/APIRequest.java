@@ -41,30 +41,25 @@ public class APIRequest {
         this.postBody = postBody;
     }
 
-    public APIRequest(String apiURL) throws Exception {
-        this.requestURL = apiURL;
-        client = new OkHttpClient();
-    }
-
     public String performAPICallGET() throws IOException {
-        Request.Builder builder = new Request.Builder();
+        okhttp3.Request.Builder builder = new okhttp3.Request.Builder();
         this.setHeader(builder);
-        Request request = builder.url(requestURL).build();
+        okhttp3.Request request = builder.url(requestURL).build();
         return client.newCall(request).execute().body().string();
     }
 
     public String performAPICallPOST() throws IOException {
-        Request.Builder builder = new Request.Builder();
+        okhttp3.Request.Builder builder = new okhttp3.Request.Builder();
         this.setHeader(builder);
-        Request request = builder.url(requestURL)
-                                    .post(RequestBody.create(postBody, MEDIA_TYPE_JSON))
-                                    .build();
+        okhttp3.Request request = builder.url(requestURL)
+                .post(RequestBody.create(postBody, MEDIA_TYPE_JSON))
+                .build();
 
         Response response = client.newCall(request).execute();
         return response.body().string();
     }
 
-    private void setHeader(Request.Builder builder) {
+    private void setHeader(okhttp3.Request.Builder builder) {
         builder.header("Accept", "application/json");
         if (header != null && !header.isEmpty()) {
             //if header are provided
