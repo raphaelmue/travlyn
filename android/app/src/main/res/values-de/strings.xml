@@ -3,16 +3,16 @@
     <string name="app_name">Travlyn</string>
     <string name="action_settings">Einstellungen</string>
     <string name="error_invalid_credentials">Deine Anmeldedaten sind inkorrekt.</string>
-    <string name="menu_gallery">Gallerie</string>
+    <string name="favorites">Favoriten</string>
     <string name="menu_home">Start</string>
-    <string name="menu_send">Senden</string>
-    <string name="menu_share">Teilen</string>
+    <string name="settings">Einstellungen</string>
+    <string name="account">Konto</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="menu_tools">Tools</string>
     <string name="navigation_drawer_close">Navigation schließen</string>
     <string name="navigation_drawer_open">Navigation öffnen</string>
     <string name="sign_in">Anmelden</string>
-    <string name="email">Email Addresse</string>
+    <string name="email">Email Adresse</string>
     <string name="password">Passwort</string>
     <string name="welcome">Willkommen, %1$s!</string>
     <string name="logout">Abmelden</string>
@@ -20,4 +20,9 @@
     <string name="undo">Rückgängig</string>
     <string name="error_field_required">Dieses Feld wird benötigt.</string>
     <string name="error_unknown">Ein unbekannter Fehler ist aufgetreten. Bei Problemen, bitte an den Support wenden.</string>
+    <string name="points_of_interests">Sehenswürdigkeiten</string>
+    <string name="trips">Trips</string>
+    <string name="error_no_city_found">Keine Stadt mit dem Namen \"%1$s\" gefunden.</string>
+    <string name="user">Benutzer</string>
+    <string name="search">Suche</string>
 </resources>

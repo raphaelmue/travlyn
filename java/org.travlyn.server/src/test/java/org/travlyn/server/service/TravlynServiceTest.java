@@ -10,8 +10,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.travlyn.shared.model.api.City;
 import org.travlyn.shared.model.api.Token;
 import org.travlyn.shared.model.api.User;
+import org.travlyn.shared.model.db.CityEntity;
 import org.travlyn.shared.model.db.TokenEntity;
 import org.travlyn.shared.model.db.UserEntity;
 
@@ -72,6 +74,26 @@ public class TravlynServiceTest {
         Assertions.assertNull(userToAssert);
     }
 
+    @Test
+    @Transactional
+    public void testGetCityWithInformation() {
+        //valid search term
+        City cityToAssert = service.getCityWithInformation("Wesel");
+        Assertions.assertNotNull(cityToAssert);
+        Assertions.assertEquals("Wesel (German pronunciation: [ˈveːzəl]) is a city in North Rhine-Westphalia, Germany. It is the capital of the Wesel district.", cityToAssert.getDescription());
+        Assertions.assertEquals("http://commons.wikimedia.org/wiki/Special:FilePath/Wesel_willibrordi_dom_chor.jpg?width=300", cityToAssert.getImage());
+
+        //test if caching is working
+        Session session = sessionFactory.getCurrentSession();
+        CityEntity result = session.createQuery("from CityEntity where name = :name", CityEntity.class)
+                .setParameter("name", "Wesel")
+                .getSingleResult();
+        Assertions.assertNotNull(result);
+
+        //invalid search term
+        cityToAssert = service.getCityWithInformation("xyz");
+        Assertions.assertNull(cityToAssert);
+    }
     @Test
     @Transactional
     public void testGenerateToken() {

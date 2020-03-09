@@ -16,6 +16,8 @@ package org.travlyn.api.model
  * City
  *
  * @param id
+ * @param longitude
+ * @param latitude
  * @param name
  * @param image URL to image
  * @param description
@@ -23,6 +25,8 @@ package org.travlyn.api.model
 data class City(
 
     val id: Int? = null,
+    val longitude: Double? = null,
+    val latitude: Double? = null,
     val name: String? = null,
     /* URL to image */
     val image: String? = null,
