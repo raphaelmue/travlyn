@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@Component
 public class OpenrouteRequest {
     private static final String BASE_URL = "https://api.openrouteservice.org/pois";
 

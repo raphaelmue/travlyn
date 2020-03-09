@@ -171,4 +171,21 @@ public class TravlynService {
             return null;
         }
     }
+
+    @Transactional
+    public boolean addRatingToStop(Long stopId, Rating rating) throws NoResultException {
+        Session session = sessionFactory.getCurrentSession();
+        StopEntity entity = session.createQuery("from StopEntity where id = :id", StopEntity.class)
+                .setParameter("id", Math.toIntExact(stopId))
+                .getSingleResult();
+
+        Set<StopRatingEntity> ratings = entity.getRatings();
+        StopRatingEntity stopRating = (StopRatingEntity) rating.toEntity();
+        stopRating.setStop(entity);
+        ratings.add(stopRating);
+        entity.setRatings(ratings);
+
+        session.save(entity);
+        return true;
+    }
 }
