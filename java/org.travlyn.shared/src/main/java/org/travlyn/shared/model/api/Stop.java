@@ -41,7 +41,7 @@ public class Stop extends AbstractDataTransferObject {
 
     @JsonProperty("pricing")
     @ApiModelProperty(value = "Approximate price estimation for one person in USD", required = true, example = "50")
-    private Double pricing= null;
+    private Double pricing = null;
 
     @JsonProperty("time_effort")
     @ApiModelProperty(value = "Approximate time estimation", required = true, example = "2")
@@ -318,7 +318,7 @@ public class Stop extends AbstractDataTransferObject {
         });
         stopEntity.setRatings(ratingEntities);
         stopEntity.setCategory(this.category.toEntity());
-        stopEntity.setCity( this.city.toEntity());
+        stopEntity.setCity(this.city.toEntity());
         stopEntity.setImage(this.image);
         return stopEntity;
     }

@@ -78,101 +78,61 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:paddingVertical="16dp">
 
-                <TextView
-                    android:id="@+id/cityDescriptionTextView"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:lines="4"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+                    android:orientation="vertical"
+                    android:paddingHorizontal="16dp">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginVertical="16dp"
-                    android:background="#D8D7D7" />
+                    <TextView
+                        android:id="@+id/cityDescriptionTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:lines="4"
+                        android:text="@string/points_of_interests"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
 
-                <TextView
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="16dp"
+                        android:background="#D8D7D7" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/points_of_interests"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/stopCardRecyclerView"
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="@string/points_of_interests"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+                    android:orientation="vertical"
+                    android:paddingHorizontal="16dp">
 
-                <HorizontalScrollView
-                    android:id="@+id/horizontalScrollView"
-                    android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:scrollbars="none">
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="16dp"
+                        android:background="#D8D7D7" />
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:paddingVertical="5dp">
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/firstPOICard"
-                            android:layout_width="100dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="2dp"
-                            android:layout_marginEnd="16dp"
-                            android:background="@color/white"
-                            android:padding="2dp">
-
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/secondPOICard"
-                            android:layout_width="100dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginEnd="16dp"
-                            android:layout_toEndOf="@+id/firstPOICard"
-                            android:background="@color/white"
-                            android:padding="2dp">
-
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/thirdPOICard"
-                            android:layout_width="100dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="2dp"
-                            android:layout_marginEnd="16dp"
-                            android:layout_toEndOf="@+id/secondPOICard"
-                            android:background="@color/white"
-                            android:padding="2dp">
-
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/fourthPOICard"
-                            android:layout_width="100dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="2dp"
-                            android:layout_marginEnd="16dp"
-                            android:layout_toEndOf="@+id/thirdPOICard"
-                            android:background="@color/white"
-                            android:padding="2dp">
-
-                        </androidx.cardview.widget.CardView>
-                    </RelativeLayout>
-                </HorizontalScrollView>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginVertical="16dp"
-                    android:background="#D8D7D7" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="@string/trips"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/trips"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+                </LinearLayout>
 
                 <ListView
                     android:id="@+id/tripsListView"

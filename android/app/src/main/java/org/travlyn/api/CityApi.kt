@@ -2,6 +2,7 @@ package org.travlyn.api
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.webkit.URLUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Request
@@ -11,7 +12,7 @@ import org.travlyn.local.Application
 import java.io.InputStream
 
 class CityApi(
-    basePath: String = "http://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
+    basePath: String = "http://169.254.244.57:3000/travlyn/travlyn/1.0.0/",
     application: Application
 ) : ApiClient(basePath, application) {
 
@@ -57,11 +58,14 @@ class CityApi(
     }
 
     suspend fun getImage(url: String): Bitmap? {
-        val request: Request = Request.Builder().url(url).build()
-        val response = client.newCall(request).await()
-        return withContext(Dispatchers.IO) {
-            val inputStream: InputStream = response.body!!.byteStream()
-            BitmapFactory.decodeStream(inputStream)
+        if (URLUtil.isValidUrl(url)) {
+            val request: Request = Request.Builder().url(url).build()
+            val response = client.newCall(request).await()
+            return withContext(Dispatchers.IO) {
+                val inputStream: InputStream = response.body!!.byteStream()
+                BitmapFactory.decodeStream(inputStream)
+            }
         }
+        return null
     }
 }

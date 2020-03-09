@@ -7,7 +7,9 @@ import org.travlyn.shared.model.db.CityEntity;
 import org.travlyn.shared.model.db.StopEntity;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * City
@@ -174,7 +176,7 @@ public class City extends AbstractDataTransferObject {
         cityEntity.setName(this.name);
         cityEntity.setImage(this.image);
         cityEntity.setDescription(this.description);
-        if ( stops != null ) {
+        if (stops != null) {
             HashSet<StopEntity> stopEntityHashSet = new HashSet<>();
             for (Stop stop : stops) {
                 City city = new City().id(stop.getCity().id);
@@ -182,7 +184,7 @@ public class City extends AbstractDataTransferObject {
                 stopEntityHashSet.add(stop.toEntity());
             }
             cityEntity.setStops(stopEntityHashSet);
-        }else{
+        } else {
             cityEntity.setStops(new HashSet<>());
         }
         return cityEntity;

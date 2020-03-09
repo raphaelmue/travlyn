@@ -16,7 +16,6 @@ import org.travlyn.util.security.Hash;
 import org.travlyn.util.security.RandomString;
 
 import javax.persistence.NoResultException;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -135,7 +134,7 @@ public class TravlynService {
         session.delete(user.getToken().toEntity());
     }
 
-    public CityEntity getPOISForCity(City city){
+    public CityEntity getPOISForCity(City city) {
         OpenrouteRequest request = new OpenrouteRequest();
         CityEntity cityEntity = new CityEntity();
         cityEntity.setName(city.getName());
@@ -143,15 +142,15 @@ public class TravlynService {
         cityEntity.setLongitude(city.getLongitude());
         cityEntity.setImage(city.getImage());
         cityEntity.setDescription(city.getDescription());
-        Set<StopEntity> stopEntities = request.getPOIS(cityEntity.getLongitude(),cityEntity.getLatitude(), cityEntity);
-        for (Iterator<StopEntity> stopEntityIterator = stopEntities.iterator(); stopEntityIterator.hasNext();){
+        Set<StopEntity> stopEntities = request.getPOIS(cityEntity.getLongitude(), cityEntity.getLatitude(), cityEntity);
+        for (Iterator<StopEntity> stopEntityIterator = stopEntities.iterator(); stopEntityIterator.hasNext(); ) {
             StopEntity entity = stopEntityIterator.next();
             DBpediaPOIRequest poiRequest = new DBpediaPOIRequest(entity.getName());
             Stop stop = poiRequest.getResult();
             if (stop != null) {
                 entity.setImage(stop.getImage());
                 entity.setDescription(stop.getDescription());
-            }else {
+            } else {
                 stopEntityIterator.remove();
             }
         }
@@ -167,7 +166,7 @@ public class TravlynService {
                     .setParameter("id", Math.toIntExact(stopId))
                     .getSingleResult();
             return entity.toDataTransferObject();
-        }catch (NoResultException noResult){
+        } catch (NoResultException noResult) {
             return null;
         }
     }
