@@ -12,7 +12,7 @@ import org.travlyn.local.Application
 import java.io.InputStream
 
 class CityApi(
-    basePath: String = "http://169.254.244.57:3000/travlyn/travlyn/1.0.0/",
+    basePath: String = "http://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
     application: Application
 ) : ApiClient(basePath, application) {
 
