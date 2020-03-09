@@ -35,8 +35,6 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.Marker
-import org.osmdroid.views.overlay.compass.CompassOverlay
-import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import org.travlyn.MainActivity
@@ -84,21 +82,14 @@ class HomeFragment : Fragment() {
         locationOverlay.enableMyLocation()
         mapView.overlays.add(locationOverlay)
 
-        val mCompassOverlay =
-            CompassOverlay(context, InternalCompassOrientationProvider(context), mapView)
-        mCompassOverlay.enableCompass()
-        mapView.overlays.add(mCompassOverlay)
-
-        val mapController = mapView.controller
-        mapController.setZoom(9.5)
-        mapController.setCenter(GeoPoint(48.8583, 2.2944))
+        mapView.controller.setZoom(9.5)
+        mapView.controller.setCenter(GeoPoint(48.8583, 2.2944))
 
         currentLocationFab.setOnClickListener {
             focusCurrentLocation()
         }
 
         suggestions = LocalStorage(context!!).readObject("searchCitySuggestions")!!
-        updateSuggestions()
 
         searchBarHome.attachNavigationDrawerToMenuButton((activity as MainActivity).findViewById(R.id.drawer_layout))
         searchBarHome.setOnQueryChangeListener { oldQuery, newQuery ->

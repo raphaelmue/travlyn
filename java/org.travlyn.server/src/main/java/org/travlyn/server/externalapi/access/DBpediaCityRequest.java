@@ -68,8 +68,10 @@ public class DBpediaCityRequest implements DBpediaRequest<City> {
 
         // filter for english language
         for (JsonElement content : resultArray) {
-            if (content.getAsJsonObject().getAsJsonObject("dboabstract").getAsJsonPrimitive("xml:lang").getAsString().equals("en")) {
+            if (content.getAsJsonObject().has("dboabstract") &&
+                    content.getAsJsonObject().getAsJsonObject("dboabstract").getAsJsonPrimitive("xml:lang").getAsString().equals("en")) {
                 englishContent = content.getAsJsonObject();
+                break;
             }
         }
 
