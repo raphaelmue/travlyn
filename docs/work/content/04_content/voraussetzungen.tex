@@ -47,13 +47,24 @@
 			Darüber hinaus lassen sich Schemata beschreiben, die das Datenmodell für Konsumenten repräsentieren. Diese Schemata sind mittels der \acs{JSON} Schema Specification definiert. Es können verschiedene Objekte definiert werden, die mehrere Attribute mit einem definierten Datentypen haben. Dieser Datentyp kann wiederum ein Schema eines Objektes sein, sodass eine Verschachtelung von Objekten möglich ist. \cite{.2252020}
 			
 			Der Hauptteil der API Beschreibung entspricht der Definition der eigentlichen Schnittstelle. Hierbei können Pfade definiert werden, welche die API öffentlich zur Verfügung stellt. Pro Pfad -- bzw. Ressource -- lassen sich die möglichen \acs{HTTP} Operationen definieren. Diese Definition beinhaltet die geforderten Parameter und möglichen Rückgabewerte bzw. -codes inkl. einer Beschreibung. Bei einer erfolgreichen Anfrage können die bereits definierten Schemata verwendet werden, um den Rückgabetyp zu definieren. So lassen sich alle möglichen Anfragen an die \acs{API} klar definieren, sodass inkorrekte Anfragen nicht zugelassen werden.
+			
+			Die definierten Pfade lassen sich zudem in Tags zusammenfassen, sodass eine gewisse Struktur in den Anfragen gewährleistet und außerdem die Komplexität der \acs{API} reduziert wird. 
 	
 		\subsection{Swagger} % Raphael
 		
-			Swagger ist ein Framework, das sich des OpenAPI Standards bedient. Swagger bietet ein Tooling an, mit dessen Hilfe APIs spezifiziert und beschrieben werden können. Neben einem entsprechenden Editor, bietet Swagger die Möglichkeit, aus der OpenAPI Spezifikation Code zu generieren und zwar unter Verwendung unterschiedlicher Frameworks -- z.B. eine vollständige Spring Applikation -- wobei nur noch die eigentliche Implementierung der Businesslogik erforderlich ist.
+			Swagger ist ein Framework, das sich des OpenAPI Standards bedient. Swagger bietet ein Tooling an, mit dessen Hilfe \acs{API}s spezifiziert und beschrieben werden können. Neben einem entsprechenden Editor, bietet Swagger die Möglichkeit, aus der OpenAPI Spezifikation Code zu generieren und zwar unter Verwendung unterschiedlicher Frameworks -- z.B. eine vollständige Spring Applikation --, wobei nur noch die eigentliche Implementierung der Businesslogik erforderlich ist.
 			
 			Des Weiteren stellt Swagger eine Web-basierte Benutzeroberfläche zur Verfügung, welche nicht nur die direkte Anbindung von Live \acs{API}s ermöglicht, sondern auch eine visuelle Dokumentation der \acs{API} darstellt. \cite{SmartBear.2020}
-	
+			
+			Swagger stellt zudem die Plattform SwaggerHub öffentlich zur Verfügung. Auf dieser Plattform können \acs{API} Spezifikationen veröffentlicht werden. Somit sind die Spezifikationen vieler verschiedener \acs{API}s auf einer Plattform zusammengefasst und können einfach eingesehen werden. \autoref{fig:swaggerHub} zeigt die Darstellung der Plattform SwaggerHub.
+			
+			\begin{figure}[ht!]
+				\centering
+				\includegraphics[width=1\textwidth]{images/swagger-hub.png}
+				\caption{SwaggerHub Darstellung anhand des Projektes \textit{Travlyn}}
+				\label{fig:swaggerHub}
+			\end{figure} 
+			
 		\subsection{Spring} % Raphael
 		
 			Spring ist ein Open Source Framework, welches in Java geschrieben wurde. Es gilt als de facto Standard bei der Entwicklung von RESTful API, da es in der Open Source Welt viel Zuspruch und Verwendung gefunden hat. Zudem integriert Spring mit fast allen Java Umgebungen und ist somit nicht nur für Anwendungen im kleinen Maßstab, sondern eben so für Anwendungen in großen Unternehmen geeignet. \cite{Walls.20162017} 
