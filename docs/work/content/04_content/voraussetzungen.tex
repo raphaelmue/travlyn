@@ -247,18 +247,19 @@
 		\subsection{SonarQube}
 		\label{qm.sonarqube}
 		
-			SonarQube ist eine in Java geschriebene Plattform, welche Quellcode hinsichtlich  technischer Qualität analysiert und bewertet. Die Ergebnisse dieser Analyse werden über eine Weboberfläche dargestellt. \cite{SonarSourceS.A.2142020} 
+			SonarQube ist eine in Java geschriebene Plattform, welche Quellcode hinsichtlich technischer Qualität analysiert und bewertet. Die Ergebnisse dieser Analyse werden über eine Weboberfläche dargestellt. \cite{SonarSourceS.A.2142020} 
 			
 			SonarQube analysiert den Code hinsichtlich folgender Qualitätsmerkmale:
 			
 			\begin{itemize}
-				\item Code Duplikationen
-				\item Testabdeckung (siehe \autoref{qm.tests.testabdeckung})
-				\item Komplexität
-				\item Potentielle Fehler
-				\item Kodierrichtlinien
-				\item Kommentare
+				\item \textbf{Code Duplikationen}: Duplikationen im Code gilt es innerhalb eines Projektes (und zumeist auch außerhalb) zu vermeiden. Sobald es Duplikate im Code gibt -- sei es durch die Unwissenheit oder aber die Absicht eines Entwicklers --, steigt der Aufwand für die Wartung der Duplikationen, da Änderungen an mehreren stellen gepflegt werden müssen.
+				\item \textbf{Testabdeckung}: siehe \autoref{qm.tests.testabdeckung}
+				\item \textbf{Komplexität}: Mit der Komplexität von Code wird im Bereich der qualitätssichernden Maßnahmen die Anzahl der Verschachtelungen -- beispielsweise von Kontrollstrukturen \textit{if}, \textit{for} und \textit{while} -- bezeichnet. Da Code mit vielen Verschachtelungsebenen schwer zu lesen und nachzuvollziehen ist, sollte die Komplexität möglichst gering sein. Um komplexe Methoden verständlicher zu machen, werden häufig Teile in weitere Methoden ausgelagert, sodass ferner auch die Wiederverwendbarkeit und die Kapselung gefördert wird. 
+				\item \textbf{Potentielle Fehler}: SonarQube erkennt potentielle Fehler, die nicht vom Compiler erkannt werden wie beispielsweise den Fall, dass eine Schleife nicht terminiert, sodass diese unendlich lange läuft. 
+				\item \textbf{Code Richtlinien}: SonarQube prüft den Code auf die von SonarQube definierten Richtlinien. Diese Richtlinien sind häufig Performance Verbesserungen, Schließen von Sicherheitslücken oder Verbessern der Lesbarkeit. 
 			\end{itemize}
+		
+			Alle definierten Regeln und Richtlinien können durch den Anwender angepasst oder deaktiviert werden. Außerdem lässt sich unter anderem die Anzahl der Regelverstoße definieren, um festzulegen, wann der Build von SonarQube fehlgeschlagen ist und wann nicht. Gleiches gilt für die Testabdeckung. 
 		
 		\subsection{Continuous Integration}
 		
