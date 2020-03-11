@@ -31,12 +31,28 @@
 			Der OpenAPI Standard ist Open Source und dient der Beschreibung von RESTful APIs. Bis 2016 war OpenAPI Teil des Swagger Frameworks, wurde aber schließlich als separates Projekt unter Aufsicht der sog. \textit{OpenAPI Initiative}  ausgelagert. 
 			
 			Mit der deklarativen Ressourcenspezifikation von OpenAPI können Clients Dienste verstehen und konsumieren, ohne über Kenntnisse der eigentlichen Server-Implementierung bzw. Zugriff auf den Servercode zu verfügen. Dies erleichtert die Entwicklung Client-seitiger Applikationen, die RESTful APIs verwenden. Die OpenAPI-Spezifikation ist zudem sprachunabhängig und lässt sich in jeder Beschreibungssprache (\acs{YAML}, \acs{XML} etc.) definieren. 
+			
+			Zu dieser Spezifikation der API gehören unter anderem folgende Metadaten:
+			
+			\begin{itemize}
+				\item Name der API
+				\item Version
+				\item Kurzbeschreibung
+				\item Kontakt
+				\item Lizenz
+			\end{itemize}
+		
+			Wichtig ist hierbei vor allem die Version. Diese ermöglicht es, auch auf ältere Versionen der \acs{API} zuzugreifen, sodass nach einem Update, nicht jeder Konsument dieser \acs{API} zum einen die Version ändern und zum anderem eventuell auch Code anpassen muss.
+			
+			Darüber hinaus lassen sich Schemata beschreiben, die das Datenmodell für Konsumenten repräsentieren. Diese Schemata sind mittels der \acs{JSON} Schema Specification definiert. Es können verschiedene Objekte definiert werden, die mehrere Attribute mit einem definierten Datentypen haben. Dieser Datentyp kann wiederum ein Schema eines Objektes sein, sodass eine Verschachtelung von Objekten möglich ist. \cite{.2252020}
+			
+			Der Hauptteil der API Beschreibung entspricht der Definition der eigentlichen Schnittstelle. Hierbei können Pfade definiert werden, welche die API öffentlich zur Verfügung stellt. Pro Pfad -- bzw. Ressource -- lassen sich die möglichen \acs{HTTP} Operationen definieren. Diese Definition beinhaltet die geforderten Parameter und möglichen Rückgabewerte bzw. -codes inkl. einer Beschreibung. Bei einer erfolgreichen Anfrage können die bereits definierten Schemata verwendet werden, um den Rückgabetyp zu definieren. So lassen sich alle möglichen Anfragen an die \acs{API} klar definieren, sodass inkorrekte Anfragen nicht zugelassen werden.
 	
 		\subsection{Swagger} % Raphael
 		
 			Swagger ist ein Framework, das sich des OpenAPI Standards bedient. Swagger bietet ein Tooling an, mit dessen Hilfe APIs spezifiziert und beschrieben werden können. Neben einem entsprechenden Editor, bietet Swagger die Möglichkeit, aus der OpenAPI Spezifikation Code zu generieren und zwar unter Verwendung unterschiedlicher Frameworks -- z.B. eine vollständige Spring Applikation -- wobei nur noch die eigentliche Implementierung der Businesslogik erforderlich ist.
 			
-			Des Weiteren stellt Swagger eine Web-basierte Benutzeroberfläche zur Verfügung, welche nicht nur die direkte Anbindung von Live APIs ermöglicht, sondern auch eine visuelle Dokumentation der \acs{API} darstellt. \cite{SmartBear.2020}
+			Des Weiteren stellt Swagger eine Web-basierte Benutzeroberfläche zur Verfügung, welche nicht nur die direkte Anbindung von Live \acs{API}s ermöglicht, sondern auch eine visuelle Dokumentation der \acs{API} darstellt. \cite{SmartBear.2020}
 	
 		\subsection{Spring} % Raphael
 		
@@ -82,7 +98,7 @@
 		
 				Eine häufig eingesetzt Technik der Persistierung sind relationale und meist auch \acs{SQL} basierte Datenbanken wie beispielsweise MySQL oder MariaDB. Wenn jedoch die Anwendung, welche die Businesslogik enthält, der Objektorientierung folgt, kommt es zu einem Widerspruch -- dem sog. \textit{Object-relational impedance mismatch} --, welcher in den unterschiedlichen Paradigmen begründet liegt. So beschreibt die Objektrelationale Abbildung eine Technik, bei welcher sich Objekte einer objektorientierten Sprache in einer relationalen Datenbank persistieren lassen. \cite{Ireland.2009}
 					
-				Java bietet mit der sog. Java Persistence API (\acs{JPA}) eine Abstraktion genau zu diesem Zweck, dessen sich Hibernate auch bedient. Mittels Annotationen lassen sich Objekte mit Attributen und Methoden -- zumeist Plain Old Java Objects (\acs{POJO}s) -- auf Entitäten abbilden. Diese Annotation definieren, welche Tabelle auf welches Objekt und welche Spalte auf welches Attribute abgebildet wird. Es lassen sich außerdem die Relationen der Entitäten auf die Assoziationen der Objekte abbilden. Hibernate bzw.\acs{JPA} unterstützt 1:1, 1:N sowie N:N Relationen. Somit wird ein vollständiges Abbild der Persistenz in der Anwendung geschaffen.
+				Java bietet mit der sog. Java Persistence API (\acs{JPA}) eine Abstraktion genau zu diesem Zweck, dessen sich Hibernate auch bedient. Mittels Annotationen lassen sich Objekte mit Attributen und Methoden -- zumeist Plain Old Java Objects (\acs{POJO}s) -- auf Entitäten abbilden. Diese Annotation definieren, welche Tabelle auf welches Objekt und welche Spalte auf welches Attribute abgebildet wird. Es lassen sich außerdem die Relationen der Entitäten auf die Assoziationen der Objekte abbilden. Hibernate bzw. \acs{JPA} unterstützt 1:1, 1:N sowie N:N Relationen. Somit wird ein vollständiges Abbild der Persistenz in der Anwendung geschaffen.
 				
 				Die einzige Vorgabe bei der Definition der Objekte ist, dass ein parameterloser Konstruktor existieren muss. Hibernate greift auf die Attribute der Klasse mittels Reflexion zu. 
 				
