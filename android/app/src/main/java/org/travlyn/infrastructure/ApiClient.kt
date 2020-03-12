@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-open class ApiClient(val baseUrl: String, open val application: Application) {
+open class ApiClient(val baseUrl: String, open val application: Application?) {
     companion object {
         protected const val ContentType = "Content-Type"
         protected const val Accept = "Accept"

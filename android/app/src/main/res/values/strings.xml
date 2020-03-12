@@ -25,4 +25,13 @@
     <string name="error_no_city_found">No city found with name \"%1$s\".</string>
     <string name="user">User</string>
     <string name="search">Search</string>
+    <string name="add">Add</string>
+    <string name="hours_unit">%1$s h</string>
+    <string name="no_value" translatable="false">---</string>
+    <string name="rate">Rate</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="rating_value">%.1f / 5</string>
 </resources>

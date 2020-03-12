@@ -25,4 +25,7 @@
     <string name="error_no_city_found">Keine Stadt mit dem Namen \"%1$s\" gefunden.</string>
     <string name="user">Benutzer</string>
     <string name="search">Suche</string>
+    <string name="add">Hinzufügen</string>
+    <string name="hours_unit">%1$s std</string>
+    <string name="rate">Bewerten</string>
 </resources>

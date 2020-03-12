@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    android:id="@+id/cityInformationLayout" xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -101,18 +102,36 @@
                         android:layout_marginVertical="16dp"
                         android:background="#D8D7D7" />
 
-                    <TextView
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="@string/points_of_interests"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+                        android:layout_height="wrap_content">
+
+                        <ImageButton
+                            android:id="@+id/cityShowStopsButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:contentDescription="@string/points_of_interests"
+                            android:background="@color/white"
+                            android:src="@drawable/ic_chevron_right"/>
+
+                        <TextView
+                            android:id="@+id/cityStopsHeadingTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/points_of_interests"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/stopCardRecyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:paddingVertical="16dp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"

@@ -12,8 +12,8 @@ import org.travlyn.local.Application
 import java.io.InputStream
 
 class CityApi(
-    basePath: String = "http://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
-    application: Application
+    basePath: String = "http://192.168.178.84:3000/travlyn/travlyn/1.0.0/",
+    application: Application? = null
 ) : ApiClient(basePath, application) {
 
     /**

@@ -1,6 +1,7 @@
 package org.travlyn.ui.home
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.TextUtils
@@ -33,7 +34,6 @@ class CityInformationFragment : SuperBottomSheetFragment() {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-
         return inflater.inflate(R.layout.fragment_city_information, container, false)
     }
 
@@ -54,6 +54,15 @@ class CityInformationFragment : SuperBottomSheetFragment() {
         }
 
         val city: City? = Gson().fromJson(arguments?.get("city") as String?, City::class.java)
+
+        cityShowStopsButton.setOnClickListener {
+            val intent = Intent(context, StopsActivity::class.java)
+            val bundle = Bundle()
+            bundle.putString("city", Gson().toJson(city))
+            intent.putExtras(bundle)
+            startActivity(intent)
+        }
+
         if (city != null) {
             cityInformationToolbar.title = city.name
             cityCollapsingToolbar.title = city.name
@@ -143,5 +152,3 @@ private class StopCardViewAdapter(private val stops: List<Stop>, private val con
             itemView.findViewById(R.id.stopCardProgressIndicator)
     }
 }
-
-

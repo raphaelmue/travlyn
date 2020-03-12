@@ -43,11 +43,11 @@ public class Stop extends AbstractDataTransferObject {
     @ApiModelProperty(value = "Approximate price estimation for one person in USD", required = true, example = "50")
     private Double pricing = null;
 
-    @JsonProperty("time_effort")
+    @JsonProperty("timeEffort")
     @ApiModelProperty(value = "Approximate time estimation", required = true, example = "2")
     private Double timeEffort = null;
 
-    @JsonProperty("average_rating")
+    @JsonProperty("averageRating")
     @ApiModelProperty(value = "Average percentage rating by user", required = true, example = "0.98")
     private Double averageRating = 0.0;
 
