@@ -4,15 +4,13 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.*
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.RatingBar
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
+import com.miguelcatalan.materialsearchview.MaterialSearchView
 import kotlinx.android.synthetic.main.activity_stops.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +20,7 @@ import org.travlyn.R
 import org.travlyn.api.CityApi
 import org.travlyn.api.model.City
 import org.travlyn.api.model.Stop
+import java.util.*
 
 
 class StopsActivity : AppCompatActivity() {
@@ -49,6 +48,9 @@ class StopsActivity : AppCompatActivity() {
                 stopsListView.layoutManager = layoutManager
 
                 stopsListView.adapter = StopListViewAdapter(city.stops!!.toList(), this)
+
+                stopListNumberOfResultsTextView.text =
+                    this.getString(R.string.number_of_stop_found, city.stops.size)
             }
         }
     }
@@ -59,14 +61,37 @@ class StopsActivity : AppCompatActivity() {
         val item: MenuItem = menu!!.findItem(R.id.searchStopsMenuItem)
         stopListSearchView.setMenuItem(item)
 
+        stopListSearchView.setOnQueryTextListener(object : MaterialSearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                performFiltering(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                performFiltering(newText)
+                return true
+            }
+        })
+
         return true
+    }
+
+    private fun performFiltering(query: String) {
+        (stopsListView.adapter as StopListViewAdapter).filter.filter(query) { count ->
+            stopListNumberOfResultsTextView.text = this.getString(
+                R.string.number_of_stop_found,
+                count
+            )
+        }
     }
 }
 
 private class StopListViewAdapter(private val stops: List<Stop>, private val context: Context) :
-    RecyclerView.Adapter<StopListViewAdapter.ViewHolder>() {
+    RecyclerView.Adapter<StopListViewAdapter.ViewHolder>(), Filterable {
 
     private val cityApi = CityApi()
+    private val filter = StopFilter(this)
+    private var filteredStops: MutableList<Stop> = stops.toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View =
@@ -75,11 +100,11 @@ private class StopListViewAdapter(private val stops: List<Stop>, private val con
     }
 
     override fun getItemCount(): Int {
-        return stops.size;
+        return filteredStops.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val stop: Stop = stops[position]
+        val stop: Stop = filteredStops[position]
 
         holder.stopListName.text = stop.name
         holder.stopListDescription.text = stop.description
@@ -99,7 +124,7 @@ private class StopListViewAdapter(private val stops: List<Stop>, private val con
                 context.getString(R.string.hours_unit, stop.timeEffort.toString())
         }
 
-        if (stop.pricing == null || stop.pricing!! <= 0) {
+        if (stop.pricing == null || stop.pricing <= 0) {
             holder.stopListPricingTextView.text = context.getString(R.string.no_value)
         } else {
             holder.stopListPricingTextView.text = stop.pricing.toString()
@@ -120,7 +145,12 @@ private class StopListViewAdapter(private val stops: List<Stop>, private val con
         }
     }
 
-    class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    override fun getFilter(): Filter {
+        return this.filter
+    }
+
+    private inner class ViewHolder internal constructor(itemView: View) :
+        RecyclerView.ViewHolder(itemView) {
         var stopListImageView: ImageView = itemView.findViewById(R.id.stopListImageView)
         var stopListName: TextView = itemView.findViewById(R.id.stopListName)
         var stopListRatingBar: RatingBar = itemView.findViewById(R.id.stopListRatingBar)
@@ -132,5 +162,32 @@ private class StopListViewAdapter(private val stops: List<Stop>, private val con
             itemView.findViewById(R.id.stopListTimeEffortTextView)
         var stopListPricingTextView: TextView = itemView.findViewById(R.id.stopListPricingTextView)
     }
-}
 
+    private inner class StopFilter(var adapter: StopListViewAdapter) :
+        Filter() {
+        override fun performFiltering(constraint: CharSequence?): FilterResults {
+            val results = FilterResults()
+            if (constraint != null && constraint.isEmpty()) {
+                filteredStops = stops.toMutableList()
+            } else {
+                filteredStops.clear()
+                val filterPattern =
+                    constraint.toString().toLowerCase(Locale.ROOT).trim { it <= ' ' }
+                for (stop in stops) {
+                    if (stop.name?.toLowerCase(Locale.ROOT)?.contains(filterPattern)!!) {
+                        filteredStops.add(stop)
+                    }
+                }
+            }
+
+            results.values = filteredStops
+            results.count = filteredStops.size
+            return results
+        }
+
+        override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+            this.adapter.notifyDataSetChanged()
+        }
+
+    }
+}
