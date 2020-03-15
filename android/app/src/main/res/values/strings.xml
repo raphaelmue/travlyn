@@ -41,4 +41,12 @@
     <string name="request_rate_city">Please give your feedback to the point of interest.</string>
     <string name="request_write_comment">Please write your comment here ...</string>
     <string name="successfully_rated_city">Rating was sent successfully!</string>
+    <string name="category_place_of_worship">Place of Worship</string>
+    <string name="category_building">Building</string>
+    <string name="category_monument">Monument</string>
+    <string name="category_memorial">Memorial</string>
+    <string name="category_artwork">Artwork</string>
+    <string name="category_gallery">Gallery</string>
+    <string name="category_museum">Museum</string>
+    <string name="category_attraction">Attraction</string>
 </resources>

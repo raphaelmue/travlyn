@@ -39,4 +39,12 @@
     <string name="request_rate_city">Bitte gib dein Feedback zu dieser Sehenswürdigkeit.</string>
     <string name="request_write_comment">Bitte schreibe deinen Kommentar hier ...</string>
     <string name="successfully_rated_city">Bewertung wurde erfolgreich gesendet!</string>
+    <string name="category_place_of_worship">Gotteshaus</string>
+    <string name="category_building">Gebäude</string>
+    <string name="category_monument">Denkmal</string>
+    <string name="category_memorial">Gedenkstätte</string>
+    <string name="category_artwork">"Kunstwerk "</string>
+    <string name="category_gallery">Gallerie</string>
+    <string name="category_museum">Museum</string>
+    <string name="category_attraction">Attraktion</string>
 </resources>
