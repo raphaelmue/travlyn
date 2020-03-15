@@ -109,6 +109,15 @@ private class StopListViewAdapter(private val stops: List<Stop>, private val con
         holder.stopListName.text = stop.name
         holder.stopListDescription.text = stop.description
 
+        val stringIdentifier = context.resources.getIdentifier(
+            "category_" + stop.category?.name, "string", context.packageName
+        )
+        if (stringIdentifier > 0) {
+            holder.stopListCategoryTextView.text = context.getString(stringIdentifier)
+        } else {
+            holder.stopListCategoryTextView.text = stop.category?.name
+        }
+
         if (stop.averageRating == null || stop.averageRating <= 0) {
             holder.stopListRatingTextView.text = context.getString(R.string.no_value)
         } else {
@@ -154,13 +163,17 @@ private class StopListViewAdapter(private val stops: List<Stop>, private val con
         var stopListImageView: ImageView = itemView.findViewById(R.id.stopListImageView)
         var stopListName: TextView = itemView.findViewById(R.id.stopListName)
         var stopListRatingBar: RatingBar = itemView.findViewById(R.id.stopListRatingBar)
-        var stopListRatingTextView: TextView = itemView.findViewById(R.id.stopListRatingTextView)
+        var stopListRatingTextView: TextView =
+            itemView.findViewById(R.id.stopListRatingTextView)
         var stopListDescription: TextView = itemView.findViewById(R.id.stopListDescription)
         var stopListProgressIndicator: ProgressBar =
             itemView.findViewById(R.id.stopListProgressIndicator)
+        var stopListCategoryTextView: TextView =
+            itemView.findViewById(R.id.stopListCategoryTextView)
         var stopListTimeEffortTextView: TextView =
             itemView.findViewById(R.id.stopListTimeEffortTextView)
-        var stopListPricingTextView: TextView = itemView.findViewById(R.id.stopListPricingTextView)
+        var stopListPricingTextView: TextView =
+            itemView.findViewById(R.id.stopListPricingTextView)
     }
 
     private inner class StopFilter(var adapter: StopListViewAdapter) :
