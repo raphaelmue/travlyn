@@ -31,4 +31,14 @@
     <string name="rate">Rate</string>
     <string name="rating_value" translatable="false">%.1f / 5</string>
     <string name="number_of_stop_found">%d points of interests found</string>
+    <string name="cancel">Cancel</string>
+    <string name="very_bad_rating">Very bad</string>
+    <string name="not_good_rating">Bad</string>
+    <string name="okay_rating">Okay</string>
+    <string name="very_good_rating">Very good</string>
+    <string name="excellent_rating">Excellent</string>
+    <string name="rate_city">Rate \'%1$s\'</string>
+    <string name="request_rate_city">Please give your feedback to the point of interest.</string>
+    <string name="request_write_comment">Please write your comment here ...</string>
+    <string name="successfully_rated_city">Rating was sent successfully!</string>
 </resources>

@@ -5,7 +5,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "rating")
+@Table(name = "stop_rating")
 public class StopRatingEntity extends RatingEntity {
 
     @ManyToOne(targetEntity = StopEntity.class)

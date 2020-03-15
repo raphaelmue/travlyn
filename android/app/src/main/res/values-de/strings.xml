@@ -29,4 +29,14 @@
     <string name="hours_unit">%1$s std</string>
     <string name="rate">Bewerten</string>
     <string name="number_of_stop_found">%d Sehenswürdigkeiten gefunden!</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="very_bad_rating">Sehr schlecht</string>
+    <string name="not_good_rating">Schlecht</string>
+    <string name="okay_rating">In Ordnung</string>
+    <string name="very_good_rating">Sehr gut</string>
+    <string name="excellent_rating">Ausgezeichnet</string>
+    <string name="rate_city">Bewerte \'%1$s\'</string>
+    <string name="request_rate_city">Bitte gib dein Feedback zu dieser Sehenswürdigkeit.</string>
+    <string name="request_write_comment">Bitte schreibe deinen Kommentar hier ...</string>
+    <string name="successfully_rated_city">Bewertung wurde erfolgreich gesendet!</string>
 </resources>
