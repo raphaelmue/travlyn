@@ -162,28 +162,10 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener {
         private val filter = StopFilter(this)
         private var filteredStops: MutableList<Stop> = stops.toMutableList()
 
-<<<<<<< HEAD
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view: View =
                 LayoutInflater.from(context).inflate(R.layout.stop_list_view, parent, false)
             return ViewHolder(view)
-=======
-        val stringIdentifier = context.resources.getIdentifier(
-            "category_" + stop.category?.name, "string", context.packageName
-        )
-        if (stringIdentifier > 0) {
-            holder.stopListCategoryTextView.text = context.getString(stringIdentifier)
-        } else {
-            holder.stopListCategoryTextView.text = stop.category?.name
-        }
-
-        if (stop.averageRating == null || stop.averageRating <= 0) {
-            holder.stopListRatingTextView.text = context.getString(R.string.no_value)
-        } else {
-            holder.stopListRatingBar.rating = stop.averageRating.toFloat() * 5f
-            holder.stopListRatingTextView.text =
-                context.getString(R.string.rating_value, stop.averageRating * 5f)
->>>>>>> issue29
         }
 
         override fun getItemCount(): Int {
@@ -193,6 +175,9 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val stop: Stop = filteredStops[position]
 
+            holder.stopListName.text = stop.name
+            holder.stopListDescription.text = stop.description
+
             holder.stopListRateButton.setOnClickListener {
                 handleRateStop(stop)
             }
@@ -201,8 +186,14 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener {
                 handleAddStopToTrip(stop)
             }
 
-            holder.stopListName.text = stop.name
-            holder.stopListDescription.text = stop.description
+            val stringIdentifier = context.resources.getIdentifier(
+                "category_" + stop.category?.name, "string", context.packageName
+            )
+            if (stringIdentifier > 0) {
+                holder.stopListCategoryTextView.text = context.getString(stringIdentifier)
+            } else {
+                holder.stopListCategoryTextView.text = stop.category?.name
+            }
 
             if (stop.averageRating == null || stop.averageRating <= 0) {
                 holder.stopListRatingTextView.text = context.getString(R.string.no_value)
@@ -244,7 +235,6 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener {
             return this.filter
         }
 
-<<<<<<< HEAD
         private inner class ViewHolder internal constructor(itemView: View) :
             RecyclerView.ViewHolder(itemView) {
             var stopListImageView: ImageView = itemView.findViewById(R.id.stopListImageView)
@@ -255,6 +245,8 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener {
             var stopListDescription: TextView = itemView.findViewById(R.id.stopListDescription)
             var stopListProgressIndicator: ProgressBar =
                 itemView.findViewById(R.id.stopListProgressIndicator)
+            var stopListCategoryTextView: TextView =
+                itemView.findViewById(R.id.stopListCategoryTextView)
             var stopListTimeEffortTextView: TextView =
                 itemView.findViewById(R.id.stopListTimeEffortTextView)
             var stopListPricingTextView: TextView =
@@ -264,25 +256,6 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener {
             var stopListAddToTripButton: Button =
                 itemView.findViewById(R.id.stopListAddToTripButton)
         }
-=======
-    private inner class ViewHolder internal constructor(itemView: View) :
-        RecyclerView.ViewHolder(itemView) {
-        var stopListImageView: ImageView = itemView.findViewById(R.id.stopListImageView)
-        var stopListName: TextView = itemView.findViewById(R.id.stopListName)
-        var stopListRatingBar: RatingBar = itemView.findViewById(R.id.stopListRatingBar)
-        var stopListRatingTextView: TextView =
-            itemView.findViewById(R.id.stopListRatingTextView)
-        var stopListDescription: TextView = itemView.findViewById(R.id.stopListDescription)
-        var stopListProgressIndicator: ProgressBar =
-            itemView.findViewById(R.id.stopListProgressIndicator)
-        var stopListCategoryTextView: TextView =
-            itemView.findViewById(R.id.stopListCategoryTextView)
-        var stopListTimeEffortTextView: TextView =
-            itemView.findViewById(R.id.stopListTimeEffortTextView)
-        var stopListPricingTextView: TextView =
-            itemView.findViewById(R.id.stopListPricingTextView)
-    }
->>>>>>> issue29
 
         private inner class StopFilter(var adapter: StopListViewAdapter) :
             Filter() {
