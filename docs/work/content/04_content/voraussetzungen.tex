@@ -46,9 +46,9 @@
 			
 			Darüber hinaus lassen sich Schemata beschreiben, die das Datenmodell für Konsumenten repräsentieren. Diese Schemata sind mittels der \acs{JSON} Schema Specification definiert. Es können verschiedene Objekte definiert werden, die mehrere Attribute mit einem definierten Datentypen haben. Dieser Datentyp kann wiederum ein Schema eines Objektes sein, sodass eine Verschachtelung von Objekten möglich ist. \cite{.2252020}
 			
-			Der Hauptteil der API Beschreibung entspricht der Definition der eigentlichen Schnittstelle. Hierbei können Pfade definiert werden, welche die API öffentlich zur Verfügung stellt. Pro Pfad -- bzw. Ressource -- lassen sich die möglichen \acs{HTTP} Operationen definieren. Diese Definition beinhaltet die geforderten Parameter und möglichen Rückgabewerte bzw. -codes inkl. einer Beschreibung. Bei einer erfolgreichen Anfrage können die bereits definierten Schemata verwendet werden, um den Rückgabetyp zu definieren. So lassen sich alle möglichen Anfragen an die \acs{API} klar definieren, sodass inkorrekte Anfragen nicht zugelassen werden.
+			Der Hauptteil der API Beschreibung entspricht der Definition der eigentlichen Schnittstelle. Hierbei können Pfade definiert werden, welche die API öffentlich zur Verfügung stellt. Pro Pfad -- bzw. Ressource -- lassen sich die möglichen \acs{HTTP} Operationen definieren. Diese Definition beinhaltet die geforderten Parameter und möglichen Rückgabewerte bzw. -codes inkl. einer Beschreibung. Bei einer erfolgreichen Anfrage können die bereits definierten Schemata verwendet werden, um den Rückgabetyp zu definieren. So lassen sich alle möglichen Anfragen an die \acs{API} klar definieren, sodass fehlerhafte Anfragen nicht zugelassen werden.
 			
-			Die definierten Pfade lassen sich zudem in Tags zusammenfassen, sodass eine gewisse Struktur in den Anfragen gewährleistet und außerdem die Komplexität der \acs{API} reduziert wird. 
+			Die definierten Pfade lassen sich zudem in Tags zusammenfassen, sodass eine festgelegte Struktur in den Anfragen gewährleistet und außerdem die Komplexität der \acs{API} reduziert wird. 
 	
 		\subsection{Swagger} % Raphael
 		
@@ -56,7 +56,7 @@
 			
 			Des Weiteren stellt Swagger eine Web-basierte Benutzeroberfläche zur Verfügung, welche nicht nur die direkte Anbindung von Live \acs{API}s ermöglicht, sondern auch eine visuelle Dokumentation der \acs{API} darstellt. \cite{SmartBear.2020}
 			
-			Swagger stellt zudem die Plattform SwaggerHub öffentlich zur Verfügung. Auf dieser Plattform können \acs{API} Spezifikationen veröffentlicht werden. Somit sind die Spezifikationen vieler verschiedener \acs{API}s auf einer Plattform zusammengefasst und können einfach eingesehen werden. \autoref{fig:swaggerHub} zeigt die Darstellung der Plattform SwaggerHub.
+			Swagger stellt zudem die Plattform SwaggerHub öffentlich zur Verfügung. Auf dieser Plattform können \acs{API} Spezifikationen veröffentlicht werden. Somit sind die Spezifikationen vieler verschiedener \acs{API}s auf einer Plattform zusammengefasst und können leicht eingesehen werden. \autoref{fig:swaggerHub} zeigt die Darstellung der Plattform SwaggerHub.
 			
 			\begin{figure}[ht!]
 				\centering
@@ -172,7 +172,7 @@
 	
 		\subsection{Maven} % Raphael
 			
-			 Maven ist ein von der Apache Software Foundation entwickeltes Build-Management-Tool. Es ist Open Source und basiert auf Java. Das Ziel von Maven ist zweiteilig: auf der einen Seite soll mittels Maven eine Applikation automatisiert gebaut werden und auf der anderen Seite dient Maven der Verwaltung von Abhängigkeiten. 
+			 Maven ist ein von der Apache Software Foundation entwickeltes Build-Management-Tool. Es ist Open Source und basiert auf Java. Das Ziel von Maven ist zweiteilig: Auf der einen Seite soll eine Applikation mittels Maven automatisiert gebaut werden und auf der anderen Seite dient Maven der Verwaltung von Abhängigkeiten. 
 			 
 			 In einer XML basierten Konfigurationsdatei werden -- gemäß des Paradigma \textit{Convention over Configuration} -- ausschließlich Ausnahmen definiert, wie Abhängigkeiten auf externe Module und Komponenten, benötigte Plugins oder die Build Reihenfolge. Alle für das Projekt benötigten Bibliotheken und Plugins werden von Maven dynamisch von einem oder mehreren Repositories heruntergeladen und in einem lokalen Cache zwischengespeichert. \cite{Company.2009}
 			 
@@ -192,22 +192,22 @@
 			 
 		\subsection{Gradle}
 			
-			Gradle ist ebenso wie Maven ein Build-Management-Tool. Statt XML wie bei Maven verwendet Gradle eine Groovy basierende domänenspezifische Sprache. Außerdem sind Gradle Skripte direkt ausführbarer Code und keine Projektbeschreibung oder -definition. Die von Gradle definierten Build Prozesse unterscheiden sich jedoch nur minimal von den von Maven verwendeten. 
+			Gradle ist ebenso, wie Maven, ein Build-Management-Tool. Statt XML wie bei Maven verwendet Gradle eine Groovy basierende domänenspezifische Sprache. Außerdem sind Gradle Skripte direkt ausführbarer Code und keine Projektbeschreibung oder -definition. Die von Gradle definierten Build Prozesse unterscheiden sich jedoch nur minimal von den von Maven verwendeten. 
 			
-			Mitte 2013 hat Google Gradle als Build-Management-Tool für Entwicklung von Android Applikationen festgesetzt. So wurde das Android Gradle Plugin eingeführt, welches es ermöglicht, außerhalb der für die Android Entwicklung bereitgestellten \acs{IDE} \textit{Android Studio} die Applikation zu bauen. \cite{Google.2282020}
+			Mitte 2013 hat Google Gradle als Build-Management-Tool für Entwicklung von Android Applikationen festgesetzt. So wurde das Android Gradle Plugin eingeführt, welches es ermöglicht, die Applikation außerhalb der für die Android Entwicklung bereitgestellten \acs{IDE} \textit{Android Studio} zu bauen. \cite{Google.2282020}
 		
 	\section{Qualitätssichernde Maßnahmen} % Raphael
 	
 		\subsection{Tests} % Raphael
 		\label{qm.tests}
 		
-			Eine der am häufigsten verwendeten Maßnahmen, um die Qualität von Code zu bewerten, sind automatisierte Tests. Tests dienen dem Zweck, dass sobald eine Änderung im Versionskontrollsystem vorliegt, diese Tests automatisch ausgeführt werden und somit auf eventuelle, durch die Änderung entstandene Fehler hinweisen. Dies ermöglicht es, noch vor der Veröffentlichung einer Applikation diese durch Tests aufgedeckten Fehler zu beheben und spart unter Umständen auch Kosten, da diese Fehler sonst im Produktivbetrieb erst aufgefallen wären. \cite{Huizinga.2007} Es existieren verschiedene Ansätze Tests zu implementieren. Im Folgenden werden die für diese Arbeit relevanten Ansätze beschrieben. 
+			Eine der am häufigsten verwendeten Maßnahmen, um die Qualität von Code zu bewerten, sind automatisierte Tests. Tests dienen dem Zweck, dass Tests automatisch ausgeführt werden, sobald eine Änderung im Versionskontrollsystem vorliegt und somit auf eventuelle, durch die Änderung entstandene Fehler hinweisen. Dies ermöglicht es, noch vor der Veröffentlichung einer Applikation diese durch Tests aufgedeckten Fehler zu beheben und spart unter Umständen auch Kosten, da diese Fehler sonst im Produktivbetrieb erst aufgefallen wären. \cite{Huizinga.2007} Es existieren verschiedene Ansätze Tests zu implementieren. Im Folgenden werden die für diese Arbeit relevanten Ansätze beschrieben. 
 			
 			\subsubsection{Unit Tests}
 			
 				Unit Tests beschreiben automatisierte Tests, die nur kleinste Einheiten der Software bzw. der Logik testen. Dabei werden alle Abhängigkeiten dieser kleinsten Einheit gemockt -- Mocking ist die Simulation eines bestimmten Zustands einer Software --, sodass ausschließlich die Funktion der kleinsten Einheit getestet wird. Diese kleinste Einheit sind zumeist Methoden verschiedener Klassen. Die Intention von Unit Tests ist also das Prüfen der funktionalen Einzelteile einer Software auf Korrektheit. 
 			
-				Ein in Java häufig für die Implementierung von Unit Tests eingesetztes Framework ist JUnit. JUnit ist Open Source und wurde u.A. Kent Beck und Erich Gamma entwickelt. JUnit bietet einige nützliche Funktionalitäten: So können pro Test Klasse beispielsweise Methoden deklariert werden, die jeweils vor und nach einem Test oder aber auch vor und nach allen sich in dieser Klasse befindlichen Tests ausgeführt werden. Außerdem lassen sich Tests seit JUnit 5.0 Tests taggen, um beispielsweise nur Tests eines vorher definierten Anwendungsfalles auszuführen. \cite{JUnitTeam.312020}
+				Ein in Java häufig für die Implementierung von Unit Tests eingesetztes Framework ist JUnit. JUnit ist Open Source und wurde u.A. von Kent Beck und Erich Gamma entwickelt. JUnit bietet einige nützliche Funktionalitäten: So können pro Test Klasse beispielsweise Methoden deklariert werden, die jeweils vor und nach einem Test oder aber auch vor und nach allen sich in dieser Klasse befindlichen Tests ausgeführt werden. Außerdem lassen sich Tests seit JUnit 5.0 Tests taggen, um beispielsweise nur Tests eines vorher definierten Anwendungsfalles auszuführen. \cite{JUnitTeam.312020}
 				
 				Spring unterstützt die Implementierung von JUnit Tests durch die Bereitstellung eines Testsframeworks, mit dessen Hilfe der Spring Server gemockt werden kann. 
 				
@@ -233,7 +233,7 @@
 					\item 
 						\textbf{Statement Coverage}: Anteil der durchlaufenen Anweisungen innerhalb der Applikation
 					\item 
-						\textbf{Branch Coverage}: Anteil der durchlaufenen Zweige von jeder Kontrollstruktur (\textit{if}- und \textit{case}-Anweisungen) innerhalb einer Applikation 
+						\textbf{Branch Coverage}: Anteil der durchlaufenen Zweige von jeder Kontrollstruktur (\textit{if}- und \textit{case}-Anweisungen sowie Schleifen) innerhalb einer Applikation. 
 				\end{enumerate}
 			
 				Die oben beschriebenen Metriken reichen für diese Arbeit aus, um eine Aussage über die Qualität des Codes bzgl. der Testabdeckung zu treffen. 
@@ -259,7 +259,7 @@
 				\item \textbf{Code Richtlinien}: SonarQube prüft den Code auf die von SonarQube definierten Richtlinien. Diese Richtlinien sind häufig Performance Verbesserungen, Schließen von Sicherheitslücken oder Verbessern der Lesbarkeit. 
 			\end{itemize}
 		
-			Alle definierten Regeln und Richtlinien können durch den Anwender angepasst oder deaktiviert werden. Außerdem lässt sich unter anderem die Anzahl der Regelverstoße definieren, um festzulegen, wann der Build von SonarQube fehlgeschlagen ist und wann nicht. Gleiches gilt für die Testabdeckung. 
+			Alle definierten Regeln und Richtlinien können durch den Anwender angepasst oder deaktiviert werden. Außerdem lässt sich unter anderem die Anzahl der Regelverstoße definieren, um festzulegen, wann der Build durch SonarQube fehlgeschlagen ist und wann nicht. Gleiches gilt für die Testabdeckung. 
 		
 		\subsection{Continuous Integration}
 		
