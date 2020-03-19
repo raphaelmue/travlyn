@@ -7,6 +7,7 @@ import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -20,16 +21,20 @@ import org.travlyn.R
 import org.travlyn.api.CityApi
 import org.travlyn.api.model.City
 import org.travlyn.api.model.Stop
+import org.travlyn.components.SelectionToolbar
 import java.util.*
 
 
 class StopsActivity : AppCompatActivity() {
+
+    private lateinit var stopListSelectionToolbar: SelectionToolbar<Stop>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stops)
         val toolbar: Toolbar = findViewById(R.id.stopsListToolbar)
         setSupportActionBar(toolbar)
+        stopListSelectionToolbar = findViewById(R.id.stopListSelectionToolbar)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -84,123 +89,164 @@ class StopsActivity : AppCompatActivity() {
             )
         }
     }
-}
 
-private class StopListViewAdapter(private val stops: List<Stop>, private val context: Context) :
-    RecyclerView.Adapter<StopListViewAdapter.ViewHolder>(), Filterable {
+    private inner class StopListViewAdapter(
+        private val stops: List<Stop>,
+        private val context: Context
+    ) :
+        RecyclerView.Adapter<StopListViewAdapter.ViewHolder>(), Filterable {
 
-    private val cityApi = CityApi()
-    private val filter = StopFilter(this)
-    private var filteredStops: MutableList<Stop> = stops.toMutableList()
+        private val cityApi = CityApi()
+        private val filter = StopFilter(this)
+        private var filteredStops: MutableList<Stop> = stops.toMutableList()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: View =
-            LayoutInflater.from(context).inflate(R.layout.stop_list_view, parent, false)
-        return ViewHolder(view)
-    }
+        private var isSelectable = false
 
-    override fun getItemCount(): Int {
-        return filteredStops.size
-    }
+        init {
+            stopListSelectionToolbar.setOnCloseListener {
+                isSelectable = false
+                notifyDataSetChanged()
+            }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val stop: Stop = filteredStops[position]
-
-        holder.stopListName.text = stop.name
-        holder.stopListDescription.text = stop.description
-
-        val stringIdentifier = context.resources.getIdentifier(
-            "category_" + stop.category?.name, "string", context.packageName
-        )
-        if (stringIdentifier > 0) {
-            holder.stopListCategoryTextView.text = context.getString(stringIdentifier)
-        } else {
-            holder.stopListCategoryTextView.text = stop.category?.name
+            stopListSelectionToolbar.setCheckListener { selectedElements ->
+                // TODO add stops to trip
+            }
         }
 
-        if (stop.averageRating == null || stop.averageRating <= 0) {
-            holder.stopListRatingTextView.text = context.getString(R.string.no_value)
-        } else {
-            holder.stopListRatingBar.rating = stop.averageRating.toFloat() * 5f
-            holder.stopListRatingTextView.text =
-                context.getString(R.string.rating_value, stop.averageRating * 5f)
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val view: View =
+                LayoutInflater.from(context).inflate(R.layout.stop_list_view, parent, false)
+            return ViewHolder(view)
         }
 
-        if (stop.timeEffort == null || stop.timeEffort <= 0) {
-            holder.stopListTimeEffortTextView.text = context.getString(R.string.no_value)
-        } else {
-            holder.stopListTimeEffortTextView.text =
-                context.getString(R.string.hours_unit, stop.timeEffort.toString())
+        override fun getItemCount(): Int {
+            return filteredStops.size
         }
 
-        if (stop.pricing == null || stop.pricing <= 0) {
-            holder.stopListPricingTextView.text = context.getString(R.string.no_value)
-        } else {
-            holder.stopListPricingTextView.text = stop.pricing.toString()
-        }
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            val stop: Stop = filteredStops[position]
 
-        if (holder.stopListImageView.drawable == null) {
-            CoroutineScope(Dispatchers.IO).launch {
-                if (stop.image != null) {
-                    withContext(Dispatchers.Main) {
-                        val bitmap: Bitmap? = cityApi.getImage(stop.image)
-                        if (bitmap != null) {
-                            holder.stopListImageView.setImageBitmap(bitmap)
-                            holder.stopListProgressIndicator.visibility = View.GONE
+            holder.stopListCheckBox.visibility = if (isSelectable) View.VISIBLE else View.GONE
+            holder.stopListCardView.setOnLongClickListener {
+                isSelectable = !isSelectable
+
+                stopListSelectionToolbar.toggleToolbar()
+                notifyDataSetChanged()
+                return@setOnLongClickListener true
+            }
+
+            holder.stopListCardView.setOnClickListener {
+                if (isSelectable) {
+                    holder.stopListCheckBox.isChecked = !holder.stopListCheckBox.isChecked
+                    if (holder.stopListCheckBox.isChecked)
+                        stopListSelectionToolbar.addSelectedElement(stop)
+                    else stopListSelectionToolbar.removeSelectedElement(stop)
+                }
+            }
+            holder.stopListCheckBox.setOnClickListener {
+                if (isSelectable) {
+                    if (holder.stopListCheckBox.isChecked)
+                        stopListSelectionToolbar.addSelectedElement(stop)
+                    else stopListSelectionToolbar.removeSelectedElement(stop)
+                }
+            }
+
+            holder.stopListName.text = stop.name
+            holder.stopListDescription.text = stop.description
+
+            val stringIdentifier = context.resources.getIdentifier(
+                "category_" + stop.category?.name, "string", context.packageName
+            )
+            holder.stopListCategoryTextView.text =
+                if (stringIdentifier > 0) context.getString(stringIdentifier) else stop.category?.name
+
+            if (stop.averageRating == null || stop.averageRating <= 0) {
+                holder.stopListRatingTextView.text = context.getString(R.string.no_value)
+            } else {
+                holder.stopListRatingBar.rating = stop.averageRating.toFloat() * 5f
+                holder.stopListRatingTextView.text =
+                    context.getString(R.string.rating_value, stop.averageRating * 5f)
+            }
+
+            if (stop.timeEffort == null || stop.timeEffort <= 0) {
+                holder.stopListTimeEffortTextView.text = context.getString(R.string.no_value)
+            } else {
+                holder.stopListTimeEffortTextView.text =
+                    context.getString(R.string.hours_unit, stop.timeEffort.toString())
+            }
+
+            if (stop.pricing == null || stop.pricing <= 0) {
+                holder.stopListPricingTextView.text = context.getString(R.string.no_value)
+            } else {
+                holder.stopListPricingTextView.text = stop.pricing.toString()
+            }
+
+            if (holder.stopListImageView.drawable == null) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    if (stop.image != null) {
+                        withContext(Dispatchers.Main) {
+                            val bitmap: Bitmap? = cityApi.getImage(stop.image)
+                            if (bitmap != null) {
+                                holder.stopListImageView.setImageBitmap(bitmap)
+                                holder.stopListProgressIndicator.visibility = View.GONE
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
-    override fun getFilter(): Filter {
-        return this.filter
-    }
+        override fun getFilter(): Filter {
+            return this.filter
+        }
 
-    private inner class ViewHolder internal constructor(itemView: View) :
-        RecyclerView.ViewHolder(itemView) {
-        var stopListImageView: ImageView = itemView.findViewById(R.id.stopListImageView)
-        var stopListName: TextView = itemView.findViewById(R.id.stopListName)
-        var stopListRatingBar: RatingBar = itemView.findViewById(R.id.stopListRatingBar)
-        var stopListRatingTextView: TextView =
-            itemView.findViewById(R.id.stopListRatingTextView)
-        var stopListDescription: TextView = itemView.findViewById(R.id.stopListDescription)
-        var stopListProgressIndicator: ProgressBar =
-            itemView.findViewById(R.id.stopListProgressIndicator)
-        var stopListCategoryTextView: TextView =
-            itemView.findViewById(R.id.stopListCategoryTextView)
-        var stopListTimeEffortTextView: TextView =
-            itemView.findViewById(R.id.stopListTimeEffortTextView)
-        var stopListPricingTextView: TextView =
-            itemView.findViewById(R.id.stopListPricingTextView)
-    }
+        private inner class ViewHolder internal constructor(itemView: View) :
+            RecyclerView.ViewHolder(itemView) {
+            var stopListCardView: CardView = itemView.findViewById(R.id.stopListCardView)
+            var stopListCheckBox: CheckBox = itemView.findViewById(R.id.stopListCheckBox)
+            var stopListImageView: ImageView = itemView.findViewById(R.id.stopListImageView)
+            var stopListName: TextView = itemView.findViewById(R.id.stopListName)
+            var stopListRatingBar: RatingBar = itemView.findViewById(R.id.stopListRatingBar)
+            var stopListRatingTextView: TextView =
+                itemView.findViewById(R.id.stopListRatingTextView)
+            var stopListDescription: TextView = itemView.findViewById(R.id.stopListDescription)
+            var stopListProgressIndicator: ProgressBar =
+                itemView.findViewById(R.id.stopListProgressIndicator)
+            var stopListCategoryTextView: TextView =
+                itemView.findViewById(R.id.stopListCategoryTextView)
+            var stopListTimeEffortTextView: TextView =
+                itemView.findViewById(R.id.stopListTimeEffortTextView)
+            var stopListPricingTextView: TextView =
+                itemView.findViewById(R.id.stopListPricingTextView)
+        }
 
-    private inner class StopFilter(var adapter: StopListViewAdapter) :
-        Filter() {
-        override fun performFiltering(constraint: CharSequence?): FilterResults {
-            val results = FilterResults()
-            if (constraint != null && constraint.isEmpty()) {
-                filteredStops = stops.toMutableList()
-            } else {
-                filteredStops.clear()
-                val filterPattern =
-                    constraint.toString().toLowerCase(Locale.ROOT).trim { it <= ' ' }
-                for (stop in stops) {
-                    if (stop.name?.toLowerCase(Locale.ROOT)?.contains(filterPattern)!!) {
-                        filteredStops.add(stop)
+        private inner class StopFilter(var adapter: StopListViewAdapter) :
+            Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val results = FilterResults()
+                if (constraint != null && constraint.isEmpty()) {
+                    filteredStops = stops.toMutableList()
+                } else {
+                    filteredStops.clear()
+                    val filterPattern =
+                        constraint.toString().toLowerCase(Locale.ROOT).trim { it <= ' ' }
+                    for (stop in stops) {
+                        if (stop.name?.toLowerCase(Locale.ROOT)?.contains(filterPattern)!!) {
+                            filteredStops.add(stop)
+                        }
                     }
                 }
+
+                results.values = filteredStops
+                results.count = filteredStops.size
+                return results
             }
 
-            results.values = filteredStops
-            results.count = filteredStops.size
-            return results
-        }
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                this.adapter.notifyDataSetChanged()
+            }
 
-        override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-            this.adapter.notifyDataSetChanged()
         }
-
     }
+
 }
