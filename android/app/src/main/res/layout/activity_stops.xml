@@ -32,6 +32,11 @@
                 android:hint="@string/search"
                 android:textColorHint="@color/black" />
 
+            <org.travlyn.components.SelectionToolbar
+                android:id="@+id/stopListSelectionToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
         </FrameLayout>
 
     </com.google.android.material.appbar.AppBarLayout>

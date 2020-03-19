@@ -1,136 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="8dp"
-    card_view:cardBackgroundColor="@android:color/white"
-    card_view:cardElevation="2dp"
-    card_view:cardUseCompatPadding="true">
+    android:animateLayoutChanges="true"
+    android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <CheckBox
+        android:id="@+id/stopListCheckBox"
+        android:layout_width="32dp"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp"
+        android:visibility="gone" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/stopListCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardCornerRadius="8dp"
+        card_view:cardBackgroundColor="@android:color/white"
+        card_view:cardElevation="2dp"
+        card_view:cardUseCompatPadding="true">
 
-            <ImageView
-                android:id="@+id/stopListImageView"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:scaleType="centerCrop" />
-
-            <ProgressBar
-                android:id="@+id/stopListProgressIndicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/stopListName"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/points_of_interests"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+            android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:orientation="horizontal">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <RatingBar
-                android:id="@+id/stopListRatingBar"
-                style="@style/RatingBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                <ImageView
+                    android:id="@+id/stopListImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:scaleType="centerCrop" />
 
-            <TextView
-                android:id="@+id/stopListRatingTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Overline" />
+                <ProgressBar
+                    android:id="@+id/stopListProgressIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
 
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/stopListDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:ellipsize="end"
-            android:lines="4"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:orientation="horizontal">
+            </FrameLayout>
 
             <TextView
-                android:id="@+id/stopListCategoryTextView"
-                android:layout_width="wrap_content"
+                android:id="@+id/stopListName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/points_of_interests"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_tag"
-                android:drawablePadding="8dp"
-                android:gravity="center"
+                android:layout_marginHorizontal="10dp"
+                android:orientation="horizontal">
+
+                <RatingBar
+                    android:id="@+id/stopListRatingBar"
+                    style="@style/RatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/stopListRatingTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Overline" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/stopListDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:ellipsize="end"
+                android:lines="4"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
 
-            <TextView
-                android:id="@+id/stopListTimeEffortTextView"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_time"
-                android:layout_marginStart="16dp"
-                android:drawablePadding="8dp"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+                android:layout_marginHorizontal="10dp"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/stopListPricingTextView"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/stopListCategoryTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_tag"
+                    android:drawablePadding="8dp"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+
+                <TextView
+                    android:id="@+id/stopListTimeEffortTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:drawableStart="@drawable/ic_time"
+                    android:drawablePadding="8dp"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+
+                <TextView
+                    android:id="@+id/stopListPricingTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:drawableStart="@drawable/ic_money"
+                    android:drawablePadding="8dp"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:drawableStart="@drawable/ic_money"
-                android:drawablePadding="8dp"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+                android:layout_marginHorizontal="10dp"
+                android:gravity="end"
+                android:orientation="horizontal">
 
+                <Button
+                    android:id="@+id/stopListRateButton"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rate" />
+
+                <Button
+                    android:id="@+id/stopListAddToTripButton"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add" />
+
+            </LinearLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:gravity="end"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/stopListRateButton"
-                style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/rate" />
-
-            <Button
-                android:id="@+id/stopListAddToTripButton"
-                style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/add" />
-
-        </LinearLayout>
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

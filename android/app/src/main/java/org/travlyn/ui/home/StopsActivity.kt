@@ -7,6 +7,7 @@ import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -24,6 +25,7 @@ import org.travlyn.api.StopApi
 import org.travlyn.api.model.City
 import org.travlyn.api.model.Rating
 import org.travlyn.api.model.Stop
+import org.travlyn.components.SelectionToolbar
 import org.travlyn.local.LocalStorage
 import java.util.*
 
@@ -32,11 +34,14 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener {
 
     private var clickedStop: Stop? = null
 
+    private lateinit var stopListSelectionToolbar: SelectionToolbar<Stop>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stops)
         val toolbar: Toolbar = findViewById(R.id.stopsListToolbar)
         setSupportActionBar(toolbar)
+        stopListSelectionToolbar = findViewById(R.id.stopListSelectionToolbar)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -162,6 +167,19 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener {
         private val filter = StopFilter(this)
         private var filteredStops: MutableList<Stop> = stops.toMutableList()
 
+        private var isSelectable = false
+
+        init {
+            stopListSelectionToolbar.setOnCloseListener {
+                isSelectable = false
+                notifyDataSetChanged()
+            }
+
+            stopListSelectionToolbar.setCheckListener { selectedElements ->
+                // TODO add stops to trip
+            }
+        }
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view: View =
                 LayoutInflater.from(context).inflate(R.layout.stop_list_view, parent, false)
@@ -186,14 +204,36 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener {
                 handleAddStopToTrip(stop)
             }
 
+            holder.stopListCheckBox.visibility = if (isSelectable) View.VISIBLE else View.GONE
+            holder.stopListCardView.setOnLongClickListener {
+                isSelectable = !isSelectable
+
+                stopListSelectionToolbar.toggleToolbar()
+                notifyDataSetChanged()
+                return@setOnLongClickListener true
+            }
+
+            holder.stopListCardView.setOnClickListener {
+                if (isSelectable) {
+                    holder.stopListCheckBox.isChecked = !holder.stopListCheckBox.isChecked
+                    if (holder.stopListCheckBox.isChecked)
+                        stopListSelectionToolbar.addSelectedElement(stop)
+                    else stopListSelectionToolbar.removeSelectedElement(stop)
+                }
+            }
+            holder.stopListCheckBox.setOnClickListener {
+                if (isSelectable) {
+                    if (holder.stopListCheckBox.isChecked)
+                        stopListSelectionToolbar.addSelectedElement(stop)
+                    else stopListSelectionToolbar.removeSelectedElement(stop)
+                }
+            }
+
             val stringIdentifier = context.resources.getIdentifier(
                 "category_" + stop.category?.name, "string", context.packageName
             )
-            if (stringIdentifier > 0) {
-                holder.stopListCategoryTextView.text = context.getString(stringIdentifier)
-            } else {
-                holder.stopListCategoryTextView.text = stop.category?.name
-            }
+            holder.stopListCategoryTextView.text =
+                if (stringIdentifier > 0) context.getString(stringIdentifier) else stop.category?.name
 
             if (stop.averageRating == null || stop.averageRating <= 0) {
                 holder.stopListRatingTextView.text = context.getString(R.string.no_value)
@@ -237,12 +277,15 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener {
 
         private inner class ViewHolder internal constructor(itemView: View) :
             RecyclerView.ViewHolder(itemView) {
+            var stopListCardView: CardView = itemView.findViewById(R.id.stopListCardView)
+            var stopListCheckBox: CheckBox = itemView.findViewById(R.id.stopListCheckBox)
             var stopListImageView: ImageView = itemView.findViewById(R.id.stopListImageView)
             var stopListName: TextView = itemView.findViewById(R.id.stopListName)
             var stopListRatingBar: RatingBar = itemView.findViewById(R.id.stopListRatingBar)
             var stopListRatingTextView: TextView =
                 itemView.findViewById(R.id.stopListRatingTextView)
-            var stopListDescription: TextView = itemView.findViewById(R.id.stopListDescription)
+            var stopListDescription: TextView =
+                itemView.findViewById(R.id.stopListDescription)
             var stopListProgressIndicator: ProgressBar =
                 itemView.findViewById(R.id.stopListProgressIndicator)
             var stopListCategoryTextView: TextView =
@@ -268,7 +311,9 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener {
                     val filterPattern =
                         constraint.toString().toLowerCase(Locale.ROOT).trim { it <= ' ' }
                     for (stop in stops) {
-                        if (stop.name?.toLowerCase(Locale.ROOT)?.contains(filterPattern)!!) {
+                        if (stop.name?.toLowerCase(Locale.ROOT)
+                                ?.contains(filterPattern)!!
+                        ) {
                             filteredStops.add(stop)
                         }
                     }
@@ -279,10 +324,16 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener {
                 return results
             }
 
-            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+            override fun publishResults(
+                constraint: CharSequence?,
+                results: FilterResults?
+            ) {
                 this.adapter.notifyDataSetChanged()
             }
 
         }
+
+
     }
+
 }
