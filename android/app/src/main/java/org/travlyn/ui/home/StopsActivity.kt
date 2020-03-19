@@ -231,7 +231,13 @@ class StopsActivity : AppCompatActivity() {
                     val filterPattern =
                         constraint.toString().toLowerCase(Locale.ROOT).trim { it <= ' ' }
                     for (stop in stops) {
-                        if (stop.name?.toLowerCase(Locale.ROOT)?.contains(filterPattern)!!) {
+                        val stringIdentifier = context.resources.getIdentifier(
+                            "category_" + stop.category?.name, "string", context.packageName
+                        )
+                        if (stop.name?.toLowerCase(Locale.ROOT)?.contains(filterPattern)!! ||
+                            context.getString(stringIdentifier).toLowerCase(Locale.ROOT)
+                                .contains(filterPattern)
+                        ) {
                             filteredStops.add(stop)
                         }
                     }
