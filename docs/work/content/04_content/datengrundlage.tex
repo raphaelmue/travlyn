@@ -14,7 +14,7 @@ Travlyn soll laut Spezifikation Trips erstellen können, welche eine Abfolge von
 \end{itemize}
 
 \subsection{Google Places API}
-Google ist einer der größten Anbieter von Ortsbasierten Services/Diensten und stellt eine API für POIs zu Verfügung \cite{Google.01.02.2020}. Diese API hat sehr weit gefächerte Funktionen, die von einer einfachen Suche über ausführliche Details zu interessanten Orten bis hin zu \enquote{user check-in} an einzeln Orten reichen. Diese große Funktionalität wäre für \textit{travlyn} sehr wertvoll. Allerdings sind die Google APIs nicht frei zugänglich und die Anzahl der Requests ist u.U. stark eingeschränkt \cite{Singhal.2012}. Außerdem ist die Nutzung der erhaltenen Daten nur in Verbindung mit anderen von Google bereitgestellten Services erlaubt \cite{Google.02.12.2019}, somit wäre die ganze \textit{travlyn} Applikation an Google gebunden.  
+Google ist einer der größten Anbieter von ortsbasierten Services/Diensten und stellt eine API für POIs zu Verfügung \cite{Google.01.02.2020}. Diese API hat sehr weit gefächerte Funktionen, die von einer einfachen Suche über ausführliche Details zu interessanten Orten bis hin zu \enquote{user check-in} an einzeln Orten reichen. Diese große Funktionalität wäre für \textit{travlyn} sehr wertvoll. Allerdings sind die Google APIs nicht frei zugänglich und die Anzahl der Requests ist u.U. stark eingeschränkt \cite{Singhal.2012}. Außerdem ist die Nutzung der erhaltenen Daten nur in Verbindung mit anderen von Google bereitgestellten Services erlaubt \cite{Google.02.12.2019}, somit wäre die ganze \textit{travlyn} Applikation an Google gebunden.  
 
 \subsection{Openroute service}
 Openroute service \cite{TheHeidelbergInstituteforGeoinformationTechnology.} wird vom Heidelberger Institut für Geoinformationstechnik angeboten. Es handelt sich um eine Crowd Sourced API, d.h. sie wird durch Benutzer über OpenStreetMap (OSM) \cite{OpenStreetMap.} gespeist und ist damit frei zugänglich. Durch die Nutzung von OSM ergibt sich der weitere Vorteil, dass die API für Orte weltweit nutzbar ist. Leider sind die gelieferten Informationen nicht sehr umfangreich und beinhalten häufig keine genauere Beschreibung und keine Bewertung o.Ä.. Weiterhin sind Crowd Sourced Informationen meist nicht offiziell verifiziert und könnten u.U. falsch sein. Die Beschränkungen für diese API sind relativ gering (500 POIs requests pro Tag), allerdings können diese auf Nachfrage erhöht werden (z.B. für Bildungszwecke).
@@ -29,6 +29,22 @@ Die Firma Foursquare bietet ebenfalls eine API an \cite{Foursquare.}, über die 
 \subsection{Evaluation der Alternativen}
 Für das Projekt wurde aus den obigen Alternativen gewählt. Die endgültige Entscheidung fiel auf den OpenRoute service, da es für unser relativ kurzes Projekt ein sehr großes Risiko darstellt, dass langwierige Nachforschungen zu Lizenzfragen und erlaubten Einsatzmöglichkeiten angestellt müssen. Openroute service ist selbst für kommerziellen Nutzen freigegeben und aus rechtlicher Perspektive damit sehr einfach zu nutzen. Im Gegensatz dazu stellen sowohl Google als auch Foursquare starke Einschränkungen auf, die ein nicht abzusehendes Risiko darstellen, z.B. sind bestimmte Funktionen unter diesen Einschränkungen umsetzbar. Trotz diesem entscheidenden Vorteil muss der Nachteil in Kauf genommen werden, dass nur mäßig ausführliche Informationen gelesen werden können. Im weiteren Verlauf dieser Arbeit werden weitere zusätzliche Datenquellen aufgezeigt, um diesen Nachteil möglichst gut aufzufangen.
 
+\begin{table}[ht!]
+	\centering
+	\resizebox{\textwidth}{!}{
+	\begin{tabular}{c|c|c|c|}
+		\cline{2-4}
+		& \textbf{Google Places API}      & \textbf{Foursquare} & \textbf{Openroute service}                   \\ \hline
+		\multicolumn{1}{|l|}{\makecell{\textbf{Kosten} \\ Gewichtung: Wichtig}} & Sehr teuer, siehe \cite{Google.01.02.2020} & \makecell{kostenfrei für personal use, \\ für Abo incl. kommerzieller Nutzung \\ min \$599}            & kostenfrei                \\ \hline
+		\multicolumn{1}{|l|}{\makecell{\textbf{Kommerzieller Nutzen erlaubt?} \\ Gewichtung: KO-Kriterium}} & Ja & \makecell{Nein,\\ im kostenfreien Account}            & Ja                \\ \hline
+		\multicolumn{1}{|l|}{\makecell{\textbf{Informationsfülle}\\ Gewichtung: Mittelmäßig wichtig}} & Sehr hoch          & Hoch           & Mäßig \\ \hline
+		\multicolumn{1}{|l|}{\makecell{\textbf{Crowdsourcing} \\ Gewichtung: Weniger wichtig}} & Nein          & Nein            & Ja \\ \hline
+		\multicolumn{1}{|l|}{\makecell{\textbf{Lizenzbedingungen}\\ Gewichtung: Essenziell wichtig}} & Sehr restriktiv, siehe \cite{Google.02.12.2019}         & Nennung der Datenherkunft ist Pflicht           & Praktisch keine \\ \hline
+	\end{tabular}
+	}
+	\caption{Gegenüberstellung der vorliegenden Alternativen zur Abfrage der \acs{POI}s}
+\end{table}
+
 \section{Weiterführende Informationen zu POIs und Städten}
 Um die eingeschränkte API Openroute service auszugleichen und dem Nutzer weitere Informationen zu seinem Reiseziel und zu besuchenden Orten zu bieten müssen weitere APIs angefragt werden.
 
@@ -42,7 +58,7 @@ Für den Zugriff auf Wikipedia gibt es unterschiedliche Möglichkeiten, im Folge
 
 \begin{itemize}
 	\item \textbf{MediaWiki}: Hinter Wikipedia und vielen anderen Wiki-Seiten steht die selbe Software: MediaWiki \cite{MediaWiki.24.01.2020}. Diese Software bietet eine sogenannte \textit{MediaWiki action API}, die viele Informationen zu allen Artikeln eines Wiki zurückliefern kann. Leider sind die Daten nicht über einen zentralen Aufruf abrufbar sondern es werden mehrere Abfragen in folge benötigt, um z.B. die URL eines der Bilder des Artikels zu ermitteln.
-	\item \textbf{DBpedia}: Die zweite API, die mithilfe eines Protypes getestet wurde ist \textit{DBpedia} \cite{DBpedia.02.02.2020}. Auch diese API folgt dem crowd souring Prinzip und ist somit frei zugänglich. Zusätzlich können dort alle Informationen über einen zentralen Zugriff abgerufen werden, indem die benötigten Daten über URL-Parameter spezifiziert werden können. Außerdem bietet diese API die Daten in aufbereiteter Form an: Links können direkt aufgelöst werden, es wird das selbe Thumbnail ausgeliefert welches im original Artikel ausgewählt ist und es kann auf alle Daten der kompakten Infobox in der oberen rechten Ecke strukturiert zugegriffen werden.
+	\item \textbf{DBpedia}: Die zweite API, die mithilfe eines Protypes getestet wurde ist \textit{DBpedia} \cite{DBpedia.02.02.2020}. DBpedia stellt die strukturierten Informationen aus Wikipedia in strukturierter Form zur Verfügung. Auch diese API folgt dem Crowd Souring Prinzip und ist frei zugänglich. Zusätzlich können dort alle Informationen über einen zentralen Zugriff abgerufen werden, indem die benötigten Daten über URL-Parameter spezifiziert werden können. Außerdem bietet diese API die Daten in aufbereiteter Form an: Links können direkt aufgelöst werden, es wird das selbe Thumbnail ausgeliefert welches im original Artikel ausgewählt ist und es kann auf alle Daten der kompakten Infobox in der oberen rechten Ecke strukturiert zugegriffen werden.
 \end{itemize}
 
 Durch die einfachere Handhabung der \textit{DBpedia} API wurde für den weiteren Verlauf entschieden auf diese API zu setzen und alle Informationen zu POIs und Städten von diesem Zugang abzufragen. Damit können erweiterte Infos geladen werden, die dem Nutzer während seines Trips kontinuierlich angezeigt werden können, um die Erfahrung weiter zu verbessern.
