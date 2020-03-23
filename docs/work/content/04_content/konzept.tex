@@ -29,7 +29,7 @@ In diesem Kapitel soll beschrieben werden, wie die in \autoref{sec:frameworks} b
 		\item \textbf{User:} Die User Entität beinhaltet alle klassischen Informationen zu einem Benutzer der App, dazu zählen z.B. seine E-Mail Adresse, seine technische ID und sein Name. Vor allem für das in  \autoref{sec:funcReq} beschriebene Nutzungsprofil \textit{Registered User} ist diese Entität von zentraler Bedeutung, da eine Identifizierung des Nutzers notwendig ist um Trips zu speichern oder persönlich zugeordnete Informationen anzulegen und zu verwalten.
 	\end{itemize}
 
-	Neben den hier beschriebenen Entitäten gibt es noch einige weitere kleinere Entitäten in diesem Projekt, wie z.B. das \textit{token} oder wie bereits in der Stop Entität verwendet das \textit{rating} und die \textit{category}. Diese Entitäten und alle genaueren Beschreibungen (wie \autoref{fig:swagger_stop}) sind im Sinne der Übersichtlichkeit nicht dargestellt, können aber bei Abruf der API eingesehen werden \footnote{https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/swagger-ui.html}.
+	Neben den hier beschriebenen Entitäten gibt es noch einige weitere kleinere Entitäten in diesem Projekt, wie z.B. das \textit{token} oder wie bereits in der Stop Entität verwendet das \textit{rating} und die \textit{category}. Diese Entitäten und alle genaueren Beschreibungen (wie \autoref{fig:swagger_stop}) sind im Sinne der Übersichtlichkeit nicht dargestellt, können aber bei Abruf der API eingesehen werden \footnote{\url{https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/swagger-ui.html}}.
 	
 	\subsection{Requests}
 	
@@ -93,5 +93,14 @@ In diesem Kapitel soll beschrieben werden, wie die in \autoref{sec:frameworks} b
 
 	
 	\section{Client Architektur}
-	Neben der automatischen Generierung von Javacode, welcher das Spring Framework nutzt, ist es mit Swagger ebenfalls möglich, Clientcode zu generieren. Da diese Generierung viel Arbeit und Einrichtungsaufwand spart, wurde auch das Grundgerüst für den \textit{Travlyn} Client automatisch generiert.
+		
+		Neben der automatischen Generierung von Code, welcher das Spring Framework nutzt, ist es mit Swagger ebenfalls möglich, Code für den Client zu generieren. Da diese Generierung viel Arbeit und Einrichtungsaufwand spart, wurde auch das Grundgerüst für den \textit{Travlyn} Client automatisch generiert.
+		
+		\subsection{Model}
+		
+		\subsection{title}
+
+	\section{Deployment Architektur}
+	
+		Wie bereits in \autoref{qm.continuous_delivery} wird der \textit{Travlyn} Server über ein Docker Image (siehe \autoref{frameworks.docker}) ausgeliefert. 
 	
