@@ -1,5 +1,8 @@
 package org.travlyn.shared.model.db;
 
+import org.travlyn.shared.model.api.DataTransferObject;
+import org.travlyn.shared.model.api.Stop;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -119,5 +122,22 @@ public class StopEntity implements DataEntity {
 
     public void setCategory(CategoryEntity category) {
         this.category = category;
+    }
+
+    @Override
+    public Stop toDataTransferObject() {
+        Stop stop = new Stop();
+        stop.setId(this.id);
+        stop.setName(this.name);
+        stop.setCategory(this.category.toDataTransferObject());
+        stop.setTimeEffort(this.timeEffort);
+        stop.setPricing(this.pricing);
+        stop.setLatitude(this.latitude);
+        stop.setLongitude(this.longitude);
+        stop.setAverageRating(this.averageRating);
+        stop.setDescription(this.description);
+        //TODO
+        //stop.setRatings(this.ratings);
+        return stop;
     }
 }

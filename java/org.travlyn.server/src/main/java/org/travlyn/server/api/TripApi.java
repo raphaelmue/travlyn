@@ -4,10 +4,12 @@ import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.travlyn.shared.model.api.Rating;
+import org.travlyn.shared.model.api.Stop;
 import org.travlyn.shared.model.api.Trip;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Api(value = "trip")
@@ -42,7 +44,9 @@ public interface TripApi {
     @PutMapping(
             value = "/trip",
             produces = {"application/json"})
-    ResponseEntity<Trip> generateTrip(@NotNull @ApiParam(value = "The user who generates the trip", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "userId") Long userId);
+    ResponseEntity<Trip> generateTrip(@NotNull @ApiParam(value = "The user who generates the trip", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "userId") Long userId,
+                                      @NotNull @ApiParam(value = "The city which the trip is generated for", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "cityId") Long cityId,
+                                      @NotNull @ApiParam(value = "List of stops that are part of the trip", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "stops") ArrayList<Stop> stops);
 
     @ApiOperation(
             value = "Get Trip by ID",

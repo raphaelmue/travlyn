@@ -1,6 +1,7 @@
 package org.travlyn.shared.model.db;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -14,6 +15,11 @@ public class TripStopEntity implements DataEntity {
     private int id;
 
     @Embedded
+    @NotNull
+    @AttributeOverrides(value = {
+            @AttributeOverride(name = "tripId", column = @Column(name = "trip_id",nullable = true)),
+            @AttributeOverride(name = "stopId", column = @Column(name = "stop_id",nullable = true))
+    })
     private TripStopId tripStopId = new TripStopId();
 
     @ManyToOne
@@ -70,8 +76,10 @@ public class TripStopEntity implements DataEntity {
 
     @Embeddable
     public static class TripStopId implements Serializable {
-        private int tripId;
-        private int stopId;
+        @NotNull
+        public int tripId;
+        @NotNull
+        public int stopId;
 
         public int getTripId() {
             return tripId;

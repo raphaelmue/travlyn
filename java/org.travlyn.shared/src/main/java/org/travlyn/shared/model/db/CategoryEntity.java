@@ -1,5 +1,8 @@
 package org.travlyn.shared.model.db;
 
+import org.travlyn.shared.model.api.Category;
+import org.travlyn.shared.model.api.DataTransferObject;
+
 import javax.persistence.*;
 
 @Entity
@@ -29,5 +32,13 @@ public class CategoryEntity implements DataEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public Category toDataTransferObject() {
+        Category category = new Category();
+        category.setId(this.id);
+        category.setName(this.name);
+        return category;
     }
 }

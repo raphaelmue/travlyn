@@ -114,4 +114,10 @@ public class TravlynServiceTest {
         service.logoutUser(userEntity.toDataTransferObject().token(tokenEntity.toDataTransferObject()));
         Assertions.assertNull(session.get(TokenEntity.class, tokenEntity.getId()));
     }
+
+    @Test
+    @Transactional
+    public void testGenerateTrip(){
+        service.generateTrip(1L,1L,null);
+    }
 }

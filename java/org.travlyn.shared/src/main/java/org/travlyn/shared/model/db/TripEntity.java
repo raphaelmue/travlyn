@@ -1,5 +1,8 @@
 package org.travlyn.shared.model.db;
 
+import org.travlyn.shared.model.api.DataTransferObject;
+import org.travlyn.shared.model.api.Trip;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
@@ -22,14 +25,14 @@ public class TripEntity implements DataEntity {
     @Column(name = "private")
     private boolean isPrivate;
 
-    @OneToMany(mappedBy = "trip")
+    @OneToMany(mappedBy = "trip",cascade = {CascadeType.ALL})
     private Set<TripStopEntity> stops;
 
     @OneToMany()
     @JoinColumn(name = "ratable")
     private Set<TripRatingEntity> ratings;
 
-    @OneToMany(mappedBy = "trip")
+    @OneToMany(mappedBy = "trip",cascade = {CascadeType.ALL})
     private Set<GeoTextEntity> geoTexts;
 
     @Override
@@ -87,5 +90,15 @@ public class TripEntity implements DataEntity {
 
     public void setGeoTexts(Set<GeoTextEntity> geoTexts) {
         this.geoTexts = geoTexts;
+    }
+
+    @Override
+    public Trip toDataTransferObject() {
+        Trip trip = new Trip();
+        trip.setId(this.id);
+        trip.setCity(this.city.toDataTransferObject());
+        trip.setPrivate(this.isPrivate);
+        trip.setUser(this.user.toDataTransferObject());
+        return trip;
     }
 }

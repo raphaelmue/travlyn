@@ -8,16 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.travlyn.server.externalapi.access.DBpediaCityRequest;
-import org.travlyn.shared.model.api.City;
-import org.travlyn.shared.model.api.Token;
-import org.travlyn.shared.model.api.User;
-import org.travlyn.shared.model.db.CityEntity;
-import org.travlyn.shared.model.db.TokenEntity;
-import org.travlyn.shared.model.db.UserEntity;
+import org.travlyn.shared.model.api.*;
+import org.travlyn.shared.model.db.*;
 import org.travlyn.util.security.Hash;
 import org.travlyn.util.security.RandomString;
 
 import javax.persistence.NoResultException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -127,5 +125,39 @@ public class TravlynService {
 
         Session session = sessionFactory.getCurrentSession();
         session.delete(user.getToken().toEntity());
+    }
+
+    @Transactional
+    public void generateTrip(Long userId,Long cityId, List<Stop> stops){
+        Session session = sessionFactory.getCurrentSession();
+        Trip trip = new Trip();
+        UserEntity user;
+        user = session.createQuery("from UserEntity where id = :id", UserEntity.class)
+                .setParameter("id", 1)
+                .getSingleResult();
+        trip.setUser(user.toDataTransferObject());
+        CityEntity city;
+        city = session.createQuery("from CityEntity where id = :id", CityEntity.class)
+                .setParameter("id", 1)
+                .getSingleResult();
+        trip.setCity(city.toDataTransferObject());
+        trip.setPrivate(false);
+        trip.setRatings(new ArrayList<>());
+        trip.setGeoText(new ArrayList<>());
+        trip.setStops(new ArrayList<>());
+        TripEntity tripEntity = trip.toEntity();
+        tripEntity.setId((Integer) session.save(trip.toEntity()));
+        StopEntity stop;
+        stop = session.createQuery("from StopEntity where id = :id", StopEntity.class)
+                .setParameter("id", 1)
+                .getSingleResult();
+        TripStopEntity tripStopEntity = new TripStopEntity();
+        TripStopEntity.TripStopId tripStopId = new TripStopEntity.TripStopId();
+        tripStopId.setStopId(stop.getId());
+        tripStopId.setTripId(tripEntity.getId());
+        tripStopEntity.setTripStopId(tripStopId);
+        tripStopEntity.setTrip(tripEntity);
+        tripStopEntity.setStop(stop);
+        session.save(tripStopEntity);
     }
 }

@@ -234,10 +234,16 @@ public class Trip extends AbstractDataTransferObject {
         tripEntity.setId(this.id);
         tripEntity.setCity(this.city.toEntity());
         tripEntity.setPrivate(this.isPrivate);
+        tripEntity.setUser(this.user.toEntity());
         List<TripStopEntity> tripStopEntities = new ArrayList<>();
         for (int i = 0; i < this.stops.size(); i++) {
             TripStopEntity tripStopEntity = new TripStopEntity();
             tripStopEntity.setStop(this.stops.get(i).toEntity());
+            tripStopEntity.setTrip(tripEntity);
+            TripStopEntity.TripStopId tripStopId = new TripStopEntity.TripStopId();
+            tripStopId.setStopId(this.stops.get(i).getId());
+            tripStopId.setTripId(tripEntity.getId());
+            tripStopEntity.setTripStopId(tripStopId);
             tripStopEntities.add(tripStopEntity);
             if (i == 0) {
                 tripStopEntity.setPredecessor(null);
