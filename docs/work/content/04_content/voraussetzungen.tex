@@ -123,6 +123,7 @@
 				Eine Session ermöglicht es eine \textit{Transaction} -- Abstraktion der Implementation von \acs{JTA} -- zu starten und zu beenden. Wie bereits in \autoref{frameworks.spring.transaktionsmanagement} beschrieben, lässt sich hierbei das Transaktionsmanagement sehr gut integrieren, sodass Spring das Starten und Beenden von Transaktionen handhabt. Dies führt zu einer Simplifizierung des Codes, der zum einen lesbarer und zum anderen einfacher wird. 
 				
 		\subsection{Docker} % Raphael
+		\label{frameworks.docker}
 			
 			Docker ist eine Open Source Virtualisierungssoftware, die der Isolierung von Anwendungen dient und von Docker Inc. bereitgestellt wird. Die Motivation hinter der Verwendung von Docker liegt im Deployment Prozess begründet: 
 			
@@ -278,6 +279,7 @@
 			\autoref{fig:jenkinsPipeline} zeigt die für diese Arbeit erstellte Pipeline. Die Abbildung besteht aus drei Schritten: Zunächst werden Frontend und Backend kompiliert. So können Syntax- und Kompilierfehler erkannt werden. Im darauffolgenden Schritt werden die sich sowohl im Frontend als auch im Backend befindlichen Tests ausgeführt. Anschließend die Analyse der Code Qualität mittels SonarQube (siehe \autoref{qm.sonarqube}) durchgeführt. 
 		
 		\subsection{Continuous Delivery}
+		\label{qm.continuous_delivery}
 		
 			\ac{CD} bezeichnet die kontinuierliche und im Besonderen automatisierte Auslieferung einer Applikation. Ziel ist, dass, nachdem ein Build die Pipeline erfolgreich durchlaufen hat, der Build Server -- z.B. Jenkins -- Artefakte der Applikation speichert und zur Verfügung stellt. Diese Artefakte sind häufig das Kompilat der Applikation, die sich Kunden und Nutzer herunterladen können. Artefakte können aber ebenso gut Docker Images sein, mit deren Hilfe der Auslieferungsprozess simplifiziert wird. \cite{Humble.2011}
 		                                                                                                                                                                                                                                                                                                                                         
