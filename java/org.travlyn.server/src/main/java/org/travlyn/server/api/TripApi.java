@@ -40,13 +40,15 @@ public interface TripApi {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful operation", response = Trip.class),
             @ApiResponse(code = 401, message = "You are not authorized to perform this action"),
+            @ApiResponse(code = 404, message = "One of the provided IDs is not valid"),
             @ApiResponse(code = 500, message = "Trip could not be generated")})
     @PutMapping(
             value = "/trip",
             produces = {"application/json"})
     ResponseEntity<Trip> generateTrip(@NotNull @ApiParam(value = "The user who generates the trip", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "userId") Long userId,
                                       @NotNull @ApiParam(value = "The city which the trip is generated for", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "cityId") Long cityId,
-                                      @NotNull @ApiParam(value = "List of stops that are part of the trip", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "stops") ArrayList<Stop> stops);
+                                      @NotNull @ApiParam(value = "Name for the new trip", required = true, defaultValue = "Trip", example = "My personal Trip") @Valid @RequestParam(value = "tripName") String tripName,
+                                      @NotNull @ApiParam(value = "List of stops that are part of the trip", required = true, defaultValue = "-1", example = "[0,124,758]") @Valid @RequestParam(value = "stopIds") ArrayList<Integer> stopIds);
 
     @ApiOperation(
             value = "Get Trip by ID",

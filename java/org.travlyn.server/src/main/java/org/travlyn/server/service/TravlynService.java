@@ -128,7 +128,7 @@ public class TravlynService {
     }
 
     @Transactional
-    public void generateTrip(Long userId,Long cityId, List<Stop> stops){
+    public void generateTrip(Long userId,Long cityId, String tripName, List<Integer> stopIds){
         Session session = sessionFactory.getCurrentSession();
         Trip trip = new Trip();
         UserEntity user;
