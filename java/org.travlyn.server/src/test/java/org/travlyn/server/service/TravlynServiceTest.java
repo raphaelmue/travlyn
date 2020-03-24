@@ -118,6 +118,6 @@ public class TravlynServiceTest {
     @Test
     @Transactional
     public void testGenerateTrip(){
-        service.generateTrip(1L,1L,"",null);
+        service.generateTrip(1L,1L,"",false,null);
     }
 }

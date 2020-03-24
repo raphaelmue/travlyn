@@ -17,6 +17,8 @@ import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.toIntExact;
+
 
 @Service
 public class TravlynService {
@@ -128,36 +130,49 @@ public class TravlynService {
     }
 
     @Transactional
-    public void generateTrip(Long userId,Long cityId, String tripName, List<Integer> stopIds){
+    public void generateTrip(Long userId,Long cityId, String tripName, boolean privateFlag, List<Long> stopIds) throws NoResultException{
         Session session = sessionFactory.getCurrentSession();
         Trip trip = new Trip();
+
+        //get corresponding user
         UserEntity user;
         user = session.createQuery("from UserEntity where id = :id", UserEntity.class)
-                .setParameter("id", 1)
+                .setParameter("id", toIntExact(userId))
                 .getSingleResult();
         trip.setUser(user.toDataTransferObject());
+
+        //get corresponding city
         CityEntity city;
         city = session.createQuery("from CityEntity where id = :id", CityEntity.class)
-                .setParameter("id", 1)
+                .setParameter("id", toIntExact(cityId))
                 .getSingleResult();
         trip.setCity(city.toDataTransferObject());
-        trip.setPrivate(false);
+
+        //set trip metadata and save trip
+        trip.setPrivate(privateFlag);
         trip.setRatings(new ArrayList<>());
         trip.setGeoText(new ArrayList<>());
         trip.setStops(new ArrayList<>());
         TripEntity tripEntity = trip.toEntity();
-        tripEntity.setId((Integer) session.save(trip.toEntity()));
+        tripEntity.setId((Integer) session.save(tripEntity));
+
+        //create tripstops and save them
         StopEntity stop;
-        stop = session.createQuery("from StopEntity where id = :id", StopEntity.class)
-                .setParameter("id", 1)
-                .getSingleResult();
-        TripStopEntity tripStopEntity = new TripStopEntity();
-        TripStopEntity.TripStopId tripStopId = new TripStopEntity.TripStopId();
-        tripStopId.setStopId(stop.getId());
-        tripStopId.setTripId(tripEntity.getId());
-        tripStopEntity.setTripStopId(tripStopId);
-        tripStopEntity.setTrip(tripEntity);
-        tripStopEntity.setStop(stop);
-        session.save(tripStopEntity);
+        TripStopEntity predecessor = null;
+        for(Long stopId : stopIds) {
+            stop = session.createQuery("from StopEntity where id = :id", StopEntity.class)
+                    .setParameter("id", toIntExact(stopId))
+                    .getSingleResult();
+            TripStopEntity tripStopEntity = new TripStopEntity();
+            TripStopEntity.TripStopId tripStopId = new TripStopEntity.TripStopId();
+            tripStopId.setStopId(stop.getId());
+            tripStopId.setTripId(tripEntity.getId());
+            tripStopEntity.setTripStopId(tripStopId);
+            tripStopEntity.setTrip(tripEntity);
+            tripStopEntity.setStop(stop);
+            tripStopEntity.setPredecessor(predecessor);
+            session.save(tripStopEntity);
+            predecessor = tripStopEntity;
+        }
     }
 }
