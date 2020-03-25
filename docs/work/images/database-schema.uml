@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>34f7f591-112c-4931-90b7-d5378d241e0d.SCHEMA:travlyn_prod</OriginalElement>
+  <nodes>
+    <node x="240.5" y="-4.5">34f7f591-112c-4931-90b7-d5378d241e0d.TABLE:travlyn_prod.stop</node>
+    <node x="53.0" y="50.5">34f7f591-112c-4931-90b7-d5378d241e0d.TABLE:travlyn_prod.trip_stop</node>
+    <node x="56.0" y="359.5">34f7f591-112c-4931-90b7-d5378d241e0d.TABLE:travlyn_prod.trip</node>
+    <node x="251.0" y="348.5">34f7f591-112c-4931-90b7-d5378d241e0d.TABLE:travlyn_prod.city</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="34f7f591-112c-4931-90b7-d5378d241e0d.TABLE:travlyn_prod.trip_stop" target="34f7f591-112c-4931-90b7-d5378d241e0d.TABLE:travlyn_prod.stop">
+      <point x="67.0" y="-0.0" />
+      <point x="-79.5" y="-0.0" />
+    </edge>
+    <edge source="34f7f591-112c-4931-90b7-d5378d241e0d.TABLE:travlyn_prod.trip_stop" target="34f7f591-112c-4931-90b7-d5378d241e0d.TABLE:travlyn_prod.trip_stop">
+      <point x="0.0" y="-69.5" />
+      <point x="120.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="120.0" />
+      <point x="-67.0" y="-0.0" />
+    </edge>
+    <edge source="34f7f591-112c-4931-90b7-d5378d241e0d.TABLE:travlyn_prod.trip_stop" target="34f7f591-112c-4931-90b7-d5378d241e0d.TABLE:travlyn_prod.trip">
+      <point x="0.0" y="69.5" />
+      <point x="0.0" y="-80.5" />
+    </edge>
+    <edge source="34f7f591-112c-4931-90b7-d5378d241e0d.TABLE:travlyn_prod.trip" target="34f7f591-112c-4931-90b7-d5378d241e0d.TABLE:travlyn_prod.city">
+      <point x="64.0" y="-0.0" />
+      <point x="-69.0" y="-0.0" />
+    </edge>
+  </edges>
+  <settings layout="Directed Orthogonal" zoom="3.400000000000002" x="200.0" y="261.0" />
+  <SelectedNodes>
+    <node>34f7f591-112c-4931-90b7-d5378d241e0d.TABLE:travlyn_prod.stop</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Key columns</Category>
+    <Category>Columns</Category>
+    <Category>Virtual foreign keys</Category>
+  </Categories>
+</Diagram>
+

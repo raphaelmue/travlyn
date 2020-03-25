@@ -139,6 +139,12 @@
 				\label{fig:dockerComparison}
 			\end{figure} 
 			
+			\subsubsection{Docker Stacks}
+			
+			Des Weiteren bietet Docker die Möglichkeit, mehrere Images zusammenzufassen und zu kombinieren. In sog. \textit{docker-compose} Dateien -- diese Dateien werden im \acs{YAML} Format gespeichert -- können mehrere Docker Images konfiguriert werden. Diese konfigurierten Docker Images erzeugen dann Instanzen -- also Container --, welche jeweils Zugriff aufeinander haben. So kann ein sog. Docker Stack -- bestehend aus mehreren Images -- als Ganze Einheit gestartet werden und auch beendet werden. 
+			
+			Eine Anwendung eines solchen Stacks könnte beispielsweise die Kombination aus einem Backend-Image einer Anwendung und einem dazugehörigen Datenbank-Image. Dies bietet den Vorteil, dass die ganze Applikation inklusive Datenbank bzw. deren Konfiguration einfach ausgeliefert werden kann und dieser Stack keine weiteren Abhängigkeiten zu anderen Applikationen -- in diesem Falle eine Datenbank Applikation -- auf dem Server hat. Ein weiterer Vorteil davon ist, dass die Daten der Applikation auf der Datenbank von allen anderen Applikationen und Docker Containern auf dem Server abgekapselt ist. Dies trägt zum Schutz der Daten bei. In Kombination mit Hibernate ist dann sogar die Änderung der Datenbankimplementierung ein leichtes. 
+						
 			\subsubsection{DockerHub} % Raphael		
 				
 				Eine Platform, die ebenfalls von Docker Inc. bereitgestellt wird, ist der sog. DockerHub. Dieser stellt eine Registry für Docker Images und Repositories dar und bietet dem Nutzer die Möglichkeit selbst erstellte Images hochzuladen und somit anderen Nutzern zur Verfügung zu stellen. 
