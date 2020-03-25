@@ -13,10 +13,11 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.travlyn.local.Application
 import java.io.File
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-open class ApiClient(val baseUrl: String, open val application: Application) {
+open class ApiClient(val baseUrl: String, open val application: Application?) {
     companion object {
         protected const val ContentType = "Content-Type"
         protected const val Accept = "Accept"
@@ -25,7 +26,8 @@ open class ApiClient(val baseUrl: String, open val application: Application) {
         protected const val XmlMediaType = "application/xml"
 
         @JvmStatic
-        val client: OkHttpClient = OkHttpClient()
+        val client: OkHttpClient =
+            OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS).build()
 
         @JvmStatic
         var defaultHeaders: Map<String, String> by ApplicationDelegates.setOnce(

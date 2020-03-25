@@ -25,4 +25,19 @@
     <string name="error_no_city_found">No city found with name \"%1$s\".</string>
     <string name="user">User</string>
     <string name="search">Search</string>
+    <string name="add">Add</string>
+    <string name="hours_unit">%1$s h</string>
+    <string name="no_value" translatable="false">---</string>
+    <string name="rate">Rate</string>
+    <string name="rating_value" translatable="false">%.1f / 5</string>
+    <string name="number_of_stop_found">%d points of interests found</string>
+    <string name="category_place_of_worship">Place of Worship</string>
+    <string name="category_building">Building</string>
+    <string name="category_monument">Monument</string>
+    <string name="category_memorial">Memorial</string>
+    <string name="category_artwork">Artwork</string>
+    <string name="category_gallery">Gallery</string>
+    <string name="category_museum">Museum</string>
+    <string name="category_attraction">Attraction</string>
+    <string name="number_of_selected_items">%d selected</string>
 </resources>

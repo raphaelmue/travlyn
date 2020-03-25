@@ -174,37 +174,12 @@ class HomeFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             val city: City? = cityApi.getCity(query)
             if (city != null) {
-                val suggestions: MutableList<String>? =
-                    LocalStorage(context!!).readObject("searchCitySuggestions")
-                if (suggestions != null) {
-                    if (!suggestions.contains(city.name)) {
-                        city.name?.let { suggestions.add(it) }
-                    }
-                }
-                LocalStorage(context!!).writeObject("searchCitySuggestions", suggestions)
+                addCityToSuggestions(city)
+                focusCityAndAddMarker(city)
 
                 val sheet = CityInformationFragment.newInstance(city)
                 if (activity != null) {
-                    withContext(Dispatchers.Main) {
-                        sheet.show(activity!!.supportFragmentManager, "CityInformationFragment")
-
-                        if (city.longitude != null && city.latitude != null) {
-                            mapView.overlay.clear()
-                            val cityLocation = GeoPoint(city.latitude, city.longitude)
-                            val startMarker = Marker(mapView)
-                            startMarker.icon = context!!.getDrawable(R.drawable.ic_location_marker)
-                            startMarker.position = cityLocation
-                            startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                            mapView.overlays.add(startMarker)
-                            mapView.controller.setZoom(13.0)
-                            mapView.controller.animateTo(
-                                GeoPoint(
-                                    cityLocation.latitude - 0.03,
-                                    cityLocation.longitude
-                                )
-                            )
-                        }
-                    }
+                    sheet.show(activity!!.supportFragmentManager, "CityInformationFragment")
                 }
             } else {
                 withContext(Dispatchers.Main) {
@@ -215,6 +190,36 @@ class HomeFragment : Fragment() {
                     )
                 }
             }
+        }
+    }
+
+    private fun addCityToSuggestions(city: City) {
+        val suggestions: MutableList<String>? =
+            LocalStorage(context!!).readObject("searchCitySuggestions")
+        if (suggestions != null) {
+            if (!suggestions.contains(city.name)) {
+                city.name?.let { suggestions.add(it) }
+            }
+        }
+        LocalStorage(context!!).writeObject("searchCitySuggestions", suggestions)
+    }
+
+    private suspend fun focusCityAndAddMarker(city: City) = withContext(Dispatchers.Main) {
+        if (city.longitude != null && city.latitude != null) {
+            mapView.overlay.clear()
+            val cityLocation = GeoPoint(city.latitude, city.longitude)
+            val startMarker = Marker(mapView)
+            startMarker.icon = context!!.getDrawable(R.drawable.ic_location_marker)
+            startMarker.position = cityLocation
+            startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            mapView.overlays.add(startMarker)
+            mapView.controller.setZoom(13.0)
+            mapView.controller.animateTo(
+                GeoPoint(
+                    cityLocation.latitude - 0.03,
+                    cityLocation.longitude
+                )
+            )
         }
     }
 
