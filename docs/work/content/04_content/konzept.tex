@@ -32,6 +32,7 @@ In diesem Kapitel soll beschrieben werden, wie die in \autoref{sec:frameworks} b
 	Neben den hier beschriebenen Entitäten gibt es noch einige weitere kleinere Entitäten in diesem Projekt, wie z.B. das \textit{token} oder wie bereits in der Stop Entität verwendet das \textit{rating} und die \textit{category}. Diese Entitäten und alle genaueren Beschreibungen (wie \autoref{fig:swagger_stop}) sind im Sinne der Übersichtlichkeit nicht dargestellt, können aber bei Abruf der API eingesehen werden \footnote{https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/swagger-ui.html}.
 	
 	\subsection{Requests}
+	\label{sec:konzept.kommunikation.requests}
 	
 	Neben den beschriebenen Entitäten beinhaltet die Swaggerbeschreibung Schemata, wie bestimmte Informationen von der API abgerufen werden können. Diese Beschreibung bietet jedem die Möglichkeit die API zu erkunden und schreibt damit genau vor, welche Services der Server bereitstellen muss aber auch wie der Client bestimmte Informationen erfragen kann.
 	
@@ -105,9 +106,24 @@ In diesem Kapitel soll beschrieben werden, wie die in \autoref{sec:frameworks} b
 		
 		\subsection{Aufbau und Struktur der Benutzeroberfläche}
 		
+			Aufbau und Struktur der Benutzeroberfläche orientiert sich im Allgemeinen an den in \autoref{sec:konzept.kommunikation.requests} beschriebenen möglichen Anfragen. So werden die zu einem Use Case gehörigen Aktionen unter einen Menüpunkt gefasst, welcher sich im ausklappbaren Menü -- diese Komponente der Applikation heißt \textit{NavigationDrawer} und lässt sich über den in der Suchleiste befindlichen Knopf (siehe \autoref{fig:ui_screenshot}) öffnen -- der Applikation befindet. \\
+			Um jedoch den Aspekt der Struktur etwas weiter im Detail zu beleuchten, wird im Folgenden ein Use Case beschrieben. 
+		
+			Beim Start der Applikation erscheint eine Karte (dargestellt durch OSMdroid \autoref{TODO}) sowie eine Suchleiste, welche dem Zweck dient, nach Städten zu suchen. Bei erfolgreicher Suche einer Stadt erscheint ein Dialog, welcher zusätzliche Informationen zur Stadt sowie deren Sehenswürdigkeiten anzeigt. Von dort aus ist es möglich auf eine Detailansicht der Sehenswürdigkeiten abzuspringen sowie alle zu dieser Stadt gehörigen öffentlichen Trips anzuzeigen und zu favorisieren. Dieses Szenario ist in \autoref{fig:ui_screenshot} dargestellt.  
+			
+			\begin{figure}[ht!]
+				\includegraphics[width=0.32\textwidth]{images/travlyn-screenshot-main.png}
+				\includegraphics[width=0.32\textwidth]{images/travlyn-screenshot-search-result.png}
+				\includegraphics[width=0.32\textwidth]{images/travlyn-screenshot-city-detail.png}
+				\caption{Aufbau und Struktur der Benutzeroberfläche anhand eines konkreten Use Cases}
+				\label{fig:ui_screenshot}
+			\end{figure} 
+		
+			Alle weiteren Use Cases werden mithilfe der von Google bereitgestellten Benutzeroberflächenkomponenten  und gemäß des Material Designs erstellt, wie beispielsweise die Erstellung oder Bearbeitung von Trips. 
+		
 		\subsection{Kommunikation zum Server}
 		
-		
+			Wie bereits erwähnt, lässt sich ebenso wie Kommunikation zum Server durch Swagger generieren. Dabei wird für jeden Endpoint der \acs{API} eine Methode generiert, welche genau die Objekte entgegennimmt, welche auch von der \acs{API} gefordert sind. Auch lassen sich in gleicher Weise die \acs{DTO} Objekte generieren, sodass die vollständige Kommunikation zwischen Server und Client gewährleistet ist. Um die Kommunikation zu beschleunigen, werden einige Entitäten bzw. Daten nach der Anfrage an den Server lokal zwischengespeichert. 
 
 	\section{Deployment Architektur}
 	
