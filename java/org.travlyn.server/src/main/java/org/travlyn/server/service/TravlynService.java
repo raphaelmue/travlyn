@@ -8,16 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.travlyn.server.externalapi.access.DBpediaCityRequest;
-import org.travlyn.shared.model.api.City;
-import org.travlyn.shared.model.api.Token;
-import org.travlyn.shared.model.api.User;
-import org.travlyn.shared.model.db.CityEntity;
-import org.travlyn.shared.model.db.TokenEntity;
-import org.travlyn.shared.model.db.UserEntity;
+import org.travlyn.server.externalapi.access.DBpediaStopRequest;
+import org.travlyn.server.externalapi.access.OpenRouteRequest;
+import org.travlyn.shared.model.api.*;
+import org.travlyn.shared.model.db.*;
 import org.travlyn.util.security.Hash;
 import org.travlyn.util.security.RandomString;
 
 import javax.persistence.NoResultException;
+import java.util.Iterator;
+import java.util.Set;
 
 
 @Service
@@ -80,15 +80,20 @@ public class TravlynService {
                     .getSingleResult();
 
             //return cached city
+            //City city1 = entity.toDataTransferObject();
+            //city1.toEntity();
             return entity.toDataTransferObject();
         } catch (NoResultException noResult) {
             // city is not cached --> get from api
             DBpediaCityRequest request = new DBpediaCityRequest(city);
             City result = request.getResult();
             if (result != null) {
+                //get Stops for city
+                CityEntity entity;
+                entity = this.getStopsForCity(result);
                 // valid city was found --> cache result
-                session.save(result.toEntity());
-                return result;
+                session.save(entity);
+                return entity.toDataTransferObject();
             }
         }
         return null;
@@ -127,5 +132,59 @@ public class TravlynService {
 
         Session session = sessionFactory.getCurrentSession();
         session.delete(user.getToken().toEntity());
+    }
+
+    public CityEntity getStopsForCity(City city) {
+        CityEntity cityEntity = new CityEntity();
+        cityEntity.setName(city.getName());
+        cityEntity.setLatitude(city.getLatitude());
+        cityEntity.setLongitude(city.getLongitude());
+        cityEntity.setImage(city.getImage());
+        cityEntity.setDescription(city.getDescription());
+        OpenRouteRequest request = new OpenRouteRequest(cityEntity.getLongitude(), cityEntity.getLatitude(), cityEntity);
+        Set<StopEntity> stopEntities = request.getResult();
+        for (Iterator<StopEntity> stopEntityIterator = stopEntities.iterator(); stopEntityIterator.hasNext(); ) {
+            StopEntity entity = stopEntityIterator.next();
+            DBpediaStopRequest poiRequest = new DBpediaStopRequest(entity.getName());
+            Stop stop = poiRequest.getResult();
+            if (stop != null) {
+                entity.setImage(stop.getImage());
+                entity.setDescription(stop.getDescription());
+            } else {
+                stopEntityIterator.remove();
+            }
+        }
+        cityEntity.setStops(stopEntities);
+        return cityEntity;
+    }
+
+    @Transactional
+    public Stop getStopById(Long stopId) {
+        Session session = sessionFactory.getCurrentSession();
+        try {
+            StopEntity entity = session.createQuery("from StopEntity where id = :id", StopEntity.class)
+                    .setParameter("id", Math.toIntExact(stopId))
+                    .getSingleResult();
+            return entity.toDataTransferObject();
+        } catch (NoResultException noResult) {
+            return null;
+        }
+    }
+
+    @Transactional
+    public boolean addRatingToStop(Long stopId, Rating rating) throws NoResultException {
+        Session session = sessionFactory.getCurrentSession();
+        StopEntity entity = session.createQuery("from StopEntity where id = :id", StopEntity.class)
+                .setParameter("id", Math.toIntExact(stopId))
+                .getSingleResult();
+
+        Set<StopRatingEntity> ratings = entity.getRatings();
+        StopRatingEntity stopRating = (StopRatingEntity) rating.toEntity();
+        stopRating.setStop(entity);
+        ratings.add(stopRating);
+        entity.setRatings(ratings);
+
+        session.save(entity);
+        return true;
     }
 }
