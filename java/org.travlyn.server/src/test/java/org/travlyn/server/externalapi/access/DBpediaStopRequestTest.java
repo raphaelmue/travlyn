@@ -3,15 +3,14 @@ package org.travlyn.server.externalapi.access;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.travlyn.shared.model.api.Category;
 import org.travlyn.shared.model.api.Stop;
 
 @Tag("unit")
-public class DBPediaStopRequestTest {
+public class DBpediaStopRequestTest {
 
     @Test
     void getResult() {
-        DBPediaStopRequest dbPediaStopRequest = new DBPediaStopRequest("Admiralty Arch");
+        DBpediaStopRequest dbPediaStopRequest = new DBpediaStopRequest("Admiralty Arch");
         Stop stop = dbPediaStopRequest.getResult();
         Assertions.assertEquals("Admiralty Arch is a landmark building in London which incorporates an archway " +
                 "providing road and pedestrian access between The Mall, which extends to the southwest, and Trafalgar " +

@@ -11,10 +11,10 @@ import java.util.Set;
  *
  * @param <K> Object to be parsed to
  */
-public abstract class DBPediaRequest<K> implements Request<K> {
+public abstract class DBpediaRequest<K> implements Request<K> {
     private final String baseURL;
 
-    DBPediaRequest(String baseURL) {
+    DBpediaRequest(String baseURL) {
         this.baseURL = baseURL;
     }
 

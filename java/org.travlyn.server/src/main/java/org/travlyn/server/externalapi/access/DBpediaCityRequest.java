@@ -14,7 +14,7 @@ import java.util.Set;
  *
  * @author Joshua Schulz
  */
-public class DBPediaCityRequest extends DBPediaRequest<City> {
+public class DBpediaCityRequest extends DBpediaRequest<City> {
     private static final String BASE_URL = "http://vmdbpedia.informatik.uni-leipzig.de:8080/api/1.0.0/values";
 
     private String query;
@@ -25,7 +25,7 @@ public class DBPediaCityRequest extends DBPediaRequest<City> {
      *
      * @param query specify what should be searched for
      */
-    public DBPediaCityRequest(String query) {
+    public DBpediaCityRequest(String query) {
         super(BASE_URL);
         this.query = query.replace(" ", "_");
     }
