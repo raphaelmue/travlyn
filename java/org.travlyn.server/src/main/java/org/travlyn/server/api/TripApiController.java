@@ -64,7 +64,7 @@ public class TripApiController implements TripApi {
             }
         }
 
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<Trip> getTripByID(Long tripId) {
