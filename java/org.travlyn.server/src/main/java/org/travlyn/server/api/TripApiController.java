@@ -71,14 +71,14 @@ public class TripApiController implements TripApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<>(objectMapper.readValue("{\n  \"geoText\" : [ {\n    \"id\" : 1,\n    \"text\" : \"text\"\n  }, {\n    \"id\" : 1,\n    \"text\" : \"text\"\n  } ],\n  \"private\" : true,\n  \"city\" : {\n    \"image\" : \"image\",\n    \"name\" : \"name\",\n    \"description\" : \"description\",\n    \"id\" : 5\n  },\n  \"ratings\" : [ null, null ],\n  \"id\" : 0,\n  \"stops\" : [ {\n    \"ratings\" : [ {\n      \"rating\" : 7.386281948385884,\n      \"description\" : \"description\",\n      \"id\" : 4\n    }, {\n      \"rating\" : 7.386281948385884,\n      \"description\" : \"description\",\n      \"id\" : 4\n    } ],\n    \"latitude\" : 7.061401241503109,\n    \"name\" : \"name\",\n    \"description\" : \"description\",\n    \"average_rating\" : 2.027123023002322,\n    \"id\" : 5,\n    \"category\" : {\n      \"name\" : \"name\",\n      \"id\" : 1\n    },\n    \"pricing\" : 9.301444243932576,\n    \"longitude\" : 2.3021358869347655,\n    \"time_effort\" : 3.616076749251911\n  }, {\n    \"ratings\" : [ {\n      \"rating\" : 7.386281948385884,\n      \"description\" : \"description\",\n      \"id\" : 4\n    }, {\n      \"rating\" : 7.386281948385884,\n      \"description\" : \"description\",\n      \"id\" : 4\n    } ],\n    \"latitude\" : 7.061401241503109,\n    \"name\" : \"name\",\n    \"description\" : \"description\",\n    \"average_rating\" : 2.027123023002322,\n    \"id\" : 5,\n    \"category\" : {\n      \"name\" : \"name\",\n      \"id\" : 1\n    },\n    \"pricing\" : 9.301444243932576,\n    \"longitude\" : 2.3021358869347655,\n    \"time_effort\" : 3.616076749251911\n  } ],\n  \"user\" : {\n    \"name\" : \"name\",\n    \"id\" : 6,\n    \"email\" : \"email\",\n    \"token\" : {\n      \"id\" : 1,\n      \"ip_address\" : \"ip_address\",\n      \"token\" : \"token\"\n    }\n  }\n}", Trip.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(travlynService.getTrip(tripId), HttpStatus.OK);
+            } catch (NoResultException e) {
+                log.error("Couldn't find requested trip", e);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         }
 
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<Void> rateTrip(Long tripId, @NotNull @Valid Rating rating) {

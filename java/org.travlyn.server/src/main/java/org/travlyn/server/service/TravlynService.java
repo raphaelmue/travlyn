@@ -184,4 +184,15 @@ public class TravlynService {
         tripEntity.setStops(stopEntitySet);
         return tripEntity.toDataTransferObject();
     }
+
+    @Transactional
+    public Trip getTrip(Long tripId) throws NoResultException{
+        Session session = sessionFactory.getCurrentSession();
+
+        TripEntity tripEntity = new TripEntity();
+        tripEntity = session.createQuery("from TripEntity where id = :id", TripEntity.class)
+                    .setParameter("id", toIntExact(tripId))
+                    .getSingleResult();
+        return tripEntity.toDataTransferObject();
+    }
 }
