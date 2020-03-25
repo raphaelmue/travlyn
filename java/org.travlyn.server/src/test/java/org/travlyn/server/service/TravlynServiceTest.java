@@ -10,15 +10,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.travlyn.shared.model.api.City;
-import org.travlyn.shared.model.api.Token;
-import org.travlyn.shared.model.api.User;
-import org.travlyn.shared.model.db.CityEntity;
-import org.travlyn.shared.model.db.TokenEntity;
-import org.travlyn.shared.model.db.UserEntity;
+import org.travlyn.shared.model.api.*;
+import org.travlyn.shared.model.db.*;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 @Tag("unit")
 @RunWith(SpringRunner.class)
@@ -33,6 +31,9 @@ public class TravlynServiceTest {
 
     private UserEntity userEntity;
     private TokenEntity tokenEntity;
+    private StopEntity stopEntity;
+    private CityEntity cityEntity;
+    private CategoryEntity categoryEntity;
 
     @Before
     @Transactional
@@ -44,7 +45,7 @@ public class TravlynServiceTest {
         userEntity.setPassword("6406b2e97a97f64910aca76370ee35a92087806da1aa878e8a9ae0f4dc3949af");
         userEntity.setSalt("I2HoOYJmqKfGboyJAdCEQwulUkxmhVH5");
 
-        session.save(userEntity);
+        userEntity.setId((Integer) session.save(userEntity));
 
         tokenEntity = new TokenEntity();
         tokenEntity.setUser(userEntity);
@@ -53,6 +54,31 @@ public class TravlynServiceTest {
         tokenEntity.setExpireDate(LocalDate.now().plusMonths(1));
 
         session.save(tokenEntity);
+
+        categoryEntity = new CategoryEntity();
+        categoryEntity.setName("tourism");
+
+        categoryEntity.setId((Integer) session.save(categoryEntity));
+
+        stopEntity = new StopEntity();
+        stopEntity.setName("Test Stop");
+        stopEntity.setDescription("Test descr");
+        stopEntity.setAverageRating(2.0);
+        stopEntity.setLatitude(33.0);
+        stopEntity.setLongitude(5.0);
+        stopEntity.setCategory(categoryEntity);
+
+        stopEntity.setId((Integer) session.save(stopEntity));
+
+        cityEntity = new CityEntity();
+        cityEntity.setName("Test city");
+        cityEntity.setDescription("Test descr");
+        cityEntity.setLongitude(0.0);
+        cityEntity.setLatitude(0.0);
+        cityEntity.setImage("https://testurl.com/test.jpg");
+
+        cityEntity.setId((Integer) session.save(cityEntity));
+
     }
 
     @Test
@@ -118,6 +144,10 @@ public class TravlynServiceTest {
     @Test
     @Transactional
     public void testGenerateTrip(){
-        service.generateTrip(1L,1L,"",false,null);
+        ArrayList<Long> stopIds= new ArrayList<>();
+        stopIds.add((long) stopEntity.getId());
+        Trip result = service.generateTrip((long) userEntity.getId(), (long) cityEntity.getId(),"Test Trip",false,stopIds);
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(userEntity.getId(),result.getUser().getId());
     }
 }
