@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.travlyn.shared.model.api.*;
 import org.travlyn.shared.model.db.*;
 
+import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class TravlynServiceTest {
     private UserEntity userEntity;
     private TokenEntity tokenEntity;
     private StopEntity stopEntity;
+    private StopEntity secondStopEntity;
     private CityEntity cityEntity;
     private CategoryEntity categoryEntity;
 
@@ -69,6 +71,16 @@ public class TravlynServiceTest {
         stopEntity.setCategory(categoryEntity);
 
         stopEntity.setId((Integer) session.save(stopEntity));
+
+        secondStopEntity = new StopEntity();
+        secondStopEntity.setName("Second Test Stop");
+        secondStopEntity.setDescription("Test descr");
+        secondStopEntity.setAverageRating(2.0);
+        secondStopEntity.setLatitude(33.0);
+        secondStopEntity.setLongitude(5.0);
+        secondStopEntity.setCategory(categoryEntity);
+
+        secondStopEntity.setId((Integer) session.save(secondStopEntity));
 
         cityEntity = new CityEntity();
         cityEntity.setName("Test city");
@@ -144,10 +156,27 @@ public class TravlynServiceTest {
     @Test
     @Transactional
     public void testGenerateTrip(){
+        //normal case
         ArrayList<Long> stopIds= new ArrayList<>();
         stopIds.add((long) stopEntity.getId());
+        stopIds.add((long) secondStopEntity.getId());
         Trip result = service.generateTrip((long) userEntity.getId(), (long) cityEntity.getId(),"Test Trip",false,stopIds);
         Assertions.assertNotNull(result);
         Assertions.assertEquals(userEntity.getId(),result.getUser().getId());
+        Assertions.assertEquals("Test Trip",result.getName());
+        //check order
+        for (int i = 0; i<result.getStops().size();i++){
+            Assertions.assertEquals(stopIds.get(i),result.getStops().get(i).getId());
+        }
+
+        //trip without stops
+        result = service.generateTrip((long) userEntity.getId(), (long) cityEntity.getId(),"Test Trip",true,null);
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(userEntity.getId(),result.getUser().getId());
+        Assertions.assertEquals("Test Trip",result.getName());
+        Assertions.assertEquals(0,result.getStops().size());
+
+        //user not found
+        Assertions.assertThrows(NoResultException.class, ()-> service.generateTrip((long) userEntity.getId() +256, (long) cityEntity.getId(),"Test Trip",false,stopIds));
     }
 }

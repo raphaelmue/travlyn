@@ -28,6 +28,9 @@ public class TripEntity implements DataEntity {
     @Column(name = "private")
     private boolean isPrivate;
 
+    @Column(name = "name")
+    private String name;
+
     @OneToMany(mappedBy = "trip",cascade = {CascadeType.ALL})
     private Set<TripStopEntity> stops;
 
@@ -95,6 +98,14 @@ public class TripEntity implements DataEntity {
         this.geoTexts = geoTexts;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public Trip toDataTransferObject() {
         Trip trip = new Trip();
@@ -102,6 +113,7 @@ public class TripEntity implements DataEntity {
         trip.setCity(this.city.toDataTransferObject());
         trip.setPrivate(this.isPrivate);
         trip.setUser(this.user.toDataTransferObject());
+        trip.name(this.name);
         ArrayList<Stop> stops = new ArrayList<Stop>();
         TripStopEntity predecessor = null;
         while(! this.stops.isEmpty()) {

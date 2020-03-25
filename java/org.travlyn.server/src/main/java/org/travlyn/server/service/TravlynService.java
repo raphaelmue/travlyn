@@ -152,6 +152,7 @@ public class TravlynService {
 
         //set trip metadata and save trip
         trip.setPrivate(privateFlag);
+        trip.name(tripName);
         trip.setRatings(new ArrayList<>());
         trip.setGeoText(new ArrayList<>());
         trip.setStops(new ArrayList<>());
