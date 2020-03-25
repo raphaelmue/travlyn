@@ -1,10 +1,18 @@
 package org.travlyn.ui.home
 
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_city_information.*
@@ -16,6 +24,8 @@ import org.travlyn.MainActivity
 import org.travlyn.R
 import org.travlyn.api.CityApi
 import org.travlyn.api.model.City
+import org.travlyn.api.model.Stop
+
 
 class CityInformationFragment : SuperBottomSheetFragment() {
 
@@ -24,7 +34,6 @@ class CityInformationFragment : SuperBottomSheetFragment() {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-
         return inflater.inflate(R.layout.fragment_city_information, container, false)
     }
 
@@ -45,10 +54,20 @@ class CityInformationFragment : SuperBottomSheetFragment() {
         }
 
         val city: City? = Gson().fromJson(arguments?.get("city") as String?, City::class.java)
+
+        cityShowStopsButton.setOnClickListener {
+            val intent = Intent(context, StopsActivity::class.java)
+            val bundle = Bundle()
+            bundle.putString("city", Gson().toJson(city))
+            intent.putExtras(bundle)
+            startActivity(intent)
+        }
+
         if (city != null) {
             cityInformationToolbar.title = city.name
             cityCollapsingToolbar.title = city.name
             cityDescriptionTextView.text = city.description
+            initializeStops(city)
 
             CoroutineScope(Dispatchers.IO).launch {
                 if (city.image != null) {
@@ -61,6 +80,16 @@ class CityInformationFragment : SuperBottomSheetFragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun initializeStops(city: City?) {
+        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        stopCardRecyclerView.layoutManager = layoutManager
+
+        if (context != null && city != null && city.stops != null) {
+            val adapter = StopCardViewAdapter(city.stops.toList(), context!!)
+            stopCardRecyclerView.adapter = adapter
         }
     }
 
@@ -79,4 +108,47 @@ class CityInformationFragment : SuperBottomSheetFragment() {
 
 }
 
+private class StopCardViewAdapter(private val stops: List<Stop>, private val context: Context) :
+    RecyclerView.Adapter<StopCardViewAdapter.ViewHolder>() {
 
+    private val cityApi = CityApi(application = context as MainActivity)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view: View =
+            LayoutInflater.from(context).inflate(R.layout.stop_card_view, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun getItemCount(): Int {
+        return stops.size;
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val stop: Stop = stops[position]
+
+        holder.stopCardName.text = stop.name
+        holder.stopCardDescription.text = stop.description
+
+        if (holder.stopCardImageView.drawable == null) {
+            CoroutineScope(Dispatchers.IO).launch {
+                if (stop.image != null) {
+                    withContext(Dispatchers.Main) {
+                        val bitmap: Bitmap? = cityApi.getImage(stop.image)
+                        if (bitmap != null) {
+                            holder.stopCardImageView.setImageBitmap(bitmap)
+                            holder.stopCardProgressIndicator.visibility = View.GONE
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var stopCardImageView: ImageView = itemView.findViewById(R.id.stopCardImageView)
+        var stopCardName: TextView = itemView.findViewById(R.id.stopCardName)
+        var stopCardDescription: TextView = itemView.findViewById(R.id.stopCardDescription)
+        var stopCardProgressIndicator: ProgressBar =
+            itemView.findViewById(R.id.stopCardProgressIndicator)
+    }
+}

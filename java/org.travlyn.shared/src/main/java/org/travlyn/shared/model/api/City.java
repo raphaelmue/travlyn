@@ -4,8 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 import org.travlyn.shared.model.db.CityEntity;
+import org.travlyn.shared.model.db.StopEntity;
 
+import javax.validation.Valid;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * City
@@ -36,6 +40,11 @@ public class City extends AbstractDataTransferObject {
     @JsonProperty("description")
     @ApiModelProperty(value = "Description text", required = true, example = "This is a description text for New York.")
     private String description = null;
+
+    @JsonProperty("stops")
+    @ApiModelProperty(value = "List of Stops in city", required = true)
+    @Valid
+    private Set<Stop> stops = null;
 
     public City id(int id) {
         this.id = id;
@@ -125,6 +134,18 @@ public class City extends AbstractDataTransferObject {
         this.description = description;
     }
 
+    public Set<Stop> getStops() {
+        return stops;
+    }
+
+    public City setStops(Set<Stop> stops) {
+        if (this.stops == null) {
+            this.stops = new HashSet<>();
+        }
+        this.stops = stops;
+        return this;
+    }
+
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {
@@ -137,6 +158,7 @@ public class City extends AbstractDataTransferObject {
         return Objects.equals(this.id, city.id) &&
                 Objects.equals(this.name, city.name) &&
                 Objects.equals(this.image, city.image) &&
+                Objects.equals(this.stops, city.stops) &&
                 Objects.equals(this.description, city.description);
     }
 
@@ -154,6 +176,17 @@ public class City extends AbstractDataTransferObject {
         cityEntity.setName(this.name);
         cityEntity.setImage(this.image);
         cityEntity.setDescription(this.description);
+        if (stops != null) {
+            HashSet<StopEntity> stopEntityHashSet = new HashSet<>();
+            for (Stop stop : stops) {
+                City city = new City().id(stop.getCity().id);
+                stop.city(city);
+                stopEntityHashSet.add(stop.toEntity());
+            }
+            cityEntity.setStops(stopEntityHashSet);
+        } else {
+            cityEntity.setStops(new HashSet<>());
+        }
         return cityEntity;
     }
 }
