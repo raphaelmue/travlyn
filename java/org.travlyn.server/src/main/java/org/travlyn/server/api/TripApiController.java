@@ -13,6 +13,7 @@ import org.travlyn.shared.model.api.Stop;
 import org.travlyn.shared.model.api.StopIdWrapper;
 import org.travlyn.shared.model.api.Trip;
 
+import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -58,9 +59,8 @@ public class TripApiController implements TripApi {
         if (accept != null && accept.contains("application/json")) {
             try {
                 return new ResponseEntity<>(travlynService.generateTrip(userId, cityId, tripName, privateFlag, stopIds.getStopIds()), HttpStatus.OK);
-            } catch (Exception e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            } catch (NoResultException e) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         }
 
