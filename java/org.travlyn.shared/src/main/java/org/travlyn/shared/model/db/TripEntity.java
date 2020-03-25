@@ -1,9 +1,12 @@
 package org.travlyn.shared.model.db;
 
 import org.travlyn.shared.model.api.DataTransferObject;
+import org.travlyn.shared.model.api.Stop;
 import org.travlyn.shared.model.api.Trip;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -99,6 +102,19 @@ public class TripEntity implements DataEntity {
         trip.setCity(this.city.toDataTransferObject());
         trip.setPrivate(this.isPrivate);
         trip.setUser(this.user.toDataTransferObject());
+        ArrayList<Stop> stops = new ArrayList<Stop>();
+        TripStopEntity predecessor = null;
+        while(! this.stops.isEmpty()) {
+            for (Iterator<TripStopEntity> i = this.stops.iterator();i.hasNext();) {
+                TripStopEntity tripStopEntity = i.next();
+                if (tripStopEntity.getPredecessor() == null ||(tripStopEntity.getPredecessor() != null && tripStopEntity.getPredecessor().equals(predecessor))) {
+                    stops.add(tripStopEntity.toDataTransferObject());
+                    predecessor = tripStopEntity;
+                    i.remove();
+                }
+            }
+        }
+        trip.setStops(stops);
         return trip;
     }
 }

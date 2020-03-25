@@ -15,7 +15,9 @@ import org.travlyn.util.security.RandomString;
 
 import javax.persistence.NoResultException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static java.lang.Math.toIntExact;
 
@@ -130,7 +132,7 @@ public class TravlynService {
     }
 
     @Transactional
-    public void generateTrip(Long userId,Long cityId, String tripName, boolean privateFlag, List<Long> stopIds) throws NoResultException{
+    public Trip generateTrip(Long userId,Long cityId, String tripName, boolean privateFlag, List<Long> stopIds) throws NoResultException{
         Session session = sessionFactory.getCurrentSession();
         Trip trip = new Trip();
 
@@ -159,20 +161,26 @@ public class TravlynService {
         //create tripstops and save them
         StopEntity stop;
         TripStopEntity predecessor = null;
-        for(Long stopId : stopIds) {
-            stop = session.createQuery("from StopEntity where id = :id", StopEntity.class)
-                    .setParameter("id", toIntExact(stopId))
-                    .getSingleResult();
-            TripStopEntity tripStopEntity = new TripStopEntity();
-            TripStopEntity.TripStopId tripStopId = new TripStopEntity.TripStopId();
-            tripStopId.setStopId(stop.getId());
-            tripStopId.setTripId(tripEntity.getId());
-            tripStopEntity.setTripStopId(tripStopId);
-            tripStopEntity.setTrip(tripEntity);
-            tripStopEntity.setStop(stop);
-            tripStopEntity.setPredecessor(predecessor);
-            session.save(tripStopEntity);
-            predecessor = tripStopEntity;
+        Set<TripStopEntity> stopEntitySet = new HashSet<>();
+        if (stopIds != null) {
+            for (Long stopId : stopIds) {
+                stop = session.createQuery("from StopEntity where id = :id", StopEntity.class)
+                        .setParameter("id", toIntExact(stopId))
+                        .getSingleResult();
+                TripStopEntity tripStopEntity = new TripStopEntity();
+                TripStopEntity.TripStopId tripStopId = new TripStopEntity.TripStopId();
+                tripStopId.setStopId(stop.getId());
+                tripStopId.setTripId(tripEntity.getId());
+                tripStopEntity.setTripStopId(tripStopId);
+                tripStopEntity.setTrip(tripEntity);
+                tripStopEntity.setStop(stop);
+                tripStopEntity.setPredecessor(predecessor);
+                stopEntitySet.add(tripStopEntity);
+                session.save(tripStopEntity);
+                predecessor = tripStopEntity;
+            }
         }
+        tripEntity.setStops(stopEntitySet);
+        return tripEntity.toDataTransferObject();
     }
 }

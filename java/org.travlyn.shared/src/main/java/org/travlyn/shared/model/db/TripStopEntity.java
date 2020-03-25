@@ -1,5 +1,8 @@
 package org.travlyn.shared.model.db;
 
+import org.travlyn.shared.model.api.DataTransferObject;
+import org.travlyn.shared.model.api.Stop;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -72,6 +75,32 @@ public class TripStopEntity implements DataEntity {
 
     public void setPredecessor(TripStopEntity predecessor) {
         this.predecessor = predecessor;
+    }
+
+    @Override
+    public Stop toDataTransferObject() {
+        return this.stop.toDataTransferObject();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TripStopEntity that = (TripStopEntity) o;
+
+        if (id != that.id) return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (tripStopId != null ? tripStopId.hashCode() : 0);
+        result = 31 * result + (trip != null ? trip.hashCode() : 0);
+        result = 31 * result + (stop != null ? stop.hashCode() : 0);
+        result = 31 * result + (predecessor != null ? predecessor.hashCode() : 0);
+        return result;
     }
 
     @Embeddable
