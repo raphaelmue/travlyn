@@ -7,13 +7,13 @@ import org.travlyn.shared.model.api.Stop;
 
 import java.util.Set;
 
-public class DBPediaStopRequest extends DBPediaRequest<Stop> {
+public class DBpediaStopRequest extends DBpediaRequest<Stop> {
     private static final String BASE_URL = "http://vmdbpedia.informatik.uni-leipzig.de:8080/api/1.0.0/values";
 
     private String query;
     private Gson gson = new Gson();
 
-    public DBPediaStopRequest(String query) {
+    public DBpediaStopRequest(String query) {
         super(BASE_URL);
         query = query.replace(" ", "_");
         this.query = query;

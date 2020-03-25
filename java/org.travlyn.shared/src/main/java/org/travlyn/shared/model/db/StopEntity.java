@@ -1,10 +1,8 @@
 package org.travlyn.shared.model.db;
 
-import org.travlyn.shared.model.api.City;
 import org.travlyn.shared.model.api.Stop;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -41,14 +39,14 @@ public class StopEntity implements DataEntity {
     private double averageRating;
 
     @ManyToOne
-    @JoinColumn(name="city_id", referencedColumnName = "id")
+    @JoinColumn(name = "city_id", referencedColumnName = "id")
     private CityEntity city;
 
     @OneToMany
     @JoinColumn(name = "ratable")
     private Set<StopRatingEntity> ratings;
 
-    @OneToOne(targetEntity = CategoryEntity.class, cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToOne(targetEntity = CategoryEntity.class)
     private CategoryEntity category;
 
     @Override
@@ -147,14 +145,14 @@ public class StopEntity implements DataEntity {
     @Override
     public Stop toDataTransferObject() {
         return new Stop().id(this.id)
-                            .setLongitude(this.longitude)
-                            .setLatitude(this.latitude)
-                            .setAverageRating(this.averageRating)
-                            .setName(this.name)
-                            .setPricing(this.pricing)
-                            .setTimeEffort(this.timeEffort)
-                            .image(this.image)
-                            .description(this.description)
-                            .category(this.category.toDataTransferObject());
+                .setLongitude(this.longitude)
+                .setLatitude(this.latitude)
+                .setAverageRating(this.averageRating)
+                .setName(this.name)
+                .setPricing(this.pricing)
+                .setTimeEffort(this.timeEffort)
+                .image(this.image)
+                .description(this.description)
+                .category(this.category.toDataTransferObject());
     }
 }

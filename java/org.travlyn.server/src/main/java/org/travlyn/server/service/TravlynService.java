@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.travlyn.server.externalapi.access.DBPediaCityRequest;
-import org.travlyn.server.externalapi.access.DBPediaStopRequest;
+import org.travlyn.server.externalapi.access.DBpediaCityRequest;
+import org.travlyn.server.externalapi.access.DBpediaStopRequest;
 import org.travlyn.server.externalapi.access.OpenRouteRequest;
 import org.travlyn.shared.model.api.*;
 import org.travlyn.shared.model.db.*;
@@ -85,7 +85,7 @@ public class TravlynService {
             return entity.toDataTransferObject();
         } catch (NoResultException noResult) {
             // city is not cached --> get from api
-            DBPediaCityRequest request = new DBPediaCityRequest(city);
+            DBpediaCityRequest request = new DBpediaCityRequest(city);
             City result = request.getResult();
             if (result != null) {
                 //get Stops for city
@@ -145,7 +145,7 @@ public class TravlynService {
         Set<StopEntity> stopEntities = request.getResult();
         for (Iterator<StopEntity> stopEntityIterator = stopEntities.iterator(); stopEntityIterator.hasNext(); ) {
             StopEntity entity = stopEntityIterator.next();
-            DBPediaStopRequest poiRequest = new DBPediaStopRequest(entity.getName());
+            DBpediaStopRequest poiRequest = new DBpediaStopRequest(entity.getName());
             Stop stop = poiRequest.getResult();
             if (stop != null) {
                 entity.setImage(stop.getImage());

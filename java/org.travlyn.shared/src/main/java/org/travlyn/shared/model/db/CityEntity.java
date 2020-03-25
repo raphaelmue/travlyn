@@ -101,7 +101,7 @@ public class CityEntity implements DataEntity {
                 .image(this.image)
                 .description(this.description);
         HashSet<Stop> stopHashSet = new HashSet<>();
-        for (StopEntity stopEntity : stops){
+        for (StopEntity stopEntity : stops) {
             stopHashSet.add(stopEntity.toDataTransferObject());
         }
         city.setStops(stopHashSet);
