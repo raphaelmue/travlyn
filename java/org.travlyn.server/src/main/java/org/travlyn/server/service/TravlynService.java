@@ -255,18 +255,40 @@ public class TravlynService {
     }
 
     @Transactional
-    public List<Trip> getTripsForCity(Long cityId) {
+    public List<Trip> getTripsForCity(Long cityId) throws NoResultException{
         Session session = sessionFactory.getCurrentSession();
-        @SuppressWarnings("unchecked") // needed cause it can not be checked that result is list of TripEntity, but hibernate ensures that...
-        List<TripEntity> result = session.createQuery("from TripEntity where city.id = :cityId and isPrivate = false")
+        //check if city exists --> throws exception if not
+        session.createQuery("from CityEntity where id = :id")
+                .setParameter("id",toIntExact(cityId))
+                .getSingleResult();
+
+        //city is present...search corresponding trips
+        List<TripEntity> result = session.createQuery("from TripEntity where city.id = :cityId and isPrivate = false",TripEntity.class)
                                     .setParameter("cityId", toIntExact(cityId))
                                     .getResultList();
-        if (result.size()> 0) {
-            ArrayList<Trip> trips = new ArrayList<>();
-            for (TripEntity entity : result) {
-                trips.add(entity.toDataTransferObject());
-            }
-            return trips;
-        }else return null;
+        ArrayList<Trip> trips = new ArrayList<>();
+        for (TripEntity entity : result) {
+            trips.add(entity.toDataTransferObject());
+        }
+        return trips;
+    }
+
+    @Transactional
+    public List<Trip> getTripsPerUser(Long userId) {
+        Session session = sessionFactory.getCurrentSession();
+        //check if user exists --> throws exception if not
+        session.createQuery("from UserEntity where id = :id")
+                .setParameter("id",toIntExact(userId))
+                .getSingleResult();
+
+        //user present..get trips
+        List<TripEntity> result = session.createQuery("from TripEntity where user.id = :userId",TripEntity.class)
+                .setParameter("userId", toIntExact(userId))
+                .getResultList();
+        ArrayList<Trip> trips = new ArrayList<>();
+        for (TripEntity entity : result) {
+            trips.add(entity.toDataTransferObject());
+        }
+        return trips;
     }
 }

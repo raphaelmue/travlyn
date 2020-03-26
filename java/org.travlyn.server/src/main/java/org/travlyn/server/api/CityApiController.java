@@ -50,12 +50,12 @@ public class CityApiController implements CityApi {
     public ResponseEntity<List<Trip>> getPublicTripsForCity(@NotNull @Valid Long cityId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
+            try {
                 List<Trip> result = travlynService.getTripsForCity(cityId);
-                if (result != null) {
-                    return new ResponseEntity<>(result, HttpStatus.OK);
-                }else {
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-                }
+                return new ResponseEntity<>(result,HttpStatus.OK);
+            }catch (NoResultException noResult){
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
