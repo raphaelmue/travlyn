@@ -11,6 +11,7 @@ import org.travlyn.server.service.TravlynService;
 import org.travlyn.shared.model.api.City;
 import org.travlyn.shared.model.api.Trip;
 
+import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -48,6 +49,15 @@ public class CityApiController implements CityApi {
 
     public ResponseEntity<List<Trip>> getPublicTripsForCity(@NotNull @Valid Long cityId) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        if (accept != null && accept.contains("application/json")) {
+                List<Trip> result = travlynService.getTripsForCity(cityId);
+                if (result != null) {
+                    return new ResponseEntity<>(result, HttpStatus.OK);
+                }else {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

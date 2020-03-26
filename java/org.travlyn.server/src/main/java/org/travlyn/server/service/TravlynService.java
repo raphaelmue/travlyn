@@ -253,4 +253,20 @@ public class TravlynService {
         session.save(entity);
         return true;
     }
+
+    @Transactional
+    public List<Trip> getTripsForCity(Long cityId) {
+        Session session = sessionFactory.getCurrentSession();
+        @SuppressWarnings("unchecked") // needed cause it can not be checked that result is list of TripEntity, but hibernate ensures that...
+        List<TripEntity> result = session.createQuery("from TripEntity where city.id = :cityId and isPrivate = false")
+                                    .setParameter("cityId", toIntExact(cityId))
+                                    .getResultList();
+        if (result.size()> 0) {
+            ArrayList<Trip> trips = new ArrayList<>();
+            for (TripEntity entity : result) {
+                trips.add(entity.toDataTransferObject());
+            }
+            return trips;
+        }else return null;
+    }
 }
