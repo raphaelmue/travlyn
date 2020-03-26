@@ -1,8 +1,11 @@
 package org.travlyn.shared.model.db;
 
 import org.travlyn.shared.model.api.City;
+import org.travlyn.shared.model.api.Stop;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "city")
@@ -27,6 +30,9 @@ public class CityEntity implements DataEntity {
 
     @Column(name = "description", length = 65536)
     private String description;
+
+    @OneToMany(cascade = {CascadeType.ALL})
+    private Set<StopEntity> stops = new HashSet<>();
 
     @Override
     public int getId() {
@@ -77,14 +83,28 @@ public class CityEntity implements DataEntity {
         this.description = description;
     }
 
+    public Set<StopEntity> getStops() {
+        return stops;
+    }
+
+    public void setStops(Set<StopEntity> stops) {
+        this.stops = stops;
+    }
+
     @Override
     public City toDataTransferObject() {
-        return new City()
+        City city = new City()
                 .id(this.id)
                 .longitude(this.longitude)
                 .latitude(this.latitude)
                 .name(this.name)
                 .image(this.image)
                 .description(this.description);
+        HashSet<Stop> stopHashSet = new HashSet<>();
+        for (StopEntity stopEntity : stops) {
+            stopHashSet.add(stopEntity.toDataTransferObject());
+        }
+        city.setStops(stopHashSet);
+        return city;
     }
 }

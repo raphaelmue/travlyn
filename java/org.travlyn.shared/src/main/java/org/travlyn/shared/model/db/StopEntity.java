@@ -1,6 +1,5 @@
 package org.travlyn.shared.model.db;
 
-import org.travlyn.shared.model.api.DataTransferObject;
 import org.travlyn.shared.model.api.Stop;
 
 import javax.persistence.*;
@@ -24,8 +23,11 @@ public class StopEntity implements DataEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 65536)
     private String description;
+
+    @Column(name = "image")
+    private String image;
 
     @Column(name = "pricing")
     private double pricing;
@@ -35,6 +37,10 @@ public class StopEntity implements DataEntity {
 
     @Column(name = "average_rating")
     private double averageRating;
+
+    @ManyToOne
+    @JoinColumn(name = "city_id", referencedColumnName = "id")
+    private CityEntity city;
 
     @OneToMany
     @JoinColumn(name = "ratable")
@@ -82,6 +88,14 @@ public class StopEntity implements DataEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public double getPricing() {
@@ -135,9 +149,14 @@ public class StopEntity implements DataEntity {
         stop.setLatitude(this.latitude);
         stop.setLongitude(this.longitude);
         stop.setAverageRating(this.averageRating);
-        stop.setDescription(this.description);
+        stop.description(this.description);
         //TODO
         //stop.setRatings(this.ratings);
         return stop;
     }
+
+    public void setCity(CityEntity city) {
+        this.city = city;
+    }
+
 }

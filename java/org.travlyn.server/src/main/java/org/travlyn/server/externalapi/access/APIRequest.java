@@ -1,4 +1,4 @@
-package org.travlyn.server.externalapi;
+package org.travlyn.server.externalapi.access;
 
 import okhttp3.*;
 import org.travlyn.server.util.Pair;
@@ -20,6 +20,12 @@ public class APIRequest {
     private final String requestURL;
     private final OkHttpClient client;
     private String postBody;
+    private Set<Pair<String, String>> header;
+
+    public APIRequest(String apiURL, Set<Pair<String, String>> parameters, String postBody, Set<Pair<String, String>> header) {
+        this(apiURL, parameters, postBody);
+        this.header = header;
+    }
 
     public APIRequest(String apiURL, Set<Pair<String, String>> parameters) {
         HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(apiURL)).newBuilder();
@@ -35,23 +41,31 @@ public class APIRequest {
         this.postBody = postBody;
     }
 
-    public APIRequest(String apiURL) throws Exception {
-        this.requestURL = apiURL;
-        client = new OkHttpClient();
-    }
-
     public String performAPICallGET() throws IOException {
-        Request request = new Request.Builder().header("Accept", "application/json").url(requestURL).build();
+        okhttp3.Request.Builder builder = new okhttp3.Request.Builder();
+        this.setHeader(builder);
+        okhttp3.Request request = builder.url(requestURL).build();
         return client.newCall(request).execute().body().string();
     }
 
     public String performAPICallPOST() throws IOException {
-        Request request = new Request.Builder()
-                .url(requestURL)
+        okhttp3.Request.Builder builder = new okhttp3.Request.Builder();
+        this.setHeader(builder);
+        okhttp3.Request request = builder.url(requestURL)
                 .post(RequestBody.create(postBody, MEDIA_TYPE_JSON))
                 .build();
 
         Response response = client.newCall(request).execute();
         return response.body().string();
+    }
+
+    private void setHeader(okhttp3.Request.Builder builder) {
+        builder.header("Accept", "application/json");
+        if (header != null && !header.isEmpty()) {
+            //if header are provided
+            for (Map.Entry<String, String> entry : header) {
+                builder.header(entry.getKey(), entry.getValue());
+            }
+        }
     }
 }

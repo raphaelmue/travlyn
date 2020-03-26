@@ -132,6 +132,7 @@ public class TravlynServiceTest {
         cityToAssert = service.getCityWithInformation("xyz");
         Assertions.assertNull(cityToAssert);
     }
+
     @Test
     @Transactional
     public void testGenerateToken() {

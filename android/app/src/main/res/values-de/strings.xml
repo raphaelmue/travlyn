@@ -25,4 +25,17 @@
     <string name="error_no_city_found">Keine Stadt mit dem Namen \"%1$s\" gefunden.</string>
     <string name="user">Benutzer</string>
     <string name="search">Suche</string>
+    <string name="add">Hinzufügen</string>
+    <string name="hours_unit">%1$s std</string>
+    <string name="rate">Bewerten</string>
+    <string name="number_of_stop_found">%d Sehenswürdigkeiten gefunden!</string>
+    <string name="category_place_of_worship">Religiöse Versammlungsstätte</string>
+    <string name="category_building">Gebäude</string>
+    <string name="category_monument">Denkmal</string>
+    <string name="category_memorial">Gedenkstätte</string>
+    <string name="category_artwork">"Kunstwerk "</string>
+    <string name="category_gallery">Galerie</string>
+    <string name="category_museum">Museum</string>
+    <string name="category_attraction">Attraktion</string>
+    <string name="number_of_selected_items">%d ausgewählt</string>
 </resources>

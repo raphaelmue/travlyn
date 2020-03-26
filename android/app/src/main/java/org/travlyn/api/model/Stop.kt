@@ -19,6 +19,7 @@ package org.travlyn.api.model
  * @param latitude
  * @param name
  * @param description Additional information about stop
+ * @param image URL to image
  * @param pricing Average pricing for one person in USD
  * @param timeEffort Time effort in hours
  * @param averageRating Average percentage rating by user
@@ -33,6 +34,8 @@ data class Stop(
     val name: String? = null,
     /* Additional information about stop */
     val description: String? = null,
+    /* URL to image */
+    val image: String? = null,
     /* Average pricing for one person in USD */
     val pricing: Double? = null,
     /* Time effort in hours */
