@@ -1,13 +1,11 @@
 package org.travlyn.shared.model.db;
 
-import org.travlyn.shared.model.api.DataTransferObject;
 import org.travlyn.shared.model.api.Stop;
 import org.travlyn.shared.model.api.Trip;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 @Entity

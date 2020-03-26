@@ -63,11 +63,13 @@ public interface TripApi {
             @ApiResponse(code = 200, message = "successful operation", response = Trip.class),
             @ApiResponse(code = 400, message = "Invalid ID supplied"),
             @ApiResponse(code = 401, message = "You are not authorized to perform this action"),
+            @ApiResponse(code = 403, message = "You can not read a private trip"),
             @ApiResponse(code = 404, message = "Trip not found")})
     @GetMapping(
             value = "/trip/{tripId}",
             produces = {"application/json"})
-    ResponseEntity<Trip> getTripByID(@ApiParam(value = "ID of trip to return", required = true, defaultValue = "-1", example = "123") @PathVariable("tripId") Long tripId);
+    ResponseEntity<Trip> getTripByID(@ApiParam(value = "ID of trip to return", required = true, defaultValue = "-1", example = "123") @PathVariable("tripId") Long tripId,
+                                     @ApiParam(value = "Id of user that is reading the trip", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "userId") Long userId);
 
     @ApiOperation(
             value = "Rate a trip",

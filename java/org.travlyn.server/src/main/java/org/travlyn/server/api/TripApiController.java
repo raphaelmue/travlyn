@@ -67,7 +67,7 @@ public class TripApiController implements TripApi {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<Trip> getTripByID(Long tripId) {
+    public ResponseEntity<Trip> getTripByID(Long tripId,Long userId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
@@ -90,5 +90,4 @@ public class TripApiController implements TripApi {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
-
 }

@@ -9,10 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.travlyn.server.service.TravlynService;
 import org.travlyn.shared.model.api.City;
+import org.travlyn.shared.model.api.Trip;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Controller
 public class CityApiController implements CityApi {
@@ -42,5 +44,10 @@ public class CityApiController implements CityApi {
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    public ResponseEntity<List<Trip>> getPublicTripsForCity(@NotNull @Valid Long cityId) {
+        String accept = request.getHeader("Accept");
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 }
