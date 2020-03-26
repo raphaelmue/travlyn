@@ -36,6 +36,7 @@ public class TravlynServiceTest {
     private StopEntity secondStopEntity;
     private CityEntity cityEntity;
     private CategoryEntity categoryEntity;
+    private TripEntity tripEntity;
 
     @Before
     @Transactional
@@ -62,6 +63,15 @@ public class TravlynServiceTest {
 
         categoryEntity.setId((Integer) session.save(categoryEntity));
 
+        cityEntity = new CityEntity();
+        cityEntity.setName("Test city");
+        cityEntity.setDescription("Test descr");
+        cityEntity.setLongitude(0.0);
+        cityEntity.setLatitude(0.0);
+        cityEntity.setImage("https://testurl.com/test.jpg");
+
+        cityEntity.setId((Integer) session.save(cityEntity));
+
         stopEntity = new StopEntity();
         stopEntity.setName("Test Stop");
         stopEntity.setDescription("Test descr");
@@ -69,6 +79,7 @@ public class TravlynServiceTest {
         stopEntity.setLatitude(33.0);
         stopEntity.setLongitude(5.0);
         stopEntity.setCategory(categoryEntity);
+        stopEntity.setCity(cityEntity);
 
         stopEntity.setId((Integer) session.save(stopEntity));
 
@@ -79,17 +90,20 @@ public class TravlynServiceTest {
         secondStopEntity.setLatitude(33.0);
         secondStopEntity.setLongitude(5.0);
         secondStopEntity.setCategory(categoryEntity);
+        secondStopEntity.setCity(cityEntity);
 
         secondStopEntity.setId((Integer) session.save(secondStopEntity));
 
-        cityEntity = new CityEntity();
-        cityEntity.setName("Test city");
-        cityEntity.setDescription("Test descr");
-        cityEntity.setLongitude(0.0);
-        cityEntity.setLatitude(0.0);
-        cityEntity.setImage("https://testurl.com/test.jpg");
+        tripEntity = new TripEntity();
+        tripEntity.setName("Test trip");
+        tripEntity.setUser(userEntity);
+        tripEntity.setCity(cityEntity);
+        tripEntity.setPrivate(false);
+        tripEntity.setRatings(new HashSet<>());
+        tripEntity.setStops(new HashSet<>());
+        tripEntity.setGeoTexts(new HashSet<>());
 
-        cityEntity.setId((Integer) session.save(cityEntity));
+        tripEntity.setId((Integer) session.save(tripEntity));
 
     }
 
@@ -179,5 +193,30 @@ public class TravlynServiceTest {
 
         //user not found
         Assertions.assertThrows(NoResultException.class, ()-> service.generateTrip((long) userEntity.getId() +256, (long) cityEntity.getId(),"Test Trip",false,stopIds));
+    }
+
+    @Test
+    @Transactional
+    public void testUpdateTrip(){
+        TripEntity newTrip = new TripEntity();
+        TripStopEntity tripStopEntity = new TripStopEntity();
+        tripStopEntity.setPredecessor(null);
+        tripStopEntity.setTrip(tripEntity);
+        tripStopEntity.setStop(secondStopEntity);
+        TripStopEntity.TripStopId tripStopId = new TripStopEntity.TripStopId();
+        tripStopId.setTripId(tripEntity.getId());
+        tripStopId.setStopId(secondStopEntity.getId());
+        tripStopEntity.setTripStopId(tripStopId);
+        HashSet<TripStopEntity> stops = new HashSet<>();
+        stops.add(tripStopEntity);
+        newTrip.setStops(stops);
+        newTrip.setId(tripEntity.getId());
+        newTrip.setName("Updated test Trip");
+        newTrip.setRatings(new HashSet<>());
+        newTrip.setGeoTexts(new HashSet<>());
+        newTrip.setCity(cityEntity);
+        newTrip.setUser(userEntity);
+        service.updateTrip(newTrip.toDataTransferObject());
+        Trip trip = service.getTrip((long) tripEntity.getId());
     }
 }

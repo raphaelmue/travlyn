@@ -125,6 +125,9 @@ public class TripEntity implements DataEntity {
             }
         }
         trip.setStops(stops);
+        //TODO
+        trip.setRatings(new ArrayList<>());
+        trip.setGeoText(new ArrayList<>());
         return trip;
     }
 }

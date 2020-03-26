@@ -150,6 +150,7 @@ public class StopEntity implements DataEntity {
         stop.setLongitude(this.longitude);
         stop.setAverageRating(this.averageRating);
         stop.description(this.description);
+        stop.city(this.city.toDataTransferObject());
         //TODO
         //stop.setRatings(this.ratings);
         return stop;

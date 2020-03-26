@@ -88,6 +88,16 @@ public class TripApiController implements TripApi {
 
     public ResponseEntity<Void> updateTrip(@NotNull @Valid Trip trip) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        if (accept != null && accept.contains("application/json")) {
+            try {
+                travlynService.updateTrip(trip);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } catch (NoResultException e) {
+                log.error("Couldn't find requested trip", e);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }
