@@ -136,7 +136,7 @@ public class TravlynService {
     }
 
     @Transactional
-    public Trip generateTrip(Long userId,Long cityId, String tripName, boolean privateFlag, List<Long> stopIds) throws NoResultException{
+    public Trip generateTrip(Long userId, Long cityId, String tripName, boolean privateFlag, List<Long> stopIds) throws NoResultException {
         Session session = sessionFactory.getCurrentSession();
         Trip trip = new Trip();
 
@@ -207,7 +207,7 @@ public class TravlynService {
         cityEntity.setLongitude(city.getLongitude());
         cityEntity.setImage(city.getImage());
         cityEntity.setDescription(city.getDescription());
-        OpenRouteRequest request = new OpenRouteRequest(cityEntity.getLongitude(), cityEntity.getLatitude(), cityEntity);
+        OpenRouteRequest request = new OpenRouteRequest(cityEntity.getLatitude(), cityEntity.getLongitude(), cityEntity);
         Set<StopEntity> stopEntities = request.getResult();
         for (Iterator<StopEntity> stopEntityIterator = stopEntities.iterator(); stopEntityIterator.hasNext(); ) {
             StopEntity entity = stopEntityIterator.next();
@@ -255,17 +255,17 @@ public class TravlynService {
     }
 
     @Transactional
-    public List<Trip> getTripsForCity(Long cityId) throws NoResultException{
+    public List<Trip> getTripsForCity(Long cityId) throws NoResultException {
         Session session = sessionFactory.getCurrentSession();
         //check if city exists --> throws exception if not
         session.createQuery("from CityEntity where id = :id")
-                .setParameter("id",toIntExact(cityId))
+                .setParameter("id", toIntExact(cityId))
                 .getSingleResult();
 
         //city is present...search corresponding trips
-        List<TripEntity> result = session.createQuery("from TripEntity where city.id = :cityId and isPrivate = false",TripEntity.class)
-                                    .setParameter("cityId", toIntExact(cityId))
-                                    .getResultList();
+        List<TripEntity> result = session.createQuery("from TripEntity where city.id = :cityId and isPrivate = false", TripEntity.class)
+                .setParameter("cityId", toIntExact(cityId))
+                .getResultList();
         ArrayList<Trip> trips = new ArrayList<>();
         for (TripEntity entity : result) {
             trips.add(entity.toDataTransferObject());
@@ -278,11 +278,11 @@ public class TravlynService {
         Session session = sessionFactory.getCurrentSession();
         //check if user exists --> throws exception if not
         session.createQuery("from UserEntity where id = :id")
-                .setParameter("id",toIntExact(userId))
+                .setParameter("id", toIntExact(userId))
                 .getSingleResult();
 
         //user present..get trips
-        List<TripEntity> result = session.createQuery("from TripEntity where user.id = :userId",TripEntity.class)
+        List<TripEntity> result = session.createQuery("from TripEntity where user.id = :userId", TripEntity.class)
                 .setParameter("userId", toIntExact(userId))
                 .getResultList();
         ArrayList<Trip> trips = new ArrayList<>();
@@ -296,8 +296,8 @@ public class TravlynService {
     public void updateTrip(Trip trip) throws NoResultException {
         Session session = sessionFactory.getCurrentSession();
         //check if trip exists
-        TripEntity test = session.createQuery("from TripEntity where id = :id",TripEntity.class)
-                .setParameter("id",trip.getId())
+        TripEntity test = session.createQuery("from TripEntity where id = :id", TripEntity.class)
+                .setParameter("id", trip.getId())
                 .getSingleResult();
 
         TripEntity tripEntity = trip.toEntity();

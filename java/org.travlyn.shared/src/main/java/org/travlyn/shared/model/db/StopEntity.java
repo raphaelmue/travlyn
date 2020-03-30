@@ -38,15 +38,16 @@ public class StopEntity implements DataEntity {
     @Column(name = "average_rating")
     private double averageRating;
 
-    @ManyToOne
-    @JoinColumn(name = "city_id", referencedColumnName = "id")
+    @ManyToOne(targetEntity = CityEntity.class)
+    @JoinColumn(name = "city_id", referencedColumnName = "id", nullable = false)
     private CityEntity city;
 
     @OneToMany
     @JoinColumn(name = "ratable")
     private Set<StopRatingEntity> ratings;
 
-    @OneToOne(targetEntity = CategoryEntity.class)
+    @OneToOne(targetEntity = CategoryEntity.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private CategoryEntity category;
 
     @Override
@@ -150,7 +151,7 @@ public class StopEntity implements DataEntity {
         stop.setLongitude(this.longitude);
         stop.setAverageRating(this.averageRating);
         stop.description(this.description);
-        stop.city(this.city.toDataTransferObject());
+        //stop.city(this.city.toDataTransferObject());
         //TODO
         //stop.setRatings(this.ratings);
         return stop;
@@ -160,4 +161,7 @@ public class StopEntity implements DataEntity {
         this.city = city;
     }
 
+    public CityEntity getCity() {
+        return city;
+    }
 }
