@@ -18,6 +18,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 @Tag("unit")
 @RunWith(SpringRunner.class)
@@ -197,7 +198,44 @@ public class TravlynServiceTest {
 
     @Test
     @Transactional
+    public void testGetTrip(){
+        Trip trip = service.getTrip((long) tripEntity.getId());
+        Assertions.assertEquals("Test trip",trip.getName());
+        Assertions.assertEquals(1,trip.getUser().getId());
+        Assertions.assertEquals(1,trip.getCity().getId());
+        Assertions.assertEquals(0,trip.getStops().size());
+
+        //not found
+        Assertions.assertThrows(NoResultException.class,() ->service.getTrip((long) 2) );
+
+    }
+
+    @Test
+    @Transactional
+    public void testGetTripPerUser(){
+        List<Trip> trips = service.getTripsPerUser((long) userEntity.getId());
+        Assertions.assertEquals(1, trips.size());
+        Assertions.assertEquals("Test trip",trips.get(0).getName());
+
+        //user not found
+        Assertions.assertThrows(NoResultException.class,()->service.getTripsPerUser(2L));
+    }
+
+    @Test
+    @Transactional
+    public void testGetTripPerCity(){
+        List<Trip> trips = service.getTripsForCity((long) cityEntity.getId());
+        Assertions.assertEquals(1, trips.size());
+        Assertions.assertEquals("Test trip",trips.get(0).getName());
+
+        //city not found
+        Assertions.assertThrows(NoResultException.class,() -> service.getTripsForCity((long) (cityEntity.getId()+100)));
+    }
+
+    @Test
+    @Transactional
     public void testUpdateTrip(){
+        //create updated trip
         TripEntity newTrip = new TripEntity();
         TripStopEntity tripStopEntity = new TripStopEntity();
         tripStopEntity.setPredecessor(null);
@@ -216,7 +254,14 @@ public class TravlynServiceTest {
         newTrip.setGeoTexts(new HashSet<>());
         newTrip.setCity(cityEntity);
         newTrip.setUser(userEntity);
+
+        //update and check
         service.updateTrip(newTrip.toDataTransferObject());
         Trip trip = service.getTrip((long) tripEntity.getId());
+
+        Assertions.assertNotEquals("Test trip",trip.getName());
+        Assertions.assertEquals("Updated test Trip",trip.getName());
+        Assertions.assertEquals(1,trip.getStops().size());
+        Assertions.assertEquals("Test descr",trip.getStops().get(0).getDescription());
     }
 }

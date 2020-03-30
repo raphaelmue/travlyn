@@ -274,7 +274,7 @@ public class TravlynService {
     }
 
     @Transactional
-    public List<Trip> getTripsPerUser(Long userId) {
+    public List<Trip> getTripsPerUser(Long userId) throws NoResultException {
         Session session = sessionFactory.getCurrentSession();
         //check if user exists --> throws exception if not
         session.createQuery("from UserEntity where id = :id")
