@@ -11,7 +11,6 @@
  */
 package org.travlyn.api
 
-import com.google.gson.Gson
 import org.travlyn.api.model.Rating
 import org.travlyn.api.model.Trip
 import org.travlyn.infrastructure.*

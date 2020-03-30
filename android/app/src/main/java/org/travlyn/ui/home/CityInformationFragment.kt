@@ -189,54 +189,55 @@ class CityInformationFragment : SuperBottomSheetFragment() {
         }
     }
 
-    private inner class TripCardViewAdapter(
-        private val trips: List<Trip>,
-        private val context: Context
-    ) : RecyclerView.Adapter<TripCardViewAdapter.ViewHolder>() {
+}
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val view: View =
-                LayoutInflater.from(context)
-                    .inflate(R.layout.city_information_trip_card_view, parent, false)
-            return ViewHolder(view)
+open class TripCardViewAdapter(
+    protected val trips: List<Trip>,
+    private val context: Context
+) : RecyclerView.Adapter<TripCardViewAdapter.ViewHolder>() {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view: View =
+            LayoutInflater.from(context)
+                .inflate(R.layout.city_information_trip_card_view, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun getItemCount(): Int {
+        return trips.size;
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val trip: Trip = trips[position]
+
+        holder.tripCardNameTextView.text = trip.name
+        holder.tripCardNumberOfStopsTextView.text = trip.stops?.size.toString()
+
+        if (trip.user != null) {
+            holder.tripCardCreatedByTextView.text =
+                context.getString(R.string.created_by, trip.user.name)
+        } else {
+            holder.tripCardCreatedByTextView.visibility = View.GONE
         }
 
-        override fun getItemCount(): Int {
-            return trips.size;
+        if (trip.averageRating == null || trip.averageRating <= 0) {
+            holder.tripCardRatingTextView.text = context.getString(R.string.no_value)
+        } else {
+            holder.tripCardRatingBar.rating = trip.averageRating.toFloat() * 5f
+            holder.tripCardRatingTextView.text =
+                context.getString(R.string.rating_value, trip.averageRating * 5f)
         }
+    }
 
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val trip: Trip = trips[position]
-
-            holder.tripCardNameTextView.text = trip.name
-            holder.tripCardNumberOfStopsTextView.text = trip.stops?.size.toString()
-
-            if (trip.user != null) {
-                holder.tripCardCreatedByTextView.text =
-                    context.getString(R.string.created_by, trip.user.name)
-            } else {
-                holder.tripCardCreatedByTextView.visibility = View.GONE
-            }
-
-            if (trip.averageRating == null || trip.averageRating <= 0) {
-                holder.tripCardRatingTextView.text = context.getString(R.string.no_value)
-            } else {
-                holder.tripCardRatingBar.rating = trip.averageRating.toFloat() * 5f
-                holder.tripCardRatingTextView.text =
-                    context.getString(R.string.rating_value, trip.averageRating * 5f)
-            }
-        }
-
-        private inner class ViewHolder internal constructor(itemView: View) :
-            RecyclerView.ViewHolder(itemView) {
-            var tripCardNameTextView: TextView = itemView.findViewById(R.id.tripCardNameTextView)
-            var tripCardRatingBar: RatingBar = itemView.findViewById(R.id.tripCardRatingBar)
-            var tripCardRatingTextView: TextView =
-                itemView.findViewById(R.id.tripCardRatingTextView)
-            var tripCardCreatedByTextView: TextView =
-                itemView.findViewById(R.id.tripCardCreatedByTextView)
-            val tripCardNumberOfStopsTextView: TextView =
-                itemView.findViewById(R.id.tripCardNumberOfStopsTextView)
-        }
+    open inner class ViewHolder internal constructor(itemView: View) :
+        RecyclerView.ViewHolder(itemView) {
+        var tripCardNameTextView: TextView = itemView.findViewById(R.id.tripCardNameTextView)
+        var tripCardRatingBar: RatingBar = itemView.findViewById(R.id.tripCardRatingBar)
+        var tripCardRatingTextView: TextView =
+            itemView.findViewById(R.id.tripCardRatingTextView)
+        var tripCardCreatedByTextView: TextView =
+            itemView.findViewById(R.id.tripCardCreatedByTextView)
+        val tripCardNumberOfStopsTextView: TextView =
+            itemView.findViewById(R.id.tripCardNumberOfStopsTextView)
     }
 }

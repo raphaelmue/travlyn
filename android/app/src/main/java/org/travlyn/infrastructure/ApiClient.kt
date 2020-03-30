@@ -26,7 +26,6 @@ open class ApiClient(
         protected const val Accept = "Accept"
         protected const val JsonMediaType = "application/json"
         protected const val FormDataMediaType = "multipart/form-data"
-        protected const val XmlMediaType = "application/xml"
 
         @JvmStatic
         val client: OkHttpClient =

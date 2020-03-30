@@ -51,7 +51,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
             android:text="@string/created_by"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
 
         <TextView
             android:id="@+id/tripCardNumberOfStopsTextView"
