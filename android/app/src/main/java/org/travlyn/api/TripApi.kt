@@ -11,16 +11,15 @@
  */
 package org.travlyn.api
 
+import com.google.gson.Gson
 import org.travlyn.api.model.Rating
 import org.travlyn.api.model.Trip
 import org.travlyn.infrastructure.*
 import org.travlyn.local.Application
 
 class TripApi(
-    basePath: String = "https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
-    application: Application
-) :
-    ApiClient(basePath, application) {
+    application: Application? = null
+) : ApiClient(application = application) {
 
     /**
      * Search for trips
@@ -178,14 +177,14 @@ class TripApi(
      * @param trip Updated trip
      * @return void
      */
-    suspend fun updateTrip(trip: Trip): Unit {
-        val localVariableQuery: MultiValueMap = mapOf("trip" to listOf("$trip"))
+    suspend fun updateTrip(trip: Trip) {
         val localVariableConfig = RequestConfig(
             RequestMethod.POST,
-            "/trip", query = localVariableQuery
+            "/trip"
         )
         val response = request<Any?>(
-            localVariableConfig
+            localVariableConfig,
+            body = trip
         )
 
         return when (response.responseType) {

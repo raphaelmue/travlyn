@@ -6,6 +6,7 @@ import org.travlyn.shared.model.api.Trip;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -29,14 +30,14 @@ public class TripEntity implements DataEntity {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "trip",cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "trip", cascade = {CascadeType.ALL})
     private Set<TripStopEntity> stops;
 
     @OneToMany()
     @JoinColumn(name = "ratable")
     private Set<TripRatingEntity> ratings;
 
-    @OneToMany(mappedBy = "trip",cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "trip", cascade = {CascadeType.ALL})
     private Set<GeoTextEntity> geoTexts;
 
     @Override
@@ -112,12 +113,12 @@ public class TripEntity implements DataEntity {
         trip.setPrivate(this.isPrivate);
         trip.setUser(this.user.toDataTransferObject());
         trip.name(this.name);
-        ArrayList<Stop> stops = new ArrayList<Stop>();
+        List<Stop> stops = new ArrayList<>();
         TripStopEntity predecessor = null;
-        while(! this.stops.isEmpty()) {
-            for (Iterator<TripStopEntity> i = this.stops.iterator();i.hasNext();) {
+        while (!this.stops.isEmpty()) {
+            for (Iterator<TripStopEntity> i = this.stops.iterator(); i.hasNext(); ) {
                 TripStopEntity tripStopEntity = i.next();
-                if (tripStopEntity.getPredecessor() == null ||(tripStopEntity.getPredecessor() != null && tripStopEntity.getPredecessor().equals(predecessor))) {
+                if (tripStopEntity.getPredecessor() == null || (tripStopEntity.getPredecessor() != null && tripStopEntity.getPredecessor().equals(predecessor))) {
                     stops.add(tripStopEntity.toDataTransferObject());
                     predecessor = tripStopEntity;
                     i.remove();

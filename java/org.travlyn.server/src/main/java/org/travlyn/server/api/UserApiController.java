@@ -61,8 +61,6 @@ public class UserApiController implements UserApi {
     public ResponseEntity<Void> logoutUser(@NotNull @Valid User user) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            System.out.println(request.getQueryString());
-            System.out.println(user);
             travlynService.logoutUser(user);
             return new ResponseEntity<>(null, HttpStatus.OK);
         }

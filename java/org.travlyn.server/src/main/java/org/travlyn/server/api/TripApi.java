@@ -4,13 +4,11 @@ import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.travlyn.shared.model.api.Rating;
-import org.travlyn.shared.model.api.Stop;
 import org.travlyn.shared.model.api.StopIdWrapper;
 import org.travlyn.shared.model.api.Trip;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 
 @Api(value = "trip")
@@ -46,11 +44,11 @@ public interface TripApi {
     @PutMapping(
             value = "/trip",
             produces = {"application/json"})
-    ResponseEntity<Trip> generateTrip( @ApiParam(value = "The user who generates the trip", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "userId") Long userId,
-                                       @ApiParam(value = "The city which the trip is generated for", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "cityId") Long cityId,
-                                       @ApiParam(value = "Name for the new trip", required = true, defaultValue = "Trip", example = "My personal Trip") @Valid @RequestParam(value = "tripName") String tripName,
-                                       @ApiParam(value = "Flag to set privacy setting for this trip", required = true, defaultValue = "false", example = "false") @Valid @RequestParam(value = "privateFlag") boolean privateFlag,
-                                       @ApiParam(value = "List of stops that are part of the trip", required = true, defaultValue = "-1", example = "[0,124,758]") @Valid @RequestParam(value = "stopIds") StopIdWrapper stopIds);
+    ResponseEntity<Trip> generateTrip(@ApiParam(value = "The user who generates the trip", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "userId") Long userId,
+                                      @ApiParam(value = "The city which the trip is generated for", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "cityId") Long cityId,
+                                      @ApiParam(value = "Name for the new trip", required = true, defaultValue = "Trip", example = "My personal Trip") @Valid @RequestParam(value = "tripName") String tripName,
+                                      @ApiParam(value = "Flag to set privacy setting for this trip", required = true, defaultValue = "false", example = "false") @Valid @RequestParam(value = "privateFlag") boolean privateFlag,
+                                      @ApiParam(value = "List of stops that are part of the trip", required = true, defaultValue = "-1", example = "[0,124,758]") @Valid @RequestParam(value = "stopIds") StopIdWrapper stopIds);
 
     @ApiOperation(
             value = "Get Trip by ID",
@@ -99,5 +97,5 @@ public interface TripApi {
     @PostMapping(
             value = "/trip")
     ResponseEntity<Void> updateTrip(@NotNull @ApiParam(value = "Updated trip", required = true, example = "{id: 123, private: true, city: {id: 123, name: \"New York\", description: \"This is a description of New York.\"}}}")
-                                    @Valid @RequestParam(value = "trip") Trip trip);
+                                    @Valid @RequestBody Trip trip);
 }

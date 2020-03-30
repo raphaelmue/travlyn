@@ -1,6 +1,5 @@
 package org.travlyn.shared.model.db;
 
-import org.travlyn.shared.model.api.DataTransferObject;
 import org.travlyn.shared.model.api.Stop;
 
 import javax.persistence.*;
@@ -20,8 +19,8 @@ public class TripStopEntity implements DataEntity {
     @Embedded
     @NotNull
     @AttributeOverrides(value = {
-            @AttributeOverride(name = "tripId", column = @Column(name = "trip_id",nullable = true)),
-            @AttributeOverride(name = "stopId", column = @Column(name = "stop_id",nullable = true))
+            @AttributeOverride(name = "tripId", column = @Column(name = "trip_id", nullable = true)),
+            @AttributeOverride(name = "stopId", column = @Column(name = "stop_id", nullable = true))
     })
     private TripStopId tripStopId = new TripStopId();
 

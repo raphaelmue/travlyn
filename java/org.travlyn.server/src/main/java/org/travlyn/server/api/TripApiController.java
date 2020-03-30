@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.travlyn.server.service.TravlynService;
 import org.travlyn.shared.model.api.Rating;
-import org.travlyn.shared.model.api.Stop;
 import org.travlyn.shared.model.api.StopIdWrapper;
 import org.travlyn.shared.model.api.Trip;
 
@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -67,7 +66,7 @@ public class TripApiController implements TripApi {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<Trip> getTripByID(Long tripId,Long userId) {
+    public ResponseEntity<Trip> getTripByID(Long tripId, Long userId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
@@ -86,7 +85,7 @@ public class TripApiController implements TripApi {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> updateTrip(@NotNull @Valid Trip trip) {
+    public ResponseEntity<Void> updateTrip(@NotNull @RequestBody @Valid Trip trip) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {

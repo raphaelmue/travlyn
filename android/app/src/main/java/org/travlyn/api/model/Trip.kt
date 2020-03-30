@@ -30,7 +30,7 @@ data class Trip(
     val city: City? = null,
     val `private`: Boolean? = null,
     val averageRating: Double? = null,
-    val stops: Array<Stop>? = null,
+    var stops: Array<Stop>? = null,
     val ratings: Array<Rating>? = null,
     val geoText: Array<GeoText>? = null
 )

@@ -318,7 +318,6 @@ public class Stop extends AbstractDataTransferObject {
         });
         stopEntity.setRatings(ratingEntities);
         stopEntity.setCategory(this.category.toEntity());
-        stopEntity.setCity(this.city.toEntity());
         stopEntity.setImage(this.image);
         return stopEntity;
     }

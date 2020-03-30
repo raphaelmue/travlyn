@@ -40,4 +40,6 @@
     <string name="number_of_selected_items">%d ausgewählt</string>
     <string name="created_by">Erstellt von %s</string>
     <string name="no_data_available">Kein Daten verfügbar.</string>
+    <string name="error_not_signed_in">Du musst angemeldet sein, um diese Aktion auszuführen.</string>
+    <string name="create_trip">Neuen Trip erstellen</string>
 </resources>
