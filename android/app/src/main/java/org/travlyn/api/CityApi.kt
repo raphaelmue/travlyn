@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Request
 import org.travlyn.api.model.City
+import org.travlyn.api.model.Trip
 import org.travlyn.infrastructure.*
 import org.travlyn.local.Application
 import java.io.InputStream
@@ -45,6 +46,41 @@ class CityApi(
             ResponseType.ClientError -> {
                 if ((response as ClientError<*>).statusCode == 404) {
                     null
+                } else {
+                    throw ClientException(
+                        (response as ClientError<*>).body as? String ?: "Client error"
+                    )
+                }
+            }
+            ResponseType.ServerError -> throw ServerException(
+                (response as ServerError<*>).message ?: "Server error"
+            )
+        }
+    }
+
+    suspend fun getPublicTripsForCity(cityId: Int): Array<Trip> {
+        val localVariableQuery: MultiValueMap = mapOf("cityId" to listOf(cityId.toString()))
+        val localVariableConfig = RequestConfig(
+            RequestMethod.GET,
+            "/city/trips", query = localVariableQuery
+        )
+        val response = request<Array<Trip>>(
+            localVariableConfig
+        )
+
+        return when (response.responseType) {
+            ResponseType.Success -> {
+                if ((response as Success<*>).data != null) {
+                    (response as Success<*>).data as Array<Trip>
+                } else {
+                    emptyArray()
+                }
+            }
+            ResponseType.Informational -> TODO()
+            ResponseType.Redirection -> TODO()
+            ResponseType.ClientError -> {
+                if ((response as ClientError<*>).statusCode == 404) {
+                    emptyArray()
                 } else {
                     throw ClientException(
                         (response as ClientError<*>).body as? String ?: "Client error"

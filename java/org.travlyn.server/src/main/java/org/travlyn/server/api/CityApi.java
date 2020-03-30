@@ -33,11 +33,11 @@ public interface CityApi {
             nickname = "getTripsByCityId",
             notes = "",
             response = Trip.class,
-            responseContainer="List",
+            responseContainer = "List",
             authorizations = {@Authorization(value = "ApiKeyAuth")},
-            tags = {"trip"})
+            tags = {"city", "trip"})
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "successful operation", response = Trip.class, responseContainer="List"),
+            @ApiResponse(code = 200, message = "successful operation", response = Trip.class, responseContainer = "List"),
             @ApiResponse(code = 404, message = "City not found")})
     @GetMapping(
             value = "/city/trips",
