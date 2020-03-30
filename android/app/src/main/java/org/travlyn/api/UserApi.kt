@@ -27,7 +27,7 @@ class UserApi(
      * @return kotlin.Array<Trip>
      */
     @Suppress("UNCHECKED_CAST")
-    suspend fun getTripsByUserId(userId: Int): Array<Trip> {
+    suspend fun getTripsByUserId(userId: Long): Array<Trip> {
         val localVariableConfig = RequestConfig(
             RequestMethod.GET,
             "/user/{userId}/trips".replace("{" + "userId" + "}", "$userId")

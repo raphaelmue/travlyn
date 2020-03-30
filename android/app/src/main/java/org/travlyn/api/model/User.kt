@@ -21,7 +21,7 @@ package org.travlyn.api.model
  */
 data class User(
 
-    val id: Int? = null,
+    val id: Long? = null,
     val email: String? = null,
     val name: String? = null,
     val token: Token? = null

@@ -44,7 +44,8 @@
     <string name="no_data_available">No data available.</string>
     <string name="error_not_signed_in">You have to be signed in to perform this action.</string>
     <string name="create_trip">Create new Trip</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="name">Name</string>
+    <string name="public_trip">Public Trip</string>
+    <string name="save">Save</string>
+    <string name="successfully_created_trip">Created trip successfully!</string>
 </resources>

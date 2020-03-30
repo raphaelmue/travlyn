@@ -1,6 +1,7 @@
 package org.travlyn.ui.trips
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -31,6 +32,11 @@ class TripsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        createTripFab.setOnClickListener {
+            val intent = Intent(context, CreateTripActivity::class.java)
+            startActivity(intent)
+        }
 
         CoroutineScope(Dispatchers.IO).launch {
             initializeTripListView(fetchUsersTrips())
@@ -71,6 +77,13 @@ class TripsFragment : Fragment() {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             super.onBindViewHolder(holder, position)
             val trip: Trip = trips[position]
+
+            if (trip.city?.name == null) {
+                holder.tripCardCreatedByTextView.visibility = View.GONE
+            } else {
+                holder.tripCardCreatedByTextView.text = trip.city.name
+            }
+
 
             if (!trip.private!!) {
                 holder.tripCardNameTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)

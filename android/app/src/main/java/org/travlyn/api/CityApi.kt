@@ -57,7 +57,7 @@ class CityApi(
         }
     }
 
-    suspend fun getPublicTripsForCity(cityId: Int): Array<Trip> {
+    suspend fun getPublicTripsForCity(cityId: Long): Array<Trip> {
         val localVariableQuery: MultiValueMap = mapOf("cityId" to listOf(cityId.toString()))
         val localVariableConfig = RequestConfig(
             RequestMethod.GET,
