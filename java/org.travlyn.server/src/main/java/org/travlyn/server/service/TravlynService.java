@@ -207,7 +207,7 @@ public class TravlynService {
         cityEntity.setLongitude(city.getLongitude());
         cityEntity.setImage(city.getImage());
         cityEntity.setDescription(city.getDescription());
-        OpenRouteRequest request = new OpenRouteRequest(cityEntity.getLongitude(), cityEntity.getLatitude(), cityEntity);
+        OpenRouteRequest request = new OpenRouteRequest(cityEntity.getLatitude(), cityEntity.getLongitude(), cityEntity);
         Set<StopEntity> stopEntities = request.getResult();
         for (Iterator<StopEntity> stopEntityIterator = stopEntities.iterator(); stopEntityIterator.hasNext(); ) {
             StopEntity entity = stopEntityIterator.next();
