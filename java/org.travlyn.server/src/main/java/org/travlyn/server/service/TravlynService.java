@@ -5,6 +5,8 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.travlyn.server.externalapi.access.DBpediaCityRequest;
@@ -16,7 +18,9 @@ import org.travlyn.util.security.Hash;
 import org.travlyn.util.security.RandomString;
 
 import javax.persistence.NoResultException;
+import java.time.LocalDate;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -63,6 +67,46 @@ public class TravlynService {
 
         logger.info("Credentials are incorrect.");
         return null;
+    }
+
+    /**
+     * Checks whether the given token is valid (not expired and existing) and returns the respective user if so.
+     *
+     * @param token token string to validate
+     * @return user object if token is valid
+     */
+    @Transactional
+    public Optional<UserEntity> checkUsersToken(String token) {
+        Session session = sessionFactory.getCurrentSession();
+
+        try {
+            TokenEntity tokenEntity = session.createQuery("from TokenEntity where token = :token", TokenEntity.class)
+                    .setParameter("token", token).getSingleResult();
+
+            // check if token is not expired
+            // !isBefore is equal to isAfter && isEqual
+            if (!tokenEntity.getExpireDate().isBefore(LocalDate.now())) {
+                tokenEntity.setExpireDate(LocalDate.now().plusMonths(1));
+                session.update(tokenEntity);
+                return Optional.of(tokenEntity.getUser());
+            }
+        } catch (NoResultException ignored) {
+        }
+
+        return Optional.empty();
+    }
+
+    /**
+     * Returns the authenticated user object, if exists.
+     *
+     * @return user object
+     */
+    public Optional<UserEntity> getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            return Optional.of((UserEntity) authentication.getPrincipal());
+        }
+        return Optional.empty();
     }
 
     /**
@@ -113,6 +157,7 @@ public class TravlynService {
 
         TokenEntity token = new TokenEntity();
         token.setUser(user);
+        token.setExpireDate(LocalDate.now().plusMonths(1));
         token.setToken(tokenGenerator.nextString());
         token.setIpAddress(ipAddress);
 
