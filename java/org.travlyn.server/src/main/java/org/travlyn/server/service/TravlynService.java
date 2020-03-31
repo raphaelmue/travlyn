@@ -296,11 +296,13 @@ public class TravlynService {
     public void updateTrip(Trip trip) throws NoResultException {
         Session session = sessionFactory.getCurrentSession();
         //check if trip exists
-        TripEntity test = session.createQuery("from TripEntity where id = :id", TripEntity.class)
+        TripEntity test = session.createQuery( "from TripEntity where id = :id", TripEntity.class)
                 .setParameter("id", trip.getId())
                 .getSingleResult();
 
         TripEntity tripEntity = trip.toEntity();
+        tripEntity.setId(-1);
+        session.delete(tripEntity);
         session.merge(tripEntity);
     }
 }

@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_trips.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -77,6 +79,12 @@ class TripsFragment : Fragment() {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             super.onBindViewHolder(holder, position)
             val trip: Trip = trips[position]
+
+            holder.itemView.setOnClickListener {
+                val intent = Intent(context, TripInformationActivity::class.java)
+                intent.putExtras(bundleOf("trip" to Gson().toJson(trip)))
+                startActivity(intent)
+            }
 
             if (trip.city?.name == null) {
                 holder.tripCardCreatedByTextView.visibility = View.GONE

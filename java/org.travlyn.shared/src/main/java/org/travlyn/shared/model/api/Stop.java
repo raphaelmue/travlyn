@@ -153,13 +153,17 @@ public class Stop extends AbstractDataTransferObject {
         return description;
     }
 
+    public Stop image(String image) {
+        this.image = image;
+        return this;
+    }
+
     public String getImage() {
         return image;
     }
 
-    public Stop image(String image) {
+    public void setImage(String image) {
         this.image = image;
-        return this;
     }
 
     public Stop pricing(Double pricing) {

@@ -144,6 +144,7 @@ public class StopEntity implements DataEntity {
         Stop stop = new Stop();
         stop.setId(this.id);
         stop.setName(this.name);
+        stop.setImage(this.image);
         stop.setCategory(this.category.toDataTransferObject());
         stop.setTimeEffort(this.timeEffort);
         stop.setPricing(this.pricing);

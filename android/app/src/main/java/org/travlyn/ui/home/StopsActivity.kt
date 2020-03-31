@@ -103,8 +103,7 @@ class StopsActivity : AppCompatActivity() {
     private inner class StopListViewAdapter(
         private val stops: List<Stop>,
         private val context: Context
-    ) :
-        RecyclerView.Adapter<StopListViewAdapter.ViewHolder>(), Filterable {
+    ) : RecyclerView.Adapter<StopListViewAdapter.ViewHolder>(), Filterable {
 
         private val cityApi = CityApi()
         private val filter = StopFilter(this)
