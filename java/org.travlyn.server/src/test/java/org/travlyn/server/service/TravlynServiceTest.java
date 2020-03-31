@@ -203,7 +203,7 @@ public class TravlynServiceTest {
         Assertions.assertEquals("Test trip",trip.getName());
         Assertions.assertEquals(userEntity.getId(),trip.getUser().getId());
         Assertions.assertEquals(cityEntity.getId(),trip.getCity().getId());
-        Assertions.assertEquals(cityEntity.getId(),trip.getStops().size());
+        Assertions.assertEquals(tripEntity.getStops().size(),trip.getStops().size());
 
         //not found
         Assertions.assertThrows(NoResultException.class,() ->service.getTrip((long) 2) );
