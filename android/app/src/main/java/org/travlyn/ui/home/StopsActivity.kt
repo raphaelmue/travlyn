@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.miguelcatalan.materialsearchview.MaterialSearchView
+import com.stepstone.apprating.AppRatingDialog
+import com.stepstone.apprating.listener.RatingDialogListener
 import kotlinx.android.synthetic.main.activity_stops.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,13 +21,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.travlyn.R
 import org.travlyn.api.CityApi
+import org.travlyn.api.StopApi
 import org.travlyn.api.model.City
+import org.travlyn.api.model.Rating
 import org.travlyn.api.model.Stop
 import org.travlyn.components.SelectionToolbar
+import org.travlyn.local.LocalStorage
 import java.util.*
 
 
-class StopsActivity : AppCompatActivity() {
+class StopsActivity : AppCompatActivity(), RatingDialogListener {
+
+    private var clickedStop: Stop? = null
 
     private lateinit var stopListSelectionToolbar: SelectionToolbar<Stop>
 
@@ -90,6 +97,68 @@ class StopsActivity : AppCompatActivity() {
         }
     }
 
+    private fun handleRateStop(stop: Stop) {
+        clickedStop = stop
+        AppRatingDialog.Builder()
+            .setPositiveButtonText(getString(R.string.rate))
+            .setNegativeButtonText(getString(R.string.cancel))
+            .setNoteDescriptions(
+                listOf(
+                    getString(R.string.very_bad_rating),
+                    getString(R.string.not_good_rating),
+                    getString(R.string.okay_rating),
+                    getString(R.string.very_good_rating),
+                    getString(R.string.excellent_rating)
+                )
+            )
+            .setDefaultRating(2)
+            .setTitle(getString(R.string.rate_city, stop.name))
+            .setDescription(getString(R.string.request_rate_city))
+            .setCommentInputEnabled(true)
+            .setStarColor(R.color.colorAccent)
+            .setHint(getString(R.string.request_write_comment))
+            .setCommentBackgroundColor(R.color.light_gray)
+            .setCancelable(true)
+            .setCanceledOnTouchOutside(true)
+            .create(this)
+            .show()
+    }
+
+    override fun onPositiveButtonClicked(rate: Int, comment: String) {
+        val rating = Rating(
+            user = LocalStorage(this).readObject("user"),
+            description = comment,
+            rating = rate / 5.0
+        )
+
+        val stopApi = StopApi()
+        val context = this
+        CoroutineScope(Dispatchers.IO).launch {
+            stopApi.rateStop(clickedStop!!.id!!, rating)
+            clickedStop = null
+
+            withContext(Dispatchers.Main) {
+                Toast.makeText(
+                    context,
+                    getString(R.string.successfully_rated_city),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    private fun handleAddStopToTrip(stop: Stop) {
+        // TODO waiting for API to implement that functionality
+    }
+
+    override fun onNegativeButtonClicked() {
+        // stays empty as no action needed
+    }
+
+    override fun onNeutralButtonClicked() {
+        // stays empty as no action needed
+    }
+
     private inner class StopListViewAdapter(
         private val stops: List<Stop>,
         private val context: Context
@@ -126,6 +195,17 @@ class StopsActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val stop: Stop = filteredStops[position]
 
+            holder.stopListName.text = stop.name
+            holder.stopListDescription.text = stop.description
+
+            holder.stopListRateButton.setOnClickListener {
+                handleRateStop(stop)
+            }
+
+            holder.stopListAddToTripButton.setOnClickListener {
+                handleAddStopToTrip(stop)
+            }
+
             holder.stopListCheckBox.visibility = if (isSelectable) View.VISIBLE else View.GONE
             holder.stopListCardView.setOnLongClickListener {
                 isSelectable = !isSelectable
@@ -150,9 +230,6 @@ class StopsActivity : AppCompatActivity() {
                     else stopListSelectionToolbar.removeSelectedElement(stop)
                 }
             }
-
-            holder.stopListName.text = stop.name
-            holder.stopListDescription.text = stop.description
 
             val stringIdentifier = context.resources.getIdentifier(
                 "category_" + stop.category?.name, "string", context.packageName
@@ -209,7 +286,8 @@ class StopsActivity : AppCompatActivity() {
             var stopListRatingBar: RatingBar = itemView.findViewById(R.id.stopListRatingBar)
             var stopListRatingTextView: TextView =
                 itemView.findViewById(R.id.stopListRatingTextView)
-            var stopListDescription: TextView = itemView.findViewById(R.id.stopListDescription)
+            var stopListDescription: TextView =
+                itemView.findViewById(R.id.stopListDescription)
             var stopListProgressIndicator: ProgressBar =
                 itemView.findViewById(R.id.stopListProgressIndicator)
             var stopListCategoryTextView: TextView =
@@ -218,6 +296,10 @@ class StopsActivity : AppCompatActivity() {
                 itemView.findViewById(R.id.stopListTimeEffortTextView)
             var stopListPricingTextView: TextView =
                 itemView.findViewById(R.id.stopListPricingTextView)
+
+            var stopListRateButton: Button = itemView.findViewById(R.id.stopListRateButton)
+            var stopListAddToTripButton: Button =
+                itemView.findViewById(R.id.stopListAddToTripButton)
         }
 
         private inner class StopFilter(var adapter: StopListViewAdapter) :
@@ -248,11 +330,16 @@ class StopsActivity : AppCompatActivity() {
                 return results
             }
 
-            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+            override fun publishResults(
+                constraint: CharSequence?,
+                results: FilterResults?
+            ) {
                 this.adapter.notifyDataSetChanged()
             }
 
         }
+
+
     }
 
 }
