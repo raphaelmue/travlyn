@@ -32,6 +32,7 @@ In diesem Kapitel soll beschrieben werden, wie die in \autoref{sec:frameworks} b
 	Neben den hier beschriebenen Entitäten gibt es noch einige weitere kleinere Entitäten in diesem Projekt, wie z.B. das \textit{token} oder wie bereits in der Stop Entität verwendet das \textit{rating} und die \textit{category}. Diese Entitäten und alle genaueren Beschreibungen (wie \autoref{fig:swagger_stop}) sind im Sinne der Übersichtlichkeit nicht dargestellt, können aber bei Abruf der API eingesehen werden \footnote{\url{https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/swagger-ui.html}}.
 	
 	\subsection{Requests}
+	\label{sec:konzept.kommunikation.requests}
 	
 	Neben den beschriebenen Entitäten beinhaltet die Swaggerbeschreibung Schemata, wie bestimmte Informationen von der API abgerufen werden können. Diese Beschreibung bietet jedem die Möglichkeit die API zu erkunden und schreibt damit genau vor, welche Services der Server bereitstellen muss aber auch wie der Client bestimmte Informationen erfragen kann.
 	
@@ -91,16 +92,50 @@ In diesem Kapitel soll beschrieben werden, wie die in \autoref{sec:frameworks} b
 
 	\clearpage
 
-	
-	\section{Client Architektur}
+	\section{Client Architektur} % Raphael
 		
-		Neben der automatischen Generierung von Code, welcher das Spring Framework nutzt, ist es mit Swagger ebenfalls möglich, Code für den Client zu generieren. Da diese Generierung viel Arbeit und Einrichtungsaufwand spart, wurde auch das Grundgerüst für den \textit{Travlyn} Client automatisch generiert.
+		Neben der automatischen Generierung von Code, welche das Spring Framework nutzt, ist es mit Swagger ebenfalls möglich, Code für den Client zu generieren. Da diese Generierung viel Arbeit und Einrichtungsaufwand spart, wurde auch das Grundgerüst für den \textit{Travlyn} Client automatisch generiert.
 		
-		\subsection{Model}
+		\subsection{Design Guidlines} % Raphael
 		
-		\subsection{title}
+			Für die Entwicklung von Benutzeroberflächen für mobile, Android-fähige Geräte, stellt Google Design Guidlines zur Verfügung. Das sog. Material Design \cite{Google.3182020} ist eine Menge an Richtlinien und Vorgaben, wie Anwendung auf dem Android Betriebssystem entworfen werden sollen. Da dies nur Richtlinien sind, ist eine Einhaltung nicht zwingend erforderlich, jedoch bringt es einige Vorteile mit sich:
+			
+			Ein Benutzer assoziiert einzelne Komponenten einer Anwendung -- wie beispielsweise ein Radiobutton -- mit einer bestimmten Aktion. Wenn nun alle Applikationen die verschiedenen Komponenten mit die gleichen Aktionen belegen, erleichtert dies die Bedienung einer einzelnen Applikation. So wird durch die Berücksichtigung dieser Richtlinien Konsistenz gewährleistet. Dabei wird auch das mentale Modell des Benutzers weiter entwickelt. \\
+			Darüber hinaus erleichtert es auch zumeist die Entwicklung dieser Applikationen, da viele Komponenten durch die Verwendung des Android \acs{SDK}s bereits implementiert sind, aber auch leicht wieder verwendet und bei Änderungen durch das Framework ohne großen Aufwand angepasst werden können. \cite{SaadiaMinhas.3232020}
+		
+		\subsection{Aufbau und Struktur der Benutzeroberfläche} % Raphael
+		
+			Aufbau und Struktur der Benutzeroberfläche orientiert sich im Allgemeinen an den in \autoref{sec:konzept.kommunikation.requests} beschriebenen möglichen Anfragen. So werden die zu einem Use Case gehörigen Aktionen unter einen Menüpunkt gefasst, welcher sich im ausklappbaren Menü -- diese Komponente der Applikation heißt \textit{NavigationDrawer} und lässt sich über den in der Suchleiste befindlichen Knopf (siehe \autoref{fig:ui_screenshot}) öffnen -- der Applikation befindet. \\
+			Um jedoch den Aspekt der Struktur etwas weiter im Detail zu beleuchten, wird im Folgenden beispielhaft ein ausgewählter Use Case beschrieben. 
+		
+			Beim Start der Applikation erscheint eine Karte (dargestellt durch OSMdroid \autoref{TODO}) sowie eine Suchleiste, welche dem Zweck dient, nach Städten zu suchen. Bei erfolgreicher Suche nach einer Stadt erscheint ein Dialog, welcher zusätzliche Informationen zur Stadt sowie deren Sehenswürdigkeiten anzeigt. Von dort aus ist es möglich auf eine Detailansicht der Sehenswürdigkeiten abzuspringen sowie alle zu dieser Stadt gehörigen öffentlichen Trips anzuzeigen und zu favorisieren. Dieses Szenario ist in \autoref{fig:ui_screenshot} dargestellt.  
+			
+			\begin{figure}[ht!]
+				\includegraphics[width=0.32\textwidth]{images/travlyn-screenshot-main.png}
+				\includegraphics[width=0.32\textwidth]{images/travlyn-screenshot-search-result.png}
+				\includegraphics[width=0.32\textwidth]{images/travlyn-screenshot-city-detail.png}
+				\caption{Aufbau und Struktur der Benutzeroberfläche anhand eines konkreten Use Cases}
+				\label{fig:ui_screenshot}
+			\end{figure} 
+		
+			Alle weiteren Use Cases werden mithilfe der von Google bereitgestellten Benutzeroberflächenkomponenten  und gemäß des Material Designs erstellt, wie beispielsweise die Erstellung oder Bearbeitung von Trips. 
+		
+		\subsection{Kommunikation zum Server}  % Raphael
+		
+			Wie bereits erwähnt, lässt sich ebenso die Kommunikation zum Server durch Swagger generieren. Dabei wird für jeden Endpoint der \acs{API} eine Methode generiert, welche genau die Objekte entgegennimmt, die auch von der \acs{API} gefordert sind. Auch lassen sich in gleicher Weise die \acs{DTO} Objekte generieren, sodass die vollständige Kommunikation zwischen Server und Client gewährleistet ist. Um die Kommunikation zu beschleunigen, werden einige Entitäten bzw. Daten nach der Anfrage an den Server lokal zwischengespeichert. 
 
-	\section{Deployment Architektur}
+	\section{Infrastruktur} % Raphael
 	
-		Wie bereits in \autoref{qm.continuous_delivery} wird der \textit{Travlyn} Server über ein Docker Image (siehe \autoref{frameworks.docker}) ausgeliefert. 
+		Wie bereits in \autoref{qm.continuous_delivery} beschrieben wird der \textit{Travlyn} Server über ein Docker Image (siehe \autoref{frameworks.docker}) ausgeliefert. Außerdem wird mittels einer \textit{docker-compose} Datei eine Datenbank angebunden. Für das Projekt \textit{Travlyn} wurde entschieden, eine relationale Datenbank -- in diesem Falle eine \textit{MariaDB} -- zu verwenden. 
+		
+		Das relationale Datenbankschema ähnelt dem von der \acs{API} exponierten Entitäten Schema (siehe \autoref{sec:entities}), jedoch mit kleineren Unterschieden. So enthält beispielsweise das Datenbankschema der \textit{User}-Entität noch zusätzlich zu den bereits beschriebenen Daten, ein gehashtes Passwort sowie einen dazugehörigen \textit{Salt} -- eine zufällige Zeichenfolge, die an das Passwort vor dem Hashen angehängt wird, sodass bei unbefugtem Zugriff auf die Datenbank verhindert wird, dass gleich Passwörter gleiche Hashes erzeugen --, um die Vertraulichkeit des Passworts zu gewährleisten. 
+		
+		So werden auch Daten vor der Exponierung aufbereitet. Beispielsweise werden die zu einem \textit{Trip} gehörigen \textit{Stops} bereits in der richtigen Reihenfolge zurückgegeben, während auf der Datenbank die Tabelle der N:N Relation zwischen \textit{Trip} und \textit{Stop} noch ein weiteres Attribut besitzt: \textit{predecessor} (dt. Vorgänger). Ist der Vorgänger \textit{null}, so ist dieser \textit{Stop} der erste im \textit{Trip}. Der nächste \textit{Stop} hat die ID des Vorgängers als Attribut gespeichert, welcher wieder als Vorgänger für den nächsten \textit{Stop} fungiert usw. \autoref{fig:database_schema} zeigt einen Ausschnitt des Datenbankschemas von \textit{Travlyn} mit Fokus auf der Relation zwischen der \textit{Trip}- und \textit{Stop}-Entität.
+		
+		\begin{figure}[ht!]
+			\centering
+			\includegraphics[width=1\textwidth]{images/database-schema.png}
+			\caption{Ausschnitt aus dem Datenbankschema von \textit{Travlyn}}
+			\label{fig:database_schema}
+		\end{figure} 
 	
