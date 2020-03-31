@@ -152,9 +152,11 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener {
     }
 
     override fun onNegativeButtonClicked() {
+        // stays empty as no action needed
     }
 
     override fun onNeutralButtonClicked() {
+        // stays empty as no action needed
     }
 
     private inner class StopListViewAdapter(

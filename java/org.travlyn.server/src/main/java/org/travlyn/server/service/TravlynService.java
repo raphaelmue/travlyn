@@ -181,8 +181,6 @@ public class TravlynService {
         Set<StopRatingEntity> ratings = stopEntity.getRatings();
         StopRatingEntity stopRatingEntity = rating.toStopEntity(stopEntity);
         session.save(stopRatingEntity);
-
-        stopRatingEntity.setStop(stopEntity);
         if (stopEntity.getRatings().isEmpty()) {
             // new rating is equal to average rating when the list of ratings is empty
             stopEntity.setAverageRating(stopRatingEntity.getRating());
