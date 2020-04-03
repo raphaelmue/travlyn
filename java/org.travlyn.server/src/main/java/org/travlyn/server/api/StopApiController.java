@@ -33,17 +33,17 @@ public class StopApiController implements StopApi {
     }
 
     @Override
-    public ResponseEntity<Void> rateStop(Long stopId, @NotNull @Valid Rating rating) {
+    public ResponseEntity<Void> rateStop(@PathVariable("stopId") int stopId, @NotNull @Valid Rating rating) {
         String accept = request.getHeader("Accept");
-        //if (accept != null && accept.contains("application/json")) {
-        if (this.travlynService.addRatingToStop(stopId, rating)) {
-            return new ResponseEntity<>(HttpStatus.OK);
+        if (accept != null && accept.contains("application/json")) {
+            if (this.travlynService.addRatingToStop(stopId, rating)) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         } else {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        //}else{
-        //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        //}
     }
 
     @Override

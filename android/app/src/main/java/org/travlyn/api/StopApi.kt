@@ -11,7 +11,7 @@
  */
 package org.travlyn.api
 
-import android.media.Rating
+import org.travlyn.api.model.Rating
 import org.travlyn.api.model.Stop
 
 import org.travlyn.infrastructure.*
@@ -19,7 +19,7 @@ import org.travlyn.local.Application
 
 class StopApi(
     basePath: String = "https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
-    application: Application
+    application: Application? = null
 ) :
     ApiClient(basePath, application) {
 
@@ -30,8 +30,8 @@ class StopApi(
      * @param rating Rating to be created
      * @return void
      */
-    suspend fun rateStop(stopId: Long, rating: Rating): Unit {
-        val localVariableQuery: MultiValueMap = mapOf("rating" to listOf("$rating"))
+    suspend fun rateStop(stopId: Int, rating: Rating) {
+        val localVariableQuery: MultiValueMap = rating.toMap().toQueryParameters()
         val localVariableConfig = RequestConfig(
             RequestMethod.POST,
             "/stop/{stopId}".replace("{" + "stopId" + "}", "$stopId"), query = localVariableQuery
@@ -47,9 +47,11 @@ class StopApi(
             ResponseType.ClientError -> throw ClientException(
                 (response as ClientError<*>).body as? String ?: "Client error"
             )
-            ResponseType.ServerError -> throw ServerException(
-                (response as ServerError<*>).message ?: "Server error"
-            )
+            ResponseType.ServerError -> {
+                throw ServerException(
+                    (response as ServerError<*>).message ?: "Server error"
+                )
+            }
         }
     }
 
