@@ -76,15 +76,15 @@ Durch die einfachere Handhabung der \textit{DBpedia} API wurde für den weiteren
 
 \section{Kartendaten} \label{sec:osmdroid}
 
-Neben den \acs{POI}s werden zur Aufbereitung der Informationen weitere Daten benötigt. Allen voran sind Kartendaten essenziell, um dem Nutzer Orientierung und eine Übersicht über die Lage der ausgewählten \acs{POI}s zu geben. Der \textit{Travlyn} Client soll auf Mobilgeräten laufen, im besonderen auf Android Geräten, wie in \autoref{sec:anforderungen} beschrieben. Aus diesem Grund muss ein Kartenformat gewählt werden, welches auf entsprechenden Geräten angezeigt werden und genutzt werden kann.
+Neben den \acs{POI}s werden zur Aufbereitung der Informationen weitere Daten benötigt. Allen voran sind Kartendaten essenziell, um dem Nutzer Orientierung und eine Übersicht über die Lage der ausgewählten \acs{POI}s zu geben. Der \textit{Travlyn} Client soll auf Mobilgeräten laufen, im Besonderen auf Android Geräten, wie in \autoref{sec:anforderungen} beschrieben. Aus diesem Grund muss ein Kartenformat gewählt werden, welches auf entsprechenden Geräten angezeigt werden und genutzt werden kann.
 
 \vspace{0.25cm}
 
-Auch bei diesem Thema stehen sich grundlegend zwei große Anbieter gegenüber: Google \cite{Google.01.02.2020} und OpenStreetMap \cite{OpenStreetMap.}. Aufgrund der ausführlichen Beschreibung im vorangegangenen Kapitel soll an dieser Stelle auf eine weitere Ausführung verzichtet werden. Auch bei dieser Entscheidung kann die Wahl nur auf OpenStreetMap fallen, da dies eine Crowd Sourced Datenbasis, welche größtenteils frei von Lizenzfragen in den meisten Umfeldern genutzt werden kann. Abgesehen vom Kostenfaktor ist dies der größte Vorteil gegenüber Services von Google, die allerdings meist im Funktionsumfang und der gebotenen Qualität überlegen sind.
+Auch bei diesem Thema stehen sich grundlegend zwei große Anbieter gegenüber: Google \cite{Google.01.02.2020} und OpenStreetMap \cite{OpenStreetMap.}. Aufgrund der ausführlichen Beschreibung im vorangegangenen Kapitel soll an dieser Stelle auf eine weitere Ausführung verzichtet werden. Auch bei dieser Entscheidung kann die Wahl nur auf OpenStreetMap fallen, da dies eine Crowd Sourced Datenbasis ist, welche größtenteils frei von Lizenzfragen in den meisten Umfeldern genutzt werden kann. Abgesehen vom Kostenfaktor ist dies der größte Vorteil gegenüber Services von Google, die allerdings meist im Funktionsumfang und der gebotenen Qualität überlegen sind.
 
 \vspace{0.25cm}
 
-Somit standen einige Android Dienste zur Auswahl, welche auf OpenStreetMap Karten operieren. Die Wahl fiel schlussendlich auf \textit{osmdroid}\cite{osmdroid.3162020}. Die Bibliothek \textit{osmdroid} kann als alternative zum Android MapView, welcher auf Google Karten operiert, genutzt werden. Sie bietet diverse Features wie offline Karten, Icons und selbst designbare Overlays. Besonders die Möglichkeit Karten auch offline anzeigen zu können bietet für die \textit{Travlyn} einen Vorteil, der ausgenutzt werden kann, wenn die Netzqualität unterwegs eher mäßig ist.
+Somit standen einige Android Dienste zur Auswahl, welche auf OpenStreetMap Karten operieren. Die Wahl fiel schlussendlich auf \textit{osmdroid} \cite{osmdroid.3162020}. Die Bibliothek \textit{osmdroid} kann als alternative zum Android MapView, welcher auf Google Karten operiert, genutzt werden. Sie bietet diverse Features wie das Herunterladen von Karten, Icons und anpassbare Overlays. Besonders die Möglichkeit Karten auch offline anzeigen zu können bietet für die \textit{Travlyn} Applikation einen Vorteil, der ausgenutzt werden kann, wenn die Netzqualität unterwegs nicht ausreicht, um Kartendaten in angemessener Zeit herunterzuladen.
 
 \vspace{0.25cm}
 
