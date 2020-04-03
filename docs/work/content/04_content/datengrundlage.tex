@@ -1,20 +1,21 @@
 \chapter{Datengrundlage}
 (Joshua)
 
-Die Datengrundlage ist für einen Reiseführer sehr wichtig, da der gesamte Sinn eines Reiseführers darauf basiert, Informationen aufzubereiten und an den Leser/Nutzer weiter zu geben. Aus diesem Grund wurden für diese Arbeit mehrere Datenquellen zu unterschiedlichen Themen herausgesucht und verglichen. Im Folgenden sollen diese Alternativen und die angestellten Überlegungen sowie die endgültige Entscheidung, welche Daten für \textit{travlyn} verwendet werden sollen, aufgezeigt.
+Die Datengrundlage ist für einen Reiseführer sehr wichtig, da der gesamte Sinn eines Reiseführers darauf basiert, Informationen aufzubereiten und an den Leser/Nutzer weiter zu geben. Aus diesem Grund wurden für diese Arbeit mehrere Datenquellen zu unterschiedlichen Themen herausgesucht und verglichen. Im Folgenden sollen diese Alternativen und die angestellten Überlegungen sowie die endgültige Entscheidung, welche Daten für \textit{Travlyn} verwendet werden sollen, aufgezeigt.
 
 \section{Points of Interest}
 Travlyn soll laut Spezifikation Trips erstellen können, welche eine Abfolge von interessanten und sehenswerten Punkten in einer Stadt ist. Diese \ac{POI} sollen über ein \ac{API} in die App integriert werden. Folgende Anforderungen sind an die Informationen und die API gestellt:
 
 \begin{itemize}
-	\item Die abgefragten Daten sollten möglichst für einen kommerziellen Nutzen zugelassen sein, damit während der Entwicklung keine schwierigen Lizenzfragen auftreten können und ggf. höhere Datenvolumen durch Nachfragen erreicht werden können.
+	\item Es soll eine möglichst vollständige \acs{API} gewählt werden, um zu viele Abhängigkeiten zu verhindern. Allerdings wird dies für den Informationsbedarf von \textit{Travlyn} kaum möglich sein, sodass wahrscheinlich eine geschickte Kombination gewählt werden muss, welche \textit{Travlyn} einzigartig macht.
+	\item Die abgefragten Daten sollten für einen kommerziellen Nutzen zugelassen sein, damit während der Entwicklung keine schwierigen Lizenzfragen auftreten können und ggf. höhere Datenvolumen durch Nachfragen erreicht werden können. Dies ist das wichtigste Entscheidungskriterium.
 	\item Da diese Arbeit ein Studienprojekt ist, für welches sehr begrenzte Ressourcen zur Verfügung stehen sollte die API kostenfrei benutzbar sein.  
-	\item Die API sollte Daten für möglichst viele Städte/Orte zur Verfügung stellen, damit \textit{travlyn} möglichst überall eingesetzt werden kann.
+	\item Die API sollte Daten für möglichst viele Städte/Orte zur Verfügung stellen, damit \textit{Travlyn} möglichst überall eingesetzt werden kann.
 	\item Zu den einzelnen POIs sollten neben dem Namen und der Position weitere Daten wie Beschreibungen, Öffnungszeiten und ggf. Bilder bereitgestellt werden.
 \end{itemize}
 
 \subsection{Google Places API}
-Google ist einer der größten Anbieter von Ortsbasierten Services/Diensten und stellt eine API für POIs zu Verfügung \cite{Google.01.02.2020}. Diese API hat sehr weit gefächerte Funktionen, die von einer einfachen Suche über ausführliche Details zu interessanten Orten bis hin zu \enquote{user check-in} an einzeln Orten reichen. Diese große Funktionalität wäre für \textit{travlyn} sehr wertvoll. Allerdings sind die Google APIs nicht frei zugänglich und die Anzahl der Requests ist u.U. stark eingeschränkt \cite{Singhal.2012}. Außerdem ist die Nutzung der erhaltenen Daten nur in Verbindung mit anderen von Google bereitgestellten Services erlaubt \cite{Google.02.12.2019}, somit wäre die ganze \textit{travlyn} Applikation an Google gebunden.  
+Google ist einer der größten Anbieter von ortsbasierten Services/Diensten und stellt eine API für POIs zu Verfügung \cite{Google.01.02.2020}. Diese API hat sehr weit gefächerte Funktionen, die von einer einfachen Suche über ausführliche Details zu interessanten Orten bis hin zu \enquote{user check-in} an einzeln Orten reichen. Diese große Funktionalität wäre für \textit{Travlyn} sehr wertvoll. Allerdings sind die Google APIs nicht frei zugänglich und die Anzahl der Requests ist u.U. stark eingeschränkt \cite{Singhal.2012}. Außerdem ist die Nutzung der erhaltenen Daten nur in Verbindung mit anderen von Google bereitgestellten Services erlaubt \cite{Google.02.12.2019}, somit wäre die ganze \textit{Travlyn} Applikation an Google gebunden.  
 
 \subsection{Openroute service}
 Openroute service \cite{TheHeidelbergInstituteforGeoinformationTechnology.} wird vom Heidelberger Institut für Geoinformationstechnik angeboten. Es handelt sich um eine Crowd Sourced API, d.h. sie wird durch Benutzer über OpenStreetMap (OSM) \cite{OpenStreetMap.} gespeist und ist damit frei zugänglich. Durch die Nutzung von OSM ergibt sich der weitere Vorteil, dass die API für Orte weltweit nutzbar ist. Leider sind die gelieferten Informationen nicht sehr umfangreich und beinhalten häufig keine genauere Beschreibung und keine Bewertung o.Ä.. Weiterhin sind Crowd Sourced Informationen meist nicht offiziell verifiziert und könnten u.U. falsch sein. Die Beschränkungen für diese API sind relativ gering (500 POIs requests pro Tag), allerdings können diese auf Nachfrage erhöht werden (z.B. für Bildungszwecke).
@@ -27,7 +28,32 @@ Openroute service \cite{TheHeidelbergInstituteforGeoinformationTechnology.} wird
 Die Firma Foursquare bietet ebenfalls eine API an \cite{Foursquare.}, über die Informationen zu interessanten Orten gelesen werden können. Die API ist weltweit einsetzbar und liefert sehr viele Informationen zu einzelnen Orten, wie Ratings, kurze Beschreibungen oder Adressen von denen Bilder in der gewünschten Auflösung abgefragt werden können. Die Anzahl der möglichen Requests kann durch die Registrierung einer Kreditkarte (trotz der kostenlosen Nutzung) auf ca. 100.000 pro Tag gesteigert werden. Allerdings können die kostenfreien Varianten dieser API nicht für kommerzielle Zwecke genutzt werden und die abgefragten Daten dürfen nicht länger als 24 Stunden persistiert werden. 
 
 \subsection{Evaluation der Alternativen}
-Für das Projekt wurde aus den obigen Alternativen gewählt. Die endgültige Entscheidung fiel auf den OpenRoute service, da es für unser relativ kurzes Projekt ein sehr großes Risiko darstellt, dass langwierige Nachforschungen zu Lizenzfragen und erlaubten Einsatzmöglichkeiten angestellt müssen. Openroute service ist selbst für kommerziellen Nutzen freigegeben und aus rechtlicher Perspektive damit sehr einfach zu nutzen. Im Gegensatz dazu stellen sowohl Google als auch Foursquare starke Einschränkungen auf, die ein nicht abzusehendes Risiko darstellen, z.B. sind bestimmte Funktionen unter diesen Einschränkungen umsetzbar. Trotz diesem entscheidenden Vorteil muss der Nachteil in Kauf genommen werden, dass nur mäßig ausführliche Informationen gelesen werden können. Im weiteren Verlauf dieser Arbeit werden weitere zusätzliche Datenquellen aufgezeigt, um diesen Nachteil möglichst gut aufzufangen.
+Für das Projekt wurde aus den obigen Alternativen gewählt. Zu diesem Zweck wurde die in \autoref{table:Entscheidungsmatrix} dargestellte Entscheidungsmatrix aufgestellt, welche die Eigenschaften der einzelnen \acs{API}s vergleicht und die Gewichtung der Eigenschaften darstellt.
+
+\vspace{0.25cm}
+
+Anhand der Entscheidungsmatrix fiel die Entscheidung auf den OpenRoute service, da die beiden Eigenschaften, welche am höchsten Gewichtet sind, nämlich Kommerzieller Nutzen und Lizenzbedingungen von dieser \acs{API} am besten erfüllt werden: Für diese beiden Kriterien steht Google als sehr teuer Dienst dar,welcher zwar für kommerziellen Nutzen zugelassen ist, aber in einem Studienprojekt praktisch nicht bezahlbar ist. Außerdem sind die Lizenzbedingungen so einschränkend, dass dies ein viel zu hohes Risiko birgt. Foursquare ist im Bereich Lizenzfragen zwar besser geeignet, allerdings ist auch dieser Dienst nur bei Zahlung eines hohen Betrags und Nutzung des Enterprise Models für kommerziellen Nutzen zugelassen. So sind diese beiden Services bereits ausgeschieden und es bleibt nur noch der OpenRoute service, welcher sowohl für kommerziellen Nutzen zugelassen ist und gleichzeitig kostenfrei bleibt. Leider muss dafür ein Nachteil im Bereich \enquote{Informationsfülle} hingenommen werde, da die abgefragten Informationen bei weitem nicht so ausführlich sind wie bei den anderen beiden Diensten. 
+
+\vspace{0.25cm}
+
+Wie aber in den Anforderungen für die Datenquelle bereits geschildert ist es nötig eine geschickte Kombination von Datenquellen zu wählen. Im Folgenden werden weitere Datenquellen vorgestellt mit welchen der durch diese Entscheidung entstandene Nachteil ausgeglichen werden kann. 
+
+\begin{table}[ht!]
+	\centering
+	\resizebox{\textwidth}{!}{
+	\begin{tabular}{c|c|c|c|}
+		\cline{2-4}
+		& \textbf{Google Places API}      & \textbf{Foursquare} & \textbf{Openroute service}                   \\ \hline
+		\multicolumn{1}{|l|}{\makecell{\textbf{Kosten} \\ Gewichtung: Wichtig}} & Sehr teuer, siehe \cite{Google.01.02.2020} & \makecell{kostenfrei für personal use, \\ für Abo incl. kommerzieller Nutzung \\ min \$599}            & kostenfrei                \\ \hline
+		\multicolumn{1}{|l|}{\makecell{\textbf{Kommerzieller Nutzen erlaubt?} \\ Gewichtung: KO-Kriterium}} & Ja & \makecell{Nein,\\ im kostenfreien Account}            & Ja                \\ \hline
+		\multicolumn{1}{|l|}{\makecell{\textbf{Informationsfülle}\\ Gewichtung: Mittelmäßig wichtig}} & Sehr hoch          & Hoch           & Mäßig \\ \hline
+		\multicolumn{1}{|l|}{\makecell{\textbf{Crowdsourcing} \\ Gewichtung: Weniger wichtig}} & Nein          & Nein            & Ja \\ \hline
+		\multicolumn{1}{|l|}{\makecell{\textbf{Lizenzbedingungen}\\ Gewichtung: Essenziell wichtig}} & Sehr restriktiv, siehe \cite{Google.02.12.2019}         & Nennung der Datenherkunft ist Pflicht           & Praktisch keine \\ \hline
+	\end{tabular}
+	}
+	\caption{Gegenüberstellung der vorliegenden Alternativen zur Abfrage der \acs{POI}s}
+	\label{table:Entscheidungsmatrix}
+\end{table}
 
 \section{Weiterführende Informationen zu POIs und Städten}
 Um die eingeschränkte API Openroute service auszugleichen und dem Nutzer weitere Informationen zu seinem Reiseziel und zu besuchenden Orten zu bieten müssen weitere APIs angefragt werden.
@@ -42,7 +68,8 @@ Für den Zugriff auf Wikipedia gibt es unterschiedliche Möglichkeiten, im Folge
 
 \begin{itemize}
 	\item \textbf{MediaWiki}: Hinter Wikipedia und vielen anderen Wiki-Seiten steht die selbe Software: MediaWiki \cite{MediaWiki.24.01.2020}. Diese Software bietet eine sogenannte \textit{MediaWiki action API}, die viele Informationen zu allen Artikeln eines Wiki zurückliefern kann. Leider sind die Daten nicht über einen zentralen Aufruf abrufbar sondern es werden mehrere Abfragen in folge benötigt, um z.B. die URL eines der Bilder des Artikels zu ermitteln.
-	\item \textbf{DBpedia}: Die zweite API, die mithilfe eines Protypes getestet wurde ist \textit{DBpedia} \cite{DBpedia.02.02.2020}. Auch diese API folgt dem crowd sourcing Prinzip und ist somit frei zugänglich. Zusätzlich können dort alle Informationen über einen zentralen Zugriff abgerufen werden, indem die benötigten Daten über URL-Parameter spezifiziert werden können. Außerdem bietet diese API die Daten in aufbereiteter Form an: Links können direkt aufgelöst werden, es wird das selbe Thumbnail ausgeliefert welches im original Artikel ausgewählt ist und es kann auf alle Daten der kompakten Infobox in der oberen rechten Ecke strukturiert zugegriffen werden.
+	
+	\item \textbf{DBpedia}: Die zweite API, die mithilfe eines Protypes getestet wurde ist \textit{DBpedia} \cite{DBpedia.02.02.2020}. DBpedia stellt die strukturierten Informationen aus Wikipedia in strukturierter Form zur Verfügung. Auch diese API folgt dem Crowd Souring Prinzip und ist frei zugänglich. Zusätzlich können dort alle Informationen über einen zentralen Zugriff abgerufen werden, indem die benötigten Daten über URL-Parameter spezifiziert werden können. Außerdem bietet diese API die Daten in aufbereiteter Form an: Links können direkt aufgelöst werden, es wird das selbe Thumbnail ausgeliefert welches im original Artikel ausgewählt ist und es kann auf alle Daten der kompakten Infobox in der oberen rechten Ecke strukturiert zugegriffen werden.
 \end{itemize}
 
 Durch die einfachere Handhabung der \textit{DBpedia} API wurde für den weiteren Verlauf entschieden auf diese API zu setzen und alle Informationen zu POIs und Städten von diesem Zugang abzufragen. Damit können erweiterte Infos geladen werden, die dem Nutzer während seines Trips kontinuierlich angezeigt werden können, um die Erfahrung weiter zu verbessern.
