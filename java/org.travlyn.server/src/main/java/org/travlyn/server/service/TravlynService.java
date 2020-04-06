@@ -295,6 +295,12 @@ public class TravlynService {
 
         session.clear();
         TripEntity tripEntity = trip.toEntity();
+
+        if (tripEntity.getCity() == null) {
+            StopEntity stopEntity = session.get(StopEntity.class, tripEntity.getStops().iterator().next().getStop().getId());
+            tripEntity.setCity(stopEntity.getCity());
+        }
+
         session.update(tripEntity);
     }
 
