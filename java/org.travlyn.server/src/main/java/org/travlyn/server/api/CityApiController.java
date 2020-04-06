@@ -19,7 +19,7 @@ import java.util.List;
 
 @Controller
 public class CityApiController implements CityApi {
-    private static final Logger log = LoggerFactory.getLogger(StopApiController.class);
+    private static final Logger log = LoggerFactory.getLogger(CityApiController.class);
     private final ObjectMapper objectMapper;
     private final HttpServletRequest request;
 

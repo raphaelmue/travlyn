@@ -1,5 +1,6 @@
 package org.travlyn.ui.home
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -37,6 +38,7 @@ import java.util.*
 class StopsActivity : AppCompatActivity() {
 
     private lateinit var stopListSelectionToolbar: SelectionToolbar<Stop>
+    private val CREATE_TRIP_ACTIVITY_CODE: Int = 1
 
     private var city: City? = null
 
@@ -89,6 +91,17 @@ class StopsActivity : AppCompatActivity() {
         })
 
         return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            CREATE_TRIP_ACTIVITY_CODE -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    val trip: Trip = Gson().fromJson(data?.getStringExtra("trip"), Trip::class.java)
+                }
+            }
+        }
     }
 
     private fun performFiltering(query: String) {
@@ -155,7 +168,7 @@ class StopsActivity : AppCompatActivity() {
                                     "stopIds" to stops.map { stop -> stop.id }.toTypedArray()
                                 )
                             )
-                            startActivity(intent)
+                            startActivityForResult(intent, CREATE_TRIP_ACTIVITY_CODE)
 
                         }
                         else -> {

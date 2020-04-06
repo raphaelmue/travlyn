@@ -41,13 +41,18 @@ class TripInformationActivity : AppCompatActivity() {
         if (bundle != null && bundle.containsKey("trip")) {
             val trip: Trip = Gson().fromJson(bundle.getString("trip"), Trip::class.java)
 
-            supportActionBar?.title = trip.name + " - "  + getString(R.string.trip)
+            supportActionBar?.title = trip.name + " - " + getString(R.string.trip)
 
             tripInformationNameTextView.text = trip.name
             if (!trip.private!!) {
                 tripInformationNameTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
             }
-            tripInformationCityTextView.text = trip.city!!.name
+            if (trip.city != null) {
+                tripInformationCityTextView.text = trip.city.name
+            } else {
+                tripInformationCityTextView.visibility = View.GONE
+            }
+
             if (trip.user?.id != LocalStorage(this).readObject<User>("user")?.id) {
                 tripInformationCityTextView.append(" | " + trip.user!!.name)
             }

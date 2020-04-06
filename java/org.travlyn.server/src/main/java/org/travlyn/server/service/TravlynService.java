@@ -149,10 +149,14 @@ public class TravlynService {
 
         //get corresponding city
         CityEntity city;
-        city = session.createQuery("from CityEntity where id = :id", CityEntity.class)
-                .setParameter("id", toIntExact(cityId))
-                .getSingleResult();
-        trip.setCity(city.toDataTransferObject());
+        try {
+            city = session.createQuery("from CityEntity where id = :id", CityEntity.class)
+                    .setParameter("id", toIntExact(cityId))
+                    .getSingleResult();
+            trip.setCity(city.toDataTransferObject());
+        } catch (NoResultException e) {
+            trip.setCity(null);
+        }
 
         //set trip metadata and save trip
         trip.setPrivate(privateFlag);
@@ -274,6 +278,27 @@ public class TravlynService {
     }
 
     @Transactional
+    public void updateTrip(Trip trip) throws NoResultException {
+        Session session = sessionFactory.getCurrentSession();
+        //check if trip exists
+        TripEntity oldTrip = session.createQuery("from TripEntity where id = :id", TripEntity.class)
+                .setParameter("id", trip.getId())
+                .getSingleResult();
+
+        for (TripStopEntity stop : oldTrip.getStops()) {
+            stop.setPredecessor(null);
+            session.update(stop);
+        }
+
+        session.createQuery("delete from TripStopEntity where tripStopId.tripId = :tripId ")
+                .setParameter("tripId", trip.getId()).executeUpdate();
+
+        session.clear();
+        TripEntity tripEntity = trip.toEntity();
+        session.update(tripEntity);
+    }
+
+    @Transactional
     public List<Trip> getTripsPerUser(Long userId) throws NoResultException {
         Session session = sessionFactory.getCurrentSession();
         //check if user exists --> throws exception if not
@@ -290,19 +315,5 @@ public class TravlynService {
             trips.add(entity.toDataTransferObject());
         }
         return trips;
-    }
-
-    @Transactional
-    public void updateTrip(Trip trip) throws NoResultException {
-        Session session = sessionFactory.getCurrentSession();
-        //check if trip exists
-        TripEntity test = session.createQuery( "from TripEntity where id = :id", TripEntity.class)
-                .setParameter("id", trip.getId())
-                .getSingleResult();
-
-        TripEntity tripEntity = trip.toEntity();
-        tripEntity.setId(-1);
-        session.delete(tripEntity);
-        session.merge(tripEntity);
     }
 }

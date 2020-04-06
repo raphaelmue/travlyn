@@ -1,5 +1,6 @@
 package org.travlyn.ui.trips
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -24,6 +25,8 @@ import org.travlyn.ui.home.TripCardViewAdapter
 
 class TripsFragment : Fragment() {
 
+    private val CREATE_TRIP_ACTIVITY_CODE: Int = 1
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,11 +40,24 @@ class TripsFragment : Fragment() {
 
         createTripFab.setOnClickListener {
             val intent = Intent(context, CreateTripActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent, CREATE_TRIP_ACTIVITY_CODE)
         }
 
         CoroutineScope(Dispatchers.IO).launch {
             initializeTripListView(fetchUsersTrips())
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            CREATE_TRIP_ACTIVITY_CODE -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    val trip: Trip = Gson().fromJson(data?.getStringExtra("trip"), Trip::class.java)
+                    (myTripsListRecyclerView.adapter as TripListAdapter).addItem(trip)
+                    (myTripsListRecyclerView.adapter as TripListAdapter).notifyDataSetChanged()
+                }
+            }
         }
     }
 
@@ -74,6 +90,12 @@ class TripsFragment : Fragment() {
             val view: View =
                 LayoutInflater.from(context).inflate(R.layout.trip_list_view, parent, false)
             return ViewHolder(view)
+        }
+
+        public fun addItem(trip: Trip) {
+            val updateTrips: MutableList<Trip> = trips.toMutableList()
+            updateTrips.add(trip)
+            trips = updateTrips.toList()
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {

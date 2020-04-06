@@ -1,11 +1,14 @@
 package org.travlyn.ui.trips
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_trip.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,6 +18,7 @@ import org.travlyn.R
 import org.travlyn.api.TripApi
 import org.travlyn.api.model.Trip
 import org.travlyn.local.LocalStorage
+
 
 class CreateTripActivity : AppCompatActivity() {
 
@@ -71,7 +75,7 @@ class CreateTripActivity : AppCompatActivity() {
         }
 
         CoroutineScope(Dispatchers.IO).launch {
-            TripApi().generateTrip(
+            val tripResult = TripApi().generateTrip(
                 trip.user?.id!!,
                 cityId,
                 trip.name!!,
@@ -84,8 +88,9 @@ class CreateTripActivity : AppCompatActivity() {
                     getString(R.string.successfully_created_trip),
                     Toast.LENGTH_LONG
                 ).show()
+                setResult(Activity.RESULT_OK, Intent().putExtra("trip", Gson().toJson(tripResult)))
+                finish()
             }
         }
-        finish()
     }
 }

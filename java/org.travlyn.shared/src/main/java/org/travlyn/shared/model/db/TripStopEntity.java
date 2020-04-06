@@ -19,8 +19,8 @@ public class TripStopEntity implements DataEntity {
     @Embedded
     @NotNull
     @AttributeOverrides(value = {
-            @AttributeOverride(name = "tripId", column = @Column(name = "trip_id", nullable = true)),
-            @AttributeOverride(name = "stopId", column = @Column(name = "stop_id", nullable = true))
+            @AttributeOverride(name = "tripId", column = @Column(name = "trip_id", nullable = false)),
+            @AttributeOverride(name = "stopId", column = @Column(name = "stop_id", nullable = false))
     })
     private TripStopId tripStopId = new TripStopId();
 
@@ -32,7 +32,7 @@ public class TripStopEntity implements DataEntity {
     @MapsId(value = "stopId")
     private StopEntity stop;
 
-    @OneToOne(targetEntity = TripStopEntity.class)
+    @OneToOne(targetEntity = TripStopEntity.class, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "predecessor", referencedColumnName = "id")
     private TripStopEntity predecessor;
 
@@ -68,12 +68,12 @@ public class TripStopEntity implements DataEntity {
         this.stop = stop;
     }
 
-    public TripStopEntity getPredecessor() {
-        return predecessor;
-    }
-
     public void setPredecessor(TripStopEntity predecessor) {
         this.predecessor = predecessor;
+    }
+
+    public TripStopEntity getPredecessor() {
+        return predecessor;
     }
 
     @Override

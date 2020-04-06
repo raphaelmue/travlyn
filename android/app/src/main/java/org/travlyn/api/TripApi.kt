@@ -69,8 +69,8 @@ class TripApi(
                 "userId" to listOf("$userId"),
                 "cityId" to listOf("$cityId"),
                 "tripName" to listOf(tripName),
-                "privateFlat" to listOf("$isPrivate"),
-                "privateFlat" to listOf("$stopIds")
+                "privateFlag" to listOf("$isPrivate"),
+                "stopIds" to stopIds.map { id -> id.toString() }.toList()
             )
         val localVariableConfig = RequestConfig(
             RequestMethod.PUT,

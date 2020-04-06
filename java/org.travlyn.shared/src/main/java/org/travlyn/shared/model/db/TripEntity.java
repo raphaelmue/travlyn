@@ -109,7 +109,9 @@ public class TripEntity implements DataEntity {
     public Trip toDataTransferObject() {
         Trip trip = new Trip();
         trip.setId(this.id);
-        trip.setCity(this.city.toDataTransferObject());
+        if (this.city != null) {
+            trip.setCity(this.city.toDataTransferObject());
+        }
         trip.setPrivate(this.isPrivate);
         trip.setUser(this.user.toDataTransferObject());
         trip.name(this.name);

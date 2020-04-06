@@ -6,6 +6,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import java.util.List;
+
 @Validated
 public class StopIdWrapper {
     @JsonProperty("stopIds")

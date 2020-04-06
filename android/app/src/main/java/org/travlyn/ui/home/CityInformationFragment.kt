@@ -194,7 +194,7 @@ class CityInformationFragment : SuperBottomSheetFragment() {
 }
 
 open class TripCardViewAdapter(
-    protected val trips: List<Trip>,
+    protected var trips: List<Trip>,
     private val context: Context
 ) : RecyclerView.Adapter<TripCardViewAdapter.ViewHolder>() {
 
