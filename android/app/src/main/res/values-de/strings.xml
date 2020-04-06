@@ -46,4 +46,5 @@
     <string name="public_trip">Öffentlicher Trip</string>
     <string name="save">Speichern</string>
     <string name="successfully_created_trip">Trip erfolgreich erstellt!</string>
+    <string name="trip">Trip</string>
 </resources>

@@ -24,6 +24,8 @@ import org.travlyn.R
 import org.travlyn.api.CityApi
 import org.travlyn.api.model.Stop
 import org.travlyn.api.model.Trip
+import org.travlyn.api.model.User
+import org.travlyn.local.LocalStorage
 
 
 class TripInformationActivity : AppCompatActivity() {
@@ -39,11 +41,16 @@ class TripInformationActivity : AppCompatActivity() {
         if (bundle != null && bundle.containsKey("trip")) {
             val trip: Trip = Gson().fromJson(bundle.getString("trip"), Trip::class.java)
 
+            supportActionBar?.title = trip.name + " - "  + getString(R.string.trip)
+
             tripInformationNameTextView.text = trip.name
             if (!trip.private!!) {
                 tripInformationNameTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
             }
             tripInformationCityTextView.text = trip.city!!.name
+            if (trip.user?.id != LocalStorage(this).readObject<User>("user")?.id) {
+                tripInformationCityTextView.append(" | " + trip.user!!.name)
+            }
             if (trip.averageRating == null || trip.averageRating <= 0) {
                 tripCardRatingTextView.text = getString(R.string.no_value)
             } else {

@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
@@ -27,6 +28,7 @@ import org.travlyn.api.CityApi
 import org.travlyn.api.model.City
 import org.travlyn.api.model.Stop
 import org.travlyn.api.model.Trip
+import org.travlyn.ui.trips.TripInformationActivity
 
 
 class CityInformationFragment : SuperBottomSheetFragment() {
@@ -204,11 +206,17 @@ open class TripCardViewAdapter(
     }
 
     override fun getItemCount(): Int {
-        return trips.size;
+        return trips.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val trip: Trip = trips[position]
+
+        holder.itemView.setOnClickListener {
+            val intent = Intent(context, TripInformationActivity::class.java)
+            intent.putExtras(bundleOf("trip" to Gson().toJson(trip)))
+            context.startActivity(intent)
+        }
 
         holder.tripCardNameTextView.text = trip.name
         holder.tripCardNumberOfStopsTextView.text = trip.stops?.size.toString()
