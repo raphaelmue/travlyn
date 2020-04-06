@@ -242,19 +242,29 @@ public class TravlynService {
     }
 
     @Transactional
-    public boolean addRatingToStop(Long stopId, Rating rating) throws NoResultException {
+    public boolean addRatingToStop(int stopId, Rating rating) throws NoResultException {
         Session session = sessionFactory.getCurrentSession();
-        StopEntity entity = session.createQuery("from StopEntity where id = :id", StopEntity.class)
-                .setParameter("id", Math.toIntExact(stopId))
+        StopEntity stopEntity = session.createQuery("from StopEntity where id = :stopId", StopEntity.class)
+                .setParameter("stopId", stopId)
                 .getSingleResult();
 
-        Set<StopRatingEntity> ratings = entity.getRatings();
-        StopRatingEntity stopRating = (StopRatingEntity) rating.toEntity();
-        stopRating.setStop(entity);
-        ratings.add(stopRating);
-        entity.setRatings(ratings);
+        Set<StopRatingEntity> ratings = stopEntity.getRatings();
+        StopRatingEntity stopRatingEntity = rating.toStopEntity(stopEntity);
+        session.save(stopRatingEntity);
+        if (stopEntity.getRatings().isEmpty()) {
+            // new rating is equal to average rating when the list of ratings is empty
+            stopEntity.setAverageRating(stopRatingEntity.getRating());
+        } else {
+            // calculate new average rating including the new rating
+            int numberOfRatings = stopEntity.getRatings().size();
+            stopEntity.setAverageRating((numberOfRatings * stopEntity.getAverageRating() + stopRatingEntity.getRating()) /
+                    (numberOfRatings + 1));
+        }
 
-        session.save(entity);
+        ratings.add(stopRatingEntity);
+        stopEntity.setRatings(ratings);
+
+        session.merge(stopEntity);
         return true;
     }
 

@@ -3,7 +3,7 @@ package org.travlyn.shared.model.db;
 import javax.persistence.*;
 
 @MappedSuperclass
-public class RatingEntity implements DataEntity {
+public abstract class RatingEntity implements DataEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

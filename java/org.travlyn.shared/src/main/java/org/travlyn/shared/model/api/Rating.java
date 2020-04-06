@@ -3,7 +3,7 @@ package org.travlyn.shared.model.api;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
-import org.travlyn.shared.model.db.RatingEntity;
+import org.travlyn.shared.model.db.*;
 
 import javax.validation.Valid;
 import java.util.Objects;
@@ -104,8 +104,23 @@ public class Rating extends AbstractDataTransferObject {
 
     @Override
     public RatingEntity toEntity() {
-        RatingEntity ratingEntity = new RatingEntity();
+        throw new UnsupportedOperationException("A RatingEntity can not be created as it is abstract.");
+    }
+
+    public StopRatingEntity toStopEntity(StopEntity stop) {
+        StopRatingEntity ratingEntity = new StopRatingEntity();
         ratingEntity.setId(this.id);
+        ratingEntity.setStop(stop);
+        ratingEntity.setUser(this.user.toEntity());
+        ratingEntity.setRating(this.rating);
+        ratingEntity.setDescription(this.description);
+        return ratingEntity;
+    }
+
+    public TripRatingEntity toTripEntity(TripEntity trip) {
+        TripRatingEntity ratingEntity = new TripRatingEntity();
+        ratingEntity.setId(this.id);
+        ratingEntity.setTrip(trip);
         ratingEntity.setUser(this.user.toEntity());
         ratingEntity.setRating(this.rating);
         ratingEntity.setDescription(this.description);

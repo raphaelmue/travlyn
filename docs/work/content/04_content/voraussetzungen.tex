@@ -125,6 +125,7 @@
 				Eine Session ermöglicht es eine \textit{Transaction} -- Abstraktion der Implementation von \acs{JTA} -- zu starten und zu beenden. Wie bereits in \autoref{frameworks.spring.transaktionsmanagement} beschrieben, lässt sich hierbei das Transaktionsmanagement sehr gut integrieren, sodass Spring das Starten und Beenden von Transaktionen handhabt. Dies führt zu einer Simplifizierung des Codes, der zum einen lesbarer und zum anderen einfacher wird. 
 				
 		\subsection{Docker} % Raphael
+		\label{frameworks.docker}
 			
 			Docker ist eine Open Source Virtualisierungssoftware, die der Isolierung von Anwendungen dient und von Docker Inc. bereitgestellt wird. Die Motivation hinter der Verwendung von Docker liegt im Deployment Prozess begründet: 
 			
@@ -140,6 +141,12 @@
 				\label{fig:dockerComparison}
 			\end{figure} 
 			
+			\subsubsection{Docker Stacks}
+			
+			Des Weiteren bietet Docker die Möglichkeit, mehrere Images zusammenzufassen und zu kombinieren. In sog. \textit{docker-compose} Dateien -- diese Dateien werden im \acs{YAML} Format gespeichert -- können mehrere Docker Images konfiguriert werden. Diese konfigurierten Docker Images erzeugen dann Instanzen -- also Container --, welche jeweils Zugriff aufeinander haben. So kann ein sog. Docker Stack -- bestehend aus mehreren Images -- als ganze Einheit gestartet werden und auch beendet werden. 
+			
+			Eine Anwendung eines solchen Stacks könnte beispielsweise die Kombination aus einem Backend-Image einer Anwendung und einem dazugehörigen Datenbank-Image sein. Dies bietet den Vorteil, dass die ganze Applikation inklusive Datenbank bzw. deren Konfiguration einfach ausgeliefert werden kann und dieser Stack keine weiteren Abhängigkeiten zu anderen Applikationen -- in diesem Falle eine Datenbank Applikation -- auf dem Server hat. Ein weiterer Vorteil dieser Technik ist, dass die Daten der Applikation auf der Datenbank von allen anderen Applikationen und Docker Containern auf dem Server abgekapselt sind. Dies trägt zum Schutz der Daten bei. In Kombination mit Hibernate ist dann sogar die Änderung der Datenbankimplementierung ein leichtes. 
+						
 			\subsubsection{DockerHub} % Raphael		
 				
 				Eine Plattform, die ebenfalls von Docker Inc. bereitgestellt wird, ist der sog. DockerHub \cite{DockerInc..3232020}. Dieser stellt eine Registry für Docker Images und Repositories dar und bietet dem Nutzer die Möglichkeit selbst erstellte Images hochzuladen und somit anderen Nutzern zur Verfügung zu stellen. 
@@ -193,7 +200,7 @@
 			 	\item \textit{deploy}: Das Projekt wird im zentralen Repository von Maven installiert, sodass es zum Herunterladen zur Verfügung steht. 
 			 \end{enumerate}
 			 
-		\subsection{Gradle}
+		\subsection{Gradle} \label{sec:gradle}
 			
 			Gradle ist ebenso, wie Maven, ein Build-Management-Tool. Statt XML wie bei Maven verwendet Gradle eine Groovy basierende domänenspezifische Sprache. Außerdem sind Gradle Skripte direkt ausführbarer Code und keine Projektbeschreibung oder -definition. Die von Gradle definierten Build Prozesse unterscheiden sich jedoch nur minimal von den von Maven verwendeten. 
 			
@@ -280,6 +287,7 @@
 			\autoref{fig:jenkinsPipeline} zeigt die für diese Arbeit erstellte Pipeline. Die Abbildung besteht aus drei Schritten: Zunächst werden Frontend und Backend kompiliert. So können Syntax- und Kompilierfehler erkannt werden. Im darauffolgenden Schritt werden die sich sowohl im Frontend als auch im Backend befindlichen Tests ausgeführt. Anschließend die Analyse der Code Qualität mittels SonarQube (siehe \autoref{qm.sonarqube}) durchgeführt. 
 		
 		\subsection{Continuous Delivery}
+		\label{qm.continuous_delivery}
 		
 			\ac{CD} bezeichnet die kontinuierliche und im Besonderen automatisierte Auslieferung einer Applikation. Ziel ist, dass, nachdem ein Build die Pipeline erfolgreich durchlaufen hat, der Build Server -- z.B. Jenkins -- Artefakte der Applikation speichert und zur Verfügung stellt. Diese Artefakte sind häufig das Kompilat der Applikation, die sich Kunden und Nutzer herunterladen können. Artefakte können aber ebenso gut Docker Images sein, mit deren Hilfe der Auslieferungsprozess simplifiziert wird. \cite{Humble.2011}
 		                                                                                                                                                                                                                                                                                                                                         
