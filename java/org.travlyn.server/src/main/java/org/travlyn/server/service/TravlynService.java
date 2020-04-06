@@ -78,10 +78,6 @@ public class TravlynService {
             CityEntity entity = session.createQuery("from CityEntity where name = :name", CityEntity.class)
                     .setParameter("name", city)
                     .getSingleResult();
-
-            //return cached city
-            //City city1 = entity.toDataTransferObject();
-            //city1.toEntity();
             return entity.toDataTransferObject();
         } catch (NoResultException noResult) {
             // city is not cached --> get from api
