@@ -16,6 +16,7 @@ import org.travlyn.util.security.Hash;
 import org.travlyn.util.security.RandomString;
 
 import javax.persistence.NoResultException;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -78,6 +79,13 @@ public class TravlynService {
             CityEntity entity = session.createQuery("from CityEntity where name = :name", CityEntity.class)
                     .setParameter("name", city)
                     .getSingleResult();
+            if (entity.isUnfetchedStops()){
+                entity.setStops(this.fetch100Stops(entity.getStops()));
+                City returnValue = this.removeUnfetchedStops(entity.toDataTransferObject());
+                entity.setUnfetchedStops(returnValue.isUnfetchedStops());
+                session.update(entity);
+                return returnValue;
+            }
             return entity.toDataTransferObject();
         } catch (NoResultException noResult) {
             // city is not cached --> get from api
@@ -87,9 +95,11 @@ public class TravlynService {
                 //get Stops for city
                 CityEntity entity;
                 entity = this.getStopsForCity(result);
+                City returnValue = this.removeUnfetchedStops(entity.toDataTransferObject());
+                entity.setUnfetchedStops(returnValue.isUnfetchedStops());
                 // valid city was found --> cache result
                 session.save(entity);
-                return entity.toDataTransferObject();
+                return returnValue;
             }
         }
         return null;
@@ -130,7 +140,7 @@ public class TravlynService {
         session.delete(user.getToken().toEntity());
     }
 
-    public CityEntity getStopsForCity(City city) {
+    private CityEntity getStopsForCity(City city) {
         CityEntity cityEntity = new CityEntity();
         cityEntity.setName(city.getName());
         cityEntity.setLatitude(city.getLatitude());
@@ -138,20 +148,40 @@ public class TravlynService {
         cityEntity.setImage(city.getImage());
         cityEntity.setDescription(city.getDescription());
         OpenRouteRequest request = new OpenRouteRequest(cityEntity.getLatitude(), cityEntity.getLongitude(), cityEntity);
-        Set<StopEntity> stopEntities = request.getResult();
-        for (Iterator<StopEntity> stopEntityIterator = stopEntities.iterator(); stopEntityIterator.hasNext(); ) {
+        Set<StopEntity> stopEntities = this.fetch100Stops(request.getResult());
+        cityEntity.setStops(stopEntities);
+        return cityEntity;
+    }
+
+    private City removeUnfetchedStops(City city) {
+        Set<Stop> stops = city.getStops();
+        boolean removed = stops.removeIf(stop -> stop.getDescription() == null && stop.getImage() == null);
+        city.setUnfetchedStops(removed);
+        return city;
+    }
+
+    @Transactional
+    protected Set<StopEntity> fetch100Stops(Set<StopEntity> entities){
+        Session session = sessionFactory.getCurrentSession();
+        int requestCount=1;
+        Iterator<StopEntity> stopEntityIterator = entities.iterator();
+        while(requestCount<100 && stopEntityIterator.hasNext()){
             StopEntity entity = stopEntityIterator.next();
+            if (entity.getImage() != null && entity.getDescription() != null){
+                continue;
+            }
             DBpediaStopRequest poiRequest = new DBpediaStopRequest(entity.getName());
             Stop stop = poiRequest.getResult();
             if (stop != null) {
                 entity.setImage(stop.getImage());
                 entity.setDescription(stop.getDescription());
             } else {
+                session.delete(entity);
                 stopEntityIterator.remove();
             }
+            requestCount ++;
         }
-        cityEntity.setStops(stopEntities);
-        return cityEntity;
+        return entities;
     }
 
     @Transactional

@@ -34,7 +34,7 @@ public class CityEntity implements DataEntity {
     @Column(name = "unfetched_stops")
     private boolean unfetchedStops;
 
-    @OneToMany(cascade = {CascadeType.ALL})
+    @OneToMany(orphanRemoval = true,cascade = {CascadeType.PERSIST})
     private Set<StopEntity> stops;
 
     @Override
