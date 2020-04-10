@@ -1,8 +1,13 @@
 package org.travlyn.server.externalapi.access;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.travlyn.server.service.TravlynService;
 import org.travlyn.server.util.Pair;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,6 +17,19 @@ import java.util.Set;
  * @param <K> Object to be parsed to
  */
 public abstract class DBpediaRequest<K> implements Request<K> {
+    private static final String API_KEY;
+    private static final Logger logger = LoggerFactory.getLogger(DBpediaRequest.class);
+    static {
+        String readLine="1234";
+        try (
+                BufferedReader fileReader = new BufferedReader(new InputStreamReader(
+                        DBpediaRequest.class.getClassLoader().getResourceAsStream("DBpediaKey.txt")))) {
+            readLine = fileReader.readLine();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+        API_KEY = readLine;
+    }
     private final String baseURL;
 
     DBpediaRequest(String baseURL) {
@@ -32,7 +50,7 @@ public abstract class DBpediaRequest<K> implements Request<K> {
         params.add(new Pair<>("oldVersion", "false"));
         params.add(new Pair<>("offset", "0"));
         params.add(new Pair<>("limit", "100"));
-        params.add(new Pair<>("key", "1234"));
+        params.add(new Pair<>("key", API_KEY));
         return params;
     }
 

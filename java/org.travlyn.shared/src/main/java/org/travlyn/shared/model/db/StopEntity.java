@@ -46,7 +46,7 @@ public class StopEntity implements DataEntity {
     @JoinColumn(name = "ratable")
     private Set<StopRatingEntity> ratings;
 
-    @OneToOne(targetEntity = CategoryEntity.class)
+    @OneToOne(targetEntity = CategoryEntity.class, cascade = CascadeType.ALL)
     private CategoryEntity category;
 
     @Override

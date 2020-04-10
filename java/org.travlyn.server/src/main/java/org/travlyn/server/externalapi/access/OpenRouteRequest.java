@@ -19,6 +19,7 @@ import java.util.Set;
 
 public class OpenRouteRequest implements Request<Set<StopEntity>> {
     private static final String BASE_URL = "https://api.openrouteservice.org/pois";
+    private static final HashSet<Integer> excludedCategories = new HashSet<>();
 
     private Gson gson = new Gson();
     private HashMap<Integer, CategoryEntity> categoryList = new HashMap<>();
@@ -28,6 +29,32 @@ public class OpenRouteRequest implements Request<Set<StopEntity>> {
     private CityEntity city;
 
     public OpenRouteRequest(double latitude, double longitude, CityEntity city) {
+        //set Categories that should be excluded (necessary due to filter limitations at ORS)
+        excludedCategories.add(136);
+        excludedCategories.add(237);
+        excludedCategories.add(238);
+        excludedCategories.add(231);
+        excludedCategories.add(234);
+        excludedCategories.add(261);
+        excludedCategories.add(262);
+        excludedCategories.add(267);
+        excludedCategories.add(271);
+        excludedCategories.add(280);
+        excludedCategories.add(282);
+        excludedCategories.add(283);
+        excludedCategories.add(288);
+        excludedCategories.add(290);
+        excludedCategories.add(293);
+        excludedCategories.add(297);
+        excludedCategories.add(298);
+        excludedCategories.add(302);
+        excludedCategories.add(303);
+        excludedCategories.add(307);
+        excludedCategories.add(623);
+        excludedCategories.add(624);
+        excludedCategories.add(626);
+
+
         this.latitude = latitude;
         this.longitude = longitude;
         this.city = city;
@@ -42,15 +69,16 @@ public class OpenRouteRequest implements Request<Set<StopEntity>> {
         for (int row = -1; row <= 1; row++) {
             for (int column = -1; column <= 1; column++) {
                 APIRequest request = new APIRequest(BASE_URL, new HashSet<>(), this.genPostBody(
-                        BigDecimal.valueOf(latitude + (row * 0.04)).setScale(2, RoundingMode.FLOOR).doubleValue(),
-                        BigDecimal.valueOf(longitude + (column * 0.04)).setScale(2, RoundingMode.FLOOR).doubleValue(),
-                        BigDecimal.valueOf(latitude + ((row + 1) * 0.04)).setScale(2, RoundingMode.FLOOR).doubleValue(),
-                        BigDecimal.valueOf(longitude + ((column + 1) * 0.04)).setScale(2, RoundingMode.FLOOR).doubleValue(),
-                        latitude + (row * 0.04),
-                        longitude + (column * 0.04)), header);
+                        BigDecimal.valueOf(latitude + (row * 0.02)).setScale(2, RoundingMode.FLOOR).doubleValue(),
+                        BigDecimal.valueOf(longitude + (column * 0.02)).setScale(2, RoundingMode.FLOOR).doubleValue(),
+                        BigDecimal.valueOf(latitude + ((row + 1) * 0.02)).setScale(2, RoundingMode.FLOOR).doubleValue(),
+                        BigDecimal.valueOf(longitude + ((column + 1) * 0.02)).setScale(2, RoundingMode.FLOOR).doubleValue(),
+                        latitude + (row * 0.02),
+                        longitude + (column * 0.02)), header);
                 String apiResult;
                 try {
                     apiResult = request.performAPICallPOST();
+                    System.out.println(apiResult);
                 } catch (IOException e) {
                     continue;
                 }
@@ -84,6 +112,9 @@ public class OpenRouteRequest implements Request<Set<StopEntity>> {
                     }
                 }
                 stop.setCategory(category);
+                if (excludedCategories.contains(category.getId())){
+                    continue;
+                }
                 stop.setName(name);
                 stopNames.add(name);
             } catch (NullPointerException nullPointer) {
@@ -101,6 +132,6 @@ public class OpenRouteRequest implements Request<Set<StopEntity>> {
     private String genPostBody(double lat1, double lon1, double lat2, double lon2, double middleLat, double middleLon) {
         return "{\"request\":\"pois\",\"geometry\":{\"bbox\":[[" + lon1 + "," + lat1 + "],[" + lon2 + "," + lat2 +
                 "]],\"geojson\":{\"type\":\"Point\",\"coordinates\":[" + middleLon + "," + middleLat +
-                "]},\"buffer\":200},\"filters\":{\"category_group_ids\":[620,130,220]}}";
+                "]},\"buffer\":2000},\"filters\":{\"category_group_ids\":[620,130,220,330,260]}}";
     }
 }
