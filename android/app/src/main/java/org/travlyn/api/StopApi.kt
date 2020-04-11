@@ -33,23 +33,9 @@ class StopApi(
             RequestMethod.POST,
             "/stop/{stopId}".replace("{" + "stopId" + "}", "$stopId"), query = localVariableQuery
         )
-        val response = request<Any?>(
+        request<Any?>(
             localVariableConfig
         )
-
-        return when (response.responseType) {
-            ResponseType.Success -> Unit
-            ResponseType.Informational -> TODO()
-            ResponseType.Redirection -> TODO()
-            ResponseType.ClientError -> throw ClientException(
-                (response as ClientError<*>).body as? String ?: "Client error"
-            )
-            ResponseType.ServerError -> {
-                throw ServerException(
-                    (response as ServerError<*>).message ?: "Server error"
-                )
-            }
-        }
     }
 
     /**
@@ -59,27 +45,14 @@ class StopApi(
      * @return Stop
      */
     @Suppress("UNCHECKED_CAST")
-    suspend fun stopStopIdGet(stopId: Long): Stop {
-
+    suspend fun stopStopIdGet(stopId: Long): Stop? {
         val localVariableConfig = RequestConfig(
             RequestMethod.GET,
             "/stop/{stopId}".replace("{" + "stopId" + "}", "$stopId")
         )
-        val response = request<Stop>(
+        return request<Stop>(
             localVariableConfig
         )
-
-        return when (response.responseType) {
-            ResponseType.Success -> (response as Success<*>).data as Stop
-            ResponseType.Informational -> TODO()
-            ResponseType.Redirection -> TODO()
-            ResponseType.ClientError -> throw ClientException(
-                (response as ClientError<*>).body as? String ?: "Client error"
-            )
-            ResponseType.ServerError -> throw ServerException(
-                (response as ServerError<*>).message ?: "Server error"
-            )
-        }
     }
 
 }

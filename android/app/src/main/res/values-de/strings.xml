@@ -37,7 +37,7 @@
     <string name="excellent_rating">Ausgezeichnet</string>
     <string name="rate_city">Bewerte \'%1$s\'</string>
     <string name="request_rate_city">Bitte gib dein Feedback zu dieser Sehenswürdigkeit.</string>
-    <string name="request_write_comment">Bitte schreibe deinen Kommentar hier ...</string>
+    <string name="request_write_comment">Bitte schreibe deinen Kommentar hier …</string>
     <string name="successfully_rated_city">Bewertung wurde erfolgreich gesendet!</string>
     <string name="category_place_of_worship">Religiöse Versammlungsstätte</string>
     <string name="category_building">Gebäude</string>
@@ -48,4 +48,7 @@
     <string name="category_museum">Museum</string>
     <string name="category_attraction">Attraktion</string>
     <string name="number_of_selected_items">%d ausgewählt</string>
+    <string name="error_server_not_available">Der Server ist derzeit nicht verfügbar.</string>
+    <string name="error_not_signed_in">Du musst angemeldet sein, um diese Aktion auszuführen.</string>
+    <string name="error_not_found">Leider wurde keine Ressource gefunden.</string>
 </resources>

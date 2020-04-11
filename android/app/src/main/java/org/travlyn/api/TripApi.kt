@@ -13,7 +13,10 @@ package org.travlyn.api
 
 import org.travlyn.api.model.Rating
 import org.travlyn.api.model.Trip
-import org.travlyn.infrastructure.*
+import org.travlyn.infrastructure.ApiClient
+import org.travlyn.infrastructure.MultiValueMap
+import org.travlyn.infrastructure.RequestConfig
+import org.travlyn.infrastructure.RequestMethod
 import org.travlyn.local.Application
 
 class TripApi(
@@ -33,21 +36,9 @@ class TripApi(
             RequestMethod.GET,
             "/trip", query = localVariableQuery
         )
-        val response = request<Array<Trip>>(
+        return request(
             localVariableConfig
-        )
-
-        return when (response.responseType) {
-            ResponseType.Success -> (response as Success<*>).data as Array<Trip>
-            ResponseType.Informational -> TODO()
-            ResponseType.Redirection -> TODO()
-            ResponseType.ClientError -> throw ClientException(
-                (response as ClientError<*>).body as? String ?: "Client error"
-            )
-            ResponseType.ServerError -> throw ServerException(
-                (response as ServerError<*>).message ?: "Server error"
-            )
-        }
+        ) ?: emptyArray()
     }
 
     /**
@@ -57,27 +48,15 @@ class TripApi(
      * @return Trip
      */
     @Suppress("UNCHECKED_CAST")
-    suspend fun generateTrip(userId: Long): Trip {
+    suspend fun generateTrip(userId: Long): Trip? {
         val localVariableQuery: MultiValueMap = mapOf("userId" to listOf("$userId"))
         val localVariableConfig = RequestConfig(
             RequestMethod.PUT,
             "/trip", query = localVariableQuery
         )
-        val response = request<Trip>(
+        return request(
             localVariableConfig
         )
-
-        return when (response.responseType) {
-            ResponseType.Success -> (response as Success<*>).data as Trip
-            ResponseType.Informational -> TODO()
-            ResponseType.Redirection -> TODO()
-            ResponseType.ClientError -> throw ClientException(
-                (response as ClientError<*>).body as? String ?: "Client error"
-            )
-            ResponseType.ServerError -> throw ServerException(
-                (response as ServerError<*>).message ?: "Server error"
-            )
-        }
     }
 
     /**
@@ -87,27 +66,14 @@ class TripApi(
      * @return Trip
      */
     @Suppress("UNCHECKED_CAST")
-    suspend fun getTripByID(tripId: Long): Trip {
-
+    suspend fun getTripByID(tripId: Long): Trip? {
         val localVariableConfig = RequestConfig(
             RequestMethod.GET,
             "/trip/{tripId}".replace("{" + "tripId" + "}", "$tripId")
         )
-        val response = request<Trip>(
+        return request(
             localVariableConfig
         )
-
-        return when (response.responseType) {
-            ResponseType.Success -> (response as Success<*>).data as Trip
-            ResponseType.Informational -> TODO()
-            ResponseType.Redirection -> TODO()
-            ResponseType.ClientError -> throw ClientException(
-                (response as ClientError<*>).body as? String ?: "Client error"
-            )
-            ResponseType.ServerError -> throw ServerException(
-                (response as ServerError<*>).message ?: "Server error"
-            )
-        }
     }
 
     /**
@@ -118,26 +84,13 @@ class TripApi(
      */
     @Suppress("UNCHECKED_CAST")
     suspend fun getTripsByUserId(userId: Long): Array<Trip> {
-
         val localVariableConfig = RequestConfig(
             RequestMethod.GET,
             "/user/{userId}/trips".replace("{" + "userId" + "}", "$userId")
         )
-        val response = request<Array<Trip>>(
+        return request(
             localVariableConfig
-        )
-
-        return when (response.responseType) {
-            ResponseType.Success -> (response as Success<*>).data as Array<Trip>
-            ResponseType.Informational -> TODO()
-            ResponseType.Redirection -> TODO()
-            ResponseType.ClientError -> throw ClientException(
-                (response as ClientError<*>).body as? String ?: "Client error"
-            )
-            ResponseType.ServerError -> throw ServerException(
-                (response as ServerError<*>).message ?: "Server error"
-            )
-        }
+        ) ?: emptyArray()
     }
 
     /**
@@ -147,27 +100,15 @@ class TripApi(
      * @param rating Rating to be created
      * @return void
      */
-    suspend fun rateTrip(tripId: Long, rating: Rating): Unit {
+    suspend fun rateTrip(tripId: Long, rating: Rating) {
         val localVariableQuery: MultiValueMap = mapOf("rating" to listOf("$rating"))
         val localVariableConfig = RequestConfig(
             RequestMethod.POST,
             "/trip/{tripId}".replace("{" + "tripId" + "}", "$tripId"), query = localVariableQuery
         )
-        val response = request<Any?>(
+        request<Any?>(
             localVariableConfig
         )
-
-        return when (response.responseType) {
-            ResponseType.Success -> Unit
-            ResponseType.Informational -> TODO()
-            ResponseType.Redirection -> TODO()
-            ResponseType.ClientError -> throw ClientException(
-                (response as ClientError<*>).body as? String ?: "Client error"
-            )
-            ResponseType.ServerError -> throw ServerException(
-                (response as ServerError<*>).message ?: "Server error"
-            )
-        }
     }
 
     /**
@@ -176,27 +117,15 @@ class TripApi(
      * @param trip Updated trip
      * @return void
      */
-    suspend fun updateTrip(trip: Trip): Unit {
+    suspend fun updateTrip(trip: Trip) {
         val localVariableQuery: MultiValueMap = mapOf("trip" to listOf("$trip"))
         val localVariableConfig = RequestConfig(
             RequestMethod.POST,
             "/trip", query = localVariableQuery
         )
-        val response = request<Any?>(
+        request<Any?>(
             localVariableConfig
         )
-
-        return when (response.responseType) {
-            ResponseType.Success -> Unit
-            ResponseType.Informational -> TODO()
-            ResponseType.Redirection -> TODO()
-            ResponseType.ClientError -> throw ClientException(
-                (response as ClientError<*>).body as? String ?: "Client error"
-            )
-            ResponseType.ServerError -> throw ServerException(
-                (response as ServerError<*>).message ?: "Server error"
-            )
-        }
     }
 
 }

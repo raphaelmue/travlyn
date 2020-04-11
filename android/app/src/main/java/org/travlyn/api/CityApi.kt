@@ -8,6 +8,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.Request
 import org.travlyn.api.model.City
 import org.travlyn.infrastructure.*
+import org.travlyn.infrastructure.error.TravlynException
 import org.travlyn.local.Application
 import java.io.InputStream
 
@@ -27,33 +28,16 @@ class CityApi(
             RequestMethod.GET,
             "/city", query = localVariableQuery
         )
-        val response = request<City>(
-            localVariableConfig
-        )
-
-        return when (response.responseType) {
-            ResponseType.Success -> {
-                if ((response as Success<*>).data != null) {
-                    (response as Success<*>).data as City
-                } else {
-                    null
-                }
-            }
-            ResponseType.Informational -> TODO()
-            ResponseType.Redirection -> TODO()
-            ResponseType.ClientError -> {
-                if ((response as ClientError<*>).statusCode == 404) {
-                    null
-                } else {
-                    throw ClientException(
-                        (response as ClientError<*>).body as? String ?: "Client error"
-                    )
-                }
-            }
-            ResponseType.ServerError -> throw ServerException(
-                (response as ServerError<*>).message ?: "Server error"
+        var result: City? = null
+        try {
+            result = request<City>(
+                localVariableConfig
             )
+        } catch (exception: TravlynException) {
+            application.showErrorDialog(exception)
         }
+
+        return result
     }
 
     suspend fun getImage(url: String): Bitmap? {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    android:id="@+id/cityInformationLayout" xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout android:id="@+id/cityInformationLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -114,7 +114,7 @@
                             app:layout_constraintTop_toTopOf="parent"
                             android:contentDescription="@string/points_of_interests"
                             android:background="@color/white"
-                            android:src="@drawable/ic_chevron_right"/>
+                            android:src="@drawable/ic_chevron_right" />
 
                         <TextView
                             android:id="@+id/cityStopsHeadingTextView"

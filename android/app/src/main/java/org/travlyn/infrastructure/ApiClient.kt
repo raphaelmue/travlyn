@@ -11,10 +11,13 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.travlyn.api.model.User
+import org.travlyn.infrastructure.error.*
 import org.travlyn.local.Application
 import org.travlyn.local.LocalStorage
 import java.io.File
 import java.io.IOException
+import java.net.SocketException
+import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -92,7 +95,7 @@ open class ApiClient(
     protected suspend inline fun <reified T : Any?> request(
         requestConfig: RequestConfig,
         body: Any? = null
-    ): ApiInfrastructureResponse<T?> {
+    ): T? {
         val httpUrl =
             baseUrl.toHttpUrlOrNull() ?: throw IllegalStateException("baseUrl is invalid.")
 
@@ -138,39 +141,45 @@ open class ApiClient(
             )
         }
 
+        val content: String?
+        val response: Response?
         val realRequest = request.build()
-        val response = client.newCall(realRequest).await()
 
-        val content: String? = withContext(Dispatchers.IO) {
-            response.body?.string()
+        try {
+            response = client.newCall(realRequest).await()
+
+            content = withContext(Dispatchers.IO) {
+                response.body?.string()
+            }
+
+            if (response.isSuccessful) {
+                return responseBody(content, accept)
+            }
+
+            responseError(realRequest, response)
+        } catch (exception: Exception) {
+            when (exception) {
+                is SocketException, is SocketTimeoutException -> application.showErrorDialog(
+                    ServerNotAvailableException(
+                        "Socket connection timed out. Either server is not available or user has no internet connection."
+                    )
+                )
+                is TravlynException -> {
+                    application.showErrorDialog(exception)
+                }
+            }
         }
 
+        return null
+    }
+
+    protected fun responseError(request: Request, response: Response) {
+        val prefix = "[${request.method}: ${request.url}] --> ${response.code}: "
         when {
-            response.isRedirect -> return Redirection(
-                response.code,
-                response.headers.toMultimap()
-            )
-            response.isInformational -> return Informational(
-                response.message,
-                response.code,
-                response.headers.toMultimap()
-            )
-            response.isSuccessful -> return Success(
-                responseBody(content, accept),
-                response.code,
-                response.headers.toMultimap()
-            )
-            response.isClientError -> return ClientError(
-                content,
-                response.code,
-                response.headers.toMultimap()
-            )
-            else -> return ServerError(
-                null,
-                content,
-                response.code,
-                response.headers.toMultimap()
-            )
+            response.code == 403 -> throw UnauthorizedException(prefix + "User is unauthorized to perform this action.")
+            response.code == 404 -> throw NotFoundException(prefix + "Resource was not found.")
+            response.isServerError -> throw InternalServerErrorException(prefix + "An internal server error occurred.")
+            else -> throw ResponseException(prefix + "An unexpected error occurred. [${response.body}]")
         }
     }
 }
