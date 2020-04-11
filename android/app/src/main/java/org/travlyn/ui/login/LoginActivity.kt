@@ -21,12 +21,13 @@ import kotlin.math.abs
 class LoginActivity : AppCompatActivity(), Application {
     private val animationTime: Long = 500
 
-    var api: UserApi = UserApi(context = this)
+    lateinit var api: UserApi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        api = UserApi(context = this)
         val context = this
         signInBtn.setOnClickListener {
             handleLogin(context)

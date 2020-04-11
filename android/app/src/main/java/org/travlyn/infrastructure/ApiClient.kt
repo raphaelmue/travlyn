@@ -19,18 +19,23 @@ import java.io.IOException
 import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.SSLHandshakeException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 open class ApiClient(
-    val baseUrl: String = "http://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
+    var baseUrl: String = baseUrlDefault,
     open val application: Application
 ) {
     companion object {
+        const val baseUrlDefault =
+            "https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/"
+
         protected const val ContentType = "Content-Type"
         protected const val Accept = "Accept"
         protected const val JsonMediaType = "application/json"
         protected const val FormDataMediaType = "multipart/form-data"
+
         protected const val XmlMediaType = "application/xml"
 
         @JvmStatic
@@ -44,10 +49,22 @@ open class ApiClient(
                 Accept to JsonMediaType
             )
         )
-
         @JvmStatic
         val jsonHeaders: Map<String, String> =
             mapOf(ContentType to JsonMediaType, Accept to JsonMediaType)
+    }
+
+    init {
+        initBaseUrl()
+    }
+
+    private fun initBaseUrl() {
+        val localStorage = LocalStorage(this.application.getContext())
+        if (localStorage.contains("baseUrl")) {
+            this.baseUrl = localStorage.readObject<String>("baseUrl")!!
+        } else {
+            this.baseUrl = baseUrlDefault
+        }
     }
 
     protected inline fun <reified T> requestBody(
@@ -159,7 +176,7 @@ open class ApiClient(
             responseError(realRequest, response)
         } catch (exception: Exception) {
             when (exception) {
-                is SocketException, is SocketTimeoutException -> application.showErrorDialog(
+                is SocketException, is SocketTimeoutException, is SSLHandshakeException -> application.showErrorDialog(
                     ServerNotAvailableException(
                         "Socket connection timed out. Either server is not available or user has no internet connection."
                     )

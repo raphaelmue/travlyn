@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    var api: UserApi = UserApi(context = this)
+    lateinit var api: UserApi
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private var user: User? = null
@@ -70,6 +70,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
         val headerView: View = navView.getHeaderView(0)
         navEmailTextField = headerView.findViewById(R.id.emailNavTextView)
         navNameTextField = headerView.findViewById(R.id.nameNavTextView)
+
+        this.api = UserApi(context = this)
 
         val localStorage = LocalStorage(this)
         user = localStorage.readObject<User>("user")
@@ -167,8 +169,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
                     launch {
                         handleLogoutRequest()
                         user = null
+                        LocalStorage(context).deleteObject("user")
                     }
-                    LocalStorage(context).deleteObject("user")
                     navEmailTextField.text = null
                     navNameTextField.text = null
                     invalidateOptionsMenu()
