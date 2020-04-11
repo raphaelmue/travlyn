@@ -68,7 +68,24 @@ Für den Zugriff auf Wikipedia gibt es unterschiedliche Möglichkeiten, im Folge
 
 \begin{itemize}
 	\item \textbf{MediaWiki}: Hinter Wikipedia und vielen anderen Wiki-Seiten steht die selbe Software: MediaWiki \cite{MediaWiki.24.01.2020}. Diese Software bietet eine sogenannte \textit{MediaWiki action API}, die viele Informationen zu allen Artikeln eines Wiki zurückliefern kann. Leider sind die Daten nicht über einen zentralen Aufruf abrufbar sondern es werden mehrere Abfragen in folge benötigt, um z.B. die URL eines der Bilder des Artikels zu ermitteln.
+	
 	\item \textbf{DBpedia}: Die zweite API, die mithilfe eines Protypes getestet wurde ist \textit{DBpedia} \cite{DBpedia.02.02.2020}. DBpedia stellt die strukturierten Informationen aus Wikipedia in strukturierter Form zur Verfügung. Auch diese API folgt dem Crowd Souring Prinzip und ist frei zugänglich. Zusätzlich können dort alle Informationen über einen zentralen Zugriff abgerufen werden, indem die benötigten Daten über URL-Parameter spezifiziert werden können. Außerdem bietet diese API die Daten in aufbereiteter Form an: Links können direkt aufgelöst werden, es wird das selbe Thumbnail ausgeliefert welches im original Artikel ausgewählt ist und es kann auf alle Daten der kompakten Infobox in der oberen rechten Ecke strukturiert zugegriffen werden.
 \end{itemize}
 
 Durch die einfachere Handhabung der \textit{DBpedia} API wurde für den weiteren Verlauf entschieden auf diese API zu setzen und alle Informationen zu POIs und Städten von diesem Zugang abzufragen. Damit können erweiterte Infos geladen werden, die dem Nutzer während seines Trips kontinuierlich angezeigt werden können, um die Erfahrung weiter zu verbessern.
+
+\section{Kartendaten} \label{sec:osmdroid}
+
+Neben den \acs{POI}s werden zur Aufbereitung der Informationen weitere Daten benötigt. Allen voran sind Kartendaten essenziell, um dem Nutzer Orientierung und eine Übersicht über die Lage der ausgewählten \acs{POI}s zu geben. Der \textit{Travlyn} Client soll auf Mobilgeräten laufen, im Besonderen auf Android Geräten, wie in \autoref{sec:anforderungen} beschrieben. Aus diesem Grund muss ein Kartenformat gewählt werden, welches auf entsprechenden Geräten angezeigt werden und genutzt werden kann.
+
+\vspace{0.25cm}
+
+Auch bei diesem Thema stehen sich grundlegend zwei große Anbieter gegenüber: Google \cite{Google.01.02.2020} und OpenStreetMap \cite{OpenStreetMap.}. Aufgrund der ausführlichen Beschreibung im vorangegangenen Kapitel soll an dieser Stelle auf eine weitere Ausführung verzichtet werden. Auch bei dieser Entscheidung kann die Wahl nur auf OpenStreetMap fallen, da dies eine Crowd Sourced Datenbasis ist, welche größtenteils frei von Lizenzfragen in den meisten Umfeldern genutzt werden kann. Abgesehen vom Kostenfaktor ist dies der größte Vorteil gegenüber Services von Google, die allerdings meist im Funktionsumfang und der gebotenen Qualität überlegen sind.
+
+\vspace{0.25cm}
+
+Somit standen einige Android Dienste zur Auswahl, welche auf OpenStreetMap Karten operieren. Die Wahl fiel schlussendlich auf \textit{osmdroid} \cite{osmdroid.3162020}. Die Bibliothek \textit{osmdroid} kann als alternative zum Android MapView, welcher auf Google Karten operiert, genutzt werden. Sie bietet diverse Features wie das Herunterladen von Karten, Icons und anpassbare Overlays. Besonders die Möglichkeit Karten auch offline anzeigen zu können bietet für die \textit{Travlyn} Applikation einen Vorteil, der ausgenutzt werden kann, wenn die Netzqualität unterwegs nicht ausreicht, um Kartendaten in angemessener Zeit herunterzuladen.
+
+\vspace{0.25cm}
+
+Die Bibliothek kann über \textit{Gradle} (siehe \autoref{sec:gradle}) eingebunden werden und ist damit leicht zu benutzen. Da diese Bibliothek Open Source ist und frei auf GitHub zur Verfügung steht, ist die Nutzung kostenfrei. Außerdem gibt es aktuell eine starke Weiterentwicklung und regelmäßige Releases. Hiervon versprechen wir uns bald weitere unter verbesserte Funktionen, die wir für \textit{Travlyn} nutzen können.
