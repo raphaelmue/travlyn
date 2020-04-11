@@ -13,15 +13,12 @@ package org.travlyn.api
 
 import org.travlyn.api.model.Rating
 import org.travlyn.api.model.Stop
-
 import org.travlyn.infrastructure.*
 import org.travlyn.local.Application
 
 class StopApi(
-    basePath: String = "https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
-    application: Application? = null
-) :
-    ApiClient(basePath, application) {
+    application: Application
+) : ApiClient(application = application) {
 
     /**
      * Rate a stop

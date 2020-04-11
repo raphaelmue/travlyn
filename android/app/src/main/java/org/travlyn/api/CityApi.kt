@@ -12,9 +12,8 @@ import org.travlyn.local.Application
 import java.io.InputStream
 
 class CityApi(
-    basePath: String = "https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
-    application: Application? = null
-) : ApiClient(basePath, application) {
+    application: Application
+) : ApiClient(application = application) {
 
     /**
      * Get City by search term

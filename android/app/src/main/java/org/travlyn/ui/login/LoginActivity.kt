@@ -1,6 +1,5 @@
 package org.travlyn.ui.login
 
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -15,19 +14,14 @@ import org.travlyn.R
 import org.travlyn.api.UserApi
 import org.travlyn.api.model.User
 import org.travlyn.local.Application
-import org.travlyn.local.Formatter
 import org.travlyn.local.LocalStorage
 import kotlin.math.abs
 
 
 class LoginActivity : AppCompatActivity(), Application {
-    private val tag: String = "LoginActivity"
-
-    private var formatter: Formatter = Formatter(this)
-
     private val animationTime: Long = 500
 
-    var api: UserApi = UserApi(application = this)
+    var api: UserApi = UserApi(context = this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,22 +108,9 @@ class LoginActivity : AppCompatActivity(), Application {
             .setListener(null)
     }
 
-    override fun showErrorDialog(throwable: Throwable) {
-        Log.e(tag, throwable.message, throwable)
-        AlertDialog.Builder(this)
-            .setTitle("Travlyn")
-            .setMessage(formatter.format(throwable))
-            .setPositiveButton(R.string.ok, null)
-            .setIcon(R.drawable.ic_error)
-            .show()
-    }
-
     override fun getContext(): Context {
         return this
     }
 
-    override fun getFormatter(): Formatter {
-        return formatter
-    }
 }
 

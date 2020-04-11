@@ -17,10 +17,8 @@ import org.travlyn.infrastructure.*
 import org.travlyn.local.Application
 
 class TripApi(
-    basePath: String = "https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
     application: Application
-) :
-    ApiClient(basePath, application) {
+) : ApiClient(application = application) {
 
     /**
      * Search for trips

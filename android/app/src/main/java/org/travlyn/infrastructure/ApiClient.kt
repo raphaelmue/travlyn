@@ -10,14 +10,19 @@ import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.travlyn.api.model.User
 import org.travlyn.local.Application
+import org.travlyn.local.LocalStorage
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-open class ApiClient(val baseUrl: String, open val application: Application?) {
+open class ApiClient(
+    val baseUrl: String = "http://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
+    open val application: Application
+) {
     companion object {
         protected const val ContentType = "Content-Type"
         protected const val Accept = "Accept"
@@ -125,6 +130,13 @@ open class ApiClient(val baseUrl: String, open val application: Application?) {
         }
 
         headers.forEach { header -> request = request.addHeader(header.key, header.value) }
+        val localStorage = LocalStorage(application.getContext())
+        if (localStorage.contains("user")) {
+            request.addHeader(
+                "Authorization",
+                "Bearer " + localStorage.readObject<User>("user")!!.token!!.token
+            )
+        }
 
         val realRequest = request.build()
         val response = client.newCall(realRequest).await()

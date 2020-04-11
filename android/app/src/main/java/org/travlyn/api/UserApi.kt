@@ -17,10 +17,8 @@ import org.travlyn.infrastructure.*
 import org.travlyn.local.Application
 
 class UserApi(
-    basePath: String = "http://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
-    application: Application
-) :
-    ApiClient(basePath, application) {
+    context: Application
+) : ApiClient(application = context) {
 
     /**
      * Get all Trips of user
