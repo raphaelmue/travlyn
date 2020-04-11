@@ -2,6 +2,7 @@ package org.travlyn.server.api;
 
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.travlyn.shared.model.api.Trip;
 import org.travlyn.shared.model.api.User;
@@ -9,6 +10,8 @@ import org.travlyn.shared.model.api.User;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+
+import static org.travlyn.server.configuration.AuthenticationTokenFilter.REGISTERED_USER_ROLE;
 
 @Api(value = "user")
 public interface UserApi {
@@ -27,6 +30,7 @@ public interface UserApi {
     @GetMapping(
             value = "/user/{userId}/trips",
             produces = {"application/json"})
+    @PreAuthorize(value = "hasRole(" + REGISTERED_USER_ROLE + ")")
     ResponseEntity<List<Trip>> getTripsByUserId(@ApiParam(value = "ID of the user whose trips are to be returned", required = true, defaultValue = "-1", example = "123") @PathVariable("userId") Long userId);
 
     @ApiOperation(
@@ -55,6 +59,7 @@ public interface UserApi {
             @ApiResponse(code = 401, message = "You are not authorized to perform this action")})
     @DeleteMapping(
             value = "/user")
+    @PreAuthorize(value = "hasRole(" + REGISTERED_USER_ROLE + ")")
     ResponseEntity<Void> logoutUser(@NotNull @ApiParam(value = "The user to logout", required = true, example = "{id: 123, email: \"test@email.com\", name: \"Test User\"}")
                                     @Valid @RequestParam(value = "user") User user);
 
@@ -84,6 +89,7 @@ public interface UserApi {
             @ApiResponse(code = 200, message = "successful operation"),
             @ApiResponse(code = 401, message = "You are not authorized to perform this action")})
     @PostMapping(value = "/user")
+    @PreAuthorize(value = "hasRole(" + REGISTERED_USER_ROLE + ")")
     ResponseEntity<Void> updateUser(@NotNull @ApiParam(value = "Updated user object", required = true, example = "{id: 123, email: \"test@email.com\", name: \"Test User\"}")
                                     @Valid @RequestParam(value = "user") User user);
 

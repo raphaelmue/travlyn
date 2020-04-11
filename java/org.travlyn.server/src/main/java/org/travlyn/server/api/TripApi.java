@@ -2,6 +2,7 @@ package org.travlyn.server.api;
 
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.travlyn.shared.model.api.Rating;
 import org.travlyn.shared.model.api.Trip;
@@ -9,6 +10,8 @@ import org.travlyn.shared.model.api.Trip;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+
+import static org.travlyn.server.configuration.AuthenticationTokenFilter.REGISTERED_USER_ROLE;
 
 @Api(value = "trip")
 public interface TripApi {
@@ -42,6 +45,7 @@ public interface TripApi {
     @PutMapping(
             value = "/trip",
             produces = {"application/json"})
+    @PreAuthorize(value = "hasRole(" + REGISTERED_USER_ROLE + ")")
     ResponseEntity<Trip> generateTrip(@NotNull @ApiParam(value = "The user who generates the trip", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "userId") Long userId);
 
     @ApiOperation(
@@ -72,6 +76,7 @@ public interface TripApi {
             @ApiResponse(code = 401, message = "You are not authorized to perform this action")})
     @PostMapping(
             value = "/trip/{tripId}")
+    @PreAuthorize(value = "hasRole(" + REGISTERED_USER_ROLE + ")")
     ResponseEntity<Void> rateTrip(@ApiParam(value = "ID of the trip that will be rated", required = true, defaultValue = "-1", example = "123") @PathVariable("tripId") Long tripId,
                                   @NotNull @ApiParam(value = "Rating to be created", required = true, defaultValue = "-1", example = "0.75") @Valid @RequestParam(value = "rating") Rating rating);
 
@@ -88,6 +93,7 @@ public interface TripApi {
             @ApiResponse(code = 500, message = "Trip could not be updated")})
     @PostMapping(
             value = "/trip")
+    @PreAuthorize(value = "hasRole(" + REGISTERED_USER_ROLE + ")")
     ResponseEntity<Void> updateTrip(@NotNull @ApiParam(value = "Updated trip", required = true, example = "{id: 123, private: true, city: {id: 123, name: \"New York\", description: \"This is a description of New York.\"}}}")
                                     @Valid @RequestParam(value = "trip") Trip trip);
 }
