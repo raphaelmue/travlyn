@@ -1,8 +1,6 @@
 package org.travlyn.server.externalapi.access;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import org.travlyn.server.util.Pair;
 import org.travlyn.shared.model.api.Stop;
 
@@ -47,25 +45,44 @@ public class DBpediaStopRequest extends DBpediaRequest<Stop> {
         params.add(new Pair<>("property", "dbo:thumbnail"));
 
         String result = executeRequest(params);
-        JsonObject englishContent;
+        JsonArray resultArray;
+        JsonObject englishContent = null;
         try {
-            englishContent = gson.fromJson(result, JsonObject.class).getAsJsonObject("results").
-                    getAsJsonArray("bindings").get(0).getAsJsonObject();
+             resultArray = gson.fromJson(result, JsonObject.class).getAsJsonObject("results").
+                    getAsJsonArray("bindings");
         }catch (JsonSyntaxException syntaxException){
             //quota limit reached...exclude stop TODO
             return null;
         }
-        try {
-            String description = englishContent.getAsJsonObject("dboabstract").getAsJsonPrimitive("value").getAsString();
-            String imageURL = englishContent.getAsJsonObject("dbothumbnail").getAsJsonPrimitive("value").getAsString();
 
-            return new Stop().name(query)
-                    .description(description)
-                    .image(imageURL);
+        // filter for english language
+        for (JsonElement content : resultArray) {
+            if (content.getAsJsonObject().has("dboabstract") &&
+                    content.getAsJsonObject().getAsJsonObject("dboabstract").getAsJsonPrimitive("xml:lang").getAsString().equals("en")) {
+                englishContent = content.getAsJsonObject();
+                break;
+            }
+        }
+
+        try {
+            if(englishContent != null) {
+                String description = englishContent.getAsJsonObject("dboabstract").getAsJsonPrimitive("value").getAsString();
+                String imageURL = englishContent.getAsJsonObject("dbothumbnail").getAsJsonPrimitive("value").getAsString();
+
+                //fix image URL in case it is broken
+                if (!imageURL.contains("http://commons.wikimedia.org/")){
+                    imageURL = "http://commons.wikimedia.org/wiki/" + imageURL.substring(5);
+                }
+
+                return new Stop().name(query)
+                        .description(description)
+                        .image(imageURL);
+            }
         } catch (NullPointerException exception) {
             //invalid search term leads to no results
             return null;
         }
+        return null;
     }
 
     private String checkForManualName(String query){

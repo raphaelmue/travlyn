@@ -98,7 +98,7 @@ public class TravlynService {
                 City returnValue = this.removeUnfetchedStops(entity.toDataTransferObject());
                 entity.setUnfetchedStops(returnValue.isUnfetchedStops());
                 // valid city was found --> cache result
-                session.save(entity);
+                session.persist(entity);
                 return returnValue;
             }
         }
