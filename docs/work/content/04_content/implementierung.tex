@@ -1,5 +1,19 @@
 \chapter{Implementierung}
 
-	\section{Coding Conventions}
-
-	\section{Probleme}
+	In diesem Kapitel werden einige Implementationsdetails dargestellt und erläutert, welche entweder einen kritischen Aspekt des Projekts darstellen oder von hoher Relevanz für den Erfolg des Projektes sind. 
+	
+	\section{Controller Interfaces}
+	
+		Wie bereits erwähnt sind die sog. Controller in einer \acs{MVC} Architektur für den Behandlung von Benutzereingaben zuständig. Im Falle einer \acs{REST}ful \acs{API} -- hier durch Spring umgesetzt -- dienen Controller dem Zweck, alle eingehenden \acs{HTTP} Anfragen zu behandeln. Dafür bietet Spring Annotationen, mit dessen Hilfe eindeutig definiert werden kann, wie die Anfrage auszusehen hat. Eine solche Definition eines sog. Endpoints beinhaltet immer einen Pfad, unter welchem der Entpoint erreicht werden kann, und eine \acs{HTTP} Methode. Es kann zusätzlich noch festgelegt werden, welche \acs{HTTP} Header bei einer Anfrage angegeben werden sollen und welcher \acs{MIME} Type zurück gegeben wird.
+		
+		\autoref{code:CityApi} zeigt beispielhaft, wie eine solche Definition eines Endpoints aussehen kann. Die eigentliche Beschreibung des Entpoints wird durch die Annotation \lstinline|@GetMapping| beschrieben. 	
+		
+		Um jedoch eine ausführlichere Beschreibung des Endpoints zu erstellen, können die von Swagger bereitgestellten Annotation verwendet werden. So lassen sich beispielsweise die Parameter, die Rückgabewerte aber auch die Authentifizierungsmethode beschreiben. So wird für die City \acs{API} ein String als Parameter benötigt, mit dessen Hilfe die entsprechende Stadt zurückgegebene werden kann. Außerdem wird ein \acs{API} Key benötigt, um sich zu authentifizieren. 
+		
+		\lstinputlisting[
+			label=code:CityApi,
+			caption=Darstellung eines Controllers am Beispiel der City API,
+			captionpos=b,               % Position, an der die Caption angezeigt wird t(op) oder b(ottom)
+			style=EigenerJavaStyle,     % Eigener Style der vor dem Dokument festgelegt wurde
+		]{code/CityApi.java}
+		
