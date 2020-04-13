@@ -115,4 +115,16 @@ public class TravlynServiceTest {
         service.logoutUser(userEntity.toDataTransferObject().token(tokenEntity.toDataTransferObject()));
         Assertions.assertNull(session.get(TokenEntity.class, tokenEntity.getId()));
     }
+
+    @Test
+    @Transactional
+    public void testRegisterUser() {
+        Session session = sessionFactory.getCurrentSession();
+
+        User userToAssert = service.registerUser("test2@email.com", "Second Test User", "password", "192.168.0.1");
+        Assertions.assertTrue(userToAssert.getId() > 0);
+        Assertions.assertNotNull(userToAssert.getToken().getToken());
+        userToAssert = service.checkCredentials("test2@email.com", "password", "192.168.0.1");
+        Assertions.assertEquals("Second Test User", userToAssert.getName());
+    }
 }

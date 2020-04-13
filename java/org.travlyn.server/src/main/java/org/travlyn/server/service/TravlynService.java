@@ -65,6 +65,26 @@ public class TravlynService {
         return null;
     }
 
+
+    @Transactional
+    public User registerUser(String email, String name, String password, String ipAddress) {
+        logger.info("Registering new user");
+
+        final String salt = new RandomString(32).nextString();
+        final String hashedPassword = Hash.create(password, salt);
+
+        Session session = sessionFactory.getCurrentSession();
+        UserEntity userEntity = new UserEntity()
+                .setEmail(email)
+                .setName(name)
+                .setPassword(hashedPassword)
+                .setSalt(salt);
+
+        userEntity.setId((Integer) session.save(userEntity));
+        Token token = this.generateToken(userEntity, ipAddress);
+        return userEntity.toDataTransferObject().token(token);
+    }
+
     /**
      * Searches for city by name using db cache / DBmedia and returns city object with all infos.
      *

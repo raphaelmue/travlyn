@@ -70,15 +70,11 @@ public class UserApiController implements UserApi {
     public ResponseEntity<User> registerUser(@NotNull @Valid String email, @NotNull @Valid String name, @NotNull @Valid String password) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<>(objectMapper.readValue("{\n  \"name\" : \"name\",\n  \"id\" : 6,\n  \"email\" : \"email\",\n  \"token\" : {\n    \"id\" : 1,\n    \"ip_address\" : \"ip_address\",\n    \"token\" : \"token\"\n  }\n}", User.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            return new ResponseEntity<>(travlynService.registerUser(email, name, password, request.getRemoteAddr()),
+                    HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<Void> updateUser(@NotNull @Valid User user) {
