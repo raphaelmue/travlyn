@@ -16,9 +16,7 @@ import org.travlyn.util.security.Hash;
 import org.travlyn.util.security.RandomString;
 
 import javax.persistence.NoResultException;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 
 @Service
@@ -140,17 +138,30 @@ public class TravlynService {
         session.delete(user.getToken().toEntity());
     }
 
-    private CityEntity getStopsForCity(City city) {
+    @Transactional
+    protected CityEntity getStopsForCity(City city) {
+        Session session = sessionFactory.getCurrentSession();
         CityEntity cityEntity = new CityEntity();
         cityEntity.setName(city.getName());
         cityEntity.setLatitude(city.getLatitude());
         cityEntity.setLongitude(city.getLongitude());
         cityEntity.setImage(city.getImage());
         cityEntity.setDescription(city.getDescription());
-        OpenRouteRequest request = new OpenRouteRequest(cityEntity.getLatitude(), cityEntity.getLongitude(), cityEntity);
+        //fetch categories and pass for reuse
+        List<CategoryEntity> categories = session.createQuery("from CategoryEntity", CategoryEntity.class)
+                .getResultList();
+        OpenRouteRequest request = new OpenRouteRequest(cityEntity.getLatitude(), cityEntity.getLongitude(), cityEntity,this.getCategorySetFromList(categories));
         Set<StopEntity> stopEntities = this.fetch100Stops(request.getResult());
         cityEntity.setStops(stopEntities);
         return cityEntity;
+    }
+
+    private Map<Integer,CategoryEntity> getCategorySetFromList(List<CategoryEntity> list){
+        HashMap<Integer,CategoryEntity> result = new HashMap<>();
+        for (CategoryEntity category : list) {
+            result.put(category.getId(),category);
+        }
+        return result;
     }
 
     private City removeUnfetchedStops(City city) {

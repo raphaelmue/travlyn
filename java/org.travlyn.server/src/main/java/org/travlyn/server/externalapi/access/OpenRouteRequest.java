@@ -4,6 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.travlyn.server.service.TravlynService;
 import org.travlyn.server.util.Pair;
 import org.travlyn.shared.model.db.CategoryEntity;
 import org.travlyn.shared.model.db.CityEntity;
@@ -21,14 +24,14 @@ public class OpenRouteRequest implements Request<Set<StopEntity>> {
     private static final String BASE_URL = "https://api.openrouteservice.org/pois";
     private static final HashSet<Integer> excludedCategories = new HashSet<>();
 
-    private Gson gson = new Gson();
-    private HashMap<Integer, CategoryEntity> categoryList = new HashMap<>();
+    private final Gson gson = new Gson();
+    private Map<Integer, CategoryEntity> categoryList;
 
-    private double latitude;
-    private double longitude;
-    private CityEntity city;
+    private final double latitude;
+    private final double longitude;
+    private final CityEntity city;
 
-    public OpenRouteRequest(double latitude, double longitude, CityEntity city) {
+    public OpenRouteRequest(double latitude, double longitude, CityEntity city, Map<Integer, CategoryEntity> categoryList) {
         //set Categories that should be excluded (necessary due to filter limitations at ORS)
         excludedCategories.add(136);
         excludedCategories.add(237);
@@ -58,6 +61,7 @@ public class OpenRouteRequest implements Request<Set<StopEntity>> {
         this.latitude = latitude;
         this.longitude = longitude;
         this.city = city;
+        this.categoryList = categoryList;
     }
 
     @Override
