@@ -17,7 +17,21 @@ public class DBpediaStopRequest extends DBpediaRequest<Stop> {
             MANUAL_NAMES = new HashMap<>();
             MANUAL_NAMES.put("Schloss_Karlsruhe", "Karlsruhe_Palace");
             MANUAL_NAMES.put("Pyramide","Karlsruhe_Pyramid");
-            MANUAL_NAMES.put("Großherzog-Karl-Friedrich-Denkmal","Charles_Frederick%2C_Grand_Duke_of_Baden");
+            MANUAL_NAMES.put("Zoologischer_Stadtgarten","Karlsruhe_Zoo");
+            MANUAL_NAMES.put("Badische_Landesbibliothek","Baden_State_Library");
+            MANUAL_NAMES.put("ZKM_|_Medienmuseum","Center_for_Art_and_Media_Karlsruhe");
+
+            //exclude false positives for Karlsruhe
+            MANUAL_NAMES.put("Heidesee","");
+            MANUAL_NAMES.put("Flora","");
+            MANUAL_NAMES.put("Orpheus","");
+            MANUAL_NAMES.put("Fennek","");
+            MANUAL_NAMES.put("Hase","");
+            MANUAL_NAMES.put("Herz-Jesu-Kirche","");
+            MANUAL_NAMES.put("Emu","");
+            MANUAL_NAMES.put("Onager","");
+            MANUAL_NAMES.put("Gondoletta","");
+            MANUAL_NAMES.put("Temple","");
         }
 
     private static final String BASE_URL = "http://vmdbpedia.informatik.uni-leipzig.de:8080/api/1.0.0/values";
