@@ -50,4 +50,6 @@
     <string name="category_museum">Museum</string>
     <string name="category_attraction">Attraction</string>
     <string name="number_of_selected_items">%d selected</string>
+    <string name="register">Register</string>
+    <string name="name">Name</string>
 </resources>

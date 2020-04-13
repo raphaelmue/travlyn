@@ -135,7 +135,7 @@ class UserApi(
     suspend fun registerUser(email: String, name: String, password: String): User {
         val localVariableQuery: MultiValueMap = mapOf(
             "email" to listOf(email),
-            "Name" to listOf(name),
+            "name" to listOf(name),
             "password" to listOf(password)
         )
         val localVariableConfig = RequestConfig(

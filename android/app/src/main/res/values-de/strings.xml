@@ -48,4 +48,6 @@
     <string name="category_museum">Museum</string>
     <string name="category_attraction">Attraktion</string>
     <string name="number_of_selected_items">%d ausgewählt</string>
+    <string name="register">Registrieren</string>
+    <string name="name">Name</string>
 </resources>

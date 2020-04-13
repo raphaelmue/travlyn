@@ -124,6 +124,9 @@ class HomeFragment : Fragment() {
                 R.id.menu_sign_in -> {
                     (activity as MainActivity).openLoginActivity()
                 }
+                R.id.menu_register -> {
+                    (activity as MainActivity).openRegisterActivity()
+                }
                 R.id.menu_logout -> {
                     (activity as MainActivity).handleLogout()
                 }

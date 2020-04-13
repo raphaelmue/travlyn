@@ -33,6 +33,7 @@ import org.travlyn.local.Application
 import org.travlyn.local.Formatter
 import org.travlyn.local.LocalStorage
 import org.travlyn.ui.login.LoginActivity
+import org.travlyn.ui.login.RegisterActivity
 import kotlin.coroutines.CoroutineContext
 
 
@@ -103,6 +104,10 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
                 openLoginActivity()
                 true
             }
+            R.id.menu_register -> {
+                openRegisterActivity()
+                true
+            }
             R.id.menu_logout -> {
                 handleLogout()
                 true
@@ -153,6 +158,12 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
     internal fun openLoginActivity() {
         if (user == null) {
             startActivity(Intent(this, LoginActivity::class.java))
+        }
+    }
+
+    internal fun openRegisterActivity() {
+        if (user == null) {
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
 
