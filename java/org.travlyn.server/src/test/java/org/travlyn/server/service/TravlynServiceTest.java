@@ -120,8 +120,6 @@ public class TravlynServiceTest {
     @Test
     @Transactional
     public void testRegisterUser() {
-        Session session = sessionFactory.getCurrentSession();
-
         User userToAssert = service.registerUser("test2@email.com", "Second Test User", "password", "192.168.0.1");
         Assertions.assertTrue(userToAssert.getId() > 0);
         Assertions.assertNotNull(userToAssert.getToken().getToken());
@@ -130,6 +128,5 @@ public class TravlynServiceTest {
 
         Assertions.assertThrows(NonUniqueResultException.class,
                 () -> service.registerUser("test@email.com", "Second Test User", "password", "192.168.0.1"));
-
     }
 }

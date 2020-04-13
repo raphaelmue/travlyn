@@ -45,20 +45,15 @@ public class TravlynService {
     public User checkCredentials(String email, String password, String ipAddress) {
         logger.info("Checking credentials ...");
 
-        Optional<UserEntity> userOptional;
-
-        try {
-            userOptional = findUserByEmail(email);
-            if (userOptional.isPresent()) {
-                String hashedPassword = Hash.create(password, userOptional.get().getSalt());
-                if (hashedPassword.equals(userOptional.get().getPassword())) {
-                    logger.info("Credentials of user {} (id: {}) are approved.",
-                            userOptional.get().getName(), userOptional.get().getId());
-                    return userOptional.get().toDataTransferObject()
-                            .token(generateToken(userOptional.get(), ipAddress));
-                }
+        Optional<UserEntity> userOptional = findUserByEmail(email);
+        if (userOptional.isPresent()) {
+            String hashedPassword = Hash.create(password, userOptional.get().getSalt());
+            if (hashedPassword.equals(userOptional.get().getPassword())) {
+                logger.info("Credentials of user {} (id: {}) are approved.",
+                        userOptional.get().getName(), userOptional.get().getId());
+                return userOptional.get().toDataTransferObject()
+                        .token(generateToken(userOptional.get(), ipAddress));
             }
-        } catch (NoResultException ignored) {
         }
 
         logger.info("Credentials are incorrect.");
@@ -71,7 +66,7 @@ public class TravlynService {
             return Optional.of(session.createQuery("from UserEntity where email = :email", UserEntity.class)
                     .setParameter("email", email)
                     .getSingleResult());
-        } catch (NoResultException e) {
+        } catch (NoResultException ignored) {
         }
         return Optional.empty();
     }
