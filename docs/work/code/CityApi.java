@@ -1,6 +1,5 @@
 @Api(value = "city")
 public interface CityApi {
-
   @ApiOperation(
     value = "Get City by search term",
     nickname = "getCity",
@@ -14,6 +13,6 @@ public interface CityApi {
   @GetMapping(
     value = "/city",
     produces = {"application/json"})
+  @PreAuthorize(value = "hasRole(" + ROLE_API_USER + ")")
   ResponseEntity<City> getCity(@ApiParam(value = "Name of the city that should be searched for", required = true, defaultValue = "", example = "Düsseldorf") @Valid @RequestParam(value = "query") String query);
-
 }

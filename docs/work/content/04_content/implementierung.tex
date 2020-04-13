@@ -8,7 +8,7 @@
 		
 		\autoref{code:CityApi} zeigt beispielhaft, wie eine solche Definition eines Endpoints aussehen kann. Die eigentliche Beschreibung des Entpoints wird durch die Annotation \lstinline|@GetMapping| beschrieben. 	
 		
-		Um jedoch eine ausführlichere Beschreibung des Endpoints zu erstellen, können die von Swagger bereitgestellten Annotation verwendet werden. So lassen sich beispielsweise die Parameter, die Rückgabewerte aber auch die Authentifizierungsmethode beschreiben. So wird für die City \acs{API} ein String als Parameter benötigt, mit dessen Hilfe die entsprechende Stadt zurückgegebene werden kann. Außerdem wird ein \acs{API} Key benötigt, um sich zu authentifizieren. 
+		Um jedoch eine ausführlichere Beschreibung des Endpoints zu erstellen, können die von Swagger bereitgestellten Annotation verwendet werden. So lassen sich beispielsweise die Parameter, die Rückgabewerte aber auch die Authentifizierungsmethode beschreiben. Außerdem lassen sich noch Beschreibungen einfügen, um die Benutzung der \acs{API} zu erleichtern und zu dokumentieren. Für die City \acs{API} wird ein String als Parameter benötigt, mit dessen Hilfe die entsprechende Stadt zurückgegebene werden kann. Außerdem wird ein \acs{API} Key benötigt, um sich zu authentifizieren. 
 		
 		\lstinputlisting[
 			label=code:CityApi,
@@ -16,4 +16,25 @@
 			captionpos=b,               % Position, an der die Caption angezeigt wird t(op) oder b(ottom)
 			style=EigenerJavaStyle,     % Eigener Style der vor dem Dokument festgelegt wurde
 		]{code/CityApi.java}
+		
+	\section{Authentifizierung}
+	
+		\begin{figure}[ht!]
+			\centering
+			\includegraphics[width=1\textwidth]{images/authorization-flow-chart.pdf}
+			\caption{Authentifizierungsprozess von \textit{Travlyn} mittels Spring Security Filter Chain}
+			\label{fig:authenticationProcess}
+		\end{figure} 
+		
+		\textit{Travlyn} stellt insgesamt zwei verschiedene Authentifizierungsrollen bereit. Wie \autoref{fig:UCD} zeigt, gibt es zum einen die Rolle des \acs{API}-Benutzers und die des registrierten Benutzers. Der API Benutzer ist es erlaubt, Informationen wie beispielsweise über Trips anzufragen, wohingegen ein registrierter Benutzer auch die Möglichkeit hat, einen Trip zu erstellen. 
+		
+		Der Prozess der Authentifizierung basiert bei \textit{Travlyn} auf sog. Tokens. Sobald sich ein Benutzer registriert oder anmeldet, wird ein Token generiert -- das Token besteht aus 32 Zeichen und Ziffern und besitzt zudem ein Ablaufdatum, welches bei Überschreiten das Token als ungültig erklärt --, auf der Datenbank abgespeichert und zurück an den Benutzer gesendet. Um nun Endpoints anzufragen, welche eine Authentifizierung benötigen, wird dieses Token im \lstinline|Authorization|-Header im Format \lstinline|Bearer <token string>| gesendet. Auf dem Server erfolgt nun die Validierung des Tokens. So kann außerdem festgestellt werden, mit wer eine bestimmte Aktion ausgeführt hat. 
+		
+		Spring stellt für diesen Prozess einen Mechanismus bereit, um diese Authentifizierung möglichst einfach umzusetzen: Bevor eine Anfrage an einen bestimmten Endpoint zugelassen und die entsprechende Controller-Methode (wie bei \autoref{code:CityApi} beispielhaft gezeigt) aufgerufen wird, durchläuft diese Anfrage eine Reihe von Filtern. Diese sog. Filter Chain beinhaltet unter Anderem auch Authentifizierungsmechanismen, die sich auch eigens definieren lassen. So wurde für \textit{Travlyn} ein Filter namens \lstinline|AuthenticationTokenFilter| entwickelt, der dazu dient, das Token aus dem \acs{HTTP}-Header zu extrahieren und zu validieren. 
+		
+		Wenn das Token valide und auch der korrekten Benutzerrolle -- \acs{API}- oder registrierter Nutzer -- zugeordnet werden kann, wird die Anfrage an die entsprechende Controller Methode weitergeleitet und der entsprechende Nutzer im sog. \lstinline|SecurityContext| gespeichert, sodass auf die Rolle des Benutzers und auch auf den Benutzer selbst beim Prozessieren der Anfragte zugegriffen werden kann. Ist dies nicht der Fall, so wird diese Anfrage als nicht-authentifiziert markiert. \autoref{fig:authenticationProcess} visualisiert den Authentifizierungsprozess, wie dieser bei \textit{Travlyn} umgesetzt wurde.
+		
+		
+		
+		Um die zugelassenen Benutzerrollen für einen Endpoint der \acs{API} festzulegen, stellt das Modul Spring Security unter anderem die Annotation \lstinline|@PreAuthorize| zur Verfügung. Als Parameter wird ein in der \ac{SpEL} geschriebener Ausdruck übergeben, wie beispielsweise \lstinline|hasRole(API_USER)| in \autoref{code:CityApi}. So lässt sich automatisiert die gesendete Authentisierung des Benutzers überprüfen. 
 		
