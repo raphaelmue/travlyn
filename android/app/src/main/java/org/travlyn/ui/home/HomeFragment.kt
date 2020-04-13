@@ -92,6 +92,11 @@ class HomeFragment : Fragment() {
         suggestions = LocalStorage(context!!).readObject("searchCitySuggestions")!!
 
         searchBarHome.attachNavigationDrawerToMenuButton((activity as MainActivity).findViewById(R.id.drawer_layout))
+        if (LocalStorage(context!!).contains("user")) {
+            searchBarHome.inflateOverflowMenu(R.menu.logout_menu)
+        } else {
+            searchBarHome.inflateOverflowMenu(R.menu.login_menu)
+        }
         searchBarHome.setOnQueryChangeListener { oldQuery, newQuery ->
             if (oldQuery != "" && newQuery == "") {
                 searchBarHome.clearSuggestions()
