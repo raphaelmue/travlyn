@@ -16,7 +16,9 @@ import org.travlyn.util.security.Hash;
 import org.travlyn.util.security.RandomString;
 
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -43,19 +45,17 @@ public class TravlynService {
     public User checkCredentials(String email, String password, String ipAddress) {
         logger.info("Checking credentials ...");
 
-        Session session = sessionFactory.getCurrentSession();
-        UserEntity user;
+        Optional<UserEntity> userOptional;
 
         try {
-            user = session.createQuery("from UserEntity where email = :email", UserEntity.class)
-                    .setParameter("email", email)
-                    .getSingleResult();
-            if (user != null) {
-                String hashedPassword = Hash.create(password, user.getSalt());
-                if (hashedPassword.equals(user.getPassword())) {
-                    logger.info("Credentials of user {} (id: {}) are approved.", user.getName(), user.getId());
-                    return user.toDataTransferObject()
-                            .token(generateToken(user, ipAddress));
+            userOptional = findUserByEmail(email);
+            if (userOptional.isPresent()) {
+                String hashedPassword = Hash.create(password, userOptional.get().getSalt());
+                if (hashedPassword.equals(userOptional.get().getPassword())) {
+                    logger.info("Credentials of user {} (id: {}) are approved.",
+                            userOptional.get().getName(), userOptional.get().getId());
+                    return userOptional.get().toDataTransferObject()
+                            .token(generateToken(userOptional.get(), ipAddress));
                 }
             }
         } catch (NoResultException ignored) {
@@ -65,6 +65,17 @@ public class TravlynService {
         return null;
     }
 
+    private Optional<UserEntity> findUserByEmail(String email) {
+        Session session = sessionFactory.getCurrentSession();
+        try {
+            return Optional.of(session.createQuery("from UserEntity where email = :email", UserEntity.class)
+                    .setParameter("email", email)
+                    .getSingleResult());
+        } catch (NoResultException e) {
+        }
+        return Optional.empty();
+    }
+
 
     @Transactional
     public User registerUser(String email, String name, String password, String ipAddress) {
@@ -72,6 +83,10 @@ public class TravlynService {
 
         final String salt = new RandomString(32).nextString();
         final String hashedPassword = Hash.create(password, salt);
+
+        if (findUserByEmail(email).isPresent()) {
+            throw new NonUniqueResultException("Email is already is use");
+        }
 
         Session session = sessionFactory.getCurrentSession();
         UserEntity userEntity = new UserEntity()

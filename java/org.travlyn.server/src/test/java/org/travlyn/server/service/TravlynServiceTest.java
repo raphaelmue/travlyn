@@ -17,6 +17,7 @@ import org.travlyn.shared.model.db.CityEntity;
 import org.travlyn.shared.model.db.TokenEntity;
 import org.travlyn.shared.model.db.UserEntity;
 
+import javax.persistence.NonUniqueResultException;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 
@@ -126,5 +127,9 @@ public class TravlynServiceTest {
         Assertions.assertNotNull(userToAssert.getToken().getToken());
         userToAssert = service.checkCredentials("test2@email.com", "password", "192.168.0.1");
         Assertions.assertEquals("Second Test User", userToAssert.getName());
+
+        Assertions.assertThrows(NonUniqueResultException.class,
+                () -> service.registerUser("test@email.com", "Second Test User", "password", "192.168.0.1"));
+
     }
 }
