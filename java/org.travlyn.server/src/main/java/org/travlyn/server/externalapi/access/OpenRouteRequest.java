@@ -15,14 +15,12 @@ import org.travlyn.shared.model.db.StopEntity;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class OpenRouteRequest implements Request<Set<StopEntity>> {
     private static final String BASE_URL = "https://api.openrouteservice.org/pois";
-    private static final HashSet<Integer> excludedCategories = new HashSet<>();
+    private static final double FIELDSIZEFORREQUEST = 0.02;
+    private static final HashSet<Integer> excludedCategories = new HashSet<>(Arrays.asList(136, 237, 238, 231, 234, 261, 262, 267, 271, 280, 282, 283, 288, 290, 293, 297, 298, 302, 303, 307, 623, 624, 626));
 
     private final Gson gson = new Gson();
     private Map<Integer, CategoryEntity> categoryList;
@@ -32,32 +30,6 @@ public class OpenRouteRequest implements Request<Set<StopEntity>> {
     private final CityEntity city;
 
     public OpenRouteRequest(double latitude, double longitude, CityEntity city, Map<Integer, CategoryEntity> categoryList) {
-        //set Categories that should be excluded (necessary due to filter limitations at ORS)
-        excludedCategories.add(136);
-        excludedCategories.add(237);
-        excludedCategories.add(238);
-        excludedCategories.add(231);
-        excludedCategories.add(234);
-        excludedCategories.add(261);
-        excludedCategories.add(262);
-        excludedCategories.add(267);
-        excludedCategories.add(271);
-        excludedCategories.add(280);
-        excludedCategories.add(282);
-        excludedCategories.add(283);
-        excludedCategories.add(288);
-        excludedCategories.add(290);
-        excludedCategories.add(293);
-        excludedCategories.add(297);
-        excludedCategories.add(298);
-        excludedCategories.add(302);
-        excludedCategories.add(303);
-        excludedCategories.add(307);
-        excludedCategories.add(623);
-        excludedCategories.add(624);
-        excludedCategories.add(626);
-
-
         this.latitude = latitude;
         this.longitude = longitude;
         this.city = city;
@@ -73,16 +45,15 @@ public class OpenRouteRequest implements Request<Set<StopEntity>> {
         for (int row = -1; row <= 1; row++) {
             for (int column = -1; column <= 1; column++) {
                 APIRequest request = new APIRequest(BASE_URL, new HashSet<>(), this.genPostBody(
-                        BigDecimal.valueOf(latitude + (row * 0.02)).setScale(2, RoundingMode.FLOOR).doubleValue(),
-                        BigDecimal.valueOf(longitude + (column * 0.02)).setScale(2, RoundingMode.FLOOR).doubleValue(),
-                        BigDecimal.valueOf(latitude + ((row + 1) * 0.02)).setScale(2, RoundingMode.FLOOR).doubleValue(),
-                        BigDecimal.valueOf(longitude + ((column + 1) * 0.02)).setScale(2, RoundingMode.FLOOR).doubleValue(),
-                        latitude + (row * 0.02),
-                        longitude + (column * 0.02)), header);
+                        BigDecimal.valueOf(latitude + (row * FIELDSIZEFORREQUEST)).setScale(2, RoundingMode.FLOOR).doubleValue(),
+                        BigDecimal.valueOf(longitude + (column * FIELDSIZEFORREQUEST)).setScale(2, RoundingMode.FLOOR).doubleValue(),
+                        BigDecimal.valueOf(latitude + ((row + 1) * FIELDSIZEFORREQUEST)).setScale(2, RoundingMode.FLOOR).doubleValue(),
+                        BigDecimal.valueOf(longitude + ((column + 1) * FIELDSIZEFORREQUEST)).setScale(2, RoundingMode.FLOOR).doubleValue(),
+                        latitude + (row * FIELDSIZEFORREQUEST),
+                        longitude + (column * FIELDSIZEFORREQUEST)), header);
                 String apiResult;
                 try {
                     apiResult = request.performAPICallPOST();
-                    System.out.println(apiResult);
                 } catch (IOException e) {
                     continue;
                 }
@@ -116,7 +87,7 @@ public class OpenRouteRequest implements Request<Set<StopEntity>> {
                     }
                 }
                 stop.setCategory(category);
-                if (excludedCategories.contains(category.getId())){
+                if (excludedCategories.contains(category.getId())) {
                     continue;
                 }
                 stop.setName(name);
@@ -133,8 +104,8 @@ public class OpenRouteRequest implements Request<Set<StopEntity>> {
         return resultList;
     }
 
-    private String genPostBody(double lat1, double lon1, double lat2, double lon2, double middleLat, double middleLon) {
-        return "{\"request\":\"pois\",\"geometry\":{\"bbox\":[[" + lon1 + "," + lat1 + "],[" + lon2 + "," + lat2 +
+    private String genPostBody(double topLeftLat, double topLeftLon, double bottomRightLat, double bottomRightLon, double middleLat, double middleLon) {
+        return "{\"request\":\"pois\",\"geometry\":{\"bbox\":[[" + topLeftLon + "," + topLeftLat + "],[" + bottomRightLon + "," + bottomRightLat +
                 "]],\"geojson\":{\"type\":\"Point\",\"coordinates\":[" + middleLon + "," + middleLat +
                 "]},\"buffer\":2000},\"filters\":{\"category_group_ids\":[620,130,220,330,260]}}";
     }

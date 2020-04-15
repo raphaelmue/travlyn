@@ -144,7 +144,7 @@ public class TravlynServiceTest {
         Assertions.assertNotNull(result);
 
         //test if stops are present
-        Assertions.assertNotEquals(0,result.getStops().size());
+        Assertions.assertNotEquals(0, result.getStops().size());
 
         //invalid search term
         cityToAssert = service.getCityWithInformation("xyz");
@@ -174,70 +174,70 @@ public class TravlynServiceTest {
 
     @Test
     @Transactional
-    public void testGenerateTrip(){
+    public void testGenerateTrip() {
         //normal case
-        ArrayList<Long> stopIds= new ArrayList<>();
+        ArrayList<Long> stopIds = new ArrayList<>();
         stopIds.add((long) stopEntity.getId());
         stopIds.add((long) secondStopEntity.getId());
-        Trip result = service.generateTrip((long) userEntity.getId(), (long) cityEntity.getId(),"Test Trip",false,stopIds);
+        Trip result = service.generateTrip((long) userEntity.getId(), (long) cityEntity.getId(), "Test Trip", false, stopIds);
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(userEntity.getId(),result.getUser().getId());
-        Assertions.assertEquals("Test Trip",result.getName());
+        Assertions.assertEquals(userEntity.getId(), result.getUser().getId());
+        Assertions.assertEquals("Test Trip", result.getName());
         //check order
-        for (int i = 0; i<result.getStops().size();i++){
-            Assertions.assertEquals(stopIds.get(i),result.getStops().get(i).getId());
+        for (int i = 0; i < result.getStops().size(); i++) {
+            Assertions.assertEquals(stopIds.get(i), result.getStops().get(i).getId());
         }
 
         //trip without stops
-        result = service.generateTrip((long) userEntity.getId(), (long) cityEntity.getId(),"Test Trip",true,null);
+        result = service.generateTrip((long) userEntity.getId(), (long) cityEntity.getId(), "Test Trip", true, null);
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(userEntity.getId(),result.getUser().getId());
-        Assertions.assertEquals("Test Trip",result.getName());
-        Assertions.assertEquals(0,result.getStops().size());
+        Assertions.assertEquals(userEntity.getId(), result.getUser().getId());
+        Assertions.assertEquals("Test Trip", result.getName());
+        Assertions.assertEquals(0, result.getStops().size());
 
         //user not found
-        Assertions.assertThrows(NoResultException.class, ()-> service.generateTrip((long) userEntity.getId() +256, (long) cityEntity.getId(),"Test Trip",false,stopIds));
+        Assertions.assertThrows(NoResultException.class, () -> service.generateTrip((long) userEntity.getId() + 256, (long) cityEntity.getId(), "Test Trip", false, stopIds));
     }
 
     @Test
     @Transactional
-    public void testGetTrip(){
+    public void testGetTrip() {
         Trip trip = service.getTrip((long) tripEntity.getId());
-        Assertions.assertEquals("Test trip",trip.getName());
-        Assertions.assertEquals(userEntity.getId(),trip.getUser().getId());
-        Assertions.assertEquals(cityEntity.getId(),trip.getCity().getId());
-        Assertions.assertEquals(tripEntity.getStops().size(),trip.getStops().size());
+        Assertions.assertEquals("Test trip", trip.getName());
+        Assertions.assertEquals(userEntity.getId(), trip.getUser().getId());
+        Assertions.assertEquals(cityEntity.getId(), trip.getCity().getId());
+        Assertions.assertEquals(tripEntity.getStops().size(), trip.getStops().size());
 
         //not found
-        Assertions.assertThrows(NoResultException.class,() ->service.getTrip((long) 2) );
+        Assertions.assertThrows(NoResultException.class, () -> service.getTrip((long) 2));
 
     }
 
     @Test
     @Transactional
-    public void testGetTripPerUser(){
+    public void testGetTripPerUser() {
         List<Trip> trips = service.getTripsPerUser((long) userEntity.getId());
         Assertions.assertEquals(1, trips.size());
-        Assertions.assertEquals("Test trip",trips.get(0).getName());
+        Assertions.assertEquals("Test trip", trips.get(0).getName());
 
         //user not found
-        Assertions.assertThrows(NoResultException.class,()->service.getTripsPerUser(2L));
+        Assertions.assertThrows(NoResultException.class, () -> service.getTripsPerUser(2L));
     }
 
     @Test
     @Transactional
-    public void testGetTripPerCity(){
+    public void testGetTripPerCity() {
         List<Trip> trips = service.getTripsForCity((long) cityEntity.getId());
         Assertions.assertEquals(1, trips.size());
-        Assertions.assertEquals("Test trip",trips.get(0).getName());
+        Assertions.assertEquals("Test trip", trips.get(0).getName());
 
         //city not found
-        Assertions.assertThrows(NoResultException.class,() -> service.getTripsForCity((long) (cityEntity.getId()+100)));
+        Assertions.assertThrows(NoResultException.class, () -> service.getTripsForCity((long) (cityEntity.getId() + 100)));
     }
 
     @Test
     @Transactional
-    public void testUpdateTrip(){
+    public void testUpdateTrip() {
         //create updated trip
         TripEntity newTrip = new TripEntity();
         TripStopEntity tripStopEntity = new TripStopEntity();
@@ -262,9 +262,9 @@ public class TravlynServiceTest {
         service.updateTrip(newTrip.toDataTransferObject());
         Trip trip = service.getTrip((long) tripEntity.getId());
 
-        Assertions.assertNotEquals("Test trip",trip.getName());
-        Assertions.assertEquals("Updated test Trip",trip.getName());
-        Assertions.assertEquals(1,trip.getStops().size());
-        Assertions.assertEquals("Test descr",trip.getStops().get(0).getDescription());
+        Assertions.assertNotEquals("Test trip", trip.getName());
+        Assertions.assertEquals("Updated test Trip", trip.getName());
+        Assertions.assertEquals(1, trip.getStops().size());
+        Assertions.assertEquals("Test descr", trip.getStops().get(0).getDescription());
     }
 }

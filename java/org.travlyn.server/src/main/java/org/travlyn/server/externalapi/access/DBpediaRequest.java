@@ -1,5 +1,8 @@
 package org.travlyn.server.externalapi.access;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.travlyn.server.service.TravlynService;
@@ -19,8 +22,9 @@ import java.util.Set;
 public abstract class DBpediaRequest<K> implements Request<K> {
     private static final String API_KEY;
     private static final Logger logger = LoggerFactory.getLogger(DBpediaRequest.class);
+
     static {
-        String readLine="1234";
+        String readLine = "1234";
         try (
                 BufferedReader fileReader = new BufferedReader(new InputStreamReader(
                         DBpediaRequest.class.getClassLoader().getResourceAsStream("DBpediaKey.txt")))) {
@@ -30,6 +34,7 @@ public abstract class DBpediaRequest<K> implements Request<K> {
         }
         API_KEY = readLine;
     }
+
     private final String baseURL;
 
     DBpediaRequest(String baseURL) {
@@ -68,5 +73,16 @@ public abstract class DBpediaRequest<K> implements Request<K> {
             //request could not be made due to some network errors
             return null;
         }
+    }
+
+    final JsonObject filterLanguageToEnglish(JsonArray jsonArray) {
+        // filter for english language
+        for (JsonElement content : jsonArray) {
+            if (content.getAsJsonObject().has("dboabstract") &&
+                    content.getAsJsonObject().getAsJsonObject("dboabstract").getAsJsonPrimitive("xml:lang").getAsString().equals("en")) {
+                return content.getAsJsonObject();
+            }
+        }
+        return null;
     }
 }
