@@ -174,7 +174,7 @@ public class TravlynService {
     @Transactional
     protected Set<StopEntity> fetch100Stops(Set<StopEntity> entities){
         Session session = sessionFactory.getCurrentSession();
-        int requestCount=1;
+        int requestCount=2;
         Iterator<StopEntity> stopEntityIterator = entities.iterator();
         while(requestCount<100 && stopEntityIterator.hasNext()){
             StopEntity entity = stopEntityIterator.next();

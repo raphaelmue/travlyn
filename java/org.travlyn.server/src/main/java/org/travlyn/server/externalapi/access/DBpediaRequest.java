@@ -25,7 +25,7 @@ public abstract class DBpediaRequest<K> implements Request<K> {
                 BufferedReader fileReader = new BufferedReader(new InputStreamReader(
                         DBpediaRequest.class.getClassLoader().getResourceAsStream("DBpediaKey.txt")))) {
             readLine = fileReader.readLine();
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             logger.error(e.getMessage());
         }
         API_KEY = readLine;
