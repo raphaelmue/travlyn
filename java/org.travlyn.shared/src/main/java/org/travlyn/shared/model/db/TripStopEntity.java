@@ -1,6 +1,9 @@
 package org.travlyn.shared.model.db;
 
+import org.travlyn.shared.model.api.Stop;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -14,6 +17,11 @@ public class TripStopEntity implements DataEntity {
     private int id;
 
     @Embedded
+    @NotNull
+    @AttributeOverrides(value = {
+            @AttributeOverride(name = "tripId", column = @Column(name = "trip_id", nullable = false)),
+            @AttributeOverride(name = "stopId", column = @Column(name = "stop_id", nullable = false))
+    })
     private TripStopId tripStopId = new TripStopId();
 
     @ManyToOne
@@ -24,7 +32,7 @@ public class TripStopEntity implements DataEntity {
     @MapsId(value = "stopId")
     private StopEntity stop;
 
-    @OneToOne(targetEntity = TripStopEntity.class)
+    @OneToOne(targetEntity = TripStopEntity.class, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "predecessor", referencedColumnName = "id")
     private TripStopEntity predecessor;
 
@@ -60,18 +68,46 @@ public class TripStopEntity implements DataEntity {
         this.stop = stop;
     }
 
-    public TripStopEntity getPredecessor() {
-        return predecessor;
-    }
-
     public void setPredecessor(TripStopEntity predecessor) {
         this.predecessor = predecessor;
     }
 
+    public TripStopEntity getPredecessor() {
+        return predecessor;
+    }
+
+    @Override
+    public Stop toDataTransferObject() {
+        return this.stop.toDataTransferObject();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TripStopEntity that = (TripStopEntity) o;
+
+        if (id != that.id) return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (tripStopId != null ? tripStopId.hashCode() : 0);
+        result = 31 * result + (trip != null ? trip.hashCode() : 0);
+        result = 31 * result + (stop != null ? stop.hashCode() : 0);
+        result = 31 * result + (predecessor != null ? predecessor.hashCode() : 0);
+        return result;
+    }
+
     @Embeddable
     public static class TripStopId implements Serializable {
-        private int tripId;
-        private int stopId;
+        @NotNull
+        public int tripId;
+        @NotNull
+        public int stopId;
 
         public int getTripId() {
             return tripId;

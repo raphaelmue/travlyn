@@ -9,7 +9,6 @@ import org.travlyn.R
 
 class SettingsFragment : Fragment() {
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

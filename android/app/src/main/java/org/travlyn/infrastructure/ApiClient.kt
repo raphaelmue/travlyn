@@ -17,13 +17,15 @@ import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-open class ApiClient(val baseUrl: String, open val application: Application?) {
+open class ApiClient(
+    val baseUrl: String = "https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
+    open val application: Application?
+) {
     companion object {
         protected const val ContentType = "Content-Type"
         protected const val Accept = "Accept"
         protected const val JsonMediaType = "application/json"
         protected const val FormDataMediaType = "multipart/form-data"
-        protected const val XmlMediaType = "application/xml"
 
         @JvmStatic
         val client: OkHttpClient =
@@ -48,8 +50,7 @@ open class ApiClient(val baseUrl: String, open val application: Application?) {
     ): RequestBody {
         when {
             content is File -> {
-                return content
-                    .asRequestBody(mediaType.toMediaTypeOrNull())
+                return content.asRequestBody(mediaType.toMediaTypeOrNull())
             }
             mediaType == FormDataMediaType -> {
                 var builder = FormBody.Builder()

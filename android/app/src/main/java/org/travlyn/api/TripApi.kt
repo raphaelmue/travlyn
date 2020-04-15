@@ -17,10 +17,8 @@ import org.travlyn.infrastructure.*
 import org.travlyn.local.Application
 
 class TripApi(
-    basePath: String = "https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
-    application: Application
-) :
-    ApiClient(basePath, application) {
+    application: Application? = null
+) : ApiClient(application = application) {
 
     /**
      * Search for trips
@@ -59,8 +57,21 @@ class TripApi(
      * @return Trip
      */
     @Suppress("UNCHECKED_CAST")
-    suspend fun generateTrip(userId: Long): Trip {
-        val localVariableQuery: MultiValueMap = mapOf("userId" to listOf("$userId"))
+    suspend fun generateTrip(
+        userId: Long,
+        cityId: Long,
+        tripName: String,
+        isPrivate: Boolean,
+        stopIds: Array<Int>
+    ): Trip {
+        val localVariableQuery: MultiValueMap =
+            mapOf(
+                "userId" to listOf("$userId"),
+                "cityId" to listOf("$cityId"),
+                "tripName" to listOf(tripName),
+                "privateFlag" to listOf("$isPrivate"),
+                "stopIds" to stopIds.map { id -> id.toString() }.toList()
+            )
         val localVariableConfig = RequestConfig(
             RequestMethod.PUT,
             "/trip", query = localVariableQuery
@@ -178,14 +189,14 @@ class TripApi(
      * @param trip Updated trip
      * @return void
      */
-    suspend fun updateTrip(trip: Trip): Unit {
-        val localVariableQuery: MultiValueMap = mapOf("trip" to listOf("$trip"))
+    suspend fun updateTrip(trip: Trip) {
         val localVariableConfig = RequestConfig(
             RequestMethod.POST,
-            "/trip", query = localVariableQuery
+            "/trip"
         )
         val response = request<Any?>(
-            localVariableConfig
+            localVariableConfig,
+            body = trip
         )
 
         return when (response.responseType) {

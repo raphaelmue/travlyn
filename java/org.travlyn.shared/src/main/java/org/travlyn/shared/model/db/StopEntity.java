@@ -38,15 +38,16 @@ public class StopEntity implements DataEntity {
     @Column(name = "average_rating")
     private double averageRating;
 
-    @ManyToOne
-    @JoinColumn(name = "city_id", referencedColumnName = "id")
+    @ManyToOne(targetEntity = CityEntity.class)
+    @JoinColumn(name = "city_id", referencedColumnName = "id", nullable = false)
     private CityEntity city;
 
     @OneToMany
     @JoinColumn(name = "ratable")
     private Set<StopRatingEntity> ratings;
 
-    @OneToOne(targetEntity = CategoryEntity.class)
+    @OneToOne(targetEntity = CategoryEntity.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private CategoryEntity category;
 
     @Override
@@ -138,21 +139,30 @@ public class StopEntity implements DataEntity {
         this.category = category;
     }
 
+    @Override
+    public Stop toDataTransferObject() {
+        Stop stop = new Stop();
+        stop.setId(this.id);
+        stop.setName(this.name);
+        stop.setImage(this.image);
+        stop.setCategory(this.category.toDataTransferObject());
+        stop.setTimeEffort(this.timeEffort);
+        stop.setPricing(this.pricing);
+        stop.setLatitude(this.latitude);
+        stop.setLongitude(this.longitude);
+        stop.setAverageRating(this.averageRating);
+        stop.description(this.description);
+        //stop.city(this.city.toDataTransferObject());
+        //TODO
+        //stop.setRatings(this.ratings);
+        return stop;
+    }
+
     public void setCity(CityEntity city) {
         this.city = city;
     }
 
-    @Override
-    public Stop toDataTransferObject() {
-        return new Stop().id(this.id)
-                .setLongitude(this.longitude)
-                .setLatitude(this.latitude)
-                .setAverageRating(this.averageRating)
-                .setName(this.name)
-                .setPricing(this.pricing)
-                .setTimeEffort(this.timeEffort)
-                .image(this.image)
-                .description(this.description)
-                .category(this.category.toDataTransferObject());
+    public CityEntity getCity() {
+        return city;
     }
 }

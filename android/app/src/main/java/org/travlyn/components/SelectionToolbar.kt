@@ -33,7 +33,7 @@ class SelectionToolbar<K> : Toolbar {
     private lateinit var onCloseListener: () -> Unit
     private lateinit var onCheckListener: (selectedElements: MutableList<K>) -> Unit
 
-    private val selectedElements: MutableList<K> = mutableListOf()
+    private var selectedElements: MutableList<K> = mutableListOf()
 
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
@@ -67,9 +67,11 @@ class SelectionToolbar<K> : Toolbar {
         val drawable = DrawableCompat.wrap(context.getDrawable(R.drawable.ic_check));
         DrawableCompat.setTint(drawable, ContextCompat.getColor(context, R.color.black));
         menu[0].icon = drawable
+
+        val that = this
         menu[0].setOnMenuItemClickListener {
+            onCheckListener(that.selectedElements)
             hideToolbar()
-            this.onCheckListener(selectedElements)
             return@setOnMenuItemClickListener true
         }
 

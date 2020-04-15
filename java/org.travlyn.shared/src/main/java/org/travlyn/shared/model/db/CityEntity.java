@@ -32,7 +32,7 @@ public class CityEntity implements DataEntity {
     private String description;
 
     @OneToMany(cascade = {CascadeType.ALL})
-    private Set<StopEntity> stops;
+    private Set<StopEntity> stops = new HashSet<>();
 
     @Override
     public int getId() {
