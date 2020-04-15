@@ -153,13 +153,17 @@ public class Stop extends AbstractDataTransferObject {
         return description;
     }
 
+    public Stop image(String image) {
+        this.image = image;
+        return this;
+    }
+
     public String getImage() {
         return image;
     }
 
-    public Stop image(String image) {
+    public void setImage(String image) {
         this.image = image;
-        return this;
     }
 
     public Stop pricing(Double pricing) {
@@ -318,7 +322,8 @@ public class Stop extends AbstractDataTransferObject {
         });
         stopEntity.setRatings(ratingEntities);
         stopEntity.setCategory(this.category.toEntity());
-        stopEntity.setCity(this.city.toEntity());
+        if (this.city != null)
+            stopEntity.setCity(this.city.toEntity());
         stopEntity.setImage(this.image);
         return stopEntity;
     }

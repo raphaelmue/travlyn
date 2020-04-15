@@ -4,6 +4,7 @@ import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.travlyn.shared.model.api.Rating;
+import org.travlyn.shared.model.api.StopIdWrapper;
 import org.travlyn.shared.model.api.Trip;
 
 import javax.validation.Valid;
@@ -38,11 +39,16 @@ public interface TripApi {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful operation", response = Trip.class),
             @ApiResponse(code = 401, message = "You are not authorized to perform this action"),
+            @ApiResponse(code = 404, message = "One of the provided IDs is not valid"),
             @ApiResponse(code = 500, message = "Trip could not be generated")})
     @PutMapping(
             value = "/trip",
             produces = {"application/json"})
-    ResponseEntity<Trip> generateTrip(@NotNull @ApiParam(value = "The user who generates the trip", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "userId") Long userId);
+    ResponseEntity<Trip> generateTrip(@ApiParam(value = "The user who generates the trip", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "userId") Long userId,
+                                      @ApiParam(value = "The city which the trip is generated for", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "cityId") Long cityId,
+                                      @ApiParam(value = "Name for the new trip", required = true, defaultValue = "Trip", example = "My personal Trip") @Valid @RequestParam(value = "tripName") String tripName,
+                                      @ApiParam(value = "Flag to set privacy setting for this trip", required = true, defaultValue = "false", example = "false") @Valid @RequestParam(value = "privateFlag") boolean privateFlag,
+                                      @ApiParam(value = "List of stops that are part of the trip", required = true, defaultValue = "-1", example = "[0,124,758]") @Valid @RequestParam(value = "stopIds") StopIdWrapper stopIds);
 
     @ApiOperation(
             value = "Get Trip by ID",
@@ -55,11 +61,13 @@ public interface TripApi {
             @ApiResponse(code = 200, message = "successful operation", response = Trip.class),
             @ApiResponse(code = 400, message = "Invalid ID supplied"),
             @ApiResponse(code = 401, message = "You are not authorized to perform this action"),
+            @ApiResponse(code = 403, message = "You can not read a private trip"),
             @ApiResponse(code = 404, message = "Trip not found")})
     @GetMapping(
             value = "/trip/{tripId}",
             produces = {"application/json"})
-    ResponseEntity<Trip> getTripByID(@ApiParam(value = "ID of trip to return", required = true, defaultValue = "-1", example = "123") @PathVariable("tripId") Long tripId);
+    ResponseEntity<Trip> getTripByID(@ApiParam(value = "ID of trip to return", required = true, defaultValue = "-1", example = "123") @PathVariable("tripId") Long tripId,
+                                     @ApiParam(value = "Id of user that is reading the trip", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "userId") Long userId);
 
     @ApiOperation(
             value = "Rate a trip",
@@ -89,5 +97,5 @@ public interface TripApi {
     @PostMapping(
             value = "/trip")
     ResponseEntity<Void> updateTrip(@NotNull @ApiParam(value = "Updated trip", required = true, example = "{id: 123, private: true, city: {id: 123, name: \"New York\", description: \"This is a description of New York.\"}}}")
-                                    @Valid @RequestParam(value = "trip") Trip trip);
+                                    @Valid @RequestBody Trip trip);
 }

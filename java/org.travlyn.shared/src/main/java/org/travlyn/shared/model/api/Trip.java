@@ -32,6 +32,10 @@ public class Trip extends AbstractDataTransferObject {
     @ApiModelProperty(value = "Trip is accessible by others if true", required = true, example = "true")
     private Boolean isPrivate = null;
 
+    @JsonProperty("name")
+    @ApiModelProperty(value = "Name for this trip", required = true, example = "My London Trip")
+    private String name = "";
+
     @JsonProperty("stops")
     @ApiModelProperty(value = "List of Stops", required = true)
     @Valid
@@ -121,6 +125,15 @@ public class Trip extends AbstractDataTransferObject {
 
     public void setPrivate(Boolean isPrivate) {
         this.isPrivate = isPrivate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Trip name(String name) {
+        this.name = name;
+        return this;
     }
 
     public Trip stops(List<Stop> stops) {
@@ -232,12 +245,21 @@ public class Trip extends AbstractDataTransferObject {
     public TripEntity toEntity() {
         TripEntity tripEntity = new TripEntity();
         tripEntity.setId(this.id);
-        tripEntity.setCity(this.city.toEntity());
+        if (tripEntity.getCity() != null) {
+            tripEntity.setCity(this.city.toEntity());
+        }
         tripEntity.setPrivate(this.isPrivate);
+        tripEntity.setName(this.name);
+        tripEntity.setUser(this.user.toEntity());
         List<TripStopEntity> tripStopEntities = new ArrayList<>();
         for (int i = 0; i < this.stops.size(); i++) {
             TripStopEntity tripStopEntity = new TripStopEntity();
             tripStopEntity.setStop(this.stops.get(i).toEntity());
+            tripStopEntity.setTrip(tripEntity);
+            TripStopEntity.TripStopId tripStopId = new TripStopEntity.TripStopId();
+            tripStopId.setStopId(this.stops.get(i).getId());
+            tripStopId.setTripId(tripEntity.getId());
+            tripStopEntity.setTripStopId(tripStopId);
             tripStopEntities.add(tripStopEntity);
             if (i == 0) {
                 tripStopEntity.setPredecessor(null);

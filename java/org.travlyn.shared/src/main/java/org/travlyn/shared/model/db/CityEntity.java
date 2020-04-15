@@ -35,7 +35,7 @@ public class CityEntity implements DataEntity {
     private boolean unfetchedStops;
 
     @OneToMany(orphanRemoval = true,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
-    private Set<StopEntity> stops;
+    private Set<StopEntity> stops = new HashSet<>();
 
     @Override
     public int getId() {
