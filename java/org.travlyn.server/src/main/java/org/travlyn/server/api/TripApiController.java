@@ -99,4 +99,16 @@ public class TripApiController implements TripApi {
 
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+    @Override
+    public ResponseEntity<Trip> getTripExecutionInfo(Long tripId, Long userId, double startLatitude, double startLongitude, boolean reorderAllowed, boolean roundTrip) {
+        String accept = request.getHeader("Accept");
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    @Override
+    public ResponseEntity<Trip> getRoutingToStop(double startLatitude, double startLongitude, Long stopId) {
+        String accept = request.getHeader("Accept");
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
 }
