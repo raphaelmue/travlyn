@@ -131,17 +131,20 @@ public class TravlynServiceTest {
     @Transactional
     public void testGetCityWithInformation() {
         //valid search term
-        City cityToAssert = service.getCityWithInformation("Wesel");
+        City cityToAssert = service.getCityWithInformation("Poole");
         Assertions.assertNotNull(cityToAssert);
-        Assertions.assertEquals("Wesel (German pronunciation: [ˈveːzəl]) is a city in North Rhine-Westphalia, Germany. It is the capital of the Wesel district.", cityToAssert.getDescription());
-        Assertions.assertEquals("http://commons.wikimedia.org/wiki/Special:FilePath/Wesel_willibrordi_dom_chor.jpg?width=300", cityToAssert.getImage());
+        Assertions.assertEquals("Poole /puːl/ is a large coastal town and seaport in the county of Dorset, on the south coast of England. The town is 33 kilometres (21 mi) east of Dorchester, and adjoins Bournemouth to the east. The local council is Borough of Poole and was made a unitary authority in 1997, gaining administrative independence from Dorset County Council. The borough had a population of 147,645 at the 2011 census, making it the second largest in Dorset. Together with Bournemouth and Christchurch, the town forms the South East Dorset conurbation with a total population of over 465,000. Human settlement in the area dates back to before the Iron Age. The earliest recorded use of the town's name was in the 12th century when the town began to emerge as an important port, prospering with the introduction of the wool trade. In later centuries, the town had important trade links with North America and at its peak in the 18th century it was one of the busiest ports in Britain. In the Second World War, the town was one of the main departing points for the Normandy landings. Poole is a tourist resort, attracting visitors with its large natural harbour, history, the Lighthouse arts centre and Blue Flag beaches. The town has a busy commercial port with cross-Channel freight and passenger ferry services. The headquarters of the Royal National Lifeboat Institution (RNLI) are in Poole, and the Royal Marines have a base in the town's harbour. Despite their names, Poole is the home of The Arts University Bournemouth, the Bournemouth Symphony Orchestra and a significant part of Bournemouth University.", cityToAssert.getDescription());
+        Assertions.assertEquals("http://commons.wikimedia.org/wiki/Special:FilePath/Poole_port.jpg?width=300", cityToAssert.getImage());
 
         //test if caching is working
         Session session = sessionFactory.getCurrentSession();
         CityEntity result = session.createQuery("from CityEntity where name = :name", CityEntity.class)
-                .setParameter("name", "Wesel")
+                .setParameter("name", "Poole")
                 .getSingleResult();
         Assertions.assertNotNull(result);
+
+        //test if stops are present
+        Assertions.assertNotEquals(0, result.getStops().size());
 
         //invalid search term
         cityToAssert = service.getCityWithInformation("xyz");
@@ -171,70 +174,70 @@ public class TravlynServiceTest {
 
     @Test
     @Transactional
-    public void testGenerateTrip(){
+    public void testGenerateTrip() {
         //normal case
-        ArrayList<Long> stopIds= new ArrayList<>();
+        ArrayList<Long> stopIds = new ArrayList<>();
         stopIds.add((long) stopEntity.getId());
         stopIds.add((long) secondStopEntity.getId());
-        Trip result = service.generateTrip((long) userEntity.getId(), (long) cityEntity.getId(),"Test Trip",false,stopIds);
+        Trip result = service.generateTrip((long) userEntity.getId(), (long) cityEntity.getId(), "Test Trip", false, stopIds);
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(userEntity.getId(),result.getUser().getId());
-        Assertions.assertEquals("Test Trip",result.getName());
+        Assertions.assertEquals(userEntity.getId(), result.getUser().getId());
+        Assertions.assertEquals("Test Trip", result.getName());
         //check order
-        for (int i = 0; i<result.getStops().size();i++){
-            Assertions.assertEquals(stopIds.get(i),result.getStops().get(i).getId());
+        for (int i = 0; i < result.getStops().size(); i++) {
+            Assertions.assertEquals(stopIds.get(i), result.getStops().get(i).getId());
         }
 
         //trip without stops
-        result = service.generateTrip((long) userEntity.getId(), (long) cityEntity.getId(),"Test Trip",true,null);
+        result = service.generateTrip((long) userEntity.getId(), (long) cityEntity.getId(), "Test Trip", true, null);
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(userEntity.getId(),result.getUser().getId());
-        Assertions.assertEquals("Test Trip",result.getName());
-        Assertions.assertEquals(0,result.getStops().size());
+        Assertions.assertEquals(userEntity.getId(), result.getUser().getId());
+        Assertions.assertEquals("Test Trip", result.getName());
+        Assertions.assertEquals(0, result.getStops().size());
 
         //user not found
-        Assertions.assertThrows(NoResultException.class, ()-> service.generateTrip((long) userEntity.getId() +256, (long) cityEntity.getId(),"Test Trip",false,stopIds));
+        Assertions.assertThrows(NoResultException.class, () -> service.generateTrip((long) userEntity.getId() + 256, (long) cityEntity.getId(), "Test Trip", false, stopIds));
     }
 
     @Test
     @Transactional
-    public void testGetTrip(){
+    public void testGetTrip() {
         Trip trip = service.getTrip((long) tripEntity.getId());
-        Assertions.assertEquals("Test trip",trip.getName());
-        Assertions.assertEquals(userEntity.getId(),trip.getUser().getId());
-        Assertions.assertEquals(cityEntity.getId(),trip.getCity().getId());
-        Assertions.assertEquals(tripEntity.getStops().size(),trip.getStops().size());
+        Assertions.assertEquals("Test trip", trip.getName());
+        Assertions.assertEquals(userEntity.getId(), trip.getUser().getId());
+        Assertions.assertEquals(cityEntity.getId(), trip.getCity().getId());
+        Assertions.assertEquals(tripEntity.getStops().size(), trip.getStops().size());
 
         //not found
-        Assertions.assertThrows(NoResultException.class,() ->service.getTrip((long) 2) );
+        Assertions.assertThrows(NoResultException.class, () -> service.getTrip((long) 2));
 
     }
 
     @Test
     @Transactional
-    public void testGetTripPerUser(){
+    public void testGetTripPerUser() {
         List<Trip> trips = service.getTripsPerUser((long) userEntity.getId());
         Assertions.assertEquals(1, trips.size());
-        Assertions.assertEquals("Test trip",trips.get(0).getName());
+        Assertions.assertEquals("Test trip", trips.get(0).getName());
 
         //user not found
-        Assertions.assertThrows(NoResultException.class,()->service.getTripsPerUser(2L));
+        Assertions.assertThrows(NoResultException.class, () -> service.getTripsPerUser(2L));
     }
 
     @Test
     @Transactional
-    public void testGetTripPerCity(){
+    public void testGetTripPerCity() {
         List<Trip> trips = service.getTripsForCity((long) cityEntity.getId());
         Assertions.assertEquals(1, trips.size());
-        Assertions.assertEquals("Test trip",trips.get(0).getName());
+        Assertions.assertEquals("Test trip", trips.get(0).getName());
 
         //city not found
-        Assertions.assertThrows(NoResultException.class,() -> service.getTripsForCity((long) (cityEntity.getId()+100)));
+        Assertions.assertThrows(NoResultException.class, () -> service.getTripsForCity((long) (cityEntity.getId() + 100)));
     }
 
     @Test
     @Transactional
-    public void testUpdateTrip(){
+    public void testUpdateTrip() {
         //create updated trip
         TripEntity newTrip = new TripEntity();
         TripStopEntity tripStopEntity = new TripStopEntity();
@@ -259,9 +262,9 @@ public class TravlynServiceTest {
         service.updateTrip(newTrip.toDataTransferObject());
         Trip trip = service.getTrip((long) tripEntity.getId());
 
-        Assertions.assertNotEquals("Test trip",trip.getName());
-        Assertions.assertEquals("Updated test Trip",trip.getName());
-        Assertions.assertEquals(1,trip.getStops().size());
-        Assertions.assertEquals("Test descr",trip.getStops().get(0).getDescription());
+        Assertions.assertNotEquals("Test trip", trip.getName());
+        Assertions.assertEquals("Updated test Trip", trip.getName());
+        Assertions.assertEquals(1, trip.getStops().size());
+        Assertions.assertEquals("Test descr", trip.getStops().get(0).getDescription());
     }
 }

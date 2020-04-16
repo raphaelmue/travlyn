@@ -7,5 +7,5 @@ public interface Request<K> {
      *
      * @return object of K
      */
-    K getResult();
+    K getResult() throws Exception;
 }

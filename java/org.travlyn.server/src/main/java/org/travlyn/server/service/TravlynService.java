@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.travlyn.server.externalapi.access.DBpediaCityRequest;
 import org.travlyn.server.externalapi.access.DBpediaStopRequest;
 import org.travlyn.server.externalapi.access.OpenRouteRequest;
+import org.travlyn.server.externalapi.access.QuotaLimitException;
 import org.travlyn.shared.model.api.*;
 import org.travlyn.shared.model.db.*;
 import org.travlyn.util.security.Hash;
@@ -29,6 +30,8 @@ public class TravlynService {
 
     @Autowired
     private SessionFactory sessionFactory;
+
+    public static final int FETCHABLESTOPS = 100;
 
     public TravlynService() {
     }
@@ -79,22 +82,33 @@ public class TravlynService {
             CityEntity entity = session.createQuery("from CityEntity where name = :name", CityEntity.class)
                     .setParameter("name", city)
                     .getSingleResult();
-
-            //return cached city
-            //City city1 = entity.toDataTransferObject();
-            //city1.toEntity();
+            if (entity.isUnfetchedStops()) {
+                entity.setStops(this.fetchNumberOfStops(entity.getStops()));
+                City returnValue = this.removeUnfetchedStops(entity.toDataTransferObject());
+                entity.setUnfetchedStops(returnValue.isUnfetchedStops());
+                session.update(entity);
+                return returnValue;
+            }
             return entity.toDataTransferObject();
         } catch (NoResultException noResult) {
             // city is not cached --> get from api
             DBpediaCityRequest request = new DBpediaCityRequest(city);
-            City result = request.getResult();
+            City result;
+            try {
+                result = request.getResult();
+            } catch (QuotaLimitException e) {
+                logger.error(e.getMessage());
+                return null;
+            }
             if (result != null) {
                 //get Stops for city
                 CityEntity entity;
                 entity = this.getStopsForCity(result);
+                City returnValue = this.removeUnfetchedStops(entity.toDataTransferObject());
+                entity.setUnfetchedStops(returnValue.isUnfetchedStops());
                 // valid city was found --> cache result
-                session.save(entity);
-                return entity.toDataTransferObject();
+                session.persist(entity);
+                return returnValue;
             }
         }
         return null;
@@ -204,28 +218,67 @@ public class TravlynService {
         return tripEntity.toDataTransferObject();
     }
 
+    @Transactional
     public CityEntity getStopsForCity(City city) {
+        Session session = sessionFactory.getCurrentSession();
         CityEntity cityEntity = new CityEntity();
         cityEntity.setName(city.getName());
         cityEntity.setLatitude(city.getLatitude());
         cityEntity.setLongitude(city.getLongitude());
         cityEntity.setImage(city.getImage());
         cityEntity.setDescription(city.getDescription());
-        OpenRouteRequest request = new OpenRouteRequest(cityEntity.getLatitude(), cityEntity.getLongitude(), cityEntity);
-        Set<StopEntity> stopEntities = request.getResult();
-        for (Iterator<StopEntity> stopEntityIterator = stopEntities.iterator(); stopEntityIterator.hasNext(); ) {
+        //fetch categories and pass for reuse
+        List<CategoryEntity> categories = session.createQuery("from CategoryEntity", CategoryEntity.class)
+                .getResultList();
+        OpenRouteRequest request = new OpenRouteRequest(cityEntity.getLatitude(), cityEntity.getLongitude(), cityEntity, this.getCategorySetFromList(categories));
+        Set<StopEntity> stopEntities = this.fetchNumberOfStops(request.getResult());
+        cityEntity.setStops(stopEntities);
+        return cityEntity;
+    }
+
+    private Map<Integer, CategoryEntity> getCategorySetFromList(List<CategoryEntity> list) {
+        HashMap<Integer, CategoryEntity> result = new HashMap<>();
+        for (CategoryEntity category : list) {
+            result.put(category.getId(), category);
+        }
+        return result;
+    }
+
+    private City removeUnfetchedStops(City city) {
+        Set<Stop> stops = city.getStops();
+        boolean removed = stops.removeIf(stop -> stop.getDescription() == null && stop.getImage() == null);
+        city.setUnfetchedStops(removed);
+        return city;
+    }
+
+    @Transactional
+    protected Set<StopEntity> fetchNumberOfStops(Set<StopEntity> entities) {
+        Session session = sessionFactory.getCurrentSession();
+        int requestCount = 2;
+        Iterator<StopEntity> stopEntityIterator = entities.iterator();
+        while (requestCount < FETCHABLESTOPS && stopEntityIterator.hasNext()) {
             StopEntity entity = stopEntityIterator.next();
+            if (entity.getImage() != null && entity.getDescription() != null) {
+                continue;
+            }
             DBpediaStopRequest poiRequest = new DBpediaStopRequest(entity.getName());
-            Stop stop = poiRequest.getResult();
+            Stop stop;
+            try {
+                stop = poiRequest.getResult();
+            } catch (QuotaLimitException e) {
+                logger.error(e.getMessage());
+                return null;
+            }
             if (stop != null) {
                 entity.setImage(stop.getImage());
                 entity.setDescription(stop.getDescription());
             } else {
+                session.delete(entity);
                 stopEntityIterator.remove();
             }
+            requestCount++;
         }
-        cityEntity.setStops(stopEntities);
-        return cityEntity;
+        return entities;
     }
 
     @Transactional
