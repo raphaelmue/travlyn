@@ -50,4 +50,10 @@ public abstract class OpenRouteDirectionRequest implements Request<ExecutionInfo
         builder.append("]}");
         return builder.toString();
     }
+
+    protected ExecutionInfo extractExecutionInfo(JsonObject apiResult){
+        ExecutionInfo executionInfo = new ExecutionInfo();
+
+        return executionInfo;
+    }
 }
