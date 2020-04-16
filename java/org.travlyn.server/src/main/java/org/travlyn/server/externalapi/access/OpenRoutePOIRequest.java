@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
-public class OpenRouteRequest implements Request<Set<StopEntity>> {
+public class OpenRoutePOIRequest implements Request<Set<StopEntity>> {
     private static final String BASE_URL = "https://api.openrouteservice.org/pois";
     private static final double FIELDSIZEFORREQUEST = 0.02;
     private static final HashSet<Integer> excludedCategories = new HashSet<>(Arrays.asList(136, 237, 238, 231, 234, 261, 262, 267, 271, 280, 282, 283, 288, 290, 293, 297, 298, 302, 303, 307, 623, 624, 626));
@@ -29,7 +29,7 @@ public class OpenRouteRequest implements Request<Set<StopEntity>> {
     private final double longitude;
     private final CityEntity city;
 
-    public OpenRouteRequest(double latitude, double longitude, CityEntity city, Map<Integer, CategoryEntity> categoryList) {
+    public OpenRoutePOIRequest(double latitude, double longitude, CityEntity city, Map<Integer, CategoryEntity> categoryList) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.city = city;

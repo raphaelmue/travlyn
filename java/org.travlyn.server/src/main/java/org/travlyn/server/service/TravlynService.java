@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.travlyn.server.externalapi.access.DBpediaCityRequest;
 import org.travlyn.server.externalapi.access.DBpediaStopRequest;
-import org.travlyn.server.externalapi.access.OpenRouteRequest;
+import org.travlyn.server.externalapi.access.OpenRoutePOIRequest;
 import org.travlyn.server.externalapi.access.QuotaLimitException;
 import org.travlyn.shared.model.api.*;
 import org.travlyn.shared.model.db.*;
@@ -230,7 +230,7 @@ public class TravlynService {
         //fetch categories and pass for reuse
         List<CategoryEntity> categories = session.createQuery("from CategoryEntity", CategoryEntity.class)
                 .getResultList();
-        OpenRouteRequest request = new OpenRouteRequest(cityEntity.getLatitude(), cityEntity.getLongitude(), cityEntity, this.getCategorySetFromList(categories));
+        OpenRoutePOIRequest request = new OpenRoutePOIRequest(cityEntity.getLatitude(), cityEntity.getLongitude(), cityEntity, this.getCategorySetFromList(categories));
         Set<StopEntity> stopEntities = this.fetchNumberOfStops(request.getResult());
         cityEntity.setStops(stopEntities);
         return cityEntity;
