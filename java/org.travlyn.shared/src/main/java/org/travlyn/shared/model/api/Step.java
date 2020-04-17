@@ -20,6 +20,33 @@ public class Step extends AbstractDataTransferObject {
     @ApiModelProperty(value = "List of indices of associated waypoints", required = true)
     private List<Integer> waypointIndices;
 
+    public int getType() {
+        return type;
+    }
+
+    public Step setType(int type) {
+        this.type = type;
+        return this;
+    }
+
+    public String getInstruction() {
+        return instruction;
+    }
+
+    public Step setInstruction(String instruction) {
+        this.instruction = instruction;
+        return this;
+    }
+
+    public List<Integer> getWaypointIndices() {
+        return waypointIndices;
+    }
+
+    public Step setWaypointIndices(List<Integer> waypointIndices) {
+        this.waypointIndices = waypointIndices;
+        return this;
+    }
+
     @Override
     public DataEntity toEntity() {
         //no entity for this DTO necessary

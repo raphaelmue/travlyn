@@ -1,15 +1,18 @@
 package org.travlyn.server.externalapi.access;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import org.travlyn.server.util.Pair;
 import org.travlyn.shared.model.api.ExecutionInfo;
+import org.travlyn.shared.model.api.Step;
 import org.travlyn.shared.model.api.Stop;
+import org.travlyn.shared.model.api.Waypoint;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 public abstract class OpenRouteDirectionRequest implements Request<ExecutionInfo> {
     private static final String PROFILE = "foot-walking";
@@ -53,7 +56,37 @@ public abstract class OpenRouteDirectionRequest implements Request<ExecutionInfo
 
     protected ExecutionInfo extractExecutionInfo(JsonObject apiResult){
         ExecutionInfo executionInfo = new ExecutionInfo();
+        JsonObject properties;
+        try{
+            properties = apiResult.getAsJsonArray("features").get(0).getAsJsonObject().get("properties").getAsJsonObject();
+        }catch (JsonSyntaxException ignored){
+            //JSON response is malformed
+            return null;
+        }
 
+        executionInfo.setDistance(properties.getAsJsonObject("summary").get("distance").getAsDouble()/1000.0);
+        executionInfo.setDuration(properties.getAsJsonObject("summary").get("duration").getAsDouble()/60.0);
+
+        ArrayList<Waypoint> waypoints = new ArrayList<>();
+        for (JsonElement element: apiResult.getAsJsonArray("features").get(0).getAsJsonObject().getAsJsonObject("geometry").getAsJsonArray("coordinates")){
+            JsonArray coord = element.getAsJsonArray();
+            waypoints.add(new Waypoint().setLongitude(coord.get(0).getAsDouble())
+                                            .setLatitude(coord.get(1).getAsDouble()));
+        }
+        executionInfo.setWaypoints(waypoints);
+
+        ArrayList<Step> steps = new ArrayList<>();
+        for (JsonElement step : properties.getAsJsonArray("segments").get(0).getAsJsonObject().getAsJsonArray("steps")){
+            JsonObject stepObject = step.getAsJsonObject();
+            Step stepInstance = new Step();
+            stepInstance.setType(stepObject.get("type").getAsInt());
+            stepInstance.setInstruction(stepObject.get("instruction").getAsString());
+            ArrayList<Integer> indices = new ArrayList<>();
+            IntStream.rangeClosed(stepObject.get("way_points").getAsJsonArray().get(0).getAsInt(),stepObject.get("way_points").getAsJsonArray().get(1).getAsInt()).forEachOrdered(indices::add);
+            stepInstance.setWaypointIndices(indices);
+            steps.add(stepInstance);
+        }
+        executionInfo.setSteps(steps);
         return executionInfo;
     }
 }
