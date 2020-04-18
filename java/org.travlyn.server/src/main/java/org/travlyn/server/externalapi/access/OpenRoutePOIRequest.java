@@ -4,9 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.travlyn.server.service.TravlynService;
 import org.travlyn.server.util.Pair;
 import org.travlyn.shared.model.db.CategoryEntity;
 import org.travlyn.shared.model.db.CityEntity;
@@ -15,7 +12,10 @@ import org.travlyn.shared.model.db.StopEntity;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class OpenRoutePOIRequest implements Request<Set<StopEntity>> {
     private static final String BASE_URL = "https://api.openrouteservice.org/pois";
@@ -96,8 +96,8 @@ public class OpenRoutePOIRequest implements Request<Set<StopEntity>> {
                 //stop is not identified with a name --> exclude
                 continue;
             }
-            stop.setLatitude(poiObject.getAsJsonObject("geometry").getAsJsonArray("coordinates").get(0).getAsDouble());
-            stop.setLongitude(poiObject.getAsJsonObject("geometry").getAsJsonArray("coordinates").get(1).getAsDouble());
+            stop.setLatitude(poiObject.getAsJsonObject("geometry").getAsJsonArray("coordinates").get(1).getAsDouble());
+            stop.setLongitude(poiObject.getAsJsonObject("geometry").getAsJsonArray("coordinates").get(0).getAsDouble());
             stop.setCity(city);
             resultList.add(stop);
         }

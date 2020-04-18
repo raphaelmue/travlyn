@@ -5,7 +5,6 @@ import org.travlyn.server.util.Pair;
 import org.travlyn.shared.model.api.ExecutionInfo;
 import org.travlyn.shared.model.api.Stop;
 import org.travlyn.shared.model.api.Trip;
-import org.travlyn.shared.model.db.TripEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,7 @@ public class OpenRouteTripDirectionRequest extends OpenRouteDirectionRequest {
         List<Pair<Double,Double>> wayPoints = new ArrayList<>();
         wayPoints.add(new Pair<>(startLon,startLat));
         for (Stop stop : trip.getStops()) {
-            wayPoints.add(new Pair<>(stop.getLatitude(),stop.getLongitude()));
+            wayPoints.add(new Pair<>(stop.getLongitude(),stop.getLatitude()));
         }
         if(roundTrip){
             wayPoints.add(new Pair<>(startLon,startLat));

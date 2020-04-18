@@ -264,7 +264,7 @@ public class TravlynService {
                 stop = poiRequest.getResult();
             } catch (QuotaLimitException e) {
                 logger.error(e.getMessage());
-                return null;
+                break;
             }
             if (stop != null) {
                 entity.setImage(stop.getImage());

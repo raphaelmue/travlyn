@@ -23,7 +23,7 @@ public class OpenRouteRedirectionRequest extends OpenRouteDirectionRequest{
     public ExecutionInfo getResult() {
         List<Pair<Double,Double>> wayPoints = new ArrayList<>();
         wayPoints.add(new Pair<>(startLon,startLat));
-        wayPoints.add(new Pair<>(stop.getLatitude(),stop.getLongitude()));
+        wayPoints.add(new Pair<>(stop.getLongitude(),stop.getLatitude()));
         JsonObject result = this.makeAPICall(wayPoints);
         return this.extractExecutionInfo(result);
     }
