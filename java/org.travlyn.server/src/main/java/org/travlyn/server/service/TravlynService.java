@@ -7,10 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.travlyn.server.externalapi.access.DBpediaCityRequest;
-import org.travlyn.server.externalapi.access.DBpediaStopRequest;
-import org.travlyn.server.externalapi.access.OpenRoutePOIRequest;
-import org.travlyn.server.externalapi.access.QuotaLimitException;
+import org.travlyn.server.externalapi.access.*;
 import org.travlyn.shared.model.api.*;
 import org.travlyn.shared.model.db.*;
 import org.travlyn.util.security.Hash;
@@ -384,5 +381,16 @@ public class TravlynService {
             trips.add(entity.toDataTransferObject());
         }
         return trips;
+    }
+
+    @Transactional
+    public ExecutionInfo getExecutionInfo(Long tripId,Long userId, double lat, double lon,boolean reorder, boolean isRoundtrip) throws NoResultException{
+        Session session = sessionFactory.getCurrentSession();
+        reorder = false;
+        TripEntity trip = session.createQuery("from TripEntity where id = :id",TripEntity.class)
+                .setParameter("id",toIntExact(tripId))
+                .getSingleResult();
+        OpenRouteTripDirectionRequest directionRequest= new OpenRouteTripDirectionRequest(lat,lon,trip.toDataTransferObject(),isRoundtrip);
+        return directionRequest.getResult();
     }
 }

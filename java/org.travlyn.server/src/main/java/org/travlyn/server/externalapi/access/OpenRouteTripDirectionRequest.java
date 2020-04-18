@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 import org.travlyn.server.util.Pair;
 import org.travlyn.shared.model.api.ExecutionInfo;
 import org.travlyn.shared.model.api.Stop;
+import org.travlyn.shared.model.api.Trip;
+import org.travlyn.shared.model.db.TripEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,21 +15,21 @@ public class OpenRouteTripDirectionRequest extends OpenRouteDirectionRequest {
     private final double startLat;
     private final double startLon;
     private final boolean roundTrip;
-    private final List<Stop> tripStops;
+    private final Trip trip;
 
-    public OpenRouteTripDirectionRequest(double startLat, double startLon, List<Stop> stops, boolean roundTrip) {
+    public OpenRouteTripDirectionRequest(double startLat, double startLon, Trip trip, boolean roundTrip) {
         this.startLat = startLat;
         this.startLon = startLon;
         this.roundTrip = roundTrip;
-        this.tripStops = stops;
+        this.trip = trip;
     }
 
     @Override
     public ExecutionInfo getResult() {
         List<Pair<Double,Double>> wayPoints = new ArrayList<>();
         wayPoints.add(new Pair<>(startLon,startLat));
-        for (Stop stop : tripStops) {
-            wayPoints.add(new Pair<>(stop.getLongitude(),stop.getLatitude()));
+        for (Stop stop : trip.getStops()) {
+            wayPoints.add(new Pair<>(stop.getLatitude(),stop.getLongitude()));
         }
         if(roundTrip){
             wayPoints.add(new Pair<>(startLon,startLat));
