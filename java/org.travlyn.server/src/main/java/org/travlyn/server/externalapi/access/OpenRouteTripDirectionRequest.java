@@ -35,6 +35,8 @@ public class OpenRouteTripDirectionRequest extends OpenRouteDirectionRequest {
             wayPoints.add(new Pair<>(startLon,startLat));
         }
         JsonObject result = this.makeAPICall(wayPoints);
-        return this.extractExecutionInfo(result);
+        ExecutionInfo info = this.extractExecutionInfo(result);
+        info.setTripId(trip.getId());
+        return info;
     }
 }

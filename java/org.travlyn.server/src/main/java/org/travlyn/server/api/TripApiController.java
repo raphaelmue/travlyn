@@ -123,6 +123,18 @@ public class TripApiController implements TripApi {
     @Override
     public ResponseEntity<ExecutionInfo> getRoutingToStop(double startLatitude, double startLongitude, Long stopId) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        if (accept != null && accept.contains("application/json")) {
+            try{
+                ExecutionInfo info = travlynService.getRedirection(startLatitude,startLongitude,stopId);
+                if (info == null){
+                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+                return new ResponseEntity<>(info,HttpStatus.OK);
+            }catch (NoResultException e){
+                log.error("Couldn't find requested stop", e);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

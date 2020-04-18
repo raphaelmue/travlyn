@@ -384,13 +384,23 @@ public class TravlynService {
     }
 
     @Transactional
-    public ExecutionInfo getExecutionInfo(Long tripId,Long userId, double lat, double lon,boolean reorder, boolean isRoundtrip) throws NoResultException{
+    public ExecutionInfo getExecutionInfo(Long tripId, Long userId, double lat, double lon, boolean reorder, boolean isRoundtrip) throws NoResultException {
         Session session = sessionFactory.getCurrentSession();
         reorder = false;
-        TripEntity trip = session.createQuery("from TripEntity where id = :id",TripEntity.class)
-                .setParameter("id",toIntExact(tripId))
+        TripEntity trip = session.createQuery("from TripEntity where id = :id", TripEntity.class)
+                .setParameter("id", toIntExact(tripId))
                 .getSingleResult();
-        OpenRouteTripDirectionRequest directionRequest= new OpenRouteTripDirectionRequest(lat,lon,trip.toDataTransferObject(),isRoundtrip);
+        OpenRouteTripDirectionRequest directionRequest = new OpenRouteTripDirectionRequest(lat, lon, trip.toDataTransferObject(), isRoundtrip);
         return directionRequest.getResult();
+    }
+
+    @Transactional
+    public ExecutionInfo getRedirection(double lat, double lon, Long stopId) throws NoResultException{
+        Session session = sessionFactory.getCurrentSession();
+        StopEntity stop = session.createQuery("from StopEntity where id = :id", StopEntity.class)
+                                .setParameter("id",toIntExact(stopId))
+                                .getSingleResult();
+        OpenRouteRedirectionRequest redirectionRequest = new OpenRouteRedirectionRequest(lat,lon,stop.toDataTransferObject());
+        return redirectionRequest.getResult();
     }
 }

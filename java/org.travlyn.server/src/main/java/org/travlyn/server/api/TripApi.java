@@ -131,8 +131,8 @@ public interface TripApi {
             tags = {"trip"})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful operation", response = ExecutionInfo.class),
-            @ApiResponse(code = 400, message = "Invalid ID supplied"),
-            @ApiResponse(code = 401, message = "You are not authorized to perform this action")
+            @ApiResponse(code = 401, message = "You are not authorized to perform this action"),
+            @ApiResponse(code = 404, message = "Stop not found")
     })
     @GetMapping(
             value = "/trip/reroute",
