@@ -37,6 +37,9 @@ class RegisterActivity : AppCompatActivity(), Application {
             if (password.isBlank()) {
                 registerPasswordTextEdit.error = getString(R.string.error_field_required)
             }
+            if (password.length <= 4){
+                registerPasswordTextEdit.error = getString(R.string.error_password_too_short)
+            }
 
             CoroutineScope(Dispatchers.IO).launch {
                 val user: User = api.registerUser(email, name, password)
