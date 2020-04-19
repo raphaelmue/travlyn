@@ -30,12 +30,7 @@ public interface UserApi {
     @GetMapping(
             value = "/user/{userId}/trips",
             produces = {"application/json"})
-<<<<<<< HEAD
-    @PreAuthorize(value = "hasRole(" + REGISTERED_USER_ROLE + ")")
-    ResponseEntity<List<Trip>> getTripsByUserId(@ApiParam(value = "ID of the user whose trips are to be returned", required = true, defaultValue = "-1", example = "123") @PathVariable("userId") Long userId);
-=======
     ResponseEntity<List<Trip>> getTripsByUserId(@ApiParam(value = "ID of the user whose trips are to be returned", required = true, defaultValue = "-1", example = "123") @PathVariable(value = "userId") Long userId);
->>>>>>> origin/master
 
     @ApiOperation(
             value = "Logs user into the system",

@@ -47,16 +47,11 @@ public interface TripApi {
     @PutMapping(
             value = "/trip",
             produces = {"application/json"})
-<<<<<<< HEAD
-    @PreAuthorize(value = "hasRole(" + REGISTERED_USER_ROLE + ")")
-    ResponseEntity<Trip> generateTrip(@NotNull @ApiParam(value = "The user who generates the trip", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "userId") Long userId);
-=======
     ResponseEntity<Trip> generateTrip(@ApiParam(value = "The user who generates the trip", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "userId") Long userId,
                                       @ApiParam(value = "The city which the trip is generated for", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "cityId") Long cityId,
                                       @ApiParam(value = "Name for the new trip", required = true, defaultValue = "Trip", example = "My personal Trip") @Valid @RequestParam(value = "tripName") String tripName,
                                       @ApiParam(value = "Flag to set privacy setting for this trip", required = true, defaultValue = "false", example = "false") @Valid @RequestParam(value = "privateFlag") boolean privateFlag,
                                       @ApiParam(value = "List of stops that are part of the trip", required = true, defaultValue = "-1", example = "[0,124,758]") @Valid @RequestParam(value = "stopIds") StopIdWrapper stopIds);
->>>>>>> origin/master
 
     @ApiOperation(
             value = "Get Trip by ID",
