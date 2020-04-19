@@ -19,16 +19,13 @@ import org.travlyn.util.security.Hash;
 import org.travlyn.util.security.RandomString;
 
 import javax.persistence.NoResultException;
-<<<<<<< HEAD
 import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
-=======
 import java.util.*;
 
 import static java.lang.Math.toIntExact;
->>>>>>> origin/master
 
 
 @Service
