@@ -17,10 +17,8 @@ import org.travlyn.infrastructure.*
 import org.travlyn.local.Application
 
 class UserApi(
-    basePath: String = "http://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
-    application: Application
-) :
-    ApiClient(basePath, application) {
+    application: Application? = null
+) : ApiClient(application = application) {
 
     /**
      * Get all Trips of user
@@ -30,7 +28,6 @@ class UserApi(
      */
     @Suppress("UNCHECKED_CAST")
     suspend fun getTripsByUserId(userId: Long): Array<Trip> {
-
         val localVariableConfig = RequestConfig(
             RequestMethod.GET,
             "/user/{userId}/trips".replace("{" + "userId" + "}", "$userId")

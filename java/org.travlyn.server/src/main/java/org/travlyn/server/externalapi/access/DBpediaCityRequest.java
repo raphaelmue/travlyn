@@ -1,9 +1,6 @@
 package org.travlyn.server.externalapi.access;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import org.travlyn.server.util.Pair;
 import org.travlyn.shared.model.api.City;
 
@@ -35,26 +32,25 @@ public class DBpediaCityRequest extends DBpediaRequest<City> {
      *
      * @return Filled CityEntity with the fetched data.
      */
-    public City getResult() {
+    public City getResult() throws QuotaLimitException{
         Set<Pair<String, String>> params = getDefaultHeaders(query);
         params.add(new Pair<>("property", "dbo:abstract"));
         params.add(new Pair<>("property", "dbo:thumbnail"));
         params.add(new Pair<>("property", "georss:point"));
 
+
         String result = executeRequest(params);
-        JsonArray resultArray = gson.fromJson(result, JsonObject.class).getAsJsonObject("results").
-                getAsJsonArray("bindings");
-
-        JsonObject englishContent = null;
-
-        // filter for english language
-        for (JsonElement content : resultArray) {
-            if (content.getAsJsonObject().has("dboabstract") &&
-                    content.getAsJsonObject().getAsJsonObject("dboabstract").getAsJsonPrimitive("xml:lang").getAsString().equals("en")) {
-                englishContent = content.getAsJsonObject();
-                break;
-            }
+        JsonArray resultArray;
+        try {
+            resultArray = gson.fromJson(result, JsonObject.class).getAsJsonObject("results").
+                    getAsJsonArray("bindings");
+        } catch (
+                JsonSyntaxException syntaxException) {
+            //quota limit reached...exclude stop TODO
+            throw new QuotaLimitException("DBpedia quota limit is reached by stop request!");
         }
+
+        JsonObject englishContent = this.filterLanguageToEnglish(resultArray);
 
         try {
             if (englishContent != null) {
