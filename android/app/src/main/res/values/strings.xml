@@ -56,4 +56,11 @@
     <string name="save">Save</string>
     <string name="host_url">Host URL</string>
     <string name="successfully_stored_settings">Settings successfully stored!</string>
+    <string name="created_by">Created by %s</string>
+    <string name="no_data_available">No data available.</string>
+    <string name="create_trip">Create new Trip</string>
+    <string name="name">Name</string>
+    <string name="public_trip">Public Trip</string>
+    <string name="successfully_created_trip">Created trip successfully!</string>
+    <string name="trip">Trip</string>
 </resources>

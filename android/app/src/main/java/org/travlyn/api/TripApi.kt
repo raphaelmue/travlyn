@@ -48,8 +48,21 @@ class TripApi(
      * @return Trip
      */
     @Suppress("UNCHECKED_CAST")
-    suspend fun generateTrip(userId: Long): Trip? {
-        val localVariableQuery: MultiValueMap = mapOf("userId" to listOf("$userId"))
+    suspend fun generateTrip(
+        userId: Long,
+        cityId: Long,
+        tripName: String,
+        isPrivate: Boolean,
+        stopIds: Array<Int>
+    ): Trip? {
+        val localVariableQuery: MultiValueMap =
+            mapOf(
+                "userId" to listOf("$userId"),
+                "cityId" to listOf("$cityId"),
+                "tripName" to listOf(tripName),
+                "privateFlag" to listOf("$isPrivate"),
+                "stopIds" to stopIds.map { id -> id.toString() }.toList()
+            )
         val localVariableConfig = RequestConfig(
             RequestMethod.PUT,
             "/trip", query = localVariableQuery
@@ -121,7 +134,8 @@ class TripApi(
         val localVariableQuery: MultiValueMap = mapOf("trip" to listOf("$trip"))
         val localVariableConfig = RequestConfig(
             RequestMethod.POST,
-            "/trip", query = localVariableQuery
+            "/trip",
+            query = localVariableQuery
         )
         request<Any?>(
             localVariableConfig

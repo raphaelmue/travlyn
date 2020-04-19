@@ -17,8 +17,8 @@ import org.travlyn.infrastructure.*
 import org.travlyn.local.Application
 
 class UserApi(
-    context: Application
-) : ApiClient(application = context) {
+    application: Application
+) : ApiClient(application = application) {
 
     /**
      * Get all Trips of user

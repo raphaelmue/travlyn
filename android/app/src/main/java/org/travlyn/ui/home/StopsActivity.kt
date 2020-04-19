@@ -1,13 +1,17 @@
 package org.travlyn.ui.home
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.*
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
+import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -21,13 +25,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.travlyn.R
 import org.travlyn.api.CityApi
+import org.travlyn.api.TripApi
+import org.travlyn.api.UserApi
 import org.travlyn.api.StopApi
 import org.travlyn.api.model.City
 import org.travlyn.api.model.Rating
 import org.travlyn.api.model.Stop
+import org.travlyn.api.model.Trip
+import org.travlyn.api.model.User
 import org.travlyn.components.SelectionToolbar
 import org.travlyn.local.Application
 import org.travlyn.local.LocalStorage
+import org.travlyn.ui.trips.CreateTripActivity
 import java.util.*
 
 
@@ -36,6 +45,9 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
     private var clickedStop: Stop? = null
 
     private lateinit var stopListSelectionToolbar: SelectionToolbar<Stop>
+    private val CREATE_TRIP_ACTIVITY_CODE: Int = 1
+
+    private var city: City? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,18 +64,17 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
         }
 
         if (intent != null && intent.extras != null) {
-            val city: City? =
-                Gson().fromJson(intent.extras.get("city") as String?, City::class.java)
+            city = Gson().fromJson(intent.extras.get("city") as String?, City::class.java)
             val stopsListView: RecyclerView = findViewById(R.id.stopsListView)
 
             if (city != null) {
                 val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
                 stopsListView.layoutManager = layoutManager
 
-                stopsListView.adapter = StopListViewAdapter(city.stops!!.toList(), this)
+                stopsListView.adapter = StopListViewAdapter(city!!.stops!!.toList(), this)
 
                 stopListNumberOfResultsTextView.text =
-                    this.getString(R.string.number_of_stop_found, city.stops.size)
+                    this.getString(R.string.number_of_stop_found, city!!.stops?.size)
             }
         }
     }
@@ -87,6 +98,17 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
         })
 
         return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            CREATE_TRIP_ACTIVITY_CODE -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    val trip: Trip = Gson().fromJson(data?.getStringExtra("trip"), Trip::class.java)
+                }
+            }
+        }
     }
 
     private fun performFiltering(query: String) {
@@ -167,8 +189,7 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
     private inner class StopListViewAdapter(
         private val stops: List<Stop>,
         private val context: Context
-    ) :
-        RecyclerView.Adapter<StopListViewAdapter.ViewHolder>(), Filterable {
+    ) : RecyclerView.Adapter<StopListViewAdapter.ViewHolder>(), Filterable {
 
         private val cityApi = CityApi(application = context as StopsActivity)
         private val filter = StopFilter(this)
@@ -183,8 +204,68 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
             }
 
             stopListSelectionToolbar.setCheckListener { selectedElements ->
-                // TODO add stops to trip
+                isSelectable = false
+                notifyDataSetChanged()
+
+                val stops = selectedElements.toMutableList()
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    openTripDialog(fetchUsersTrips(), stops)
+                }
             }
+        }
+
+        private suspend fun fetchUsersTrips(): List<Trip> {
+            val user: User? = LocalStorage(context).readObject("user")
+            if (user != null) {
+                return UserApi(context as StopsActivity).getTripsByUserId(user.id!!).toList()
+            }
+            return emptyList()
+        }
+
+        private suspend fun openTripDialog(trips: List<Trip>, stops: List<Stop>) =
+            withContext(Dispatchers.Main) {
+                val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+                builder.setTitle(context.getString(R.string.trips))
+
+                val tripNames: MutableList<String> =
+                    trips.map { it.name.toString() }.toMutableList()
+                tripNames.add(0, context.getString(R.string.create_trip))
+                builder.setItems(tripNames.toTypedArray()) { _, which ->
+                    when (which) {
+                        0 -> {
+                            val intent = Intent(context, CreateTripActivity::class.java)
+                            intent.putExtras(
+                                bundleOf(
+                                    "cityId" to city!!.id,
+                                    "stopIds" to stops.map { stop -> stop.id }.toTypedArray()
+                                )
+                            )
+                            startActivityForResult(intent, CREATE_TRIP_ACTIVITY_CODE)
+
+                        }
+                        else -> {
+                            val trip: Trip = trips[which - 1]
+                            CoroutineScope(Dispatchers.IO).launch {
+                                updateTrip(trip, stops.toMutableList())
+                            }
+                        }
+                    }
+                }
+
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            }
+
+        private suspend fun updateTrip(trip: Trip, stops: MutableList<Stop>) {
+            for (tripStop in trip.stops!!) {
+                if (!stops.any { _stop -> _stop.id == tripStop.id }) {
+                    stops.add(tripStop)
+                }
+            }
+            trip.stops = stops.toTypedArray()
+
+            TripApi(context as StopsActivity).updateTrip(trip)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -213,10 +294,13 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
 
             holder.stopListCheckBox.visibility = if (isSelectable) View.VISIBLE else View.GONE
             holder.stopListCardView.setOnLongClickListener {
-                isSelectable = !isSelectable
-
-                stopListSelectionToolbar.toggleToolbar()
-                notifyDataSetChanged()
+                if (LocalStorage(context).contains("user")) {
+                    isSelectable = !isSelectable
+                    stopListSelectionToolbar.toggleToolbar()
+                    notifyDataSetChanged()
+                } else {
+                    Toast.makeText(context, R.string.error_not_signed_in, Toast.LENGTH_LONG).show()
+                }
                 return@setOnLongClickListener true
             }
 

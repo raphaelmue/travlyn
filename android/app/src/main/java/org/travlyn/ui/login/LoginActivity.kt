@@ -27,7 +27,7 @@ class LoginActivity : AppCompatActivity(), Application {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        api = UserApi(context = this)
+        api = UserApi(application = this)
         val context = this
         signInBtn.setOnClickListener {
             handleLogin(context)

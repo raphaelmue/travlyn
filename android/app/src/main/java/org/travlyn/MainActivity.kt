@@ -61,7 +61,13 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.nav_home, R.id.nav_favorites, R.id.nav_account, R.id.nav_settings),
+            setOf(
+                R.id.nav_home,
+                R.id.nav_favorites,
+                R.id.nav_trips,
+                R.id.nav_account,
+                R.id.nav_settings
+            ),
             drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -71,7 +77,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
         navEmailTextField = headerView.findViewById(R.id.emailNavTextView)
         navNameTextField = headerView.findViewById(R.id.nameNavTextView)
 
-        this.api = UserApi(context = this)
+        this.api = UserApi(application = this)
 
         val localStorage = LocalStorage(this)
         user = localStorage.readObject<User>("user")

@@ -73,8 +73,7 @@ open class ApiClient(
     ): RequestBody {
         when {
             content is File -> {
-                return content
-                    .asRequestBody(mediaType.toMediaTypeOrNull())
+                return content.asRequestBody(mediaType.toMediaTypeOrNull())
             }
             mediaType == FormDataMediaType -> {
                 var builder = FormBody.Builder()

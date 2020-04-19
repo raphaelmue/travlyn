@@ -54,4 +54,11 @@
     <string name="save">Speichern</string>
     <string name="host_url">Host URL</string>
     <string name="successfully_stored_settings">Einstellungen erfolgreich gespeichert!</string>
+    <string name="created_by">Erstellt von %s</string>
+    <string name="no_data_available">Kein Daten verfügbar.</string>
+    <string name="create_trip">Neuen Trip erstellen</string>
+    <string name="name">Name</string>
+    <string name="public_trip">Öffentlicher Trip</string>
+    <string name="successfully_created_trip">Trip erfolgreich erstellt!</string>
+    <string name="trip">Trip</string>
 </resources>

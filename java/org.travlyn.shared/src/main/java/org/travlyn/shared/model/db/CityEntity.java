@@ -31,8 +31,11 @@ public class CityEntity implements DataEntity {
     @Column(name = "description", length = 65536)
     private String description;
 
-    @OneToMany(cascade = {CascadeType.ALL})
-    private Set<StopEntity> stops;
+    @Column(name = "unfetched_stops")
+    private boolean unfetchedStops;
+
+    @OneToMany(orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<StopEntity> stops = new HashSet<>();
 
     @Override
     public int getId() {
@@ -91,6 +94,14 @@ public class CityEntity implements DataEntity {
         this.stops = stops;
     }
 
+    public boolean isUnfetchedStops() {
+        return unfetchedStops;
+    }
+
+    public void setUnfetchedStops(boolean unfetchedStops) {
+        this.unfetchedStops = unfetchedStops;
+    }
+
     @Override
     public City toDataTransferObject() {
         City city = new City()
@@ -99,7 +110,8 @@ public class CityEntity implements DataEntity {
                 .latitude(this.latitude)
                 .name(this.name)
                 .image(this.image)
-                .description(this.description);
+                .description(this.description)
+                .setUnfetchedStops(this.unfetchedStops);
         HashSet<Stop> stopHashSet = new HashSet<>();
         for (StopEntity stopEntity : stops) {
             stopHashSet.add(stopEntity.toDataTransferObject());

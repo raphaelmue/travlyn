@@ -7,6 +7,7 @@ import org.travlyn.shared.model.api.City;
 import org.travlyn.shared.model.api.Stop;
 import org.travlyn.shared.model.db.StopEntity;
 
+import java.util.HashMap;
 import java.util.Set;
 
 @Tag("unit")
@@ -17,13 +18,13 @@ public class OpenRouteStopAccessTest {
         City city = new City()
                 .latitude(51.507222222222225)
                 .longitude(-0.1275);
-        OpenRouteRequest request = new OpenRouteRequest(city.getLatitude(), city.getLongitude(), city.toEntity());
+        OpenRouteRequest request = new OpenRouteRequest(city.getLatitude(), city.getLongitude(), city.toEntity(), new HashMap<>());
         Set<StopEntity> result = request.getResult();
         Assertions.assertTrue(result.size() > 0);
     }
 
     @Test
-    public void testDBPediaStop() {
+    public void testDBPediaStop() throws QuotaLimitException{
         DBpediaStopRequest request = new DBpediaStopRequest("Karlsruhe_Palace");
         Stop stop = request.getResult();
         Assertions.assertNotNull(stop.getName());

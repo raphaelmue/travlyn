@@ -24,7 +24,7 @@ package org.travlyn.api.model
  */
 data class City(
 
-    val id: Int? = null,
+    val id: Long? = null,
     val longitude: Double? = null,
     val latitude: Double? = null,
     val name: String? = null,

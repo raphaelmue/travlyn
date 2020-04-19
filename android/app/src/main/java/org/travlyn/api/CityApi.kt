@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Request
 import org.travlyn.api.model.City
+import org.travlyn.api.model.Trip
 import org.travlyn.infrastructure.*
 import org.travlyn.infrastructure.error.TravlynException
 import org.travlyn.local.Application
@@ -38,6 +39,17 @@ class CityApi(
         }
 
         return result
+    }
+
+    suspend fun getPublicTripsForCity(cityId: Long): Array<Trip> {
+        val localVariableQuery: MultiValueMap = mapOf("cityId" to listOf(cityId.toString()))
+        val localVariableConfig = RequestConfig(
+            RequestMethod.GET,
+            "/city/trips", query = localVariableQuery
+        )
+        return request<Array<Trip>>(
+            localVariableConfig
+        ) ?: emptyArray()
     }
 
     suspend fun getImage(url: String): Bitmap? {

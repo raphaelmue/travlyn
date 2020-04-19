@@ -131,7 +131,7 @@ public class User extends AbstractDataTransferObject {
         userEntity.setId(this.id);
         userEntity.setEmail(this.email);
         userEntity.setName(this.name);
-        userEntity.setTokens(new HashSet<>(Collections.singletonList(this.token.toEntity())));
+        //userEntity.setTokens(new HashSet<>(Collections.singletonList(this.token.toEntity())));
         return userEntity;
     }
 }

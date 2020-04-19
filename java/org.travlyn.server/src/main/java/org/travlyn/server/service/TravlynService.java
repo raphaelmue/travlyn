@@ -12,16 +12,23 @@ import org.springframework.transaction.annotation.Transactional;
 import org.travlyn.server.externalapi.access.DBpediaCityRequest;
 import org.travlyn.server.externalapi.access.DBpediaStopRequest;
 import org.travlyn.server.externalapi.access.OpenRouteRequest;
+import org.travlyn.server.externalapi.access.QuotaLimitException;
 import org.travlyn.shared.model.api.*;
 import org.travlyn.shared.model.db.*;
 import org.travlyn.util.security.Hash;
 import org.travlyn.util.security.RandomString;
 
 import javax.persistence.NoResultException;
+<<<<<<< HEAD
 import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
+=======
+import java.util.*;
+
+import static java.lang.Math.toIntExact;
+>>>>>>> origin/master
 
 
 @Service
@@ -32,6 +39,8 @@ public class TravlynService {
 
     @Autowired
     private SessionFactory sessionFactory;
+
+    public static final int FETCHABLESTOPS = 100;
 
     public TravlynService() {
     }
@@ -122,22 +131,33 @@ public class TravlynService {
             CityEntity entity = session.createQuery("from CityEntity where name = :name", CityEntity.class)
                     .setParameter("name", city)
                     .getSingleResult();
-
-            //return cached city
-            //City city1 = entity.toDataTransferObject();
-            //city1.toEntity();
+            if (entity.isUnfetchedStops()) {
+                entity.setStops(this.fetchNumberOfStops(entity.getStops()));
+                City returnValue = this.removeUnfetchedStops(entity.toDataTransferObject());
+                entity.setUnfetchedStops(returnValue.isUnfetchedStops());
+                session.update(entity);
+                return returnValue;
+            }
             return entity.toDataTransferObject();
         } catch (NoResultException noResult) {
             // city is not cached --> get from api
             DBpediaCityRequest request = new DBpediaCityRequest(city);
-            City result = request.getResult();
+            City result;
+            try {
+                result = request.getResult();
+            } catch (QuotaLimitException e) {
+                logger.error(e.getMessage());
+                return null;
+            }
             if (result != null) {
                 //get Stops for city
                 CityEntity entity;
                 entity = this.getStopsForCity(result);
+                City returnValue = this.removeUnfetchedStops(entity.toDataTransferObject());
+                entity.setUnfetchedStops(returnValue.isUnfetchedStops());
                 // valid city was found --> cache result
-                session.save(entity);
-                return entity.toDataTransferObject();
+                session.persist(entity);
+                return returnValue;
             }
         }
         return null;
@@ -179,28 +199,136 @@ public class TravlynService {
         session.delete(user.getToken().toEntity());
     }
 
+    @Transactional
+    public Trip generateTrip(Long userId, Long cityId, String tripName, boolean privateFlag, List<Long> stopIds) throws NoResultException {
+        Session session = sessionFactory.getCurrentSession();
+        Trip trip = new Trip();
+
+        //get corresponding user
+        UserEntity user;
+        user = session.createQuery("from UserEntity where id = :id", UserEntity.class)
+                .setParameter("id", toIntExact(userId))
+                .getSingleResult();
+        trip.setUser(user.toDataTransferObject());
+
+        //get corresponding city
+        CityEntity city;
+        try {
+            city = session.createQuery("from CityEntity where id = :id", CityEntity.class)
+                    .setParameter("id", toIntExact(cityId))
+                    .getSingleResult();
+            trip.setCity(city.toDataTransferObject());
+        } catch (NoResultException e) {
+            trip.setCity(null);
+        }
+
+        //set trip metadata and save trip
+        trip.setPrivate(privateFlag);
+        trip.name(tripName);
+        trip.setRatings(new ArrayList<>());
+        trip.setGeoText(new ArrayList<>());
+        trip.setStops(new ArrayList<>());
+        TripEntity tripEntity = trip.toEntity();
+        tripEntity.setId((Integer) session.save(tripEntity));
+
+        //create tripstops and save them
+        StopEntity stop;
+        TripStopEntity predecessor = null;
+        Set<TripStopEntity> stopEntitySet = new HashSet<>();
+        if (stopIds != null) {
+            for (Long stopId : stopIds) {
+                stop = session.createQuery("from StopEntity where id = :id", StopEntity.class)
+                        .setParameter("id", toIntExact(stopId))
+                        .getSingleResult();
+                TripStopEntity tripStopEntity = new TripStopEntity();
+                TripStopEntity.TripStopId tripStopId = new TripStopEntity.TripStopId();
+                tripStopId.setStopId(stop.getId());
+                tripStopId.setTripId(tripEntity.getId());
+                tripStopEntity.setTripStopId(tripStopId);
+                tripStopEntity.setTrip(tripEntity);
+                tripStopEntity.setStop(stop);
+                tripStopEntity.setPredecessor(predecessor);
+                stopEntitySet.add(tripStopEntity);
+                session.save(tripStopEntity);
+                predecessor = tripStopEntity;
+            }
+        }
+        tripEntity.setStops(stopEntitySet);
+        return tripEntity.toDataTransferObject();
+    }
+
+    @Transactional
+    public Trip getTrip(Long tripId) throws NoResultException {
+        Session session = sessionFactory.getCurrentSession();
+
+        TripEntity tripEntity = new TripEntity();
+        tripEntity = session.createQuery("from TripEntity where id = :id", TripEntity.class)
+                .setParameter("id", toIntExact(tripId))
+                .getSingleResult();
+        return tripEntity.toDataTransferObject();
+    }
+
+    @Transactional
     public CityEntity getStopsForCity(City city) {
+        Session session = sessionFactory.getCurrentSession();
         CityEntity cityEntity = new CityEntity();
         cityEntity.setName(city.getName());
         cityEntity.setLatitude(city.getLatitude());
         cityEntity.setLongitude(city.getLongitude());
         cityEntity.setImage(city.getImage());
         cityEntity.setDescription(city.getDescription());
-        OpenRouteRequest request = new OpenRouteRequest(cityEntity.getLatitude(), cityEntity.getLongitude(), cityEntity);
-        Set<StopEntity> stopEntities = request.getResult();
-        for (Iterator<StopEntity> stopEntityIterator = stopEntities.iterator(); stopEntityIterator.hasNext(); ) {
+        //fetch categories and pass for reuse
+        List<CategoryEntity> categories = session.createQuery("from CategoryEntity", CategoryEntity.class)
+                .getResultList();
+        OpenRouteRequest request = new OpenRouteRequest(cityEntity.getLatitude(), cityEntity.getLongitude(), cityEntity, this.getCategorySetFromList(categories));
+        Set<StopEntity> stopEntities = this.fetchNumberOfStops(request.getResult());
+        cityEntity.setStops(stopEntities);
+        return cityEntity;
+    }
+
+    private Map<Integer, CategoryEntity> getCategorySetFromList(List<CategoryEntity> list) {
+        HashMap<Integer, CategoryEntity> result = new HashMap<>();
+        for (CategoryEntity category : list) {
+            result.put(category.getId(), category);
+        }
+        return result;
+    }
+
+    private City removeUnfetchedStops(City city) {
+        Set<Stop> stops = city.getStops();
+        boolean removed = stops.removeIf(stop -> stop.getDescription() == null && stop.getImage() == null);
+        city.setUnfetchedStops(removed);
+        return city;
+    }
+
+    @Transactional
+    protected Set<StopEntity> fetchNumberOfStops(Set<StopEntity> entities) {
+        Session session = sessionFactory.getCurrentSession();
+        int requestCount = 2;
+        Iterator<StopEntity> stopEntityIterator = entities.iterator();
+        while (requestCount < FETCHABLESTOPS && stopEntityIterator.hasNext()) {
             StopEntity entity = stopEntityIterator.next();
+            if (entity.getImage() != null && entity.getDescription() != null) {
+                continue;
+            }
             DBpediaStopRequest poiRequest = new DBpediaStopRequest(entity.getName());
-            Stop stop = poiRequest.getResult();
+            Stop stop;
+            try {
+                stop = poiRequest.getResult();
+            } catch (QuotaLimitException e) {
+                logger.error(e.getMessage());
+                return null;
+            }
             if (stop != null) {
                 entity.setImage(stop.getImage());
                 entity.setDescription(stop.getDescription());
             } else {
+                session.delete(entity);
                 stopEntityIterator.remove();
             }
+            requestCount++;
         }
-        cityEntity.setStops(stopEntities);
-        return cityEntity;
+        return entities;
     }
 
     @Transactional
@@ -241,5 +369,70 @@ public class TravlynService {
 
         session.merge(stopEntity);
         return true;
+    }
+
+    @Transactional
+    public List<Trip> getTripsForCity(Long cityId) throws NoResultException {
+        Session session = sessionFactory.getCurrentSession();
+        //check if city exists --> throws exception if not
+        session.createQuery("from CityEntity where id = :id")
+                .setParameter("id", toIntExact(cityId))
+                .getSingleResult();
+
+        //city is present...search corresponding trips
+        List<TripEntity> result = session.createQuery("from TripEntity where city.id = :cityId and isPrivate = false", TripEntity.class)
+                .setParameter("cityId", toIntExact(cityId))
+                .getResultList();
+        ArrayList<Trip> trips = new ArrayList<>();
+        for (TripEntity entity : result) {
+            trips.add(entity.toDataTransferObject());
+        }
+        return trips;
+    }
+
+    @Transactional
+    public void updateTrip(Trip trip) throws NoResultException {
+        Session session = sessionFactory.getCurrentSession();
+        //check if trip exists
+        TripEntity oldTrip = session.createQuery("from TripEntity where id = :id", TripEntity.class)
+                .setParameter("id", trip.getId())
+                .getSingleResult();
+
+        for (TripStopEntity stop : oldTrip.getStops()) {
+            stop.setPredecessor(null);
+            session.update(stop);
+        }
+
+        session.createQuery("delete from TripStopEntity where tripStopId.tripId = :tripId ")
+                .setParameter("tripId", trip.getId()).executeUpdate();
+
+        session.clear();
+        TripEntity tripEntity = trip.toEntity();
+
+        if (tripEntity.getCity() == null) {
+            StopEntity stopEntity = session.get(StopEntity.class, tripEntity.getStops().iterator().next().getStop().getId());
+            tripEntity.setCity(stopEntity.getCity());
+        }
+
+        session.update(tripEntity);
+    }
+
+    @Transactional
+    public List<Trip> getTripsPerUser(Long userId) throws NoResultException {
+        Session session = sessionFactory.getCurrentSession();
+        //check if user exists --> throws exception if not
+        session.createQuery("from UserEntity where id = :id")
+                .setParameter("id", toIntExact(userId))
+                .getSingleResult();
+
+        //user present..get trips
+        List<TripEntity> result = session.createQuery("from TripEntity where user.id = :userId", TripEntity.class)
+                .setParameter("userId", toIntExact(userId))
+                .getResultList();
+        ArrayList<Trip> trips = new ArrayList<>();
+        for (TripEntity entity : result) {
+            trips.add(entity.toDataTransferObject());
+        }
+        return trips;
     }
 }

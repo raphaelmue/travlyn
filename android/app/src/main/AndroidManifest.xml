@@ -21,6 +21,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ui.trips.TripInformationActivity"
+            android:label="@string/create_trip"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.trips.CreateTripActivity"
+            android:label="@string/create_trip"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/sign_in"
             android:theme="@style/AppTheme.NoActionBar" />
