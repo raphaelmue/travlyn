@@ -9,7 +9,7 @@ import org.travlyn.shared.model.api.Stop;
 public class DBpediaStopRequestTest {
 
     @Test
-    void getResult() {
+    void getResult() throws QuotaLimitException{
         DBpediaStopRequest dbPediaStopRequest = new DBpediaStopRequest("Admiralty Arch");
         Stop stop = dbPediaStopRequest.getResult();
         Assertions.assertEquals("Admiralty Arch is a landmark building in London which incorporates an archway " +

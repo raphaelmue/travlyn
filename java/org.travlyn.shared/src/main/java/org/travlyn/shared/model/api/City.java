@@ -37,6 +37,10 @@ public class City extends AbstractDataTransferObject {
     @ApiModelProperty(value = "URL to image", required = true, example = "https://example.org/image")
     private String image = null;
 
+    @JsonProperty("unfetchedStops")
+    @ApiModelProperty(value = "Boolean to indicate if there are unfetched stops", required = true, example = "false")
+    private boolean unfetchedStops = false;
+
     @JsonProperty("description")
     @ApiModelProperty(value = "Description text", required = true, example = "This is a description text for New York.")
     private String description = null;
@@ -117,6 +121,15 @@ public class City extends AbstractDataTransferObject {
         return image;
     }
 
+    public boolean isUnfetchedStops() {
+        return unfetchedStops;
+    }
+
+    public City setUnfetchedStops(boolean unfetchedStops) {
+        this.unfetchedStops = unfetchedStops;
+        return this;
+    }
+
     public void setImage(String image) {
         this.image = image;
     }
@@ -175,12 +188,11 @@ public class City extends AbstractDataTransferObject {
         cityEntity.setLatitude(this.latitude);
         cityEntity.setName(this.name);
         cityEntity.setImage(this.image);
+        cityEntity.setUnfetchedStops(this.unfetchedStops);
         cityEntity.setDescription(this.description);
         if (stops != null) {
             HashSet<StopEntity> stopEntityHashSet = new HashSet<>();
             for (Stop stop : stops) {
-                City city = new City().id(stop.getCity().id);
-                stop.city(city);
                 stopEntityHashSet.add(stop.toEntity());
             }
             cityEntity.setStops(stopEntityHashSet);

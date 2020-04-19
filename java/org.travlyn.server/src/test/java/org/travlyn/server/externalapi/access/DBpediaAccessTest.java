@@ -8,7 +8,7 @@ import org.travlyn.shared.model.api.City;
 @Tag("unit")
 public class DBpediaAccessTest {
     @Test
-    public void testInfoCall() {
+    public void testInfoCall() throws QuotaLimitException{
         DBpediaCityRequest request = new DBpediaCityRequest("Wesel");
         City result = request.getResult();
         Assert.assertEquals("Wesel (German pronunciation: [ˈveːzəl]) is a city in North Rhine-Westphalia, Germany. It is the capital of the Wesel district.", result.getDescription());

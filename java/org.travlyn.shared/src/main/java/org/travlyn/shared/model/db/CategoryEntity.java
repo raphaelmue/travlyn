@@ -37,7 +37,9 @@ public class CategoryEntity implements DataEntity {
 
     @Override
     public Category toDataTransferObject() {
-        return new Category().name(this.name)
-                .id(this.id);
+        Category category = new Category();
+        category.setId(this.id);
+        category.setName(this.name);
+        return category;
     }
 }
