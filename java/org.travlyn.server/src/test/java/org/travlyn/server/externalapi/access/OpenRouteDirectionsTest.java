@@ -22,7 +22,7 @@ public class OpenRouteDirectionsTest {
         set.add(new TripStopEntity().setStop(stop.toEntity()));
         User user = new User().email("mail@mail.com").name("name").id(1);
         TripEntity entity = new TripEntity().setStops(set).setUser(user.toEntity());
-        OpenRouteTripDirectionRequest tripRequest = new OpenRouteTripDirectionRequest(51.507,-0.1275, entity.toDataTransferObject(),false);
+        OpenRouteTripDirectionRequest tripRequest = new OpenRouteTripDirectionRequest(51.507,-0.1275, entity.toDataTransferObject(),false,"en");
         ExecutionInfo info = tripRequest.getResult();
         Assertions.assertNotNull(info);
         Assertions.assertEquals(85,info.getWaypoints().size());
@@ -32,7 +32,7 @@ public class OpenRouteDirectionsTest {
     @Test
     public void testRedirectionCall(){
         Stop stop = new Stop().setLatitude(49.007865).setLongitude(8.398634);
-        OpenRouteRedirectionRequest redirectionRequest = new OpenRouteRedirectionRequest(49.0092097,8.4039514,stop);
+        OpenRouteRedirectionRequest redirectionRequest = new OpenRouteRedirectionRequest(49.0092097,8.4039514,stop,"en");
         ExecutionInfo info = redirectionRequest.getResult();
         Assertions.assertNotNull(info);
         Assertions.assertEquals(0.555,info.getDistance());

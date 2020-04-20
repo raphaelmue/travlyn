@@ -12,11 +12,13 @@ public class OpenRouteRedirectionRequest extends OpenRouteDirectionRequest{
     private final double startLat;
     private final double startLon;
     private final Stop stop;
+    private final String lang;
 
-    public OpenRouteRedirectionRequest(double startLat, double startLon, Stop stop) {
+    public OpenRouteRedirectionRequest(double startLat, double startLon, Stop stop, String lang) {
         this.startLat = startLat;
         this.startLon = startLon;
         this.stop = stop;
+        this.lang = lang;
     }
 
     @Override
@@ -24,7 +26,7 @@ public class OpenRouteRedirectionRequest extends OpenRouteDirectionRequest{
         List<Pair<Double,Double>> wayPoints = new ArrayList<>();
         wayPoints.add(new Pair<>(startLon,startLat));
         wayPoints.add(new Pair<>(stop.getLongitude(),stop.getLatitude()));
-        JsonObject result = this.makeAPICall(wayPoints);
+        JsonObject result = this.makeAPICall(wayPoints,lang);
         return this.extractExecutionInfo(result);
     }
 }

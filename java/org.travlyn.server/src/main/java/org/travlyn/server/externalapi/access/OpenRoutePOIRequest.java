@@ -4,12 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.travlyn.server.util.Pair;
 import org.travlyn.shared.model.db.CategoryEntity;
 import org.travlyn.shared.model.db.CityEntity;
 import org.travlyn.shared.model.db.StopEntity;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
@@ -19,8 +23,22 @@ import java.util.Set;
 
 public class OpenRoutePOIRequest implements Request<Set<StopEntity>> {
     private static final String BASE_URL = "https://api.openrouteservice.org/pois";
+    private static final String API_KEY;
+    private static final Logger logger = LoggerFactory.getLogger(OpenRoutePOIRequest.class);
     private static final double FIELDSIZEFORREQUEST = 0.02;
     private static final HashSet<Integer> excludedCategories = new HashSet<>(Arrays.asList(136, 237, 238, 231, 234, 261, 262, 267, 271, 280, 282, 283, 288, 290, 293, 297, 298, 302, 303, 307, 623, 624, 626));
+
+    static {
+        String readLine = "1234";
+        try (
+                BufferedReader fileReader = new BufferedReader(new InputStreamReader(
+                        DBpediaRequest.class.getClassLoader().getResourceAsStream("OpenRouteKey.txt")))) {
+            readLine = fileReader.readLine();
+        } catch (IOException | NullPointerException e) {
+            logger.error(e.getMessage());
+        }
+        API_KEY = readLine;
+    }
 
     private final Gson gson = new Gson();
     private Map<Integer, CategoryEntity> categoryList;
@@ -40,7 +58,7 @@ public class OpenRoutePOIRequest implements Request<Set<StopEntity>> {
     public Set<StopEntity> getResult() {
         Set<StopEntity> resultList = new HashSet<>();
         Set<Pair<String, String>> header = new HashSet<>();
-        header.add(new Pair<>("Authorization", "5b3ce3597851110001cf62487839b1884ada4627bbe7c52c372087fd"));
+        header.add(new Pair<>("Authorization", API_KEY));
 
         for (int row = -1; row <= 1; row++) {
             for (int column = -1; column <= 1; column++) {

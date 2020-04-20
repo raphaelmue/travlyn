@@ -23,7 +23,7 @@ public class ExecutionInfo extends AbstractDataTransferObject {
 
     @JsonProperty("duration")
     @ApiModelProperty(value = "Duration in min", required = true, example = "120.5")
-    private double duration = 120;
+    private double duration = 0.0;
 
     @JsonProperty("waypoints")
     @ApiModelProperty(value = "Waypoints to show on map", required = true)

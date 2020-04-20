@@ -106,8 +106,12 @@ public class TripApiController implements TripApi {
     public ResponseEntity<ExecutionInfo> getTripExecutionInfo(@PathVariable("tripId") Long tripId, Long userId, double startLatitude, double startLongitude, boolean reorderAllowed, boolean roundTrip) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
+            String language = request.getHeader("Accept-Language");
+            if (language == null || language.isBlank()){
+                language = "en";
+            }
             try{
-                ExecutionInfo info = travlynService.getExecutionInfo(tripId,userId,startLatitude,startLongitude,reorderAllowed,roundTrip);
+                ExecutionInfo info = travlynService.getExecutionInfo(tripId,userId,startLatitude,startLongitude,reorderAllowed,roundTrip,language);
                 if (info == null){
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
@@ -124,8 +128,12 @@ public class TripApiController implements TripApi {
     public ResponseEntity<ExecutionInfo> getRoutingToStop(double startLatitude, double startLongitude, Long stopId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
+            String language = request.getHeader("Accept-Language");
+            if (language == null || language.isBlank()){
+                language = "en";
+            }
             try{
-                ExecutionInfo info = travlynService.getRedirection(startLatitude,startLongitude,stopId);
+                ExecutionInfo info = travlynService.getRedirection(startLatitude,startLongitude,stopId,language);
                 if (info == null){
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
