@@ -37,12 +37,29 @@ public interface StopApi {
             tags = {"stop"})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful operation"),
+            @ApiResponse(code = 400, message = "Accept Header missing or invalid pricing supplied."),
             @ApiResponse(code = 401, message = "You are not authorized to perform this action"),
             @ApiResponse(code = 404, message = "Stop Id not found")})
     @PostMapping(
             value = "/stop/{stopId}/pricing")
     ResponseEntity<Stop> addPricingStop(@ApiParam(value = "ID of the stop that will be rated", required = true, defaultValue = "-1", example = "123") @PathVariable("stopId") int stopId,
                                   @NotNull @ApiParam(value = "Average price for adult in USD", required = true, defaultValue = "-1", example = "14.5") @Valid @RequestParam(value = "pricing") double pricing);
+
+    @ApiOperation(
+            value = "Commit time effort to stop",
+            nickname = "addTimeEffortStop",
+            notes = "",
+            authorizations = {@Authorization(value = "TokenAuth")},
+            tags = {"stop"})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful operation"),
+            @ApiResponse(code = 400, message = "Accept Header missing or invalid time effort supplied."),
+            @ApiResponse(code = 401, message = "You are not authorized to perform this action"),
+            @ApiResponse(code = 404, message = "Stop Id not found")})
+    @PostMapping(
+            value = "/stop/{stopId}/timeEffort")
+    ResponseEntity<Stop> addTimeEffortStop(@ApiParam(value = "ID of the stop that will be rated", required = true, defaultValue = "-1", example = "123") @PathVariable("stopId") int stopId,
+                                        @NotNull @ApiParam(value = "Average time effort to visit this stop in hours", required = true, defaultValue = "-1", example = "1.5") @Valid @RequestParam(value = "timeEffort") double timeEffort);
 
     @ApiOperation(
             value = "Get Stop by ID",

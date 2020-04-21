@@ -70,6 +70,27 @@ public class StopApiController implements StopApi {
     }
 
     @Override
+    public ResponseEntity<Stop> addTimeEffortStop(@PathVariable("stopId") int stopId, double timeEffort) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            Stop stop;
+            try {
+                stop = this.travlynService.addTimeEffortToStop(stopId, timeEffort);
+            }catch (NoResultException e){
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }catch (ValueException e){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            if (stop != null) {
+                return new ResponseEntity<>(stop,HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
     public ResponseEntity<Stop> stopStopIdGet(@PathVariable("stopId") Long stopId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {

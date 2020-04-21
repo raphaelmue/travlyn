@@ -323,7 +323,7 @@ public class TravlynService {
         Session session = sessionFactory.getCurrentSession();
 
         if (pricing < 0){
-            throw new ValueException("Pricing can not be negative");
+            throw new ValueException("Pricing can not be negative!");
         }
 
         StopEntity stopEntity = session.createQuery("from StopEntity where id = :stopId", StopEntity.class)
@@ -337,6 +337,34 @@ public class TravlynService {
         }else{
             //calc avg and set; weight old pricing 9 times and new 1 times to avoid high changes
             stopEntity.setPricing((1.0/10.0)*((9.0*oldPricing)+pricing));
+        }
+        session.merge(stopEntity);
+        return stopEntity.toDataTransferObject();
+    }
+
+    @Transactional
+    public Stop addTimeEffortToStop(int stopId, double timeEffort) throws NoResultException, ValueException{
+        Session session = sessionFactory.getCurrentSession();
+
+        if (timeEffort < 0){
+            throw new ValueException("Time effort can not be negative!");
+        }
+
+        if (timeEffort > 16){
+            throw new ValueException("Time effort can not be higher than one day!");
+        }
+
+        StopEntity stopEntity = session.createQuery("from StopEntity where id = :stopId", StopEntity.class)
+                .setParameter("stopId", stopId)
+                .getSingleResult();
+        double oldTimeEffort = stopEntity.getTimeEffort();
+
+        if (oldTimeEffort == 0.0){
+            //pricing initial
+            stopEntity.setTimeEffort(timeEffort);
+        }else{
+            //calc avg and set; weight old pricing 9 times and new 1 times to avoid high changes
+            stopEntity.setTimeEffort((1.0/10.0)*((9.0*oldTimeEffort)+timeEffort));
         }
         session.merge(stopEntity);
         return stopEntity.toDataTransferObject();
