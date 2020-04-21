@@ -2,6 +2,9 @@ pipeline {
     environment {
         registry = 'raphaelmue/travlyn'
         registryCredentials = 'dockerhub'
+
+        OPENROUTE_API_KEY = credentials('openroute-api-key')
+        DBPEDIA_API_KEY = credentials('dbpedia-api-key')
     }
 
     agent any
@@ -14,11 +17,8 @@ pipeline {
     stages {
         stage('Prepare Build') {
             steps {
-                withCredentials([file(credentialsId: 'openroute-api-key', variable: 'openroute-api-key'),
-                                 file(credentialsId: 'dbpedia-api-key', variable: 'dbpedia-api-key')]) {
-                    sh 'cp \$openroute-api-key java/org.travlyn.server/src/main/resources/OpenRouteKey.txt'
-                    sh 'cp \$dbpedia-api-key java/org.travlyn.server/src/main/resources/DBpediaKey.txt'
-                }
+                sh 'cp $OPENROUTE_API_KEY java/org.travlyn.server/src/main/resources/OpenRouteKey.txt'
+                sh 'cp $DBPEDIA_API_KEY java/org.travlyn.server/src/main/resources/DBpediaKey.txt'
             }
         }
 
