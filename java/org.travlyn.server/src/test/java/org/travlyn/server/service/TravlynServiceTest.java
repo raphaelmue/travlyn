@@ -267,4 +267,26 @@ public class TravlynServiceTest {
         Assertions.assertEquals(1, trip.getStops().size());
         Assertions.assertEquals("Test descr", trip.getStops().get(0).getDescription());
     }
+
+    @Transactional
+    @Test
+    public void testUpdatePricing() throws NoResultException,ValueException{
+        Session session = sessionFactory.getCurrentSession();
+
+        Stop result = service.addPricingToStop(stopEntity.getId(),10.0);
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(10.0,result.getPricing());
+
+        StopEntity entity = session.createQuery("from StopEntity where id = :id",StopEntity.class)
+                .setParameter("id",stopEntity.getId())
+                .getSingleResult();
+
+        Assertions.assertEquals(10.0,entity.getPricing());
+
+        Assertions.assertThrows(ValueException.class,() -> service.addPricingToStop(stopEntity.getId(),-20));
+        Assertions.assertThrows(NoResultException.class,() -> service.addPricingToStop(-1,20));
+
+        result = service.addPricingToStop(stopEntity.getId(),20);
+        Assertions.assertEquals(11,result.getPricing());
+    }
 }
