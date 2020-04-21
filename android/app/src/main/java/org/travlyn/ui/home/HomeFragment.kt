@@ -171,8 +171,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun handleSearchCity(query: String) {
+        searchBarHome.showProgress()
         CoroutineScope(Dispatchers.IO).launch {
             val city: City? = cityApi.getCity(query)
+            withContext(Dispatchers.Main) { searchBarHome.hideProgress() }
             if (city != null) {
                 addCityToSuggestions(city)
                 focusCityAndAddMarker(city)
@@ -187,7 +189,7 @@ class HomeFragment : Fragment() {
                         activity,
                         getString(R.string.error_no_city_found, query),
                         Toast.LENGTH_LONG
-                    )
+                    ).show()
                 }
             }
         }
