@@ -12,6 +12,16 @@ pipeline {
     }
 
     stages {
+        stage('Prepare Build') {
+            steps {
+                withCredentials([file(credentialsId: 'openroute-api-key', variable: 'openroute-api-key'),
+                                 file(credentialsId: 'dbpedia-api-key', variable: 'dbpedia-api-key')]) {
+                    sh 'cp \$openroute-api-key java/org.travlyn.server/src/main/resources/OpenRouteKey.txt'
+                    sh 'cp \$dbpedia-api-key java/org.travlyn.server/src/main/resources/DBpediaKey.txt'
+                }
+            }
+        }
+
         stage('Build') {
             parallel {
                 stage('Java') {
@@ -19,11 +29,6 @@ pipeline {
                         dir('java') {
                             sh 'mvn clean install -DskipTests'
                         }
-                        // post {
-                        //     always {
-                        //         archiveArtifacts artifacts: '**/*.msi, **/*.deb, **/*.dmg, **/*.apk', fingerprint: true
-                        //     }
-                        // }
                     }
                 }
                 stage('Android') {
