@@ -81,7 +81,7 @@ public abstract class OpenRouteDirectionRequest implements Request<ExecutionInfo
         JsonObject properties;
         try {
             properties = apiResult.getAsJsonArray("features").get(0).getAsJsonObject().get("properties").getAsJsonObject();
-        } catch (JsonSyntaxException ignored) {
+        } catch (NullPointerException ignored) {
             //JSON response is malformed
             return null;
         }
