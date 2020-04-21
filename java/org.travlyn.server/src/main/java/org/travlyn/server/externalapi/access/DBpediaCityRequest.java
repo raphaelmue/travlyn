@@ -47,7 +47,7 @@ public class DBpediaCityRequest extends DBpediaRequest<City> {
         } catch (
                 JsonSyntaxException syntaxException) {
             //quota limit reached...exclude stop TODO
-            throw new QuotaLimitException("DBpedia quota limit is reached by stop request!");
+            throw new QuotaLimitException("DBpedia quota limit is reached by city request!");
         }
 
         JsonObject englishContent = this.filterLanguageToEnglish(resultArray);

@@ -7,10 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.travlyn.server.externalapi.access.DBpediaCityRequest;
-import org.travlyn.server.externalapi.access.DBpediaStopRequest;
-import org.travlyn.server.externalapi.access.OpenRouteRequest;
-import org.travlyn.server.externalapi.access.QuotaLimitException;
+import org.travlyn.server.externalapi.access.*;
 import org.travlyn.shared.model.api.*;
 import org.travlyn.shared.model.db.*;
 import org.travlyn.util.security.Hash;
@@ -230,7 +227,7 @@ public class TravlynService {
         //fetch categories and pass for reuse
         List<CategoryEntity> categories = session.createQuery("from CategoryEntity", CategoryEntity.class)
                 .getResultList();
-        OpenRouteRequest request = new OpenRouteRequest(cityEntity.getLatitude(), cityEntity.getLongitude(), cityEntity, this.getCategorySetFromList(categories));
+        OpenRoutePOIRequest request = new OpenRoutePOIRequest(cityEntity.getLatitude(), cityEntity.getLongitude(), cityEntity, this.getCategorySetFromList(categories));
         Set<StopEntity> stopEntities = this.fetchNumberOfStops(request.getResult());
         cityEntity.setStops(stopEntities);
         return cityEntity;
@@ -267,7 +264,7 @@ public class TravlynService {
                 stop = poiRequest.getResult();
             } catch (QuotaLimitException e) {
                 logger.error(e.getMessage());
-                return null;
+                break;
             }
             if (stop != null) {
                 entity.setImage(stop.getImage());
@@ -384,5 +381,26 @@ public class TravlynService {
             trips.add(entity.toDataTransferObject());
         }
         return trips;
+    }
+
+    @Transactional
+    public ExecutionInfo getExecutionInfo(Long tripId, Long userId, double lat, double lon, boolean reorder, boolean isRoundtrip, String lang) throws NoResultException {
+        Session session = sessionFactory.getCurrentSession();
+        reorder = false;
+        TripEntity trip = session.createQuery("from TripEntity where id = :id", TripEntity.class)
+                .setParameter("id", toIntExact(tripId))
+                .getSingleResult();
+        OpenRouteTripDirectionRequest directionRequest = new OpenRouteTripDirectionRequest(lat, lon, trip.toDataTransferObject(), isRoundtrip, lang);
+        return directionRequest.getResult();
+    }
+
+    @Transactional
+    public ExecutionInfo getRedirection(double lat, double lon, Long stopId, String lang) throws NoResultException {
+        Session session = sessionFactory.getCurrentSession();
+        StopEntity stop = session.createQuery("from StopEntity where id = :id", StopEntity.class)
+                .setParameter("id", toIntExact(stopId))
+                .getSingleResult();
+        OpenRouteRedirectionRequest redirectionRequest = new OpenRouteRedirectionRequest(lat, lon, stop.toDataTransferObject(), lang);
+        return redirectionRequest.getResult();
     }
 }

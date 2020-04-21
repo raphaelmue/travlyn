@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.travlyn.server.service.TravlynService;
+import org.travlyn.shared.model.api.ExecutionInfo;
 import org.travlyn.shared.model.api.Rating;
 import org.travlyn.shared.model.api.StopIdWrapper;
 import org.travlyn.shared.model.api.Trip;
@@ -97,6 +99,50 @@ public class TripApiController implements TripApi {
             }
         }
 
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public ResponseEntity<ExecutionInfo> getTripExecutionInfo(@PathVariable("tripId") Long tripId, Long userId, double startLatitude, double startLongitude, boolean reorderAllowed, boolean roundTrip) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            String language = request.getHeader("Accept-Language");
+            if (language == null || language.isBlank()){
+                language = "en";
+            }
+            try{
+                ExecutionInfo info = travlynService.getExecutionInfo(tripId,userId,startLatitude,startLongitude,reorderAllowed,roundTrip,language);
+                if (info == null){
+                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+                return new ResponseEntity<>(info,HttpStatus.OK);
+            }catch (NoResultException e){
+                log.error("Couldn't find requested trip", e);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public ResponseEntity<ExecutionInfo> getRoutingToStop(double startLatitude, double startLongitude, Long stopId) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            String language = request.getHeader("Accept-Language");
+            if (language == null || language.isBlank()){
+                language = "en";
+            }
+            try{
+                ExecutionInfo info = travlynService.getRedirection(startLatitude,startLongitude,stopId,language);
+                if (info == null){
+                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+                return new ResponseEntity<>(info,HttpStatus.OK);
+            }catch (NoResultException e){
+                log.error("Couldn't find requested stop", e);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

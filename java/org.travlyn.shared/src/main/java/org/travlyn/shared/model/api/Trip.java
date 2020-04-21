@@ -245,7 +245,7 @@ public class Trip extends AbstractDataTransferObject {
     public TripEntity toEntity() {
         TripEntity tripEntity = new TripEntity();
         tripEntity.setId(this.id);
-        if (tripEntity.getCity() != null) {
+        if (this.getCity() != null) {
             tripEntity.setCity(this.city.toEntity());
         }
         tripEntity.setPrivate(this.isPrivate);
