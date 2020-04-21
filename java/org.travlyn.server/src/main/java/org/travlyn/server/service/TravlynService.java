@@ -319,6 +319,30 @@ public class TravlynService {
     }
 
     @Transactional
+    public Stop addPricingToStop(int stopId, double pricing) throws NoResultException, ValueException{
+        Session session = sessionFactory.getCurrentSession();
+
+        if (pricing < 0){
+            throw new ValueException("Pricing can not be negative");
+        }
+
+        StopEntity stopEntity = session.createQuery("from StopEntity where id = :stopId", StopEntity.class)
+                .setParameter("stopId", stopId)
+                .getSingleResult();
+        double oldPricing = stopEntity.getPricing();
+
+        if (oldPricing == 0.0){
+            //pricing initial
+            stopEntity.setPricing(pricing);
+        }else{
+            //calc avg and set; weight old pricing 9 times and new 1 times to avoid high changes
+            stopEntity.setPricing((1.0/10.0)*((9.0*oldPricing)+pricing));
+        }
+        session.merge(stopEntity);
+        return stopEntity.toDataTransferObject();
+    }
+
+    @Transactional
     public List<Trip> getTripsForCity(Long cityId) throws NoResultException {
         Session session = sessionFactory.getCurrentSession();
         //check if city exists --> throws exception if not
