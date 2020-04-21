@@ -24,7 +24,7 @@ public class OpenRouteStopAccessTest {
     }
 
     @Test
-    public void testDBPediaStop() throws QuotaLimitException{
+    public void testDBPediaStop() throws QuotaLimitException {
         DBpediaStopRequest request = new DBpediaStopRequest("Karlsruhe_Palace");
         Stop stop = request.getResult();
         Assertions.assertNotNull(stop.getName());

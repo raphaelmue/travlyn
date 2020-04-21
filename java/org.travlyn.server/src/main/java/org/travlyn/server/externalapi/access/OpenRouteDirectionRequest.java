@@ -19,7 +19,7 @@ import java.util.stream.IntStream;
 
 public abstract class OpenRouteDirectionRequest implements Request<ExecutionInfo> {
     private static final String PROFILE = "foot-walking";
-    private static final String BASE_URL = "https://api.openrouteservice.org/v2/directions/" + PROFILE + "/geojson";
+    private static String baseUrl = "https://api.openrouteservice.org/v2/directions/" + PROFILE + "/geojson";
     private static final String API_KEY;
     private static final Logger logger = LoggerFactory.getLogger(OpenRouteRedirectionRequest.class);
     private final Gson gson = new Gson();
@@ -39,13 +39,17 @@ public abstract class OpenRouteDirectionRequest implements Request<ExecutionInfo
     @Override
     public abstract ExecutionInfo getResult();
 
+    public static void setBaseUrl(String baseUrl) {
+        OpenRouteDirectionRequest.baseUrl = baseUrl;
+    }
+
     protected JsonObject makeAPICall(List<Pair<Double, Double>> wayPoints, String lang) {
         Set<Pair<String, String>> header = new HashSet<>();
         header.add(new Pair<>("Authorization", API_KEY));
         header.add(new Pair<>("Content-Type", "application/json; charset=utf-8"));
         header.add(new Pair<>("Accept", "application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8"));
 
-        APIRequest request = new APIRequest(BASE_URL, new HashSet<>(), this.generatePostBody(wayPoints, lang), header);
+        APIRequest request = new APIRequest(baseUrl, new HashSet<>(), this.generatePostBody(wayPoints, lang), header);
         String apiResult;
         try {
             apiResult = request.performAPICallPOST();
