@@ -270,23 +270,45 @@ public class TravlynServiceTest {
 
     @Transactional
     @Test
-    public void testUpdatePricing() throws NoResultException,ValueException{
+    public void testUpdatePricing() throws NoResultException, ValueException {
         Session session = sessionFactory.getCurrentSession();
 
-        Stop result = service.addPricingToStop(stopEntity.getId(),10.0);
+        Stop result = service.addPricingToStop(stopEntity.getId(), 10.0);
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(10.0,result.getPricing());
+        Assertions.assertEquals(10.0, result.getPricing());
 
-        StopEntity entity = session.createQuery("from StopEntity where id = :id",StopEntity.class)
-                .setParameter("id",stopEntity.getId())
+        StopEntity entity = session.createQuery("from StopEntity where id = :id", StopEntity.class)
+                .setParameter("id", stopEntity.getId())
                 .getSingleResult();
 
-        Assertions.assertEquals(10.0,entity.getPricing());
+        Assertions.assertEquals(10.0, entity.getPricing());
 
-        Assertions.assertThrows(ValueException.class,() -> service.addPricingToStop(stopEntity.getId(),-20));
-        Assertions.assertThrows(NoResultException.class,() -> service.addPricingToStop(-1,20));
+        Assertions.assertThrows(ValueException.class, () -> service.addPricingToStop(stopEntity.getId(), -20));
+        Assertions.assertThrows(NoResultException.class, () -> service.addPricingToStop(-1, 20));
 
-        result = service.addPricingToStop(stopEntity.getId(),20);
-        Assertions.assertEquals(11,result.getPricing());
+        result = service.addPricingToStop(stopEntity.getId(), 20);
+        Assertions.assertEquals(11, result.getPricing());
+    }
+
+    @Transactional
+    @Test
+    public void testUpdateTimeEffort() throws NoResultException, ValueException {
+        Session session = sessionFactory.getCurrentSession();
+
+        Stop result = service.addTimeEffortToStop(stopEntity.getId(), 2.0);
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(2.0, result.getTimeEffort());
+
+        StopEntity entity = session.createQuery("from StopEntity where id = :id", StopEntity.class)
+                .setParameter("id", stopEntity.getId())
+                .getSingleResult();
+
+        Assertions.assertEquals(2.0, entity.getTimeEffort());
+
+        Assertions.assertThrows(ValueException.class, () -> service.addTimeEffortToStop(stopEntity.getId(), -20));
+        Assertions.assertThrows(NoResultException.class, () -> service.addTimeEffortToStop(-1, 2.0));
+
+        result = service.addTimeEffortToStop(stopEntity.getId(), 10);
+        Assertions.assertEquals(2.8, result.getTimeEffort(),0.1);
     }
 }

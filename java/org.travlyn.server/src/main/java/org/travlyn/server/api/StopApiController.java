@@ -55,13 +55,13 @@ public class StopApiController implements StopApi {
             Stop stop;
             try {
                 stop = this.travlynService.addPricingToStop(stopId, pricing);
-            }catch (NoResultException e){
+            } catch (NoResultException e) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }catch (ValueException e){
+            } catch (ValueException e) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             if (stop != null) {
-                return new ResponseEntity<>(stop,HttpStatus.OK);
+                return new ResponseEntity<>(stop, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -76,13 +76,13 @@ public class StopApiController implements StopApi {
             Stop stop;
             try {
                 stop = this.travlynService.addTimeEffortToStop(stopId, timeEffort);
-            }catch (NoResultException e){
+            } catch (NoResultException e) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }catch (ValueException e){
+            } catch (ValueException e) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             if (stop != null) {
-                return new ResponseEntity<>(stop,HttpStatus.OK);
+                return new ResponseEntity<>(stop, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
