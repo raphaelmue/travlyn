@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_trips.*
+import kotlinx.android.synthetic.main.stop_list_view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -68,7 +69,10 @@ class TripsFragment : Fragment() {
             if (user != null) {
                 return UserApi(context as MainActivity).getTripsByUserId(user.id!!).toList()
             } else {
-                userNotSignedInTextView.visibility = View.VISIBLE
+                withContext(Dispatchers.Main) {
+                    userNotSignedInTextView.visibility = View.VISIBLE
+                    stopListAddToTripButton.visibility = View.GONE
+                }
             }
         }
         return emptyList()

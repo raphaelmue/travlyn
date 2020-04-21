@@ -30,7 +30,9 @@ public interface UserApi {
     @GetMapping(
             value = "/user/{userId}/trips",
             produces = {"application/json"})
-    ResponseEntity<List<Trip>> getTripsByUserId(@ApiParam(value = "ID of the user whose trips are to be returned", required = true, defaultValue = "-1", example = "123") @PathVariable(value = "userId") Long userId);
+    ResponseEntity<List<Trip>> getTripsByUserId(
+            @ApiParam(value = "ID of the user whose trips are to be returned", required = true, defaultValue = "-1", example = "123")
+            @PathVariable(value = "userId") Long userId);
 
     @ApiOperation(
             value = "Logs user into the system",

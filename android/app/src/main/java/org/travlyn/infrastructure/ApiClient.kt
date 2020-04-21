@@ -40,7 +40,10 @@ open class ApiClient(
 
         @JvmStatic
         val client: OkHttpClient =
-            OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS).build()
+            OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(2, TimeUnit.MINUTES)
+                .writeTimeout(2, TimeUnit.MINUTES).build()
 
         @JvmStatic
         var defaultHeaders: Map<String, String> by ApplicationDelegates.setOnce(

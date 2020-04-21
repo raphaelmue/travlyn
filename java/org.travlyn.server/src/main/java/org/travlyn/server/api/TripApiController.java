@@ -55,11 +55,11 @@ public class TripApiController implements TripApi {
     }
 
     @Override
-    public ResponseEntity<Trip> generateTrip(@NotNull @Valid Long userId, @NotNull @Valid Long cityId, @NotNull @Valid String tripName, @NotNull @Valid boolean privateFlag, @NotNull @Valid StopIdWrapper stopIds) {
+    public ResponseEntity<Trip> generateTrip(@NotNull @Valid int cityId, @NotNull @Valid String tripName, @NotNull @Valid boolean privateFlag, @NotNull @Valid StopIdWrapper stopIds) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<>(travlynService.generateTrip(userId, cityId, tripName, privateFlag, stopIds.getStopIds()), HttpStatus.OK);
+                return new ResponseEntity<>(travlynService.generateTrip(cityId, tripName, privateFlag, stopIds.getStopIds()), HttpStatus.OK);
             } catch (NoResultException e) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -68,7 +68,7 @@ public class TripApiController implements TripApi {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<Trip> getTripByID(Long tripId, Long userId) {
+    public ResponseEntity<Trip> getTripByID(Long tripId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
@@ -76,6 +76,9 @@ public class TripApiController implements TripApi {
             } catch (NoResultException e) {
                 log.error("Couldn't find requested trip", e);
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } catch (IllegalAccessError e) {
+                log.error(e.getMessage(), e);
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
         }
 
@@ -107,16 +110,16 @@ public class TripApiController implements TripApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             String language = request.getHeader("Accept-Language");
-            if (language == null || language.isBlank()){
+            if (language == null || language.isBlank()) {
                 language = "en";
             }
-            try{
-                ExecutionInfo info = travlynService.getExecutionInfo(tripId,userId,startLatitude,startLongitude,reorderAllowed,roundTrip,language);
-                if (info == null){
+            try {
+                ExecutionInfo info = travlynService.getExecutionInfo(tripId, userId, startLatitude, startLongitude, reorderAllowed, roundTrip, language);
+                if (info == null) {
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
-                return new ResponseEntity<>(info,HttpStatus.OK);
-            }catch (NoResultException e){
+                return new ResponseEntity<>(info, HttpStatus.OK);
+            } catch (NoResultException e) {
                 log.error("Couldn't find requested trip", e);
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -129,16 +132,16 @@ public class TripApiController implements TripApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             String language = request.getHeader("Accept-Language");
-            if (language == null || language.isBlank()){
+            if (language == null || language.isBlank()) {
                 language = "en";
             }
-            try{
-                ExecutionInfo info = travlynService.getRedirection(startLatitude,startLongitude,stopId,language);
-                if (info == null){
+            try {
+                ExecutionInfo info = travlynService.getRedirection(startLatitude, startLongitude, stopId, language);
+                if (info == null) {
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
-                return new ResponseEntity<>(info,HttpStatus.OK);
-            }catch (NoResultException e){
+                return new ResponseEntity<>(info, HttpStatus.OK);
+            } catch (NoResultException e) {
                 log.error("Couldn't find requested stop", e);
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
