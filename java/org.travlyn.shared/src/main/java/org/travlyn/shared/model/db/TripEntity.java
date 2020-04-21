@@ -53,8 +53,9 @@ public class TripEntity implements DataEntity {
         return user;
     }
 
-    public void setUser(UserEntity user) {
+    public TripEntity setUser(UserEntity user) {
         this.user = user;
+        return this;
     }
 
     public CityEntity getCity() {
@@ -77,8 +78,9 @@ public class TripEntity implements DataEntity {
         return stops;
     }
 
-    public void setStops(Set<TripStopEntity> stops) {
+    public TripEntity setStops(Set<TripStopEntity> stops) {
         this.stops = stops;
+        return this;
     }
 
     public Set<TripRatingEntity> getRatings() {

@@ -18,7 +18,7 @@ public class OpenRouteStopAccessTest {
         City city = new City()
                 .latitude(51.507222222222225)
                 .longitude(-0.1275);
-        OpenRouteRequest request = new OpenRouteRequest(city.getLatitude(), city.getLongitude(), city.toEntity(), new HashMap<>());
+        OpenRoutePOIRequest request = new OpenRoutePOIRequest(city.getLatitude(), city.getLongitude(), city.toEntity(), new HashMap<>());
         Set<StopEntity> result = request.getResult();
         Assertions.assertTrue(result.size() > 0);
     }
