@@ -2,6 +2,9 @@ pipeline {
     environment {
         registry = 'raphaelmue/travlyn'
         registryCredentials = 'dockerhub'
+
+        OPENROUTE_API_KEY = credentials('openroute-api-key')
+        DBPEDIA_API_KEY = credentials('dbpedia-api-key')
     }
 
     agent any
@@ -12,6 +15,13 @@ pipeline {
     }
 
     stages {
+        stage('Prepare Build') {
+            steps {
+                sh 'cp $OPENROUTE_API_KEY java/org.travlyn.server/src/main/resources/OpenRouteKey.txt'
+                sh 'cp $DBPEDIA_API_KEY java/org.travlyn.server/src/main/resources/DBpediaKey.txt'
+            }
+        }
+
         stage('Build') {
             parallel {
                 stage('Java') {
@@ -19,11 +29,6 @@ pipeline {
                         dir('java') {
                             sh 'mvn clean install -DskipTests'
                         }
-                        // post {
-                        //     always {
-                        //         archiveArtifacts artifacts: '**/*.msi, **/*.deb, **/*.dmg, **/*.apk', fingerprint: true
-                        //     }
-                        // }
                     }
                 }
                 stage('Android') {

@@ -64,8 +64,9 @@ public class TripStopEntity implements DataEntity {
         return stop;
     }
 
-    public void setStop(StopEntity stop) {
+    public TripStopEntity setStop(StopEntity stop) {
         this.stop = stop;
+        return this;
     }
 
     public void setPredecessor(TripStopEntity predecessor) {

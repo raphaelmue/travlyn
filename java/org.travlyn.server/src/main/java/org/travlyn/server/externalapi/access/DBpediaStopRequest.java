@@ -23,16 +23,16 @@ public class DBpediaStopRequest extends DBpediaRequest<Stop> {
         MANUAL_NAMES.put("ZKM_|_Medienmuseum", "Center_for_Art_and_Media_Karlsruhe");
 
         //exclude false positives for Karlsruhe
-        MANUAL_NAMES.put("Heidesee", "");
-        MANUAL_NAMES.put("Flora", "");
-        MANUAL_NAMES.put("Orpheus", "");
-        MANUAL_NAMES.put("Fennek", "");
-        MANUAL_NAMES.put("Hase", "");
-        MANUAL_NAMES.put("Herz-Jesu-Kirche", "");
-        MANUAL_NAMES.put("Emu", "");
-        MANUAL_NAMES.put("Onager", "");
-        MANUAL_NAMES.put("Gondoletta", "");
-        MANUAL_NAMES.put("Temple", "");
+        MANUAL_NAMES.put("Heidesee", "xyz");
+        MANUAL_NAMES.put("Flora", "xyz");
+        MANUAL_NAMES.put("Orpheus", "xyz");
+        MANUAL_NAMES.put("Fennek", "xyz");
+        MANUAL_NAMES.put("Hase", "xyz");
+        MANUAL_NAMES.put("Herz-Jesu-Kirche", "xyz");
+        MANUAL_NAMES.put("Emu", "xyz");
+        MANUAL_NAMES.put("Onager", "xyz");
+        MANUAL_NAMES.put("Gondoletta", "xyz");
+        MANUAL_NAMES.put("Temple", "xyz");
     }
 
     private static final String BASE_URL = "http://vmdbpedia.informatik.uni-leipzig.de:8080/api/1.0.0/values";
@@ -66,7 +66,7 @@ public class DBpediaStopRequest extends DBpediaRequest<Stop> {
                     getAsJsonArray("bindings");
         } catch (JsonSyntaxException syntaxException) {
             // TODO
-            throw new QuotaLimitException("DBpedia quota limit is reached by city request!");
+            throw new QuotaLimitException("DBpedia quota limit is reached by stop request!");
         }
 
         JsonObject englishContent = this.filterLanguageToEnglish(resultArray);
