@@ -1,6 +1,7 @@
 package org.travlyn.ui.trips
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -17,10 +18,11 @@ import kotlinx.coroutines.withContext
 import org.travlyn.R
 import org.travlyn.api.TripApi
 import org.travlyn.api.model.Trip
+import org.travlyn.local.Application
 import org.travlyn.local.LocalStorage
 
 
-class CreateTripActivity : AppCompatActivity() {
+class CreateTripActivity : AppCompatActivity(), Application {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +52,10 @@ class CreateTripActivity : AppCompatActivity() {
         }
     }
 
+    override fun getContext(): Context {
+        return this
+    }
+
     private fun createTrip() {
         if (tripNameTextEdit.text.isNullOrBlank()) {
             tripNameTextEdit.error = getString(R.string.error_field_required)
@@ -75,7 +81,7 @@ class CreateTripActivity : AppCompatActivity() {
         }
 
         CoroutineScope(Dispatchers.IO).launch {
-            val tripResult = TripApi().generateTrip(
+            val tripResult = TripApi(this@CreateTripActivity).generateTrip(
                 trip.user?.id!!,
                 cityId,
                 trip.name!!,

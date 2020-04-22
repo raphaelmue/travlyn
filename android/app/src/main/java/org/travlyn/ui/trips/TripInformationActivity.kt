@@ -25,10 +25,11 @@ import org.travlyn.api.CityApi
 import org.travlyn.api.model.Stop
 import org.travlyn.api.model.Trip
 import org.travlyn.api.model.User
+import org.travlyn.local.Application
 import org.travlyn.local.LocalStorage
 
 
-class TripInformationActivity : AppCompatActivity() {
+class TripInformationActivity : AppCompatActivity(), Application {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,16 +82,20 @@ class TripInformationActivity : AppCompatActivity() {
         }
     }
 
+    override fun getContext(): Context {
+        return this
+    }
+
     private inner class TripInformationStopAdapter(
         private val stops: List<Stop>,
-        private val context: Context
+        private val application: Application
     ) : RecyclerView.Adapter<TripInformationStopAdapter.ViewHolder>() {
 
-        private val cityApi = CityApi()
+        private val cityApi = CityApi(application as TripInformationActivity)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view: View =
-                LayoutInflater.from(context)
+                LayoutInflater.from(application.getContext())
                     .inflate(R.layout.trip_information_stop_list_view, parent, false)
             return ViewHolder(view)
         }
@@ -106,36 +111,38 @@ class TripInformationActivity : AppCompatActivity() {
             holder.stopListDescription.text = stop.description
 
             if (position == 0) {
-                holder.stopListIndicatorView.setImageDrawable(context.getDrawable(R.drawable.stop_list_indicator_start))
+                holder.stopListIndicatorView.setImageDrawable(application.getContext()
+                    .getDrawable(R.drawable.stop_list_indicator_start))
             }
 
             if (position == stops.size - 1) {
-                holder.stopListIndicatorView.setImageDrawable(context.getDrawable(R.drawable.stop_list_indicator_end))
+                holder.stopListIndicatorView.setImageDrawable(application.getContext()
+                    .getDrawable(R.drawable.stop_list_indicator_end))
             }
 
-            val stringIdentifier = context.resources.getIdentifier(
-                "category_" + stop.category?.name, "string", context.packageName
+            val stringIdentifier = application.getContext().resources.getIdentifier(
+                "category_" + stop.category?.name, "string", application.getContext().packageName
             )
             holder.stopListCategoryTextView.text =
-                if (stringIdentifier > 0) context.getString(stringIdentifier) else stop.category?.name
+                if (stringIdentifier > 0) application.getContext().getString(stringIdentifier) else stop.category?.name
 
             if (stop.averageRating == null || stop.averageRating <= 0) {
-                holder.stopListRatingTextView.text = context.getString(R.string.no_value)
+                holder.stopListRatingTextView.text = application.getContext().getString(R.string.no_value)
             } else {
                 holder.stopListRatingBar.rating = stop.averageRating.toFloat() * 5f
                 holder.stopListRatingTextView.text =
-                    context.getString(R.string.rating_value, stop.averageRating * 5f)
+                    application.getContext().getString(R.string.rating_value, stop.averageRating * 5f)
             }
 
             if (stop.timeEffort == null || stop.timeEffort <= 0) {
-                holder.stopListTimeEffortTextView.text = context.getString(R.string.no_value)
+                holder.stopListTimeEffortTextView.text = application.getContext().getString(R.string.no_value)
             } else {
                 holder.stopListTimeEffortTextView.text =
-                    context.getString(R.string.hours_unit, stop.timeEffort.toString())
+                    application.getContext().getString(R.string.hours_unit, stop.timeEffort.toString())
             }
 
             if (stop.pricing == null || stop.pricing <= 0) {
-                holder.stopListPricingTextView.text = context.getString(R.string.no_value)
+                holder.stopListPricingTextView.text = application.getContext().getString(R.string.no_value)
             } else {
                 holder.stopListPricingTextView.text = stop.pricing.toString()
             }

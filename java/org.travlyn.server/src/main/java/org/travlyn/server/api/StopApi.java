@@ -2,15 +2,19 @@ package org.travlyn.server.api;
 
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.travlyn.server.configuration.AuthenticationTokenFilter;
 import org.travlyn.shared.model.api.Rating;
 import org.travlyn.shared.model.api.Stop;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
+import static org.travlyn.server.configuration.AuthenticationTokenFilter.REGISTERED_USER_ROLE;
 
 @Api(value = "stop")
 public interface StopApi {
@@ -26,6 +30,7 @@ public interface StopApi {
             @ApiResponse(code = 401, message = "You are not authorized to perform this action")})
     @PostMapping(
             value = "/stop/{stopId}")
+    @PreAuthorize(value = "hasRole(" + REGISTERED_USER_ROLE + ")")
     ResponseEntity<Void> rateStop(@ApiParam(value = "ID of the stop that will be rated", required = true, defaultValue = "-1", example = "123") @PathVariable("stopId") int stopId,
                                   @NotNull @ApiParam(value = "Rating to be created", required = true, defaultValue = "-1", example = "0.75") @Valid @RequestParam(value = "rating") Rating rating);
 

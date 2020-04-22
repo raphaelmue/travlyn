@@ -68,7 +68,9 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        this.cityApi = CityApi(application = activity as MainActivity)
+        if (context != null) {
+            this.cityApi = CityApi(application = context as MainActivity)
+        }
 
         Configuration.getInstance()
             .load(context, PreferenceManager.getDefaultSharedPreferences(context))

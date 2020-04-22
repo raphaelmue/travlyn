@@ -2,6 +2,7 @@ package org.travlyn.server.api;
 
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.travlyn.shared.model.api.ExecutionInfo;
 import org.travlyn.shared.model.api.Rating;
@@ -11,6 +12,8 @@ import org.travlyn.shared.model.api.Trip;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+
+import static org.travlyn.server.configuration.AuthenticationTokenFilter.REGISTERED_USER_ROLE;
 
 @Api(value = "trip")
 public interface TripApi {
@@ -45,11 +48,12 @@ public interface TripApi {
     @PutMapping(
             value = "/trip",
             produces = {"application/json"})
-    ResponseEntity<Trip> generateTrip(@ApiParam(value = "The user who generates the trip", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "userId") Long userId,
-                                      @ApiParam(value = "The city which the trip is generated for", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "cityId") Long cityId,
-                                      @ApiParam(value = "Name for the new trip", required = true, defaultValue = "Trip", example = "My personal Trip") @Valid @RequestParam(value = "tripName") String tripName,
-                                      @ApiParam(value = "Flag to set privacy setting for this trip", required = true, defaultValue = "false", example = "false") @Valid @RequestParam(value = "privateFlag") boolean privateFlag,
-                                      @ApiParam(value = "List of stops that are part of the trip", required = true, defaultValue = "-1", example = "[0,124,758]") @Valid @RequestParam(value = "stopIds") StopIdWrapper stopIds);
+    @PreAuthorize(value = "hasRole(" + REGISTERED_USER_ROLE + ")")
+    ResponseEntity<Trip> generateTrip(
+            @ApiParam(value = "The city which the trip is generated for", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "cityId") int cityId,
+            @ApiParam(value = "Name for the new trip", required = true, defaultValue = "Trip", example = "My personal Trip") @Valid @RequestParam(value = "tripName") String tripName,
+            @ApiParam(value = "Flag to set privacy setting for this trip", required = true, defaultValue = "false", example = "false") @Valid @RequestParam(value = "privateFlag") boolean privateFlag,
+            @ApiParam(value = "List of stops that are part of the trip", required = true, defaultValue = "-1", example = "[0,124,758]") @Valid @RequestParam(value = "stopIds") StopIdWrapper stopIds);
 
     @ApiOperation(
             value = "Get Trip by ID",
@@ -67,8 +71,7 @@ public interface TripApi {
     @GetMapping(
             value = "/trip/{tripId}",
             produces = {"application/json"})
-    ResponseEntity<Trip> getTripByID(@ApiParam(value = "ID of trip to return", required = true, defaultValue = "-1", example = "123") @PathVariable("tripId") Long tripId,
-                                     @ApiParam(value = "Id of user that is reading the trip", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "userId") Long userId);
+    ResponseEntity<Trip> getTripByID(@ApiParam(value = "ID of trip to return", required = true, defaultValue = "-1", example = "123") @PathVariable("tripId") Long tripId);
 
     @ApiOperation(
             value = "Rate a trip",
@@ -81,6 +84,7 @@ public interface TripApi {
             @ApiResponse(code = 401, message = "You are not authorized to perform this action")})
     @PostMapping(
             value = "/trip/{tripId}")
+    @PreAuthorize(value = "hasRole(" + REGISTERED_USER_ROLE + ")")
     ResponseEntity<Void> rateTrip(@ApiParam(value = "ID of the trip that will be rated", required = true, defaultValue = "-1", example = "123") @PathVariable("tripId") Long tripId,
                                   @NotNull @ApiParam(value = "Rating to be created", required = true, defaultValue = "-1", example = "0.75") @Valid @RequestParam(value = "rating") Rating rating);
 
@@ -97,6 +101,7 @@ public interface TripApi {
             @ApiResponse(code = 500, message = "Trip could not be updated")})
     @PostMapping(
             value = "/trip")
+    @PreAuthorize(value = "hasRole(" + REGISTERED_USER_ROLE + ")")
     ResponseEntity<Void> updateTrip(@NotNull @ApiParam(value = "Updated trip", required = true, example = "{id: 123, private: true, city: {id: 123, name: \"New York\", description: \"This is a description of New York.\"}}}")
                                     @Valid @RequestBody Trip trip);
 
