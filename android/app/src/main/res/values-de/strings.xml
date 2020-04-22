@@ -50,7 +50,7 @@
     <string name="number_of_selected_items">%d ausgewählt</string>
     <string name="error_server_not_available">Der Server ist derzeit nicht verfügbar.</string>
     <string name="error_not_signed_in">Du musst angemeldet sein, um diese Aktion auszuführen.</string>
-    <string name="error_not_found">Leider wurde keine Ressource gefunden.</string>
+    <string name="error_not_found">Leider wurde kein entsprechendes Objekt gefunden.</string>
     <string name="save">Speichern</string>
     <string name="host_url">Host URL</string>
     <string name="successfully_stored_settings">Einstellungen erfolgreich gespeichert!</string>

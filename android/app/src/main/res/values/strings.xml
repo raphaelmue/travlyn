@@ -52,7 +52,7 @@
     <string name="number_of_selected_items">%d selected</string>
     <string name="error_server_not_available">The server is currently not available.</string>
     <string name="error_not_signed_in">You have to be signed in to perform this action.</string>
-    <string name="error_not_found">Unfortunetly, resource was not found.</string>
+    <string name="error_not_found">Unfortunetly, object was not found.</string>
     <string name="save">Save</string>
     <string name="host_url">Host URL</string>
     <string name="successfully_stored_settings">Settings successfully stored!</string>

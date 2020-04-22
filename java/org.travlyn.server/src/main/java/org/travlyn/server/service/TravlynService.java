@@ -397,6 +397,11 @@ public class TravlynService {
     @Transactional
     public void updateTrip(Trip trip) throws NoResultException {
         Session session = sessionFactory.getCurrentSession();
+
+        if (getAuthenticatedUser().isEmpty()) {
+            throw new IllegalAccessError("User must be authenticated to perform this operation.");
+        }
+
         //check if trip exists
         TripEntity oldTrip = session.get(TripEntity.class, trip.getId());
 

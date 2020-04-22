@@ -99,6 +99,9 @@ public class TripApiController implements TripApi {
             } catch (NoResultException e) {
                 log.error("Couldn't find requested trip", e);
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } catch (IllegalAccessError e) {
+                log.error(e.getMessage(), e);
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
         }
 
