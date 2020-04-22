@@ -31,7 +31,8 @@ class Suggestion : SearchSuggestion {
     }
 
     companion object {
-        @JvmField val CREATOR: Creator<Suggestion?> = object : Creator<Suggestion?> {
+        @JvmField
+        val CREATOR: Creator<Suggestion?> = object : Creator<Suggestion?> {
             override fun createFromParcel(`in`: Parcel): Suggestion? {
                 return Suggestion(`in`)
             }
