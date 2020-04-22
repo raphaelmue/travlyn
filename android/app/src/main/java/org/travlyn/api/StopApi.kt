@@ -13,15 +13,12 @@ package org.travlyn.api
 
 import org.travlyn.api.model.Rating
 import org.travlyn.api.model.Stop
-
 import org.travlyn.infrastructure.*
 import org.travlyn.local.Application
 
 class StopApi(
-    basePath: String = "https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/",
-    application: Application? = null
-) :
-    ApiClient(basePath, application) {
+    application: Application
+) : ApiClient(application = application) {
 
     /**
      * Rate a stop
@@ -36,23 +33,9 @@ class StopApi(
             RequestMethod.POST,
             "/stop/{stopId}".replace("{" + "stopId" + "}", "$stopId"), query = localVariableQuery
         )
-        val response = request<Any?>(
+        request<Any?>(
             localVariableConfig
         )
-
-        return when (response.responseType) {
-            ResponseType.Success -> Unit
-            ResponseType.Informational -> TODO()
-            ResponseType.Redirection -> TODO()
-            ResponseType.ClientError -> throw ClientException(
-                (response as ClientError<*>).body as? String ?: "Client error"
-            )
-            ResponseType.ServerError -> {
-                throw ServerException(
-                    (response as ServerError<*>).message ?: "Server error"
-                )
-            }
-        }
     }
 
     /**
@@ -62,27 +45,14 @@ class StopApi(
      * @return Stop
      */
     @Suppress("UNCHECKED_CAST")
-    suspend fun stopStopIdGet(stopId: Long): Stop {
-
+    suspend fun stopStopIdGet(stopId: Long): Stop? {
         val localVariableConfig = RequestConfig(
             RequestMethod.GET,
             "/stop/{stopId}".replace("{" + "stopId" + "}", "$stopId")
         )
-        val response = request<Stop>(
+        return request<Stop>(
             localVariableConfig
         )
-
-        return when (response.responseType) {
-            ResponseType.Success -> (response as Success<*>).data as Stop
-            ResponseType.Informational -> TODO()
-            ResponseType.Redirection -> TODO()
-            ResponseType.ClientError -> throw ClientException(
-                (response as ClientError<*>).body as? String ?: "Client error"
-            )
-            ResponseType.ServerError -> throw ServerException(
-                (response as ServerError<*>).message ?: "Server error"
-            )
-        }
     }
 
 }
