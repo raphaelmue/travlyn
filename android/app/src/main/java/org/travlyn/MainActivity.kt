@@ -1,7 +1,6 @@
 package org.travlyn
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -30,7 +29,6 @@ import kotlinx.coroutines.launch
 import org.travlyn.api.UserApi
 import org.travlyn.api.model.User
 import org.travlyn.local.Application
-import org.travlyn.local.Formatter
 import org.travlyn.local.LocalStorage
 import org.travlyn.ui.login.LoginActivity
 import org.travlyn.ui.login.RegisterActivity
@@ -38,18 +36,16 @@ import kotlin.coroutines.CoroutineContext
 
 
 class MainActivity : AppCompatActivity(), CoroutineScope, Application {
-    val tag: String = "MainActivity"
 
     private var job: Job = Job()
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    var api: UserApi = UserApi(application = this)
+    lateinit var api: UserApi
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private var user: User? = null
-    private var formatter: Formatter = Formatter(this)
 
     private lateinit var navEmailTextField: TextView
     private lateinit var navNameTextField: TextView
@@ -81,6 +77,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
         val headerView: View = navView.getHeaderView(0)
         navEmailTextField = headerView.findViewById(R.id.emailNavTextView)
         navNameTextField = headerView.findViewById(R.id.nameNavTextView)
+
+        this.api = UserApi(application = this)
 
         val localStorage = LocalStorage(this)
         user = localStorage.readObject<User>("user")
@@ -188,8 +186,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
                     launch {
                         handleLogoutRequest()
                         user = null
+                        LocalStorage(context).deleteObject("user")
                     }
-                    LocalStorage(context).deleteObject("user")
                     navEmailTextField.text = null
                     navNameTextField.text = null
                     invalidateOptionsMenu()
@@ -202,21 +200,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope, Application {
         api.logoutUser(this.user!!)
     }
 
-    override fun showErrorDialog(throwable: Throwable) {
-        Log.e(tag, throwable.message, throwable)
-        AlertDialog.Builder(this)
-            .setTitle("Travlyn")
-            .setMessage(formatter.format(throwable))
-            .setPositiveButton(R.string.ok, null)
-            .setIcon(R.drawable.ic_error)
-            .show()
-    }
-
     override fun getContext(): Context {
         return this
-    }
-
-    override fun getFormatter(): Formatter {
-        return formatter
     }
 }

@@ -17,7 +17,7 @@ import org.travlyn.infrastructure.*
 import org.travlyn.local.Application
 
 class UserApi(
-    application: Application? = null
+    application: Application
 ) : ApiClient(application = application) {
 
     /**
@@ -32,23 +32,9 @@ class UserApi(
             RequestMethod.GET,
             "/user/{userId}/trips".replace("{" + "userId" + "}", "$userId")
         )
-        val response = request<Array<Trip>>(
+        return request(
             localVariableConfig
-        )
-
-        return when (response.responseType) {
-            ResponseType.Success -> (response as Success<*>).data as Array<Trip>
-            ResponseType.Informational -> TODO()
-            ResponseType.Redirection -> TODO()
-            ResponseType.ClientError -> throw ClientException(
-                (response as ClientError<*>).body as? String ?: "Client error"
-            )
-            ResponseType.ServerError -> {
-                throw ServerException(
-                    (response as ServerError<*>).message ?: "Server error"
-                )
-            }
-        }
+        ) ?: emptyArray()
     }
 
     /**
@@ -66,28 +52,9 @@ class UserApi(
             RequestMethod.GET,
             "/user", query = localVariableQuery
         )
-        val response = request<User>(
+        return request(
             localVariableConfig
         )
-
-        println(response)
-        return when (response.responseType) {
-            ResponseType.Success -> {
-                if ((response as Success<*>).data != null) {
-                    (response as Success<*>).data as User
-                } else {
-                    null
-                }
-            }
-            ResponseType.Informational -> TODO()
-            ResponseType.Redirection -> TODO()
-            ResponseType.ClientError -> throw ClientException(
-                (response as ClientError<*>).body as? String ?: "Client error"
-            )
-            ResponseType.ServerError -> throw ServerException(
-                (response as ServerError<*>).message ?: "Server error"
-            )
-        }
     }
 
     /**
@@ -102,22 +69,9 @@ class UserApi(
             RequestMethod.DELETE,
             "/user", query = localVariableQuery
         )
-        val response = request<Any?>(
+        request<Any?>(
             localVariableConfig
         )
-
-        return when (response.responseType) {
-            ResponseType.Success -> Unit
-            ResponseType.Informational -> TODO()
-            ResponseType.Redirection -> TODO()
-            ResponseType.ClientError -> throw ClientException(
-                (response as ClientError<*>).body as? String ?: "Client error"
-            )
-            ResponseType.ServerError -> throw ServerException(
-                (response as ServerError<*>).message
-                    ?: "Server error (code: ${response.statusCode})"
-            )
-        }
     }
 
     /**
@@ -129,7 +83,7 @@ class UserApi(
      * @return User
      */
     @Suppress("UNCHECKED_CAST")
-    suspend fun registerUser(email: String, name: String, password: String): User {
+    suspend fun registerUser(email: String, name: String, password: String): User? {
         val localVariableQuery: MultiValueMap = mapOf(
             "email" to listOf(email),
             "name" to listOf(name),
@@ -139,21 +93,9 @@ class UserApi(
             RequestMethod.PUT,
             "/user", query = localVariableQuery
         )
-        val response = request<User>(
+        return request(
             localVariableConfig
         )
-
-        return when (response.responseType) {
-            ResponseType.Success -> (response as Success<*>).data as User
-            ResponseType.Informational -> TODO()
-            ResponseType.Redirection -> TODO()
-            ResponseType.ClientError -> throw ClientException(
-                (response as ClientError<*>).body as? String ?: "Client error"
-            )
-            ResponseType.ServerError -> throw ServerException(
-                (response as ServerError<*>).message ?: "Server error"
-            )
-        }
     }
 
     /**
@@ -162,27 +104,15 @@ class UserApi(
      * @param user Updated user object
      * @return void
      */
-    suspend fun updateUser(user: User): Unit {
+    suspend fun updateUser(user: User) {
         val localVariableQuery: MultiValueMap = mapOf("user" to listOf("$user"))
         val localVariableConfig = RequestConfig(
             RequestMethod.POST,
             "/user", query = localVariableQuery
         )
-        val response = request<Any?>(
+        request<Any?>(
             localVariableConfig
         )
-
-        return when (response.responseType) {
-            ResponseType.Success -> Unit
-            ResponseType.Informational -> TODO()
-            ResponseType.Redirection -> TODO()
-            ResponseType.ClientError -> throw ClientException(
-                (response as ClientError<*>).body as? String ?: "Client error"
-            )
-            ResponseType.ServerError -> throw ServerException(
-                (response as ServerError<*>).message ?: "Server error"
-            )
-        }
     }
 
 }

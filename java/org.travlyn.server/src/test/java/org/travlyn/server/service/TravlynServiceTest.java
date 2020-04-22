@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Tag;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.travlyn.shared.model.api.City;
 import org.travlyn.shared.model.api.Token;
@@ -23,6 +26,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Tag("unit")
 @RunWith(SpringRunner.class)
@@ -110,13 +116,15 @@ public class TravlynServiceTest {
 
         tripEntity.setId((Integer) session.save(tripEntity));
 
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(
+                new UsernamePasswordAuthenticationToken(userEntity, null));
+        SecurityContextHolder.setContext(securityContext);
     }
 
     @Test
     @Transactional
     public void testCheckCredentials() {
-        Session session = sessionFactory.getCurrentSession();
-
         User userToAssert = service.checkCredentials("test@email.com", "password", "192.168.0.1");
         Assertions.assertNotNull(userToAssert);
         Assertions.assertNotNull(userToAssert.getToken());
@@ -195,7 +203,7 @@ public class TravlynServiceTest {
         ArrayList<Long> stopIds = new ArrayList<>();
         stopIds.add((long) stopEntity.getId());
         stopIds.add((long) secondStopEntity.getId());
-        Trip result = service.generateTrip((long) userEntity.getId(), (long) cityEntity.getId(), "Test Trip", false, stopIds);
+        Trip result = service.generateTrip(cityEntity.getId(), "Test Trip", false, stopIds);
         Assertions.assertNotNull(result);
         Assertions.assertEquals(userEntity.getId(), result.getUser().getId());
         Assertions.assertEquals("Test Trip", result.getName());
@@ -205,14 +213,18 @@ public class TravlynServiceTest {
         }
 
         //trip without stops
-        result = service.generateTrip((long) userEntity.getId(), (long) cityEntity.getId(), "Test Trip", true, null);
+        result = service.generateTrip(cityEntity.getId(), "Test Trip", true, null);
         Assertions.assertNotNull(result);
         Assertions.assertEquals(userEntity.getId(), result.getUser().getId());
         Assertions.assertEquals("Test Trip", result.getName());
         Assertions.assertEquals(0, result.getStops().size());
 
         //user not found
-        Assertions.assertThrows(NoResultException.class, () -> service.generateTrip((long) userEntity.getId() + 256, (long) cityEntity.getId(), "Test Trip", false, stopIds));
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(
+                new UsernamePasswordAuthenticationToken(null, null));
+        SecurityContextHolder.setContext(securityContext);
+        Assertions.assertThrows(NoResultException.class, () -> service.generateTrip(cityEntity.getId(), "Test Trip", false, stopIds));
     }
 
     @Test
