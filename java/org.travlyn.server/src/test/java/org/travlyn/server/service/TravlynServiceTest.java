@@ -13,10 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.travlyn.shared.model.api.City;
-import org.travlyn.shared.model.api.Token;
-import org.travlyn.shared.model.api.Trip;
-import org.travlyn.shared.model.api.User;
+import org.travlyn.shared.model.api.*;
 import org.travlyn.shared.model.db.*;
 
 import javax.persistence.NoResultException;
@@ -325,5 +322,16 @@ public class TravlynServiceTest {
 
         result = service.addTimeEffortToStop(stopEntity.getId(), 10);
         Assertions.assertEquals(2.8, result.getTimeEffort(),0.1);
+    }
+
+    @Transactional
+    @Test
+    public void testAddRatingToTrip() throws NoResultException{
+        Session session = sessionFactory.getCurrentSession();
+        Rating testRating = new Rating().rating(0.0001).user(userEntity.toDataTransferObject()).description("Sucks!");
+        Assertions.assertTrue(service.addRatingToTrip( tripEntity.getId(),testRating));
+        TripEntity entity = session.get(TripEntity.class,tripEntity.getId());
+        Assertions.assertEquals(1, entity.getRatings().size());
+        Assertions.assertEquals(0.0001,entity.getAverageRating());
     }
 }

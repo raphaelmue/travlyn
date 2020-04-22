@@ -498,6 +498,38 @@ public class TravlynService {
     }
 
     @Transactional
+    public boolean addRatingToTrip(int tripId, Rating rating) throws IllegalAccessError{
+        Session session = sessionFactory.getCurrentSession();
+        TripEntity trip = session.get(TripEntity.class,tripId);
+        Optional<UserEntity> user = this.getAuthenticatedUser();
+
+        if (trip.isPrivate() && (user.isPresent() && trip.getUser().getId() != user.get().getId())){
+            throw  new IllegalAccessError();
+        }
+
+        Set<TripRatingEntity> ratingEntities = trip.getRatings();
+        TripRatingEntity tripRating = rating.toTripEntity(trip);
+        session.save(tripRating);
+
+        if (ratingEntities.isEmpty()) {
+            // new rating is equal to average rating when the list of ratings is empty
+            trip.setAverageRating(tripRating.getRating());
+        } else {
+            // calculate new average rating including the new rating
+            int numberOfRatings = ratingEntities.size();
+            trip.setAverageRating((numberOfRatings * trip.getAverageRating() + tripRating.getRating()) /
+                    (numberOfRatings + 1));
+        }
+
+        ratingEntities.add(tripRating);
+        trip.setRatings(ratingEntities);
+
+        session.merge(trip);
+        return true;
+
+    }
+
+    @Transactional
     public ExecutionInfo getExecutionInfo(Long tripId, Long userId, double lat, double lon, boolean reorder, boolean isRoundtrip, String lang) throws NoResultException {
         Session session = sessionFactory.getCurrentSession();
         reorder = false;

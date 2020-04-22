@@ -46,6 +46,11 @@ public class Trip extends AbstractDataTransferObject {
     @Valid
     private List<Rating> ratings = null;
 
+    @JsonProperty("averageRating")
+    @ApiModelProperty(value = "Average Rating")
+    @Valid
+    private Double averageRating = 0.0;
+
     @JsonProperty("geoText")
     @ApiModelProperty(value = "List of GeoTexts")
     @Valid
@@ -190,6 +195,15 @@ public class Trip extends AbstractDataTransferObject {
         this.ratings = ratings;
     }
 
+    public Double getAverageRating() {
+        return averageRating;
+    }
+
+    public Trip setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
+        return this;
+    }
+
     public Trip geoText(List<GeoText> geoText) {
         this.geoText = geoText;
         return this;
@@ -245,6 +259,7 @@ public class Trip extends AbstractDataTransferObject {
     public TripEntity toEntity() {
         TripEntity tripEntity = new TripEntity();
         tripEntity.setId(this.id);
+        tripEntity.setAverageRating(this.averageRating);
         if (this.getCity() != null) {
             tripEntity.setCity(this.city.toEntity());
         }

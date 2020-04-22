@@ -81,11 +81,12 @@ public interface TripApi {
             tags = {"trip"})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful operation"),
-            @ApiResponse(code = 401, message = "You are not authorized to perform this action")})
+            @ApiResponse(code = 401, message = "You are not authorized to perform this action"),
+            @ApiResponse(code = 200, message = "Trip not found")})
     @PostMapping(
-            value = "/trip/{tripId}")
+            value = "/trip/{tripId}/rating")
     @PreAuthorize(value = "hasRole(" + REGISTERED_USER_ROLE + ")")
-    ResponseEntity<Void> rateTrip(@ApiParam(value = "ID of the trip that will be rated", required = true, defaultValue = "-1", example = "123") @PathVariable("tripId") Long tripId,
+    ResponseEntity<Void> rateTrip(@ApiParam(value = "ID of the trip that will be rated", required = true, defaultValue = "-1", example = "123") @PathVariable("tripId") int tripId,
                                   @NotNull @ApiParam(value = "Rating to be created", required = true, defaultValue = "-1", example = "0.75") @Valid @RequestParam(value = "rating") Rating rating);
 
 
@@ -145,4 +146,5 @@ public interface TripApi {
     ResponseEntity<ExecutionInfo> getRoutingToStop(@ApiParam(value = "Latitude where rerouting should start", required = true, defaultValue = "0.0", example = "-3.25") @Valid @RequestParam(value = "startLatitude") double startLatitude,
                                                    @ApiParam(value = "Longitude where rerouting should start", required = true, defaultValue = "0.0", example = "56.0") @Valid @RequestParam(value = "startLongitude") double startLongitude,
                                                    @ApiParam(value = "Stop ID that should be rerouted to", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "stopId") Long stopId);
+
 }
