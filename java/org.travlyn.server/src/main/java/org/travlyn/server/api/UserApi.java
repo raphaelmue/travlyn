@@ -76,7 +76,7 @@ public interface UserApi {
             @Valid @RequestParam(value = "email") String email,
             @NotNull @ApiParam(value = "The name for registration", required = true, example = "Test User")
             @Valid @RequestParam(value = "Name") String name,
-            @NotNull @ApiParam(value = "The password for registration in clear text", required = true, example = "secret")
+            @NotNull @ApiParam(value = "The password for registration in plain text", required = true, example = "secret")
             @Valid @RequestParam(value = "password") @Size(min = 4, max = 32) String password);
 
     @ApiOperation(
