@@ -34,5 +34,18 @@
 		
 		Wenn das Token valide ist und auch der korrekten Benutzerrolle -- \acs{API}- oder registrierter Nutzer -- zugeordnet werden kann, wird die Anfrage an die entsprechende Controller Methode weitergeleitet und der entsprechende Nutzer im sog. \lstinline|SecurityContext| gespeichert, sodass auf die Rolle des Benutzers und auch auf den Benutzer selbst beim Prozessieren der Anfrage zugegriffen werden kann. Ist dies nicht der Fall, so wird diese Anfrage als nicht-authentifiziert markiert. \autoref{fig:authenticationProcess} visualisiert den Authentifizierungsprozess, wie er bei \textit{Travlyn} umgesetzt wurde.
 		
-		Um die zugelassenen Benutzerrollen für einen Endpoint der \acs{API} festzulegen, stellt das Modul Spring Security unter anderem die Annotation \lstinline|@PreAuthorize| zur Verfügung. Als Parameter wird ein in der \ac{SpEL} geschriebener Ausdruck übergeben, wie beispielsweise \lstinline|hasRole(API_USER)| in \autoref{code:CityApi}. So lässt sich die gesendete Authentisierung des Benutzers automatisiert überprüfen. 
+		Um die zugelassenen Benutzerrollen für einen Endpoint der \acs{API} festzulegen, stellt das Modul Spring Security unter anderem die Annotation \lstinline|@PreAuthorize| zur Verfügung. Als Parameter wird ein in der \ac{SpEL} geschriebener Ausdruck übergeben, wie beispielsweise \lstinline|hasRole(API_USER)| in \autoref{code:CityApi}. So lässt sich die gesendete Authentisierung des Benutzers automatisiert überprüfen.
+		
+	\section{Trip Execution} 
+	
+		Einen großen Teil der Applikation stellt die Ausführung der Trips dar. Diese beinhaltet die Navigation des Benutzers durch die Stadt entlang der einzelnen, zu diesem Trip gehörigen Stops. Wenn der Nutzer einen Stop erreicht hat, werden zusätzliche Informationen zu diesem Trip angezeigt. Sobald die Sehenswürdigkeit ausreichend besichtigt wurde, wird der Nutzer zum nächsten Stop navigiert. 
+		
+		Beim Starten dieser Navigation können zwei zusätzliche Parameter festgelegt werden: \lstinline|roundTrip| und \lstinline|reorderAllowed|. \textit{Travlyn} führt den Nutzer an seine Startposition zurück, wenn der erste Parameter auf \lstinline|true| gesetzt ist. Der zweite Parameter hingegen entscheidet, ob die Stops reorganisiert werden, sodass ein kürzerer Laufweg für den Nutzer entsteht. 
+		
+		Diese Reorganisierung der Stops entstammt aus der Menge der kombinatorischen Optimierungsproblemen und wird auch als \ac{TSP} bezeichnet. Dabei gilt es die kürzeste Strecke durch Rekombination der einzelnen Orte zu finden. Da dem Handlungsreisenden -- bzw. in diesem Fall dem Benutzer -- in jedem Schritt die Städte zur Auswahl stehen, welche noch nicht besucht wurden, existieren $(n - 1)!$ mögliche Touren, wobei $n$ die Anzahl der Städte -- bzw. Stops -- beschreibt. \acs{TSP} ist ein NP-schweres Problem, für welches unter der bisher unbewiesenen Annahme, dass die Komplexitätsklassen P und NP verschieden sind, kein Algorithmus existiert, der die kürzeste Rundreise in polynomieller Laufzeit lösen kann.
+		
+		\subsection*{Simulated Annealing}
+		
+		Simulated Annealing bezeichnet ein heuristisches Approximationsverfahren, welches das Ziel hat, eine Näherungslösung für Optimierungsprobleme -- wie \acs{TSP} -- zu finden. 
+			
 		
