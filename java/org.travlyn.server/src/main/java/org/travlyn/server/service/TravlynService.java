@@ -501,9 +501,12 @@ public class TravlynService {
     public boolean addRatingToTrip(int tripId, Rating rating) throws IllegalAccessError{
         Session session = sessionFactory.getCurrentSession();
         TripEntity trip = session.get(TripEntity.class,tripId);
+        if(trip == null){
+            throw new NoResultException();
+        }
         Optional<UserEntity> user = this.getAuthenticatedUser();
 
-        if (trip.isPrivate() && (user.isPresent() && trip.getUser().getId() != user.get().getId())){
+        if (trip.isPrivate() && (user.isEmpty() || trip.getUser().getId() != user.get().getId())){
             throw  new IllegalAccessError();
         }
 

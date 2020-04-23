@@ -328,10 +328,29 @@ public class TravlynServiceTest {
     @Test
     public void testAddRatingToTrip() throws NoResultException{
         Session session = sessionFactory.getCurrentSession();
+        //normal case
         Rating testRating = new Rating().rating(0.0001).user(userEntity.toDataTransferObject()).description("Sucks!");
         Assertions.assertTrue(service.addRatingToTrip( tripEntity.getId(),testRating));
         TripEntity entity = session.get(TripEntity.class,tripEntity.getId());
         Assertions.assertEquals(1, entity.getRatings().size());
         Assertions.assertEquals(0.0001,entity.getAverageRating());
+
+        TripRatingEntity savedRating = session.createQuery("from TripRatingEntity where trip.id = :id",TripRatingEntity.class)
+                .setParameter("id",tripEntity.getId())
+                .getSingleResult();
+        Assertions.assertNotNull(savedRating);
+        Assertions.assertEquals(0.0001,savedRating.getRating());
+
+        //try to set ratong for non existing trip
+        Assertions.assertThrows(NoResultException.class,() ->service.addRatingToTrip(-1,testRating));
+
+        //try to set rating for private trip without auth
+        tripEntity.setPrivate(true);
+        service.updateTrip(tripEntity.toDataTransferObject());
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(
+                new UsernamePasswordAuthenticationToken(null, null));
+        SecurityContextHolder.setContext(securityContext);
+        Assertions.assertThrows(IllegalAccessError.class,() -> service.addRatingToTrip(tripEntity.getId(),testRating));
     }
 }

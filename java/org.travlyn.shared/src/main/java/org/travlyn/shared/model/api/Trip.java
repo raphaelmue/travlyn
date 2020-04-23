@@ -285,8 +285,7 @@ public class Trip extends AbstractDataTransferObject {
         tripEntity.setStops(new HashSet<>(tripStopEntities));
         Set<TripRatingEntity> ratingEntities = new HashSet<>();
         this.ratings.forEach(rating -> {
-            TripRatingEntity tripRatingEntity = (TripRatingEntity) rating.toEntity();
-            tripRatingEntity.setTrip(tripEntity);
+            TripRatingEntity tripRatingEntity = rating.toTripEntity(tripEntity);
             ratingEntities.add(tripRatingEntity);
         });
         tripEntity.setRatings(ratingEntities);
