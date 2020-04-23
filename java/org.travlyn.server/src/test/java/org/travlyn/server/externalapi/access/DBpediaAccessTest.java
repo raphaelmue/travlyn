@@ -35,7 +35,7 @@ public class DBpediaAccessTest extends ApiTest {
     @After
     @AfterEach
     public void tearDown() throws IOException {
-        super.tearDown();
+        stopServer();
     }
 
 }

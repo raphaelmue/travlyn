@@ -32,7 +32,7 @@ public class OpenRouteDirectionsTest extends ApiTest {
         Assertions.assertEquals(85, info.getWaypoints().size());
         Assertions.assertEquals(1.5843, info.getDistance());
 
-        tearDown();
+        stopServer();
     }
 
     @Test
@@ -47,6 +47,6 @@ public class OpenRouteDirectionsTest extends ApiTest {
         Assertions.assertEquals(0.555, info.getDistance());
         Assertions.assertEquals(35, info.getWaypoints().size());
 
-        tearDown();
+        stopServer();
     }
 }

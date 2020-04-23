@@ -31,7 +31,7 @@ public abstract class ApiTest {
                 .setBody(json));
     }
 
-    protected void tearDown() throws IOException {
+    protected void stopServer() throws IOException {
         server.shutdown();
     }
 
