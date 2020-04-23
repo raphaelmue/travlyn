@@ -3,6 +3,7 @@ package org.travlyn.server.externalapi.access;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
+import org.travlyn.server.ApiTest;
 import org.travlyn.shared.model.api.ExecutionInfo;
 import org.travlyn.shared.model.api.Stop;
 import org.travlyn.shared.model.api.User;
@@ -17,7 +18,8 @@ public class OpenRouteDirectionsTest extends ApiTest {
 
     @Test
     public void testTripRouteCall() throws Exception {
-        OpenRouteTripDirectionRequest.setBaseUrl(setUp("openroute-response-triproute.json"));
+        enqueue("openroute-response-triproute.json");
+        OpenRouteTripDirectionRequest.setBaseUrl(startServer());
 
         Stop stop = new Stop().setLatitude(51.517021).setLongitude(-0.117408);
         Set<TripStopEntity> set = new HashSet<>();
@@ -35,7 +37,8 @@ public class OpenRouteDirectionsTest extends ApiTest {
 
     @Test
     public void testRedirectionCall() throws Exception {
-        OpenRouteTripDirectionRequest.setBaseUrl(setUp("openroute-response-redirection.json"));
+        enqueue("openroute-response-redirection.json");
+        OpenRouteTripDirectionRequest.setBaseUrl(startServer());
 
         Stop stop = new Stop().setLatitude(49.007865).setLongitude(8.398634);
         OpenRouteRedirectionRequest redirectionRequest = new OpenRouteRedirectionRequest(49.0092097, 8.4039514, stop, "en");

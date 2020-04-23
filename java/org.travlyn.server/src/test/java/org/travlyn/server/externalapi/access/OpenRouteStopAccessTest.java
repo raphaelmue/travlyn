@@ -3,6 +3,7 @@ package org.travlyn.server.externalapi.access;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
+import org.travlyn.server.ApiTest;
 import org.travlyn.shared.model.api.City;
 import org.travlyn.shared.model.api.Stop;
 import org.travlyn.shared.model.db.StopEntity;
@@ -11,7 +12,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 @Tag("unit")
-public class OpenRouteStopAccessTest {
+public class OpenRouteStopAccessTest extends ApiTest {
 
     @Test
     public void testStopCall() {
@@ -24,7 +25,10 @@ public class OpenRouteStopAccessTest {
     }
 
     @Test
-    public void testDBPediaStop() throws QuotaLimitException {
+    public void testDBPediaStop() throws Exception {
+        enqueue("dbpedia-response-karlsruhe_palace.json");
+        DBpediaStopRequest.setBaseUrl(startServer());
+
         DBpediaStopRequest request = new DBpediaStopRequest("Karlsruhe_Palace");
         Stop stop = request.getResult();
         Assertions.assertNotNull(stop.getName());

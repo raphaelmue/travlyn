@@ -1,4 +1,4 @@
-package org.travlyn.server.externalapi.access;
+package org.travlyn.server;
 
 import com.google.common.io.CharStreams;
 import okhttp3.HttpUrl;
@@ -8,13 +8,20 @@ import okhttp3.mockwebserver.MockWebServer;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 
 public abstract class ApiTest {
 
     private final MockWebServer server = new MockWebServer();
 
-    protected String setUp(String fileName) throws Exception {
-        Reader reader = new InputStreamReader(ApiTest.class.getResourceAsStream(fileName));
+    protected String startServer() throws Exception {
+        server.start();
+        HttpUrl url = server.url("/api");
+        return url.toString();
+    }
+
+    protected void enqueue(String fileName) throws Exception {
+        Reader reader = new InputStreamReader(ApiTest.class.getResourceAsStream(fileName), StandardCharsets.UTF_8);
         final String json = CharStreams.toString(reader);
         reader.close();
 
@@ -22,9 +29,6 @@ public abstract class ApiTest {
                 .addHeader("Content-Type", "application/json; charset=utf-8")
                 .setResponseCode(200)
                 .setBody(json));
-        server.start();
-        HttpUrl url = server.url("/api");
-        return url.toString();
     }
 
     protected void tearDown() throws IOException {

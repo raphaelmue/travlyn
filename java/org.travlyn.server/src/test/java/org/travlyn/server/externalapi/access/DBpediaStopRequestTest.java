@@ -3,17 +3,19 @@ package org.travlyn.server.externalapi.access;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.jupiter.api.*;
+import org.travlyn.server.ApiTest;
 import org.travlyn.shared.model.api.Stop;
 
 import java.io.IOException;
 
 @Tag("unit")
-public class DBpediaStopRequestTest extends ApiTest{
+public class DBpediaStopRequestTest extends ApiTest {
 
     @Before
     @BeforeEach
     public void setUp() throws Exception {
-        DBpediaStopRequest.setBaseUrl(setUp("dbpedia-stop-response-admirality-arch.json"));
+        enqueue("dbpedia-stop-response-admirality-arch.json");
+        DBpediaStopRequest.setBaseUrl(startServer());
     }
 
     @Test
