@@ -24,6 +24,7 @@ import org.travlyn.shared.model.api.User;
 import org.travlyn.shared.model.db.*;
 
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -199,6 +200,18 @@ public class TravlynServiceTest extends ApiTest {
 
     @Test
     @Transactional
+    public void testRegisterUser() {
+        User userToAssert = service.registerUser("test2@email.com", "Second Test User", "password", "192.168.0.1");
+        Assertions.assertTrue(userToAssert.getId() > 0);
+        Assertions.assertNotNull(userToAssert.getToken().getToken());
+        userToAssert = service.checkCredentials("test2@email.com", "password", "192.168.0.1");
+        Assertions.assertEquals("Second Test User", userToAssert.getName());
+
+        Assertions.assertThrows(NonUniqueResultException.class,
+                () -> service.registerUser("test@email.com", "Second Test User", "password", "192.168.0.1"));
+
+    }
+
     public void testGenerateTrip() {
         //normal case
         ArrayList<Long> stopIds = new ArrayList<>();
