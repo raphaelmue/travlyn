@@ -61,7 +61,6 @@ public interface UserApi {
             @ApiResponse(code = 401, message = "You are not authorized to perform this action")})
     @DeleteMapping(
             value = "/user")
-    @PreAuthorize(value = "hasRole(" + REGISTERED_USER_ROLE + ")")
     ResponseEntity<Void> logoutUser(@NotNull @ApiParam(value = "The user to logout", required = true, example = "{id: 123, email: \"test@email.com\", name: \"Test User\"}")
                                     @Valid @RequestParam(value = "user") User user);
 
@@ -95,7 +94,6 @@ public interface UserApi {
             @ApiResponse(code = 200, message = "successful operation"),
             @ApiResponse(code = 401, message = "You are not authorized to perform this action")})
     @PostMapping(value = "/user")
-    @PreAuthorize(value = "hasRole(" + REGISTERED_USER_ROLE + ")")
     ResponseEntity<Void> updateUser(@NotNull @ApiParam(value = "Updated user object", required = true, example = "{id: 123, email: \"test@email.com\", name: \"Test User\"}")
                                     @Valid @RequestParam(value = "user") User user);
 
