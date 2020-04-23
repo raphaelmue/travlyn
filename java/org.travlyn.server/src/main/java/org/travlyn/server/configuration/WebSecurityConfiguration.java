@@ -29,8 +29,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest().permitAll()
                 .and()
-                .addFilterBefore(new AuthenticationTokenFilter(), BasicAuthenticationFilter.class)
+                .addFilterBefore(authenticationTokenFilter(), BasicAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    }
+
+    @Bean
+    public AuthenticationTokenFilter authenticationTokenFilter() {
+        return new AuthenticationTokenFilter();
     }
 
     @Bean
