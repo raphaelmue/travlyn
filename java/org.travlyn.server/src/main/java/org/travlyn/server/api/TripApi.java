@@ -82,7 +82,7 @@ public interface TripApi {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful operation"),
             @ApiResponse(code = 401, message = "You are not authorized to perform this action"),
-            @ApiResponse(code = 200, message = "Trip not found")})
+            @ApiResponse(code = 404, message = "Trip not found")})
     @PostMapping(
             value = "/trip/{tripId}/rating")
     @PreAuthorize(value = "hasRole(" + REGISTERED_USER_ROLE + ")")
