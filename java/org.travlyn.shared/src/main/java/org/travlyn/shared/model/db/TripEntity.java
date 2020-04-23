@@ -5,10 +5,7 @@ import org.travlyn.shared.model.api.Stop;
 import org.travlyn.shared.model.api.Trip;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "trip")
@@ -36,7 +33,7 @@ public class TripEntity implements DataEntity {
 
     @OneToMany()
     @JoinColumn(name = "ratable")
-    private Set<TripRatingEntity> ratings;
+    private Set<TripRatingEntity> ratings = new HashSet<>();
 
     @Column(name = "average_rating")
     private double averageRating;
