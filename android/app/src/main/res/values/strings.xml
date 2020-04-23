@@ -50,6 +50,8 @@
     <string name="category_museum">Museum</string>
     <string name="category_attraction">Attraction</string>
     <string name="number_of_selected_items">%d selected</string>
+    <string name="register">Register</string>
+    <string name="name">Name</string>
     <string name="error_server_not_available">The server is currently not available.</string>
     <string name="error_not_signed_in">You have to be signed in to perform this action.</string>
     <string name="error_not_found">Unfortunetly, object was not found.</string>
@@ -59,8 +61,8 @@
     <string name="created_by">Created by %s</string>
     <string name="no_data_available">No data available.</string>
     <string name="create_trip">Create new Trip</string>
-    <string name="name">Name</string>
     <string name="public_trip">Public Trip</string>
     <string name="successfully_created_trip">Created trip successfully!</string>
     <string name="trip">Trip</string>
+    <string name="error_password_too_short">Password is too short. It must have at least 4 characters. </string>
 </resources>

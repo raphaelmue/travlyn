@@ -6,35 +6,48 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.web.filter.OncePerRequestFilter;
 import org.travlyn.server.service.TravlynService;
+import org.travlyn.server.util.Pair;
 import org.travlyn.shared.model.db.UserEntity;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class AuthenticationTokenFilter extends GenericFilterBean {
+public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
     private static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
 
     public static final String REGISTERED_USER_ROLE = "REGISTERED_USER";
 
+
+    private static final List<Pair<String, String>> WHITE_LIST = Arrays.asList(
+            new Pair<>("GET", "/"),
+            new Pair<>("GET", "/user"),
+            new Pair<>("PUT", "/user"),
+            new Pair<>("GET", "/city/**"),
+            new Pair<>("GET", "/trip/**"),
+            new Pair<>("GET", "/stop/**"),
+            new Pair<>("GET", "/swagger-ui/**"),
+            new Pair<>("GET", "/swagger-ui*/**"),
+            new Pair<>("GET", "/webjars/**"),
+            new Pair<>("GET", "/swagger-resources/**"),
+            new Pair<>("GET", "/csrf/**"),
+            new Pair<>("GET", "/api-docs/**"));
+
     @Autowired
     private TravlynService travlynService;
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException {
         final String header = request.getHeader(HEADER_STRING);
 
         if (header != null && header.startsWith(TOKEN_PREFIX)) {
@@ -60,7 +73,13 @@ public class AuthenticationTokenFilter extends GenericFilterBean {
         } else {
             logger.info("Failed to authenticate: Token is not present.");
         }
-//        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Failed to authenticate: Token is invalid.");
-        chain.doFilter(request, response);
+        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Failed to authenticate: Token is invalid.");
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return WHITE_LIST.stream().anyMatch(path ->
+                request.getMethod().equals(path.getKey())
+                        && new AntPathMatcher().match(path.getValue(), request.getServletPath()));
     }
 }

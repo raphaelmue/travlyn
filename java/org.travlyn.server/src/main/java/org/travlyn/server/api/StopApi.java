@@ -31,7 +31,6 @@ public interface StopApi {
             @ApiResponse(code = 401, message = "You are not authorized to perform this action")})
     @PostMapping(
             value = "/stop/{stopId}")
-    @PreAuthorize(value = "hasRole(" + REGISTERED_USER_ROLE + ")")
     ResponseEntity<Void> rateStop(@ApiParam(value = "ID of the stop that will be rated", required = true, defaultValue = "-1", example = "123") @PathVariable("stopId") int stopId,
                                   @NotNull @ApiParam(value = "Rating to be created", required = true, defaultValue = "-1", example = "0.75") @Valid @RequestParam(value = "rating") Rating rating);
 
