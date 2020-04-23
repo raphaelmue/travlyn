@@ -12,10 +12,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_trips.*
+import kotlinx.android.synthetic.main.stop_list_view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.travlyn.MainActivity
 import org.travlyn.R
 import org.travlyn.api.UserApi
 import org.travlyn.api.model.Trip
@@ -65,9 +67,12 @@ class TripsFragment : Fragment() {
         if (context != null) {
             val user: User? = LocalStorage(context!!).readObject("user")
             if (user != null) {
-                return UserApi().getTripsByUserId(user.id!!).toList()
+                return UserApi(context as MainActivity).getTripsByUserId(user.id!!).toList()
             } else {
-                userNotSignedInTextView.visibility = View.VISIBLE
+                withContext(Dispatchers.Main) {
+                    userNotSignedInTextView.visibility = View.VISIBLE
+                    stopListAddToTripButton.visibility = View.GONE
+                }
             }
         }
         return emptyList()

@@ -34,12 +34,13 @@ import org.travlyn.api.model.Stop
 import org.travlyn.api.model.Trip
 import org.travlyn.api.model.User
 import org.travlyn.components.SelectionToolbar
+import org.travlyn.local.Application
 import org.travlyn.local.LocalStorage
 import org.travlyn.ui.trips.CreateTripActivity
 import java.util.*
 
 
-class StopsActivity : AppCompatActivity(), RatingDialogListener {
+class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
 
     private var clickedStop: Stop? = null
 
@@ -153,7 +154,7 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener {
             rating = rate / 5.0
         )
 
-        val stopApi = StopApi()
+        val stopApi = StopApi(application = this)
         val context = this
         CoroutineScope(Dispatchers.IO).launch {
             stopApi.rateStop(clickedStop!!.id!!, rating)
@@ -181,12 +182,16 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener {
         // stays empty as no action needed
     }
 
+    override fun getContext(): Context {
+        return this
+    }
+
     private inner class StopListViewAdapter(
         private val stops: List<Stop>,
         private val context: Context
     ) : RecyclerView.Adapter<StopListViewAdapter.ViewHolder>(), Filterable {
 
-        private val cityApi = CityApi()
+        private val cityApi = CityApi(application = context as StopsActivity)
         private val filter = StopFilter(this)
         private var filteredStops: MutableList<Stop> = stops.toMutableList()
 
@@ -213,7 +218,7 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener {
         private suspend fun fetchUsersTrips(): List<Trip> {
             val user: User? = LocalStorage(context).readObject("user")
             if (user != null) {
-                return UserApi().getTripsByUserId(user.id!!).toList()
+                return UserApi(context as StopsActivity).getTripsByUserId(user.id!!).toList()
             }
             return emptyList()
         }
@@ -260,7 +265,7 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener {
             }
             trip.stops = stops.toTypedArray()
 
-            TripApi().updateTrip(trip)
+            TripApi(context as StopsActivity).updateTrip(trip)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
