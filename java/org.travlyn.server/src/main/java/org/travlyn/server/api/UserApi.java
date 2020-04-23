@@ -9,6 +9,7 @@ import org.travlyn.shared.model.api.User;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 import static org.travlyn.server.configuration.AuthenticationTokenFilter.REGISTERED_USER_ROLE;
@@ -60,7 +61,6 @@ public interface UserApi {
             @ApiResponse(code = 401, message = "You are not authorized to perform this action")})
     @DeleteMapping(
             value = "/user")
-    @PreAuthorize(value = "hasRole(" + REGISTERED_USER_ROLE + ")")
     ResponseEntity<Void> logoutUser(@NotNull @ApiParam(value = "The user to logout", required = true, example = "{id: 123, email: \"test@email.com\", name: \"Test User\"}")
                                     @Valid @RequestParam(value = "user") User user);
 
@@ -76,9 +76,13 @@ public interface UserApi {
     @PutMapping(
             value = "/user",
             produces = {"application/json"})
-    ResponseEntity<User> registerUser(@NotNull @ApiParam(value = "The email for registration", required = true, example = "test@email.com") @Valid @RequestParam(value = "email") String email,
-                                      @NotNull @ApiParam(value = "The name for registration", required = true, example = "Test User") @Valid @RequestParam(value = "Name") String name,
-                                      @NotNull @ApiParam(value = "The password for registration in clear text", required = true, example = "secret") @Valid @RequestParam(value = "password") String password);
+    ResponseEntity<User> registerUser(
+            @NotNull @ApiParam(value = "The email for registration", required = true, example = "test@email.com")
+            @Valid @RequestParam(value = "email") String email,
+            @NotNull @ApiParam(value = "The name for registration", required = true, example = "Test User")
+            @Valid @RequestParam(value = "Name") String name,
+            @NotNull @ApiParam(value = "The password for registration in plain text", required = true, example = "secret")
+            @Valid @RequestParam(value = "password") @Size(min = 4, max = 32) String password);
 
     @ApiOperation(
             value = "Update users information",
@@ -90,7 +94,6 @@ public interface UserApi {
             @ApiResponse(code = 200, message = "successful operation"),
             @ApiResponse(code = 401, message = "You are not authorized to perform this action")})
     @PostMapping(value = "/user")
-    @PreAuthorize(value = "hasRole(" + REGISTERED_USER_ROLE + ")")
     ResponseEntity<Void> updateUser(@NotNull @ApiParam(value = "Updated user object", required = true, example = "{id: 123, email: \"test@email.com\", name: \"Test User\"}")
                                     @Valid @RequestParam(value = "user") User user);
 
