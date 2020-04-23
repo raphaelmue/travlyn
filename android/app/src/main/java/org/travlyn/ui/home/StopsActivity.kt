@@ -64,6 +64,10 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener {
         if (intent != null && intent.extras != null) {
             city = Gson().fromJson(intent.extras.get("city") as String?, City::class.java)
             initListView()
+            if (city != null && city!!.unfetchedStops!!) {
+                Toast.makeText(this, getString(R.string.swipe_to_update_stops), Toast.LENGTH_LONG)
+                    .show()
+            }
         }
     }
 
@@ -90,7 +94,8 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener {
                 CoroutineScope(Dispatchers.IO).launch {
                     city = cityApi.getCity(city!!.name!!)
                     withContext(Dispatchers.Main) {
-                        stopsListView.adapter = StopListViewAdapter(city!!.stops!!.toList(), this@StopsActivity)
+                        stopsListView.adapter =
+                            StopListViewAdapter(city!!.stops!!.toList(), this@StopsActivity)
                         stopListNumberOfResultsTextView.text =
                             getString(R.string.number_of_stop_found, city!!.stops?.size)
                         stopListSwipeRefreshLayout.isRefreshing = false

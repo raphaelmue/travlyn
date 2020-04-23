@@ -59,4 +59,5 @@
     <string name="save">Save</string>
     <string name="successfully_created_trip">Created trip successfully!</string>
     <string name="trip">Trip</string>
+    <string name="swipe_to_update_stops">"Swipe down to update stops. "</string>
 </resources>
