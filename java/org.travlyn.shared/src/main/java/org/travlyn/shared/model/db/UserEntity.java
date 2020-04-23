@@ -42,32 +42,36 @@ public class UserEntity implements DataEntity {
         return email;
     }
 
-    public void setEmail(String email) {
+    public UserEntity setEmail(String email) {
         this.email = email;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public UserEntity setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public UserEntity setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     public String getSalt() {
         return salt;
     }
 
-    public void setSalt(String salt) {
+    public UserEntity setSalt(String salt) {
         this.salt = salt;
+        return this;
     }
 
     public Set<TokenEntity> getTokens() {
