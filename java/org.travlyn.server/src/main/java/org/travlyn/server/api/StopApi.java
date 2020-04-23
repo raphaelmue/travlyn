@@ -13,6 +13,7 @@ import org.travlyn.shared.model.api.Stop;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import static org.travlyn.server.configuration.AuthenticationTokenFilter.REGISTERED_USER_ROLE;
 
@@ -64,7 +65,7 @@ public interface StopApi {
     @PostMapping(
             value = "/stop/{stopId}/timeEffort")
     ResponseEntity<Stop> addTimeEffortStop(@ApiParam(value = "ID of the stop that will be rated", required = true, defaultValue = "-1", example = "123") @PathVariable("stopId") int stopId,
-                                        @NotNull @ApiParam(value = "Average time effort to visit this stop in hours", required = true, defaultValue = "-1", example = "1.5") @Valid @RequestParam(value = "timeEffort") double timeEffort);
+                                        @NotNull @Size(max = 32) @ApiParam(value = "Average time effort to visit this stop in hours", required = true, defaultValue = "-1", example = "1.5") @Valid @RequestParam(value = "timeEffort") double timeEffort);
 
     @ApiOperation(
             value = "Get Stop by ID",
