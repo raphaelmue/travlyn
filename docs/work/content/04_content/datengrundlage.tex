@@ -1,4 +1,4 @@
-\chapter{Datengrundlage}
+\chapter{Datengrundlage}\label{sec:datengrundlage}
 (Joshua)
 
 Die Datengrundlage ist für einen Reiseführer sehr wichtig, da der gesamte Sinn eines Reiseführers darauf basiert, Informationen aufzubereiten und an den Leser/Nutzer weiter zu geben. Aus diesem Grund wurden für diese Arbeit mehrere Datenquellen zu unterschiedlichen Themen herausgesucht und verglichen. Im Folgenden sollen diese Alternativen und die angestellten Überlegungen sowie die endgültige Entscheidung, welche Daten für \textit{Travlyn} verwendet werden sollen, aufgezeigt.
@@ -17,7 +17,7 @@ Travlyn soll laut Spezifikation Trips erstellen können, welche eine Abfolge von
 \subsection{Google Places API}
 Google ist einer der größten Anbieter von ortsbasierten Services/Diensten und stellt eine API für POIs zu Verfügung \cite{Google.01.02.2020}. Diese API hat sehr weit gefächerte Funktionen, die von einer einfachen Suche über ausführliche Details zu interessanten Orten bis hin zu \enquote{user check-in} an einzeln Orten reichen. Diese große Funktionalität wäre für \textit{Travlyn} sehr wertvoll. Allerdings sind die Google APIs nicht frei zugänglich und die Anzahl der Requests ist u.U. stark eingeschränkt \cite{Singhal.2012}. Außerdem ist die Nutzung der erhaltenen Daten nur in Verbindung mit anderen von Google bereitgestellten Services erlaubt \cite{Google.02.12.2019}, somit wäre die ganze \textit{Travlyn} Applikation an Google gebunden.  
 
-\subsection{Openroute service}
+\subsection{OpenrouteService}
 Openroute service \cite{TheHeidelbergInstituteforGeoinformationTechnology.} wird vom Heidelberger Institut für Geoinformationstechnik angeboten. Es handelt sich um eine Crowd Sourced API, d.h. sie wird durch Benutzer über OpenStreetMap (OSM) \cite{OpenStreetMap.} gespeist und ist damit frei zugänglich. Durch die Nutzung von OSM ergibt sich der weitere Vorteil, dass die API für Orte weltweit nutzbar ist. Leider sind die gelieferten Informationen nicht sehr umfangreich und beinhalten häufig keine genauere Beschreibung und keine Bewertung o.Ä.. Weiterhin sind Crowd Sourced Informationen meist nicht offiziell verifiziert und könnten u.U. falsch sein. Die Beschränkungen für diese API sind relativ gering (500 POIs requests pro Tag), allerdings können diese auf Nachfrage erhöht werden (z.B. für Bildungszwecke).
 
 \begin{defStrich}[Crowdsourcing]
