@@ -312,7 +312,7 @@ public class TravlynServiceTest {
         Assertions.assertThrows(NoResultException.class, () -> service.addPricingToStop(-1, 20));
 
         result = service.addPricingToStop(stopEntity.getId(), 20);
-        Assertions.assertEquals(11, result.getPricing());
+        Assertions.assertEquals(15, result.getPricing());
     }
 
     @Transactional
@@ -334,7 +334,7 @@ public class TravlynServiceTest {
         Assertions.assertThrows(NoResultException.class, () -> service.addTimeEffortToStop(-1, 2.0));
 
         result = service.addTimeEffortToStop(stopEntity.getId(), 10);
-        Assertions.assertEquals(2.8, result.getTimeEffort(),0.1);
+        Assertions.assertEquals(6.0, result.getTimeEffort(),0.1);
     }
 
     @Transactional
