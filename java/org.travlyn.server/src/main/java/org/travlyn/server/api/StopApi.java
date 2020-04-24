@@ -3,6 +3,7 @@ package org.travlyn.server.api;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,12 +13,14 @@ import org.travlyn.shared.model.api.Rating;
 import org.travlyn.shared.model.api.Stop;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import static org.travlyn.server.configuration.AuthenticationTokenFilter.REGISTERED_USER_ROLE;
 
 @Api(value = "stop")
+@Validated
 public interface StopApi {
 
     @ApiOperation(
@@ -64,7 +67,7 @@ public interface StopApi {
     @PostMapping(
             value = "/stop/{stopId}/timeEffort")
     ResponseEntity<Stop> addTimeEffortStop(@ApiParam(value = "ID of the stop that will be rated", required = true, defaultValue = "-1", example = "123") @PathVariable("stopId") int stopId,
-                                        @NotNull @Size(max = 32) @ApiParam(value = "Average time effort to visit this stop in hours", required = true, defaultValue = "-1", example = "1.5") @Valid @RequestParam(value = "timeEffort") double timeEffort);
+                                        @NotNull @ApiParam(value = "Average time effort to visit this stop in hours", required = true, defaultValue = "-1", example = "1.5") @Valid @RequestParam(value = "timeEffort") double timeEffort);
 
     @ApiOperation(
             value = "Get Stop by ID",

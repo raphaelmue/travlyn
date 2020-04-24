@@ -178,10 +178,11 @@ public class TravlynService {
                 //get Stops for city
                 CityEntity entity;
                 entity = this.getStopsForCity(result);
+                session.persist(entity);
                 City returnValue = this.removeUnfetchedStops(entity.toDataTransferObject());
                 entity.setUnfetchedStops(returnValue.isUnfetchedStops());
                 // valid city was found --> cache result
-                session.persist(entity);
+                session.update(entity);
                 return returnValue;
             }
         }
@@ -422,14 +423,16 @@ public class TravlynService {
                 .setParameter("stopId", stopId)
                 .getSingleResult();
         double oldPricing = stopEntity.getPricing();
+        int numberOfCommitments = stopEntity.getNumberOfPricingCommitments();
 
-        if (oldPricing == 0.0) {
+        if (numberOfCommitments == 0) {
             //pricing initial
             stopEntity.setPricing(pricing);
         } else {
-            //calc avg and set; weight old pricing 9 times and new 1 times to avoid high changes
-            stopEntity.setPricing((1.0 / 10.0) * ((9.0 * oldPricing) + pricing));
+            //calc avg and set;
+            stopEntity.setPricing((1.0 / (numberOfCommitments + 1)) * ((numberOfCommitments * oldPricing) + pricing));
         }
+        stopEntity.setNumberOfPricingCommitments(numberOfCommitments + 1);
         session.merge(stopEntity);
         return stopEntity.toDataTransferObject();
     }
@@ -446,26 +449,24 @@ public class TravlynService {
     public Stop addTimeEffortToStop(int stopId, double timeEffort) throws NoResultException {
         Session session = sessionFactory.getCurrentSession();
 
-        if (timeEffort < 0) {
-            throw new ValueException("Time effort can not be negative!");
-        }
-
-        if (timeEffort > 16) {
-            throw new ValueException("Time effort can not be higher than one day!");
+        if (timeEffort < 0 || timeEffort > 32) {
+            throw new ValueException("Time effort is invalid");
         }
 
         StopEntity stopEntity = session.createQuery("from StopEntity where id = :stopId", StopEntity.class)
                 .setParameter("stopId", stopId)
                 .getSingleResult();
         double oldTimeEffort = stopEntity.getTimeEffort();
+        int numberOfCommitments = stopEntity.getNumberOfTimeEffortCommitments();
 
-        if (oldTimeEffort == 0.0) {
-            //pricing initial
+        if ( numberOfCommitments == 0) {
+            //time effort initial
             stopEntity.setTimeEffort(timeEffort);
         } else {
-            //calc avg and set; weight old pricing 9 times and new 1 times to avoid high changes
-            stopEntity.setTimeEffort((1.0 / 10.0) * ((9.0 * oldTimeEffort) + timeEffort));
+            //calc avg and set;
+            stopEntity.setTimeEffort((1.0 / (numberOfCommitments+1)) * ((numberOfCommitments * oldTimeEffort) + timeEffort));
         }
+        stopEntity.setNumberOfTimeEffortCommitments(numberOfCommitments + 1);
         session.merge(stopEntity);
         return stopEntity.toDataTransferObject();
     }

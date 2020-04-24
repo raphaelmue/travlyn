@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.travlyn.server.service.TravlynService;
 import org.travlyn.server.service.ValueException;
@@ -16,9 +17,11 @@ import org.travlyn.shared.model.api.Stop;
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Controller
+@Validated
 public class StopApiController implements StopApi {
 
     private static final Logger log = LoggerFactory.getLogger(StopApiController.class);

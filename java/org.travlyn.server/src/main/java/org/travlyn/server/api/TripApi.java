@@ -83,7 +83,7 @@ public interface TripApi {
             @ApiResponse(code = 401, message = "You are not authorized to perform this action"),
             @ApiResponse(code = 404, message = "Trip not found")})
     @PostMapping(
-            value = "/trip/{tripId}")
+            value = "/trip/{tripId}/rating")
     ResponseEntity<Void> rateTrip(@ApiParam(value = "ID of the trip that will be rated", required = true, defaultValue = "-1", example = "123") @PathVariable("tripId") int tripId,
                                   @NotNull @ApiParam(value = "Rating to be created", required = true, defaultValue = "-1", example = "0.75") @Valid @RequestParam(value = "rating") Rating rating);
 
