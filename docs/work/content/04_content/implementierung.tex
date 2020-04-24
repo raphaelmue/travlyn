@@ -40,34 +40,34 @@
 	
 	(Joshua)
 	
-	Wie in \autoref{sec:datengrundlage} beschrieben werden für \textit{Travlyn} mehrere verschiedene \acs{API}s benutzt um alle relevanten Informationen zusammen zu sammeln. Leider ergeben sich bei einer derartigen Parallelbenutzung häufig Inkompatibilitäten, grade wenn die \acs{API}s nicht von dem selben Anbieter stammen.
+	Wie in \autoref{sec:datengrundlage} beschrieben werden für \textit{Travlyn} mehrere verschiedene \acs{API}s benutzt um alle relevanten Informationen zu sammeln. Leider ergeben sich bei einer derartigen Parallelbenutzung häufig Inkompatibilitäten, gerade wenn die \acs{API}s nicht von demselben Anbieter stammen.
 	
 	\vspace{0.25cm}
 	
-	Im Fall von \textit{Travlyn} besteht eine solche Inkompatibilität zwischen der OpenRouteService \acs{API}, welche die Positionen und Namen der \acs{POI}s liefert und der DBpedia \acs{API}, welche die entsprechenden Informationen von Wikipedia bezieht: OpenRouteService liefert die Namen der Punkte in der Landessprache z.B. \enquote{Schloss Karlsruhe}. Dem gegenüber können bei DBpedia nur englische Namen abgefragt werden, wie z.B. \enquote{Karlsruhe Palace}. Des weiteren stehen selbst in englischsprachigen Ländern einige Namen in Konflikt wie z.B. \enquote{Coca Cola London Eye} auf \acs{ORS} zu \enquote{London Eye} auf DBpedia. Durch diese Konflikte fehlen viele Infos in der \textit{Travlyn} App und müssen manuell nachgepflegt werden.
+	Im Fall von \textit{Travlyn} besteht eine solche Inkompatibilität zwischen der OpenRouteService \acs{API}, welche die Positionen und Namen der \acs{POI}s liefert und der DBpedia \acs{API}, welche die entsprechenden Informationen von Wikipedia bezieht: OpenRouteService liefert die Namen der Punkte in der Landessprache z.B. \enquote{Schloss Karlsruhe}. Dem gegenüber können bei DBpedia nur englische Namen abgefragt werden, wie z.B. \enquote{Karlsruhe Palace}. Des Weiteren stehen selbst in englischsprachigen Ländern einige Namen in Konflikt wie z.B. \enquote{Coca Cola London Eye} auf \acs{ORS} zu \enquote{London Eye} auf DBpedia. Durch diese Konflikte fehlen viele Informationen in der \textit{Travlyn} App und müssen manuell nachgepflegt werden.
 	
 	\vspace{0.25cm}
 	
-	Da diese Arbeit nicht darauf ausgelegt ist eine zur Veröffentlichung bereite App zu erstellen, sondern Konzepte und Wege aufzuzeigen, welche verwendet werden können wurde diese Nachpflege lediglich für einige Sehenswürdigkeiten in Karlsruhe durchgeführt und die entsprechende Infrastruktur für eine ausgedehntere Pflege geschaffen. Sollte die App produktiv veröffentlicht werden sind mehrere Möglichkeiten der Pflege vorstellbar: Es werden entsprechende Agenturen gebucht um die Zuordnung manuell in einer Datenbank zu pflegen und für möglichst viele Städte zur Verfügung zu stellen. Außerdem könnte auf einen nutzerbasierten Ansatz gesetzt werden, bei dem die Nutzer die Möglichkeit haben Fehler und fehlende Infos nachzupflegen, sobald sie auffallen. Dies hätten den Vorteil, dass es für den Hersteller kostenlos ist und gut skaliert. Wahrscheinlich wäre eine Kombination aus beiden Möglichkeiten der beste Weg.
+	Da diese Arbeit nicht darauf ausgelegt ist eine zur Veröffentlichung bereite App zu erstellen, sondern Konzepte und Wege aufzuzeigen, welche verwendet werden können wurde diese Nachpflege lediglich für einige Sehenswürdigkeiten in Karlsruhe durchgeführt und die entsprechende Infrastruktur für eine ausgedehntere Pflege geschaffen. Sollte die App produktiv veröffentlicht werden sind mehrere Möglichkeiten der Pflege vorstellbar: Es werden entsprechende Agenturen gebucht um die Zuordnung manuell in einer Datenbank zu pflegen und für möglichst viele Städte zur Verfügung zu stellen. Außerdem könnte auf einen nutzerbasierten Ansatz gesetzt werden, bei dem die Nutzer die Möglichkeit haben Fehler und fehlende Informationen nachzupflegen, sobald sie auffallen. Dies hätten den Vorteil, dass es für den Hersteller kostenlos ist und gut skaliert. Wahrscheinlich wäre eine Kombination aus beiden Möglichkeiten der beste Weg.
 	
 	\section{Umgehung der API Beschränkung für DBpedia}
 	
-	Der Umgang mit DBpedia für dieses Projekt wurde neben dem oben beschriebenen Mappingproblem auch durch die Abfragebeschränkung erschwert. Trotz einem registrierten persönlichen \acs{API} Schlüssels stehen der \textit{Travlyn} App nur 100 Abfragen pro Minute Verfügung. Außerdem gelten weitere strenge Einschränkungen,wie in \cite{DBpedia.2020} beschrieben. 
+	Der Umgang mit DBpedia für dieses Projekt wurde neben dem oben beschriebenen Mappingproblem auch durch die Abfragebeschränkung erschwert. Trotz eines registrierten persönlichen \acs{API} Schlüssels stehen der \textit{Travlyn} App nur 100 Abfragen pro Minute Verfügung. Außerdem gelten weitere strenge Einschränkungen, wie in \cite{DBpedia.2020} beschrieben. 
 	
 	\vspace{0.25cm}
 	
 	Unter Betrachtung des Umstandes, dass jede neu abgefragte Stadt und jeder in dieser Stadt befindliche \acs{POI} abgefragt werden muss, wenn ein Nutzer sich per \textit{Travlyn} über eine Stadt informieren möchte, ist leicht zu erkennen, dass diese Beschränkung kaum eingehalten werden kann. Beispielsweise liefert \acs{ORS} für die Stadt London ca. 670 \acs{POI}s, die alle in einer für den Nutzer angemessenen Zeit abgefragt werden müssten. Dies kollidiert eindeutig mit der Minutenbeschränkung von DBpedia.
 	Aus diesem Grund wurde für \textit{Travlyn} ein Konzept entwickelt, was ein \textit{lazy fetching} ermöglicht und die nötigen Abfragen erst nach und nach absetzt und den Nutzer möglichst wenig einschränkt:
-	Für eine neue (nicht im Cache befindliche) Stadt wir sowohl die Abfrage für die Stadt als auch für bis zu 99 \acs{POI}s durchgeführt. Dies ist konform mit der Beschränkung von DBpedia und versucht den Nutzer möglichst wenig einzuschränken, indem die \acs{POI}s bevorzugt abgefragt werden, für die sich der aktuelle Nutzer laut seiner Präferenzen interessiert. Es wird eine entsprechend reduzierte Antwort an den Client geschickt, mit dem Hinweis, dass einige \acs{POI}s fehlen könnten. Nun hat der Nutzer die Möglichkeit, nach der Durchsicht der vorhandenen Sehenswürdigkeiten, weitere anzufordern und damit weitere Anfragen auf DBpedia auszulösen. Ebenso löst jede weitere Suche nach der vorliegenden Stadt weitere Requests aus. Dieses Verfahren operiert, bis alle \acs{POI}s abgefragt wurden. \autoref{fig:DBpediaFlow} zeigt vereinfacht den allgemeinen Ablauf des Verfahrens.
+	Für eine neue (sich nicht im Cache befindliche) Stadt wird sowohl die Abfrage für die Stadt als auch für bis zu 99 \acs{POI}s durchgeführt. Dies ist konform mit der Beschränkung von DBpedia und versucht den Nutzer möglichst wenig einzuschränken, indem die \acs{POI}s bevorzugt abgefragt werden, für die sich der aktuelle Nutzer laut seiner Präferenzen interessiert. Es wird eine entsprechend reduzierte Antwort an den Client geschickt, mit dem Hinweis, dass einige \acs{POI}s fehlen könnten. Nun hat der Nutzer die Möglichkeit, nach der Durchsicht der vorhandenen Sehenswürdigkeiten, weitere anzufordern und damit weitere Anfragen auf DBpedia auszulösen. Ebenso löst jede weitere Suche nach der vorliegenden Stadt weitere Requests aus. Dieses Verfahren operiert, bis alle \acs{POI}s abgefragt wurden. \autoref{fig:DBpediaFlow} zeigt vereinfacht den allgemeinen Ablauf des Verfahrens.
 	
 	\begin{figure}[ht!]
 		\centering
 		\includegraphics[width=1\textwidth]{images/DBpediaFlow.pdf}
-		\caption{Flussdiagramm zum Ablauf des lazy fetching von DBpedia.}
+		\caption{Flussdiagramm zum Ablauf des \textit{lazy fetching} von DBpedia.}
 		\label{fig:DBpediaFlow}
 	\end{figure}
 
-	Über diesen Mechanismus können die \enquote{burstartigen} Abfragenwellen abgefedert werden und die Beschränkung kann eingehalten werden.
+	Über diesen Mechanismus können die großen Abfragenwellen abgefedert werden und die Beschränkung kann eingehalten werden.
 	
 	\vspace{0.25cm}
 	
