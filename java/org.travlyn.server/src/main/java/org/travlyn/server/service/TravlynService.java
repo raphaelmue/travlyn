@@ -402,8 +402,16 @@ public class TravlynService {
         return true;
     }
 
+    /**
+     * Adds a new pricing suggestion to a Stop.
+     * @param stopId Id of Stop that should be updated
+     * @param pricing Suggested pricing value
+     * @return Updated Stop DTO
+     * @throws NoResultException If passed Stop Id is not associated with a Stop
+     * @throws ValueException If suggested pricing value is invalid
+     */
     @Transactional
-    public Stop addPricingToStop(int stopId, double pricing) throws NoResultException, ValueException {
+    public Stop addPricingToStop(int stopId, double pricing) throws NoResultException {
         Session session = sessionFactory.getCurrentSession();
 
         if (pricing < 0) {
@@ -426,8 +434,16 @@ public class TravlynService {
         return stopEntity.toDataTransferObject();
     }
 
+    /**
+     * Adds a new time effort suggestion to a Stop.
+     * @param stopId Id of Stop that should be updated
+     * @param timeEffort Suggested time effort
+     * @return Updated Stop DTO
+     * @throws NoResultException If passed Stop Id is not associated with a Stop
+     * @throws ValueException If suggested time effort value is invalid
+     */
     @Transactional
-    public Stop addTimeEffortToStop(int stopId, double timeEffort) throws NoResultException, ValueException {
+    public Stop addTimeEffortToStop(int stopId, double timeEffort) throws NoResultException {
         Session session = sessionFactory.getCurrentSession();
 
         if (timeEffort < 0) {

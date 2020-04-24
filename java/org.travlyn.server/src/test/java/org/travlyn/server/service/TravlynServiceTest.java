@@ -295,7 +295,7 @@ public class TravlynServiceTest {
 
     @Transactional
     @Test
-    public void testUpdatePricing() throws NoResultException, ValueException {
+    public void testUpdatePricing() throws NoResultException {
         Session session = sessionFactory.getCurrentSession();
 
         Stop result = service.addPricingToStop(stopEntity.getId(), 10.0);
@@ -317,7 +317,7 @@ public class TravlynServiceTest {
 
     @Transactional
     @Test
-    public void testUpdateTimeEffort() throws NoResultException, ValueException {
+    public void testUpdateTimeEffort() throws NoResultException {
         Session session = sessionFactory.getCurrentSession();
 
         Stop result = service.addTimeEffortToStop(stopEntity.getId(), 2.0);
