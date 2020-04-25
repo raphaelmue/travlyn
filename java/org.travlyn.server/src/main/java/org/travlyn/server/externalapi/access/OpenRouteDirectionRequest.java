@@ -98,15 +98,17 @@ public abstract class OpenRouteDirectionRequest implements Request<ExecutionInfo
         executionInfo.setWaypoints(waypoints);
 
         ArrayList<Step> steps = new ArrayList<>();
-        for (JsonElement step : properties.getAsJsonArray("segments").get(0).getAsJsonObject().getAsJsonArray("steps")) {
-            JsonObject stepObject = step.getAsJsonObject();
-            Step stepInstance = new Step();
-            stepInstance.setType(stepObject.get("type").getAsInt());
-            stepInstance.setInstruction(stepObject.get("instruction").getAsString());
-            ArrayList<Integer> indices = new ArrayList<>();
-            IntStream.rangeClosed(stepObject.get("way_points").getAsJsonArray().get(0).getAsInt(), stepObject.get("way_points").getAsJsonArray().get(1).getAsInt()).forEachOrdered(indices::add);
-            stepInstance.setWaypointIndices(indices);
-            steps.add(stepInstance);
+        for (JsonElement segment : properties.getAsJsonArray("segments")) {
+            for (JsonElement step: segment.getAsJsonObject().getAsJsonArray("steps")) {
+                JsonObject stepObject = step.getAsJsonObject();
+                Step stepInstance = new Step();
+                stepInstance.setType(stepObject.get("type").getAsInt());
+                stepInstance.setInstruction(stepObject.get("instruction").getAsString());
+                ArrayList<Integer> indices = new ArrayList<>();
+                IntStream.rangeClosed(stepObject.get("way_points").getAsJsonArray().get(0).getAsInt(), stepObject.get("way_points").getAsJsonArray().get(1).getAsInt()).forEachOrdered(indices::add);
+                stepInstance.setWaypointIndices(indices);
+                steps.add(stepInstance);
+            }
         }
         executionInfo.setSteps(steps);
         return executionInfo;
