@@ -33,6 +33,7 @@ public class DBpediaStopRequest extends DBpediaRequest<Stop> {
         MANUAL_NAMES.put("Onager", "xyz");
         MANUAL_NAMES.put("Gondoletta", "xyz");
         MANUAL_NAMES.put("Temple", "xyz");
+        MANUAL_NAMES.put("ZKM_|_Museum_für_Neue_Kunst","xyz");
     }
 
     private static final String BASE_URL = "http://vmdbpedia.informatik.uni-leipzig.de:8080/api/1.0.0/values";
