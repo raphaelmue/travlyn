@@ -1,0 +1,99 @@
+{
+    "head": {"vars": [
+        "entities",
+        "dboabstract",
+        "dbothumbnail"
+    ]},
+    "results": {"bindings": [
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe_Palace"
+            },
+            "dboabstract": {
+                "xml:lang": "de",
+                "type": "literal",
+                "value": "Das Karlsruher Schloss wurde ab 1715 im Stile des Barocks als Residenz des Markgrafen Karl Wilhelm von Baden-Durlach errichtet. Es diente bis 1918 als Residenzschloss der Markgrafen bzw. Großherzöge von Baden.Heute ist in dem Gebäude das Badische Landesmuseum und ein Teil des Bundesverfassungsgerichts untergebracht."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe_Palace"
+            },
+            "dboabstract": {
+                "xml:lang": "fr",
+                "type": "literal",
+                "value": "Le château de Karlsruhe (Karlsruher Schloss en allemand) est un château situé au centre de la ville de Karlsruhe, en Allemagne. Il a été édifié en 1715 pour le margrave Charles-Guillaume de Bade-Durlach. Jusqu'en 1918, il a servi de résidence officielle aux margraves puis grands-ducs de Bade. Il accueille depuis 1921 le musée national badois."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe_Palace"
+            },
+            "dboabstract": {
+                "xml:lang": "es",
+                "type": "literal",
+                "value": "El palacio de Karlsruhe (en alemán: Karlsruher Schloss)? fue construido en 1715 por el margrave Carlos Guillermo de Baden-Durlach, tras una disputa con los ciudadanos de su anterior capital, Durlach. La ciudad de Karlsruhe ha crecido desde entonces alrededor de él."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe_Palace"
+            },
+            "dboabstract": {
+                "xml:lang": "pt",
+                "type": "literal",
+                "value": "O Castelo de Karlsruhe (em alemão: Schloss Karlsruhe) foi construído em 1715, como residência do marquês Carlos III Guilherme de Baden-Durlach. Até 1918 foi a residência oficial dos marqueses de Baden. Atualmente a edificação abriga o Museu Estatal de Baden e uma parte do Tribunal Constitucional Federal da Alemanha."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe_Palace"
+            },
+            "dboabstract": {
+                "xml:lang": "ru",
+                "type": "literal",
+                "value": "Дворец Карлсруэ (нем. Karlsruher Schloss) \u2014 бывшая резиденция маркграфов и великих герцогов Бадена, построенная в 1715 году маркграфом Карлом III Вильгельмом и прослужившая в этом качестве до 1918 года. В настоящее время во дворце находится Музей земли Баден и часть Конституционного суда Германии, основное здание которого расположено в непосредственной близости от дворца. В планировке города дворец служит центральной точкой, от которой лучеобразно во все стороны проложены улицы."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe_Palace"
+            },
+            "dboabstract": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "Karlsruhe Palace (German: Karlsruher Schloss) was erected in 1715 by Margrave  Charles III William of Baden-Durlach, after a dispute with the citizens of his previous capital, Durlach. The city of Karlsruhe has since grown around it. It is now home to the main museum of the Badisches Landesmuseum Karlsruhe."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        }
+    ]}
+}

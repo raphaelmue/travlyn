@@ -1,0 +1,20 @@
+{
+    "head": {
+        "vars": [
+            "entities",
+            "dboabstract",
+            "dbothumbnail",
+            "georsspoint"
+        ]
+    },
+    "results": {
+        "bindings": [
+            {
+                "entities": {
+                    "type": "uri",
+                    "value": "xyz"
+                }
+            }
+        ]
+    }
+}

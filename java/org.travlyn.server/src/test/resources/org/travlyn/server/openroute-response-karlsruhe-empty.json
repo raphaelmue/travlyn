@@ -1,0 +1,47 @@
+{
+    "type": "FeatureCollection",
+    "bbox": [
+        8.38004,
+        48.980156,
+        8.399976,
+        48.999752
+    ],
+    "features": [],
+    "information": {
+        "attribution": "openrouteservice.org | OpenStreetMap contributors",
+        "version": "0.1",
+        "timestamp": 1587652190,
+        "query": {
+            "request": "pois",
+            "geometry": {
+                "bbox": [
+                    [
+                        8.38,
+                        48.98
+                    ],
+                    [
+                        8.4,
+                        49.0
+                    ]
+                ],
+                "geojson": {
+                    "type": "Point",
+                    "coordinates": [
+                        8.3839514,
+                        48.989209699999996
+                    ]
+                },
+                "buffer": 2000
+            },
+            "filters": {
+                "category_group_ids": [
+                    620,
+                    130,
+                    220,
+                    330,
+                    260
+                ]
+            }
+        }
+    }
+}

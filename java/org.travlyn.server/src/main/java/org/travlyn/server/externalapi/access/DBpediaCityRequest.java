@@ -1,6 +1,9 @@
 package org.travlyn.server.externalapi.access;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import org.travlyn.server.util.Pair;
 import org.travlyn.shared.model.api.City;
 
@@ -12,7 +15,7 @@ import java.util.Set;
  * @author Joshua Schulz
  */
 public class DBpediaCityRequest extends DBpediaRequest<City> {
-    private static final String BASE_URL = "http://vmdbpedia.informatik.uni-leipzig.de:8080/api/1.0.0/values";
+    private static String baseUrl = "http://vmdbpedia.informatik.uni-leipzig.de:8080/api/1.0.0/values";
 
     private String query;
     private Gson gson = new Gson();
@@ -23,8 +26,12 @@ public class DBpediaCityRequest extends DBpediaRequest<City> {
      * @param query specify what should be searched for
      */
     public DBpediaCityRequest(String query) {
-        super(BASE_URL);
+        super(baseUrl);
         this.query = query.replace(" ", "_");
+    }
+
+    public static void setBaseUrl(String baseUrl) {
+        DBpediaCityRequest.baseUrl = baseUrl;
     }
 
     /**
@@ -32,7 +39,7 @@ public class DBpediaCityRequest extends DBpediaRequest<City> {
      *
      * @return Filled CityEntity with the fetched data.
      */
-    public City getResult() throws QuotaLimitException{
+    public City getResult() {
         Set<Pair<String, String>> params = getDefaultHeaders(query);
         params.add(new Pair<>("property", "dbo:abstract"));
         params.add(new Pair<>("property", "dbo:thumbnail"));
@@ -46,7 +53,6 @@ public class DBpediaCityRequest extends DBpediaRequest<City> {
                     getAsJsonArray("bindings");
         } catch (
                 JsonSyntaxException syntaxException) {
-            //quota limit reached...exclude stop TODO
             throw new QuotaLimitException("DBpedia quota limit is reached by city request!");
         }
 

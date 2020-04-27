@@ -1,14 +1,13 @@
 package org.travlyn.server.externalapi.access;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import org.travlyn.server.util.Pair;
 import org.travlyn.shared.model.api.Stop;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 
 public class DBpediaStopRequest extends DBpediaRequest<Stop> {
@@ -36,20 +35,24 @@ public class DBpediaStopRequest extends DBpediaRequest<Stop> {
         MANUAL_NAMES.put("ZKM_|_Museum_für_Neue_Kunst","xyz");
     }
 
-    private static final String BASE_URL = "http://vmdbpedia.informatik.uni-leipzig.de:8080/api/1.0.0/values";
+    private static String baseUrl = "http://vmdbpedia.informatik.uni-leipzig.de:8080/api/1.0.0/values";
 
     private String query;
     private Gson gson = new Gson();
 
 
     public DBpediaStopRequest(String query) {
-        super(BASE_URL);
+        super(baseUrl);
         query = query.replace(" ", "_");
         this.query = query;
     }
 
+    public static void setBaseUrl(String baseUrl) {
+        DBpediaStopRequest.baseUrl = baseUrl;
+    }
+
     @Override
-    public Stop getResult() throws QuotaLimitException{
+    public Stop getResult() throws QuotaLimitException {
         //check for manual name setting
         String manualQuery = this.checkForManualName(query);
         if (manualQuery != null) {
@@ -66,7 +69,6 @@ public class DBpediaStopRequest extends DBpediaRequest<Stop> {
             resultArray = gson.fromJson(result, JsonObject.class).getAsJsonObject("results").
                     getAsJsonArray("bindings");
         } catch (JsonSyntaxException syntaxException) {
-            // TODO
             throw new QuotaLimitException("DBpedia quota limit is reached by stop request!");
         }
 
