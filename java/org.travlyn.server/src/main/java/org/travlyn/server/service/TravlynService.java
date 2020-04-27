@@ -484,17 +484,11 @@ public class TravlynService {
         Trip trip = tripEntity.toDataTransferObject();
         if (reorder) {
             List<Stop> stops = trip.getStops();
-            if (isRoundtrip) {
-                // add stop that represents the position of the user
-                stops.add(0, new Stop().id(-1).latitude(lat).longitude(lon));
-            }
+            // add stop that represents the position of the user
+            stops.add(0, new Stop().id(-1).latitude(lat).longitude(lon));
             trip.setStops(new TSPSolver(stops).solve());
-            if (isRoundtrip) {
-                // remove stop that represents the position of the user
-                trip.getStops().remove(0);
-            }
         }
-        OpenRouteTripDirectionRequest directionRequest = new OpenRouteTripDirectionRequest(lat, lon, trip, isRoundtrip, lang);
+        OpenRouteTripDirectionRequest directionRequest = new OpenRouteTripDirectionRequest(trip, isRoundtrip, lang);
         return directionRequest.getResult();
     }
 
