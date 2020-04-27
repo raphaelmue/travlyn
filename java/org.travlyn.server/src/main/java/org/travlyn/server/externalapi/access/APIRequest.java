@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Generic utility class to fetch data from API via GET request.
@@ -18,7 +19,12 @@ public class APIRequest {
     public static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
 
     private final String requestURL;
-    private final OkHttpClient client;
+    private final OkHttpClient client = new OkHttpClient.Builder()
+            .connectTimeout(2, TimeUnit.SECONDS) // For testing purposes
+            .readTimeout(2, TimeUnit.SECONDS) // For testing purposes
+            .writeTimeout(2, TimeUnit.SECONDS)
+            .build();
+
     private String postBody;
     private Set<Pair<String, String>> header;
 
@@ -32,7 +38,6 @@ public class APIRequest {
         for (Map.Entry<String, String> entry : parameters) {
             urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
         }
-        client = new OkHttpClient();
         this.requestURL = urlBuilder.build().toString();
     }
 
@@ -45,7 +50,9 @@ public class APIRequest {
         okhttp3.Request.Builder builder = new okhttp3.Request.Builder();
         this.setHeader(builder);
         okhttp3.Request request = builder.url(requestURL).build();
-        return client.newCall(request).execute().body().string();
+        Response response = client.newCall(request).execute();
+        final String json = response.body().string();
+        return json;
     }
 
     public String performAPICallPOST() throws IOException {

@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class OpenRoutePOIRequest implements Request<Set<StopEntity>> {
-    private static final String BASE_URL = "https://api.openrouteservice.org/pois";
+    private static String baseUrl = "https://api.openrouteservice.org/pois";
     private static final String API_KEY;
     private static final Logger logger = LoggerFactory.getLogger(OpenRoutePOIRequest.class);
     private static final double FIELDSIZEFORREQUEST = 0.02;
@@ -54,6 +54,10 @@ public class OpenRoutePOIRequest implements Request<Set<StopEntity>> {
         this.categoryList = categoryList;
     }
 
+    public static void setBaseUrl(String baseUrl) {
+        OpenRoutePOIRequest.baseUrl = baseUrl;
+    }
+
     @Override
     public Set<StopEntity> getResult() {
         Set<StopEntity> resultList = new HashSet<>();
@@ -62,7 +66,7 @@ public class OpenRoutePOIRequest implements Request<Set<StopEntity>> {
 
         for (int row = -1; row <= 1; row++) {
             for (int column = -1; column <= 1; column++) {
-                APIRequest request = new APIRequest(BASE_URL, new HashSet<>(), this.genPostBody(
+                APIRequest request = new APIRequest(baseUrl, new HashSet<>(), this.genPostBody(
                         BigDecimal.valueOf(latitude + (row * FIELDSIZEFORREQUEST)).setScale(2, RoundingMode.FLOOR).doubleValue(),
                         BigDecimal.valueOf(longitude + (column * FIELDSIZEFORREQUEST)).setScale(2, RoundingMode.FLOOR).doubleValue(),
                         BigDecimal.valueOf(latitude + ((row + 1) * FIELDSIZEFORREQUEST)).setScale(2, RoundingMode.FLOOR).doubleValue(),
