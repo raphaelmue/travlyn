@@ -1,17 +1,19 @@
 package org.travlyn.ui.trips
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.RatingBar
-import android.widget.TextView
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -22,14 +24,20 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.travlyn.R
 import org.travlyn.api.CityApi
+import org.travlyn.api.TripApi
+import org.travlyn.api.model.ExecutionInfo
 import org.travlyn.api.model.Stop
 import org.travlyn.api.model.Trip
 import org.travlyn.api.model.User
 import org.travlyn.local.Application
 import org.travlyn.local.LocalStorage
+import org.travlyn.ui.navigation.NavigationActivity
+import org.travlyn.ui.navigation.fetchLocation
 
 
 class TripInformationActivity : AppCompatActivity(), Application {
+
+    lateinit var tripApi: TripApi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +46,15 @@ class TripInformationActivity : AppCompatActivity(), Application {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        tripApi = TripApi(this)
+
         val bundle = intent.extras
         if (bundle != null && bundle.containsKey("trip")) {
             val trip: Trip = Gson().fromJson(bundle.getString("trip"), Trip::class.java)
+
+            startTripNavigationFab.setOnClickListener {
+                showStartNavigationDialog(trip)
+            }
 
             supportActionBar?.title = trip.name + " - " + getString(R.string.trip)
 
@@ -69,6 +83,67 @@ class TripInformationActivity : AppCompatActivity(), Application {
             tripStopCardView.layoutManager =
                 LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
             tripStopCardView.adapter = TripInformationStopAdapter(trip.stops!!.toList(), this)
+        }
+    }
+
+    private suspend fun startNavigationActivity(trip: Trip, executionInfo: ExecutionInfo) =
+        withContext(Dispatchers.Main) {
+            val intent = Intent(this@TripInformationActivity, NavigationActivity::class.java)
+            intent.putExtras(bundleOf("trip" to Gson().toJson(trip)))
+            intent.putExtras(bundleOf("executionInfo" to Gson().toJson(executionInfo)))
+
+            startActivity(intent)
+        }
+
+    private fun showStartNavigationDialog(trip: Trip) {
+        val dialogLayout: View = layoutInflater.inflate(R.layout.navigation_dialog, null)
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.navigation))
+            .setView(dialogLayout)
+            .setPositiveButton(getString(R.string.ok), null)
+            .setNegativeButton(getString(R.string.cancel), null)
+            .create()
+
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val reorderLayout: LinearLayout =
+                    dialogLayout.findViewById(R.id.navigationStartDialogReorderLayout)
+                val roundTripLayout: LinearLayout =
+                    dialogLayout.findViewById(R.id.navigationStartDialogRoundTripLayout)
+                val progressBar: ProgressBar =
+                    dialogLayout.findViewById(R.id.navigationStartDialogProgressBar)
+                val reorderSwitch: Switch = dialogLayout.findViewById(R.id.navigationReorderSwitch)
+                val roundTripSwitch: Switch =
+                    dialogLayout.findViewById(R.id.navigationRoundTripSwitch)
+
+                reorderLayout.visibility = View.GONE
+                roundTripLayout.visibility = View.GONE
+                progressBar.visibility = View.VISIBLE
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    fetchRoute(trip, reorderSwitch.isChecked, roundTripSwitch.isChecked)
+                    withContext(Dispatchers.Main) { dialog.dismiss() }
+                }
+            }
+        }
+
+        dialog.show()
+    }
+
+    private suspend fun fetchRoute(trip: Trip, reorderAllowed: Boolean, roundTrip: Boolean) {
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val location: Location = locationManager.fetchLocation(this@TripInformationActivity)
+
+        val executionInfo = tripApi.getTripExecutionInfo(
+            reorderAllowed,
+            roundTrip,
+            location.latitude,
+            location.longitude,
+            trip.id!!,
+            LocalStorage(this@TripInformationActivity).readObject<User>("user")!!.id!!
+        )
+        if (executionInfo != null) {
+            startNavigationActivity(trip, executionInfo)
         }
     }
 
@@ -111,38 +186,48 @@ class TripInformationActivity : AppCompatActivity(), Application {
             holder.stopListDescription.text = stop.description
 
             if (position == 0) {
-                holder.stopListIndicatorView.setImageDrawable(application.getContext()
-                    .getDrawable(R.drawable.stop_list_indicator_start))
+                holder.stopListIndicatorView.setImageDrawable(
+                    application.getContext()
+                        .getDrawable(R.drawable.stop_list_indicator_start)
+                )
             }
 
             if (position == stops.size - 1) {
-                holder.stopListIndicatorView.setImageDrawable(application.getContext()
-                    .getDrawable(R.drawable.stop_list_indicator_end))
+                holder.stopListIndicatorView.setImageDrawable(
+                    application.getContext()
+                        .getDrawable(R.drawable.stop_list_indicator_end)
+                )
             }
 
             val stringIdentifier = application.getContext().resources.getIdentifier(
                 "category_" + stop.category?.name, "string", application.getContext().packageName
             )
             holder.stopListCategoryTextView.text =
-                if (stringIdentifier > 0) application.getContext().getString(stringIdentifier) else stop.category?.name
+                if (stringIdentifier > 0) application.getContext()
+                    .getString(stringIdentifier) else stop.category?.name
 
             if (stop.averageRating == null || stop.averageRating <= 0) {
-                holder.stopListRatingTextView.text = application.getContext().getString(R.string.no_value)
+                holder.stopListRatingTextView.text =
+                    application.getContext().getString(R.string.no_value)
             } else {
                 holder.stopListRatingBar.rating = stop.averageRating.toFloat() * 5f
                 holder.stopListRatingTextView.text =
-                    application.getContext().getString(R.string.rating_value, stop.averageRating * 5f)
+                    application.getContext()
+                        .getString(R.string.rating_value, stop.averageRating * 5f)
             }
 
             if (stop.timeEffort == null || stop.timeEffort <= 0) {
-                holder.stopListTimeEffortTextView.text = application.getContext().getString(R.string.no_value)
+                holder.stopListTimeEffortTextView.text =
+                    application.getContext().getString(R.string.no_value)
             } else {
                 holder.stopListTimeEffortTextView.text =
-                    application.getContext().getString(R.string.hours_unit, stop.timeEffort.toString())
+                    application.getContext()
+                        .getString(R.string.hours_unit, stop.timeEffort.toString())
             }
 
             if (stop.pricing == null || stop.pricing <= 0) {
-                holder.stopListPricingTextView.text = application.getContext().getString(R.string.no_value)
+                holder.stopListPricingTextView.text =
+                    application.getContext().getString(R.string.no_value)
             } else {
                 holder.stopListPricingTextView.text = stop.pricing.toString()
             }

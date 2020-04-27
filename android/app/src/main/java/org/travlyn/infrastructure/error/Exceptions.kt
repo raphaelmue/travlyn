@@ -31,3 +31,6 @@ class NotFoundException(message: String) : TravlynException(message) {
 
 class InternalServerErrorException(message: String) : ResponseException(message) {
 }
+
+class PermissionException(message: String?) : RuntimeException(message) {
+}

@@ -65,4 +65,7 @@
     <string name="successfully_created_trip">Created trip successfully!</string>
     <string name="trip">Trip</string>
     <string name="error_password_too_short">Password is too short. It must have at least 4 characters. </string>
+    <string name="navigation">Navigation</string>
+    <string name="reorder_description">Reorder trips to reduce trip route</string>
+    <string name="round_trip_description">Navigate back to start point after trip is finished</string>
 </resources>

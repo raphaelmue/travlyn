@@ -65,7 +65,7 @@ class TripsFragment : Fragment() {
 
     private suspend fun fetchUsersTrips(): List<Trip> {
         if (context != null) {
-            val user: User? = LocalStorage(context!!).readObject("user")
+            val user: User? = LocalStorage(requireContext()).readObject("user")
             if (user != null) {
                 return UserApi(context as MainActivity).getTripsByUserId(user.id!!).toList()
             } else {
