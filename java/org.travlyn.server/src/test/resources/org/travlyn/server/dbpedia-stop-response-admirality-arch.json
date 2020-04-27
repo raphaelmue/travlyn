@@ -1,0 +1,174 @@
+{
+    "head": {"vars": [
+        "entities",
+        "dboabstract",
+        "dbothumbnail"
+    ]},
+    "results": {"bindings": [
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Admiralty_Arch"
+            },
+            "dboabstract": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "Admiralty Arch is a landmark building in London which incorporates an archway providing road and pedestrian access between The Mall, which extends to the southwest, and Trafalgar Square to the northeast. Admiralty Arch, commissioned by King Edward VII in memory of his mother, Queen Victoria and designed by Aston Webb is now a Grade I listed building. In the past, it served as residence of the First Sea Lord and was used by the Admiralty. Until 2011, the building housed government offices, but in 2012 the government sold a 125-year lease over the building to a property developer (Prime Investors Capital, run by Rafael Serrano) for redevelopment into a luxury hotel, restaurant and apartments."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Arco_del_Almirantazgo,_Londres,_Inglaterra,_2014-08-11,_DD_186.JPG?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Admiralty_Arch"
+            },
+            "dboabstract": {
+                "xml:lang": "de",
+                "type": "literal",
+                "value": "Der Admiralty Arch ist ein 1910 errichteter Triumphbogen in London. Er wurde von Sir Aston Webb entworfen und bildet im Zuge der von ihm umgestalteten Prachtstraße The Mall deren östlichen Abschluss. Das Gebäude ist Teil des Admiralitäts-Komplexes. Vom belebten Trafalgar Square her bietet das Bauwerk bei feierlichen Anlässen eine elegante Durchfahrt in Richtung Buckingham Palace. Der zentrale Bogen ist an normalen Tagen für den Verkehr gesperrt und wird nur für Staatsakte geöffnet. Kraftfahrzeuge benutzen die benachbarten Bögen und Fußgänger die kleinen äußeren Durchgänge. Ursprünglich war der Admiralty Arch von König Eduard VII. zu Ehren seiner Mutter Königin Victoria in Auftrag gegeben worden. Auf diesen Hintergrund bezieht sich die am Tor zu lesende lateinische Inschrift ANNO DECIMO EDWARDI SEPTIMI REGIS VICTORIÆ REGINÆ CIVES GRATISSIMI MDCCCCX. 2012 wurde bekannt, dass die britische Regierung den Gebäudekomplex an einen Investor für die Dauer von 99 Jahren verpachtet hat. Das in die Jahre gekommene Gebäude soll renoviert und in ein Hotel umgewandelt werden."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Arco_del_Almirantazgo,_Londres,_Inglaterra,_2014-08-11,_DD_186.JPG?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Admiralty_Arch"
+            },
+            "dboabstract": {
+                "xml:lang": "es",
+                "type": "literal",
+                "value": "El Arco del Almirantazgo es un gran edificio de oficinas situado en Londres, incorpora una arcada que proporciona acceso a un camino y un paso peatonal entre The Mall, que se extiende al suroeste y Trafalgar Square al noreste. Fue diseñado en 1910 por Sir Aston Webb, construido por John Mowlem & Co. y terminado en 1912. Se encuentra adyacente al viejo edificio del Almirantazgo, del cual recibe el nombre. La construcción del edificio fue comisionada por el rey Eduardo VII en memoria de su madre la reina Victoria, aunque no viviría para verlo terminado. En una inscripción en latín situada en lo alto se lee: : ANNO : DECIMO : EDWARDI : SEPTIMI : REGIS :: VICTORIÆ : REGINÆ : CIVES : GRATISSIMI : MDCCCCX : (En el décimo año del Rey Eduardo VII, a la Reina Victoria, de los ciudadanos más agradecidos, 1910) Las figuras de La Navegación y La Artillería fueron diseñadas por el escultor inglés Thomas Brock y en su exterior se ubica también una estatua del capitán James Cook. Otro de sus rasgos destacados es su «nariz», sobre la pared interior del arco más septentrional hay una pequeña saliente del tamaño y la forma de una nariz humana. Hay poca o ninguna información pública en cuanto al porque de su presencia. La nariz está a una altura de aproximadamente 2,1 metros, algunas leyendas sostienen que está allí en honor de Eduardo VII, aunque otras dicen que es por la nariz de Napoleón. El arco central es normalmente cerrado por las puertas ferradas, y es reservado por los miembros de la Familia Real británica a las ceremonias. El Arco de Almirantazgo pertenece al Grado I del catálogo de edificios del Reino Unido. En el año 2000, la Oficina del Gabinete mudó sus oficinas al edificio, manteniendo su oficina central en Whitehall. También aloja a la Unidad de Estrategia del Primer Ministro y el Destacamento de Fuerzas de Exclusión Social."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Arco_del_Almirantazgo,_Londres,_Inglaterra,_2014-08-11,_DD_186.JPG?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Admiralty_Arch"
+            },
+            "dboabstract": {
+                "xml:lang": "fr",
+                "type": "literal",
+                "value": "L'Arche de l'Amirauté (en anglais «Admiralty Arch») est une arche monumentale située à Londres, à l'extrémité est du Mall qui va de Charing Cross et Trafalgar Square à Buckingham Palace, faisant partie de « the ceremonial route », l'itinéraire suivi lors des cérémonies protocolaires. Elle a été construite en 1911 à l'emplacement de jardins horticoles (« Spring Gardens »), sur les plans de Aston Webb, à l'instigation d'Édouard VII en mémoire de sa mère, la Reine Victoria. Cependant, Édouard mourra avant même de voir l'achèvement des travaux. L'inscription latine au-dessus du monument en témoigne : : ANNO : DECIMO : EDWARDI : SEPTIMI : REGIS : : VICTORIÆ : REGINÆ : CIVES : GRATISSIMI : MDCCCCX : (traduction : « En la dixième année du règne d'Édouard VII, à la reine Victoria, de la plupart de ses citoyens reconnaissants, 1910 ») Le monument est composé de trois porches, dont celui du centre est fermé en temps normal par une grille de fer forgé, car il est emprunté uniquement par le souverain britannique lors des cérémonies officielles. Les deux autres sont accessibles à la circulation automobile et piétonne. Ces porches sont encadrés de part et d'autre de deux bâtiments comprenant plusieurs bureaux, en général occupés par le Cabinet Office. L'Admiralty Arch est reliée au sud par un pont enjambant une allée de Spings Gardens, au Old Admiralty Building attenant, dont la façade principale est située sur Horse Guards Parade."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Arco_del_Almirantazgo,_Londres,_Inglaterra,_2014-08-11,_DD_186.JPG?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Admiralty_Arch"
+            },
+            "dboabstract": {
+                "xml:lang": "it",
+                "type": "literal",
+                "value": "Il template {{Coord}} ha riscontrato degli errori (istruzioni): Modulo:Wikidata:398: attempt to index field 'wikibase' (a nil value) L'Admiralty Arch è un edificio di Londra con tre grandi archi che permettono il collegamento tra il Mall e Trafalgar Square. Progettato da Sir Aston Webb, fu ultimato nel 1912. L'edificio fu fatto costruire dal re Edoardo VII in memoria di sua madre, la Regina Vittoria. Sopra i tre grandi archi c'è una grande iscrizione in latino scolpita nel marmo: : ANNO : DECIMO : EDWARDI : SEPTIMI : REGIS : : VICTORIÆ : REGINÆ : CIVES : GRATISSIMI : MDCCCCX : (Nel decimo anno del regno di Edoardo VII, alla Regina Vittoria, da parte dei suoi gratissimi cittadini, 1910) Una caratteristica singolare di questo edificio è \"il naso\". Sulla parete interna dell'arco più a nord (a sinistra per chi proviene dal Mall) c'è una sporgenza che assomiglia molto sia nella forma che nelle dimensioni ad un naso umano. Si trova ad un'altezza di circa 210 cm, corrispondente alla cintola di chi passa a cavallo attraverso gli archi. Non si hanno notizie certe sul perché ci sia, ma la tradizione vuole che sia stato fatto in onore del Duca di Wellington, che era noto per avere un grosso naso. I soldati dell'epoca erano soliti toccare il \"naso di Wellington\" come portafortuna mentre passavano a cavallo attraverso l'arco. L'arco centrale è normalmente chiuso per le porte di ferro, e è riservato per gli membri della famiglia reale britannica alle cerimonie. L'edificio ospitava diversi uffici governativi, mentre nel 2012 è stato ceduto con un leasing di 125 anni a privati per essere trasformato in un albergo di lusso."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Arco_del_Almirantazgo,_Londres,_Inglaterra,_2014-08-11,_DD_186.JPG?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Admiralty_Arch"
+            },
+            "dboabstract": {
+                "xml:lang": "nl",
+                "type": "literal",
+                "value": "Admiralty Arch is een gebouw in de Britse hoofdstad Londen. Het gebouw bevindt zich aan het einde van The Mall en heeft een onderdoorgang waardoor voetgangers naar Trafalgar Square kunnen lopen. Het poortgebouw is verbonden met het gebouw van de oude admiraliteit, vandaar de naam. Het werd gebouwd in opdracht van koning Eduard VII, die ermee de nagedachtenis van zijn moeder, koningin Victoria wilde eren. Dat blijkt ook uit de Latijnse inscriptie die op de gevel is aangebracht: ANNO DECIMO EDWARDI SEPTIMI REGIS VICTORIÆ REGINÆ CIVES GRATISSIMI MDCCCCX, hetgeen betekent: \"In het tiende jaar van de regering van Eduard VII, aan koningin Victoria door de dankbare bevolking, 1910\". Tijdens de begrafenis van prinses Diana was enige tijd onzeker of de lijkstoet niet te breed zou zijn om door de poort te kunnen rijden. Coördinaten 51° 30\u2032 24\u2033 NB, 00° 07\u2032 43\u2033 WL"
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Arco_del_Almirantazgo,_Londres,_Inglaterra,_2014-08-11,_DD_186.JPG?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Admiralty_Arch"
+            },
+            "dboabstract": {
+                "xml:lang": "ja",
+                "type": "literal",
+                "value": "アドミラルティ・アーチ(Admiralty Arch)はロンドンの歴史的建造物で、南西はザ・マル、北東はトラファルガー広場へつながる道にかかるアーチをもつ。アドミラルティ・アーチはグレードⅠの保存建築指定を受けており、かつては政府庁舎でもあったのだが、2012年に不動産開発会社プライム・インベスターズ・キャピタルへ125年の借地権付で売却されたため、高級ホテルとして再開発されることとなった。"
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Arco_del_Almirantazgo,_Londres,_Inglaterra,_2014-08-11,_DD_186.JPG?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Admiralty_Arch"
+            },
+            "dboabstract": {
+                "xml:lang": "pt",
+                "type": "literal",
+                "value": "O Admiralty Arch (inglês para Arco do Almirantado) é um grande edifício situado em Londres, no Reino Unido, que incorpora uma arcada fornecendo acesso de automóveis e pedestres entre o The Mall e a Trafalgar Square. Como grande parte das construções vizinhas, foi desenhado por Sir Aston Webb e construído pela John Mowlem & Co em 1912. É adjacente ao Old Admiralty Building, de onde provém seu nome. Está classificado como de I Grau dos Edifícios listados do Reino Unido. O edifício foi construído pelo Rei Eduardo VII do Reino Unido, em memória de sua mãe Rainha Vitória, embora ele não tenha vivido para ver a sua conclusão. A inscrição latina, na parte superior tem o seguinte teor: : ANNO : DECIMO : EDWARDI : SEPTIMI : REGIS : : VICTORIÆ : REGINÆ : CIVES : GRATISSIMI : MDCCCCX : (No décimo ano do Rei Eduardo VII, à Rainha Vitória, dos mais gratos cidadãos, 1910)"
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Arco_del_Almirantazgo,_Londres,_Inglaterra,_2014-08-11,_DD_186.JPG?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Admiralty_Arch"
+            },
+            "dboabstract": {
+                "xml:lang": "pl",
+                "type": "literal",
+                "value": "Admiralty Arch \u2013 duży biurowiec w Londynie, będący jednocześnie bramą zapewniającą dostęp drogowy i pieszy pomiędzy The Mall a Trafalgar Square. Został zaprojektowany przez Astona Webba w 1910 roku, a budowa została ukończona w 1912 roku. Nazwa pochodzi od znajdującego się w pobliżu Old Admiralty Building. Budynek powstał na polecenie króla Edwarda VII, pamięci jego matki królowej Wiktorii Hanowerskiej. Edward VII zmarł dwa lata przed ukończeniem budynku. Admiralty Arch jest budynkiem zabytkowym pierwszego stopnia. W 2011 roku w ramach programu oszczędnościowego brytyjskiego rządu, został wystawiony na sprzedaż. Pierwotna cena wynosiła 75 milionów funtów. Na górze znajdują się słowa po łacinie: \"ANNO : DECIMO : EDWARDI : SEPTIMI : REGIS : VICTORIÆ : REGINÆ : CIVES : GRATISSIMI : MDCCCCX\", co znaczy: \"W dziesiątym roku panowania króla Edwarda VII, królowej Wiktorii, od najwdzięczniejszych mieszkańców, 1910\""
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Arco_del_Almirantazgo,_Londres,_Inglaterra,_2014-08-11,_DD_186.JPG?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Admiralty_Arch"
+            },
+            "dboabstract": {
+                "xml:lang": "zh",
+                "type": "literal",
+                "value": "水师提督门（英語：Admiralty Arch）是英国伦敦的一座纪念性建筑物，建于1912年。水师提督门位于伦敦西敏市中心，连通特拉法加廣場和白金汉宫前的林荫路，因连接旧海军部（水师提督衙门）而得名，又稱作海軍部拱門。门楼在特拉法加广场的西南角，林荫路的东北端。 该建筑名为门，实为楼（参见新华门）。2012年以前在楼内办公的有内阁办公厅和首相策略处。 门楼左右为四层。中间部分下部是五道券门（三道车行，两道人行），上有一层。 水师提督门是按英王爱德华七世之命建造的，以纪念王母，维多利亚女王。门洞上方有拉丁语铭文： : ANNO : DECIMO : EDWARDI : SEPTIMI : REGIS : : VICTORIÆ : REGINÆ : CIVES : GRATISSIMI : MDCCCCX : 意即\u201c王爱德华七世十年：臣民感维多利亚女王之恩而立：1910\u201d。 水师提督门平时悬挂英国国旗，重要庆典场合（作为海军部建筑）悬挂海军旗\u2014\u2014白船旗。水师提督拱门是从特拉法加广场通往林荫路的仪仗入口，而林荫路本身则是白金汉宫前的仪仗路。因此，包括皇家婚礼、葬礼、加冕等重要场合中的銮驾队伍和其他重要庆典中的游行队伍（例如2012年奥运会和残奥会后的游行）都会从此门下通过。 2012年，作为政府紧缩开支的项目，水师提督门被租予西班牙地产商塞拉诺（西班牙语：Rafael Serrano），用于改造为豪华旅馆。租期为125年。"
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Arco_del_Almirantazgo,_Londres,_Inglaterra,_2014-08-11,_DD_186.JPG?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Admiralty_Arch"
+            },
+            "dboabstract": {
+                "xml:lang": "ru",
+                "type": "literal",
+                "value": "Арка Адмиралтейства (англ. Admiralty Arch) \u2014 трехарочная арка, расположенная в Лондоне. Арка соединяет Трафальгарскую площадь с Мэлл, которая идет через Сент-Джеймсский парк к Мемориалу Виктории и Букингемскому дворцу. Арка получила своё название от соседнего с ней здания Старого Адмиралтейства, с которым она соединена мостиком."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Arco_del_Almirantazgo,_Londres,_Inglaterra,_2014-08-11,_DD_186.JPG?width=300"
+            }
+        }
+    ]}
+}

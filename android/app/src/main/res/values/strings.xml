@@ -39,7 +39,7 @@
     <string name="excellent_rating">Excellent</string>
     <string name="rate_city">Rate \'%1$s\'</string>
     <string name="request_rate_city">Please give your feedback to the point of interest.</string>
-    <string name="request_write_comment">Please write your comment here ...</string>
+    <string name="request_write_comment">Please write your comment here …</string>
     <string name="successfully_rated_city">Rating was sent successfully!</string>
     <string name="category_place_of_worship">Place of Worship</string>
     <string name="category_building">Building</string>
@@ -50,14 +50,20 @@
     <string name="category_museum">Museum</string>
     <string name="category_attraction">Attraction</string>
     <string name="number_of_selected_items">%d selected</string>
+    <string name="register">Register</string>
+    <string name="name">Name</string>
+    <string name="error_server_not_available">The server is currently not available.</string>
+    <string name="error_not_signed_in">You have to be signed in to perform this action.</string>
+    <string name="error_not_found">Unfortunetly, object was not found.</string>
+    <string name="save">Save</string>
+    <string name="host_url">Host URL</string>
+    <string name="successfully_stored_settings">Settings successfully stored!</string>
     <string name="created_by">Created by %s</string>
     <string name="no_data_available">No data available.</string>
-    <string name="error_not_signed_in">You have to be signed in to perform this action.</string>
     <string name="create_trip">Create new Trip</string>
-    <string name="name">Name</string>
     <string name="public_trip">Public Trip</string>
-    <string name="save">Save</string>
     <string name="successfully_created_trip">Created trip successfully!</string>
     <string name="trip">Trip</string>
     <string name="swipe_to_update_stops">"Swipe down to update stops. "</string>
+    <string name="error_password_too_short">Password is too short. It must have at least 4 characters. </string>
 </resources>

@@ -1,15 +1,25 @@
 package org.travlyn.server.externalapi.access;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.jupiter.api.*;
+import org.travlyn.server.ApiTest;
 import org.travlyn.shared.model.api.Stop;
 
+import java.io.IOException;
+
 @Tag("unit")
-public class DBpediaStopRequestTest {
+public class DBpediaStopRequestTest extends ApiTest {
+
+    @Before
+    @BeforeEach
+    public void setUp() throws Exception {
+        enqueue("dbpedia-stop-response-admirality-arch.json");
+        DBpediaStopRequest.setBaseUrl(startServer());
+    }
 
     @Test
-    void getResult() throws QuotaLimitException{
+    public void getResult() throws QuotaLimitException{
         DBpediaStopRequest dbPediaStopRequest = new DBpediaStopRequest("Admiralty Arch");
         Stop stop = dbPediaStopRequest.getResult();
         Assertions.assertEquals("Admiralty Arch is a landmark building in London which incorporates an archway " +
@@ -21,5 +31,11 @@ public class DBpediaStopRequestTest {
                 "Capital, run by Rafael Serrano) for redevelopment into a luxury hotel, restaurant and apartments.", stop.getDescription());
         Assertions.assertEquals("http://commons.wikimedia.org/wiki/Special:FilePath/Arco_del_Almirantazgo,_Lond" +
                 "res,_Inglaterra,_2014-08-11,_DD_186.JPG?width=300", stop.getImage());
+    }
+
+    @After
+    @AfterEach
+    public void tearDown() throws IOException {
+        stopServer();
     }
 }

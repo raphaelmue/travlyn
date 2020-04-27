@@ -1,0 +1,73 @@
+{
+    "type": "FeatureCollection",
+    "bbox": [
+        8.400027,
+        49.000003,
+        8.419992,
+        49.019756
+    ],
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    8.404376,
+                    49.013484
+                ]
+            },
+            "properties": {
+                "osm_id": 316433983,
+                "osm_type": 2,
+                "distance": 476.35864667,
+                "category_ids": {
+                    "224": {
+                        "category_name": "castle",
+                        "category_group": "historic"
+                    }
+                },
+                "osm_tags": {
+                    "name": "Schloss Karlsruhe",
+                    "wheelchair": "yes"
+                }
+            }
+        }
+    ],
+    "information": {
+        "attribution": "openrouteservice.org | OpenStreetMap contributors",
+        "version": "0.1",
+        "timestamp": 1587652231,
+        "query": {
+            "request": "pois",
+            "geometry": {
+                "bbox": [
+                    [
+                        8.4,
+                        49.0
+                    ],
+                    [
+                        8.42,
+                        49.02
+                    ]
+                ],
+                "geojson": {
+                    "type": "Point",
+                    "coordinates": [
+                        8.4039514,
+                        49.0092097
+                    ]
+                },
+                "buffer": 2000
+            },
+            "filters": {
+                "category_group_ids": [
+                    620,
+                    130,
+                    220,
+                    330,
+                    260
+                ]
+            }
+        }
+    }
+}

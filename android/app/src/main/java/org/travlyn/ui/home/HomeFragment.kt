@@ -68,7 +68,9 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        this.cityApi = CityApi(application = activity as MainActivity)
+        if (context != null) {
+            this.cityApi = CityApi(application = context as MainActivity)
+        }
 
         Configuration.getInstance()
             .load(context, PreferenceManager.getDefaultSharedPreferences(context))
@@ -92,6 +94,11 @@ class HomeFragment : Fragment() {
         suggestions = LocalStorage(context!!).readObject("searchCitySuggestions")!!
 
         searchBarHome.attachNavigationDrawerToMenuButton((activity as MainActivity).findViewById(R.id.drawer_layout))
+        if (LocalStorage(context!!).contains("user")) {
+            searchBarHome.inflateOverflowMenu(R.menu.logout_menu)
+        } else {
+            searchBarHome.inflateOverflowMenu(R.menu.login_menu)
+        }
         searchBarHome.setOnQueryChangeListener { oldQuery, newQuery ->
             if (oldQuery != "" && newQuery == "") {
                 searchBarHome.clearSuggestions()
@@ -123,6 +130,9 @@ class HomeFragment : Fragment() {
             when (item?.itemId) {
                 R.id.menu_sign_in -> {
                     (activity as MainActivity).openLoginActivity()
+                }
+                R.id.menu_register -> {
+                    (activity as MainActivity).openRegisterActivity()
                 }
                 R.id.menu_logout -> {
                     (activity as MainActivity).handleLogout()

@@ -56,7 +56,7 @@ public class PersistenceConfiguration {
     }
 
     @Bean
-    public PlatformTransactionManager hibernateTransactionManager() {
+    public PlatformTransactionManager transactionManager() {
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();
         transactionManager.setDataSource(dataSource());
         transactionManager.setSessionFactory(sessionFactory().getObject());
