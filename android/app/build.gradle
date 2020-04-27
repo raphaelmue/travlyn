@@ -59,6 +59,7 @@ dependencies {
     implementation 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
     implementation 'com.github.arimorty:floatingsearchview:2.1.1'
     implementation 'org.osmdroid:osmdroid-android:6.1.5'
+    implementation 'com.github.MKergall:osmbonuspack:6.6.0'
     implementation 'com.github.andrefrsousa:SuperBottomSheet:1.5.0'
     implementation 'com.miguelcatalan:materialsearchview:1.4.0'
     implementation 'com.stepstone.apprating:app-rating:2.3.1'

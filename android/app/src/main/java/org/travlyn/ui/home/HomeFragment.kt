@@ -91,10 +91,10 @@ class HomeFragment : Fragment() {
             focusCurrentLocation()
         }
 
-        suggestions = LocalStorage(context!!).readObject("searchCitySuggestions")!!
+        suggestions = LocalStorage(requireContext()).readObject("searchCitySuggestions")!!
 
         searchBarHome.attachNavigationDrawerToMenuButton((activity as MainActivity).findViewById(R.id.drawer_layout))
-        if (LocalStorage(context!!).contains("user")) {
+        if (LocalStorage(requireContext()).contains("user")) {
             searchBarHome.inflateOverflowMenu(R.menu.logout_menu)
         } else {
             searchBarHome.inflateOverflowMenu(R.menu.login_menu)
@@ -103,7 +103,7 @@ class HomeFragment : Fragment() {
             if (oldQuery != "" && newQuery == "") {
                 searchBarHome.clearSuggestions()
             } else {
-                suggestions = LocalStorage(context!!).readObject("searchCitySuggestions")!!
+                suggestions = LocalStorage(requireContext()).readObject("searchCitySuggestions")!!
                 suggestions = suggestions.filter { f ->
                     f.toLowerCase(Locale.ROOT).contains(newQuery.toLowerCase(Locale.ROOT))
                 }.toMutableList()
@@ -170,10 +170,10 @@ class HomeFragment : Fragment() {
         searchBarHome.currentMenuItems.forEach { item ->
             when ((item as MenuItem).itemId) {
                 R.id.menu_sign_in -> {
-                    (item as MenuItem).isVisible = LocalStorage(context!!).contains("user")
+                    (item as MenuItem).isVisible = LocalStorage(requireContext()).contains("user")
                 }
                 R.id.menu_logout -> {
-                    (item as MenuItem).isVisible = !LocalStorage(context!!).contains("user")
+                    (item as MenuItem).isVisible = !LocalStorage(requireContext()).contains("user")
 
                 }
             }
@@ -189,7 +189,7 @@ class HomeFragment : Fragment() {
 
                 val sheet = CityInformationFragment.newInstance(city)
                 if (activity != null) {
-                    sheet.show(activity!!.supportFragmentManager, "CityInformationFragment")
+                    sheet.show(requireActivity().supportFragmentManager, "CityInformationFragment")
                 }
             } else {
                 withContext(Dispatchers.Main) {
@@ -205,13 +205,13 @@ class HomeFragment : Fragment() {
 
     private fun addCityToSuggestions(city: City) {
         val suggestions: MutableList<String>? =
-            LocalStorage(context!!).readObject("searchCitySuggestions")
+            LocalStorage(requireContext()).readObject("searchCitySuggestions")
         if (suggestions != null) {
             if (!suggestions.contains(city.name)) {
                 city.name?.let { suggestions.add(it) }
             }
         }
-        LocalStorage(context!!).writeObject("searchCitySuggestions", suggestions)
+        LocalStorage(requireContext()).writeObject("searchCitySuggestions", suggestions)
     }
 
     private suspend fun focusCityAndAddMarker(city: City) = withContext(Dispatchers.Main) {
@@ -219,7 +219,7 @@ class HomeFragment : Fragment() {
             mapView.overlay.clear()
             val cityLocation = GeoPoint(city.latitude, city.longitude)
             val startMarker = Marker(mapView)
-            startMarker.icon = context!!.getDrawable(R.drawable.ic_location_marker)
+            startMarker.icon = requireContext().getDrawable(R.drawable.ic_location_marker)
             startMarker.position = cityLocation
             startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             mapView.overlays.add(startMarker)
@@ -243,9 +243,9 @@ class HomeFragment : Fragment() {
     private fun setLocationListener() {
         if (context != null) {
             val locationManager: LocationManager =
-                context!!.getSystemService(LOCATION_SERVICE) as LocationManager
+                requireContext().getSystemService(LOCATION_SERVICE) as LocationManager
             if (checkSelfPermission(
-                    context!!,
+                    requireContext(),
                     Manifest.permission.ACCESS_FINE_LOCATION
                 ) == PermissionChecker.PERMISSION_GRANTED
             ) {

@@ -68,4 +68,6 @@
     <string name="navigation">Navigation</string>
     <string name="reorder_description">Reorder trips to reduce trip route</string>
     <string name="round_trip_description">Navigate back to start point after trip is finished</string>
+    <string name="confirm_cancel_navigation">Are you sure that you want to cancel the navigation?</string>
+    <string name="start">Start</string>
 </resources>
