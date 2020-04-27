@@ -38,15 +38,15 @@
 		
 	\section{Trip Execution} 
 	
-		Einen großen Teil der Applikation stellt die Ausführung der Trips dar. Diese beinhaltet die Navigation des Benutzers durch die Stadt entlang der einzelnen, zu diesem Trip gehörigen Stops. Wenn der Nutzer einen Stop erreicht hat, werden zusätzliche Informationen zu diesem Trip angezeigt. Sobald die Sehenswürdigkeit ausreichend besichtigt wurde, kann der Nutzer zum nächsten Stop navigieren. 
+		Einen großen Teil der Applikation stellt die Ausführung der Trips dar. Diese beinhaltet die Navigation des Benutzers durch die Stadt entlang der einzelnen, zu diesem Trip gehörigen Stops. Wenn der Nutzer einen Stop erreicht hat, werden zusätzliche Informationen zu diesem Stop angezeigt. Sobald die Sehenswürdigkeit nach dem Empfinden des Nutzers ausreichend besichtigt wurde, kann der Nutzer zum nächsten Stop navigieren. 
 		
 		Beim Starten dieser Navigation können zwei zusätzliche Parameter festgelegt werden: \lstinline|roundTrip| und \lstinline|reorderAllowed|. \textit{Travlyn} führt den Nutzer an seine Startposition zurück, wenn der erste Parameter auf \lstinline|true| gesetzt ist. Der zweite Parameter hingegen entscheidet, ob die Stops reorganisiert werden, sodass ein kürzerer Laufweg für den Nutzer entsteht. 
 		
-		Diese Reorganisierung der Stops entstammt aus der Menge der kombinatorischen Optimierungsproblemen und wird auch als \ac{TSP} bezeichnet. Dabei gilt es die kürzeste Strecke durch Rekombination der einzelnen Orte zu finden. Da dem Handlungsreisenden -- bzw. in diesem Fall dem Benutzer -- in jedem Schritt die Stops zur Auswahl stehen, welche noch nicht besucht wurden, existieren $(n - 1)!$ mögliche Touren, wobei $n$ die Anzahl der Orte -- bzw. Stops -- beschreibt. \acs{TSP} ist ein NP-schweres Problem, für welches unter der bisher unbewiesenen Annahme, dass die Komplexitätsklassen P und NP verschieden sind, kein Algorithmus existiert, der das Problem der kürzesten Rundreise in polynomieller Laufzeit lösen kann.
+		Diese Reorganisierung der Stops entstammt aus der Menge der kombinatorischen Optimierungsproblemen und wird auch als \ac{TSP} bezeichnet. Dabei gilt es die kürzeste Strecke durch Rekombination der einzelnen Orte zu finden. Da dem Handlungsreisenden -- bzw. in diesem Fall dem Benutzer -- in jedem Schritt die Stops zur Auswahl stehen, welche noch nicht besucht wurden, existieren $(n - 1)!$ mögliche Touren, wobei $n$ die Anzahl der Orte -- bzw. Stops -- beschreibt. \acs{TSP} ist ein NP-schweres Problem, für welches unter der bisher unbewiesenen Annahme, dass die Komplexitätsklassen P und NP verschieden sind, kein Algorithmus existiert, der das Problem der kürzesten Rundreise in polynomieller Laufzeit lösen kann. \cite{Applegate.2006}
 		
 		\subsection*{Simulated Annealing}
 		
-		Simulated Annealing bezeichnet ein heuristisches Approximationsverfahren, welches das Ziel hat, eine Näherungslösung für Optimierungsprobleme wie \acs{TSP} zu finden. Der Algorithmus von Simulated Annealing ist durch physikalische Überlegungen motiviert: Der langsame Abkühlungsprozess von Metallen nach dem Erhitzen sorgt dafür, dass die Atome ausreichend Zeit haben, sich zu ordnen und stabile Kristalle zu bilden. Der Zustand, der auf diese Weise erzeugt wird, liegt somit nahe am Optimum und ist energiearm. 
+		Simulated Annealing \cite{S.Kirkpatrick.1983} bezeichnet ein heuristisches Approximationsverfahren, welches das Ziel hat, eine Näherungslösung für Optimierungsprobleme wie \acs{TSP} zu finden. Der Algorithmus von Simulated Annealing ist durch physikalische Überlegungen motiviert: Der langsame Abkühlungsprozess von Metallen nach dem Erhitzen sorgt dafür, dass die Atome ausreichend Zeit haben, sich zu ordnen und stabile Kristalle zu bilden. Der Zustand, der auf diese Weise erzeugt wird, liegt somit nahe am Optimum und ist energiearm. 
 		
 		Wenn man das auf Optimierungsprobleme überträgt, entspricht die Temperatur $T$ der Wahrscheinlichkeit mit der sich ein Zwischenergebnis verschlechtern darf. So kann ein lokales Optimum wieder verlassen werden, was bei der lokalen Suche beispielsweise nicht möglich ist. Es werden also Verschlechterungen akzeptiert, da auf diese Weise die Wahrscheinlichkeit erhöht wird, ein besseres lokales Optimum und im besten Fall das globale Optimum zu erreichen. 
 		
@@ -59,7 +59,7 @@
 		Um nun festzustellen, ob eine Lösung $x_{2}$ besser oder schlechter als eine andere Lösung $x_{1}$ ist, lässt sich $\varDelta E$ bestimmen mit $\varDelta E = \left\| E\left(x_{2}\right) - E\left(x_{1}\right) \right\|$. 
 		
 		\begin{algorithm}
-			\caption{Simulated Annealing Algorithmus}
+			\caption{Simulated Annealing Algorithmus \cite{S.Kirkpatrick.1983}}
 			\label{alg:simulatedAnnealing}
 			\begin{algorithmic}
 				\State $T\gets T_{max}$
