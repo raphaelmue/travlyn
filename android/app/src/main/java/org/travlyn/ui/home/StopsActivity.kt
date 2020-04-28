@@ -25,14 +25,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.travlyn.R
 import org.travlyn.api.CityApi
+import org.travlyn.api.StopApi
 import org.travlyn.api.TripApi
 import org.travlyn.api.UserApi
-import org.travlyn.api.StopApi
-import org.travlyn.api.model.City
-import org.travlyn.api.model.Rating
-import org.travlyn.api.model.Stop
-import org.travlyn.api.model.Trip
-import org.travlyn.api.model.User
+import org.travlyn.api.model.*
 import org.travlyn.components.SelectionToolbar
 import org.travlyn.local.Application
 import org.travlyn.local.LocalStorage
@@ -348,14 +344,12 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
             }
 
             if (holder.stopListImageView.drawable == null) {
-                CoroutineScope(Dispatchers.IO).launch {
+                CoroutineScope(Dispatchers.Main).launch {
                     if (stop.image != null) {
-                        withContext(Dispatchers.Main) {
-                            val bitmap: Bitmap? = cityApi.getImage(stop.image)
-                            if (bitmap != null) {
-                                holder.stopListImageView.setImageBitmap(bitmap)
-                                holder.stopListProgressIndicator.visibility = View.GONE
-                            }
+                        val bitmap: Bitmap? = cityApi.getImage(stop.image)
+                        if (bitmap != null) {
+                            holder.stopListImageView.setImageBitmap(bitmap)
+                            holder.stopListProgressIndicator.visibility = View.GONE
                         }
                     }
                 }

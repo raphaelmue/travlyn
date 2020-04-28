@@ -71,4 +71,5 @@
     <string name="city">Stadt</string>
     <string name="time_unit">%d std %d min</string>
     <string name="skip">Überspringen</string>
+    <string name="continue_stop">Fortfahren</string>
 </resources>

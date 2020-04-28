@@ -15,7 +15,7 @@ public class ExecutionInfo extends AbstractDataTransferObject {
 
     @JsonProperty("steps")
     @ApiModelProperty(value = "Direction Steps", required = true)
-    private List<Step> steps = new ArrayList<Step>();
+    private List<Step> steps = new ArrayList<>();
 
     @JsonProperty("distance")
     @ApiModelProperty(value = "Total Distance in Km", required = true, example = "5.1")
@@ -27,7 +27,11 @@ public class ExecutionInfo extends AbstractDataTransferObject {
 
     @JsonProperty("waypoints")
     @ApiModelProperty(value = "Waypoints to show on map", required = true)
-    private List<Waypoint> waypoints= new ArrayList<Waypoint>();
+    private List<Waypoint> waypoints = new ArrayList<>();
+
+    @JsonProperty("stopIds")
+    @ApiModelProperty(value = "Order of stop IDs in which the trip will be executed", required = true)
+    private List<Integer> stopIds = new ArrayList<>();
 
     public int getTripId() {
         return tripId;
@@ -71,6 +75,15 @@ public class ExecutionInfo extends AbstractDataTransferObject {
 
     public ExecutionInfo setWaypoints(List<Waypoint> waypoints) {
         this.waypoints = waypoints;
+        return this;
+    }
+
+    public List<Integer> getStopIds() {
+        return stopIds;
+    }
+
+    public ExecutionInfo setStopIds(List<Integer> stopIds) {
+        this.stopIds = stopIds;
         return this;
     }
 

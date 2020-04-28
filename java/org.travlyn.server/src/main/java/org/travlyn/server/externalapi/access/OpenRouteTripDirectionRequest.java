@@ -29,8 +29,12 @@ public class OpenRouteTripDirectionRequest extends OpenRouteDirectionRequest {
     public ExecutionInfo getResult() {
         List<Pair<Double, Double>> wayPoints = new ArrayList<>();
         wayPoints.add(new Pair<>(startLon, startLat));
+        List<Integer> stopIds = new ArrayList<>();
         for (Stop stop : trip.getStops()) {
             wayPoints.add(new Pair<>(stop.getLongitude(), stop.getLatitude()));
+            if (stop.getId() > 0) {
+                stopIds.add(stop.getId());
+            }
         }
         if (roundTrip) {
             wayPoints.add(new Pair<>(startLon, startLat));
@@ -38,6 +42,7 @@ public class OpenRouteTripDirectionRequest extends OpenRouteDirectionRequest {
         JsonObject result = this.makeAPICall(wayPoints, lang);
         ExecutionInfo info = this.extractExecutionInfo(result);
         info.setTripId(trip.getId());
+        info.setStopIds(stopIds);
         return info;
     }
 }

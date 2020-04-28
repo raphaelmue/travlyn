@@ -2,15 +2,16 @@ package org.travlyn.ui.navigation
 
 import android.animation.ObjectAnimator
 import android.content.Context
+import android.graphics.Bitmap
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.util.DisplayMetrics
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.arlib.floatingsearchview.util.Util.getScreenWidth
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.coroutines.*
@@ -24,19 +25,19 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.Marker
 import org.travlyn.R
-import org.travlyn.api.model.ExecutionInfo
-import org.travlyn.api.model.Step
-import org.travlyn.api.model.Trip
-import org.travlyn.api.model.Waypoint
+import org.travlyn.api.CityApi
+import org.travlyn.api.model.*
+import org.travlyn.infrastructure.dpToPx
+import org.travlyn.local.Application
 import java.util.*
 import kotlin.math.*
 
-
-class NavigationActivity : AppCompatActivity() {
+class NavigationActivity : AppCompatActivity(), Application {
 
     // if distance between current location and way point is less than threshold, the way point is
     // marked as passed
-    private val wayPointThreshold = 10
+    private val wayPointThreshold = 20
+    private val stopThreshold = 50
 
     private val defaultVelocity = 5.0
 
@@ -46,17 +47,25 @@ class NavigationActivity : AppCompatActivity() {
     // current step that is shown
     private var currentStep = 0
 
+    private var currentStopIndex = -1
+    private lateinit var nextStop: Stop
+
     // way point with index 0 is start position
     private var currentWayPoint = 1
+
+    private var stopReached = false
 
     private lateinit var trip: Trip
     private lateinit var executionInfo: ExecutionInfo
     private val currentLocation: GeoPoint = GeoPoint(0.0, 0.0)
     private lateinit var locationMarker: Marker
+    private lateinit var cityApi: CityApi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navigation)
+
+        cityApi = CityApi(this)
 
         initStartNavigationButton()
         initMapView()
@@ -71,6 +80,8 @@ class NavigationActivity : AppCompatActivity() {
                     ExecutionInfo::class.java
                 )
 
+            updateNextStop()
+
             initTripInformation(trip, executionInfo)
 
             showRoute(executionInfo)
@@ -82,7 +93,7 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun startNavigationTimer() = CoroutineScope(Dispatchers.Default).launch {
-        while (currentStep < executionInfo.steps.size && currentWayPoint < executionInfo.waypoints.size) {
+        while (!stopReached && currentStep < executionInfo.steps.size && currentWayPoint < executionInfo.waypoints.size) {
             updateNavigation()
             delay(1000 / 10)
         }
@@ -94,6 +105,12 @@ class NavigationActivity : AppCompatActivity() {
         val step: Step = executionInfo.steps[currentStep]
         val wayPoint: Waypoint = executionInfo.waypoints[currentWayPoint]
 
+        val distanceToNextStop = distance(
+            currentLocation, GeoPoint(
+                nextStop.latitude!!,
+                nextStop.longitude!!
+            )
+        )
         val distanceToNextWayPoint = distance(
             currentLocation, GeoPoint(
                 wayPoint.latitude!!,
@@ -126,6 +143,11 @@ class NavigationActivity : AppCompatActivity() {
         // if the last way point of the step is reached
         if (currentWayPoint >= step.waypoints.last()) {
             currentStep++
+        }
+
+        // if stop is reached
+        if (distanceToNextStop < stopThreshold) {
+            stopReached()
         }
     }
 
@@ -211,18 +233,127 @@ class NavigationActivity : AppCompatActivity() {
         navigationMapView.invalidate()
     }
 
+    private suspend fun stopReached() {
+        this@NavigationActivity.stopReached = true
+        initStopInformationLayout(nextStop)
+        updateNextStop()
+
+        withContext(Dispatchers.Main) {
+
+            skipNextStopButton.visibility = View.GONE
+            continueToNextStopButton.visibility = View.VISIBLE
+
+            continueToNextStopButton.setOnClickListener {
+                this@NavigationActivity.stopReached = false
+                val outAnimation: ObjectAnimator =
+                    ObjectAnimator.ofFloat(
+                        navigationStopInformationLayout,
+                        "x",
+                        dpToPx(8).toFloat(),
+                        getScreenWidth(this@NavigationActivity).toFloat()
+                    )
+                outAnimation.duration = 500
+                outAnimation.interpolator = DecelerateInterpolator()
+                outAnimation.start()
+
+                continueToNextStopButton.visibility = View.GONE
+                skipNextStopButton.visibility = View.VISIBLE
+
+                startNavigationTimer()
+            }
+        }
+    }
+
+
+    private fun updateNextStop() {
+        currentStopIndex++
+        nextStop =
+            trip.stops!!.find { stop -> stop.id == executionInfo.stopIds[currentStopIndex] }!!
+    }
+
+    private suspend fun initStopInformationLayout(stop: Stop) = withContext(Dispatchers.Main) {
+        navigationStopInformationLayout.visibility = View.VISIBLE
+
+        val inAnimation: ObjectAnimator =
+            ObjectAnimator.ofFloat(
+                navigationStopInformationLayout,
+                "x",
+                -getScreenWidth(this@NavigationActivity).toFloat(),
+                dpToPx(8).toFloat()
+            )
+        inAnimation.duration = 500
+        inAnimation.interpolator = DecelerateInterpolator()
+        inAnimation.start()
+
+        val outAnimation: ObjectAnimator =
+            ObjectAnimator.ofFloat(
+                navigationHeaderLayout,
+                "x",
+                dpToPx(8).toFloat(),
+                getScreenWidth(this@NavigationActivity).toFloat()
+            )
+        outAnimation.duration = 500
+        outAnimation.interpolator = DecelerateInterpolator()
+        outAnimation.start()
+
+        navigationStopNameTextView.text = stop.name
+
+        CoroutineScope(Dispatchers.IO).launch {
+            if (stop.image != null) {
+                withContext(Dispatchers.Main) {
+                    val bitmap: Bitmap? = cityApi.getImage(stop.image)
+                    if (bitmap != null) {
+                        navigationStopThumbnailImageView.setImageBitmap(bitmap)
+                        navigationStopThumbnailProgressIndicator.visibility = View.GONE
+                    }
+                }
+            }
+        }
+
+        if (stop.averageRating == null || stop.averageRating <= 0) {
+            navigationStopRatingTextView.text = getString(R.string.no_value)
+        } else {
+            navigationStopRatingBar.rating = stop.averageRating.toFloat() * 5f
+            navigationStopRatingTextView.text =
+                getString(R.string.rating_value, stop.averageRating * 5f)
+        }
+
+        navigationStopDescriptionTextView.text = stop.description
+
+        val stringIdentifier = resources.getIdentifier(
+            "category_" + stop.category?.name, "string", packageName
+        )
+        navigationStopCategoryTextView.text =
+            if (stringIdentifier > 0) getString(stringIdentifier) else stop.category?.name
+
+
+        if (stop.timeEffort == null || stop.timeEffort <= 0) {
+            navigationStopTimeEffortTextView.text = getString(R.string.no_value)
+        } else {
+            navigationStopTimeEffortTextView.text =
+                getString(R.string.hours_unit, stop.timeEffort.toString())
+        }
+
+        if (stop.pricing == null || stop.pricing <= 0) {
+            navigationStopPricingTextView.text = getString(R.string.no_value)
+        } else {
+            navigationStopPricingTextView.text = stop.pricing.toString()
+        }
+    }
+
     private fun initStartNavigationButton() {
         startNavigationButton.setOnClickListener {
             startNavigationButton.visibility = View.GONE
             skipNextStopButton.visibility = View.GONE
             navigationHeaderLayout.visibility = View.VISIBLE
 
-            val displayMetrics = DisplayMetrics()
-            windowManager.defaultDisplay.getMetrics(displayMetrics)
-            val width = displayMetrics.widthPixels
-
             val outAnimation: ObjectAnimator =
-                ObjectAnimator.ofFloat(navigationHeaderLayout, "x", -width.toFloat(), 16f)
+                ObjectAnimator.ofFloat(
+                    navigationHeaderLayout,
+                    "x",
+                    -getScreenWidth(this@NavigationActivity).toFloat(),
+                    dpToPx(8).toFloat()
+                )
             outAnimation.duration = 500
             outAnimation.interpolator = DecelerateInterpolator()
             outAnimation.start()
@@ -231,8 +362,8 @@ class NavigationActivity : AppCompatActivity() {
                 ObjectAnimator.ofFloat(
                     navigationHeaderTripInformationLayout,
                     "x",
-                    16f,
-                    width.toFloat()
+                    dpToPx(8).toFloat(),
+                    getScreenWidth(this@NavigationActivity).toFloat()
                 )
             inAnimation.duration = 500
             inAnimation.interpolator = DecelerateInterpolator()
@@ -281,5 +412,9 @@ class NavigationActivity : AppCompatActivity() {
 
         locationMarker.position = currentLocation
         locationMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+    }
+
+    override fun getContext(): Context {
+        return this
     }
 }
