@@ -7,6 +7,7 @@ import org.travlyn.server.util.Pair;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -106,9 +107,11 @@ public class WikimediaRequest {
             return null;
         }
         innerContent = gson.fromJson(result, JsonObject.class).getAsJsonObject("query").getAsJsonObject("pages");
-        for (Map.Entry<String, JsonElement> entry : innerContent.entrySet()) {
-            return entry.getValue().getAsJsonObject().getAsJsonArray("imageinfo").get(0).getAsJsonObject().get("url").toString().replace("\"", "");
+        Iterator<Map.Entry<String, JsonElement>> iterator = innerContent.entrySet().iterator();
+
+        if (!iterator.hasNext()){
+            return null;
         }
-        return null;
+        return iterator.next().getValue().getAsJsonObject().getAsJsonArray("imageinfo").get(0).getAsJsonObject().get("url").toString().replace("\"", "");
     }
 }

@@ -196,7 +196,7 @@ public class TravlynService {
      * @return generated Token DTO
      */
     @Transactional
-    Token generateToken(UserEntity user, String ipAddress) {
+    public Token generateToken(UserEntity user, String ipAddress) {
         logger.info("Generating token for user {} (id: {}).", user.getName(), user.getId());
 
         Session session = sessionFactory.getCurrentSession();
@@ -334,7 +334,7 @@ public class TravlynService {
     }
 
     @Transactional
-    protected Set<StopEntity> fetchNumberOfStops(Set<StopEntity> entities) {
+    public Set<StopEntity> fetchNumberOfStops(Set<StopEntity> entities) {
         Session session = sessionFactory.getCurrentSession();
         int requestCount = 2;
         Iterator<StopEntity> stopEntityIterator = entities.iterator();
@@ -581,7 +581,6 @@ public class TravlynService {
     @Transactional
     public ExecutionInfo getExecutionInfo(Long tripId, Long userId, double lat, double lon, boolean reorder, boolean isRoundtrip, String lang) throws NoResultException {
         Session session = sessionFactory.getCurrentSession();
-        reorder = false;
         TripEntity trip = session.createQuery("from TripEntity where id = :id", TripEntity.class)
                 .setParameter("id", toIntExact(tripId))
                 .getSingleResult();
