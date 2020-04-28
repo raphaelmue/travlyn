@@ -178,10 +178,11 @@ public class TravlynService {
                 //get Stops for city
                 CityEntity entity;
                 entity = this.getStopsForCity(result);
+                session.persist(entity);
                 City returnValue = this.removeUnfetchedStops(entity.toDataTransferObject());
                 entity.setUnfetchedStops(returnValue.isUnfetchedStops());
                 // valid city was found --> cache result
-                session.persist(entity);
+                session.update(entity);
                 return returnValue;
             }
         }
@@ -402,6 +403,74 @@ public class TravlynService {
         return true;
     }
 
+    /**
+     * Adds a new pricing suggestion to a Stop.
+     * @param stopId Id of Stop that should be updated
+     * @param pricing Suggested pricing value
+     * @return Updated Stop DTO
+     * @throws NoResultException If passed Stop Id is not associated with a Stop
+     * @throws ValueException If suggested pricing value is invalid
+     */
+    @Transactional
+    public Stop addPricingToStop(int stopId, double pricing) throws NoResultException {
+        Session session = sessionFactory.getCurrentSession();
+
+        if (pricing < 0) {
+            throw new ValueException("Pricing can not be negative!");
+        }
+
+        StopEntity stopEntity = session.createQuery("from StopEntity where id = :stopId", StopEntity.class)
+                .setParameter("stopId", stopId)
+                .getSingleResult();
+        double oldPricing = stopEntity.getPricing();
+        int numberOfCommitments = stopEntity.getNumberOfPricingCommitments();
+
+        if (numberOfCommitments == 0) {
+            //pricing initial
+            stopEntity.setPricing(pricing);
+        } else {
+            //calc avg and set;
+            stopEntity.setPricing((1.0 / (numberOfCommitments + 1)) * ((numberOfCommitments * oldPricing) + pricing));
+        }
+        stopEntity.setNumberOfPricingCommitments(numberOfCommitments + 1);
+        session.merge(stopEntity);
+        return stopEntity.toDataTransferObject();
+    }
+
+    /**
+     * Adds a new time effort suggestion to a Stop.
+     * @param stopId Id of Stop that should be updated
+     * @param timeEffort Suggested time effort
+     * @return Updated Stop DTO
+     * @throws NoResultException If passed Stop Id is not associated with a Stop
+     * @throws ValueException If suggested time effort value is invalid
+     */
+    @Transactional
+    public Stop addTimeEffortToStop(int stopId, double timeEffort) throws NoResultException {
+        Session session = sessionFactory.getCurrentSession();
+
+        if (timeEffort < 0 || timeEffort > 32) {
+            throw new ValueException("Time effort is invalid");
+        }
+
+        StopEntity stopEntity = session.createQuery("from StopEntity where id = :stopId", StopEntity.class)
+                .setParameter("stopId", stopId)
+                .getSingleResult();
+        double oldTimeEffort = stopEntity.getTimeEffort();
+        int numberOfCommitments = stopEntity.getNumberOfTimeEffortCommitments();
+
+        if ( numberOfCommitments == 0) {
+            //time effort initial
+            stopEntity.setTimeEffort(timeEffort);
+        } else {
+            //calc avg and set;
+            stopEntity.setTimeEffort((1.0 / (numberOfCommitments+1)) * ((numberOfCommitments * oldTimeEffort) + timeEffort));
+        }
+        stopEntity.setNumberOfTimeEffortCommitments(numberOfCommitments + 1);
+        session.merge(stopEntity);
+        return stopEntity.toDataTransferObject();
+    }
+
     @Transactional
     public List<Trip> getTripsForCity(Long cityId) throws NoResultException {
         Session session = sessionFactory.getCurrentSession();
@@ -472,6 +541,41 @@ public class TravlynService {
             }
         }
         return trips;
+    }
+
+    @Transactional
+    public boolean addRatingToTrip(int tripId, Rating rating) throws IllegalAccessError{
+        Session session = sessionFactory.getCurrentSession();
+        TripEntity trip = session.get(TripEntity.class,tripId);
+        if(trip == null){
+            throw new NoResultException();
+        }
+        Optional<UserEntity> user = this.getAuthenticatedUser();
+
+        if (trip.isPrivate() && (user.isEmpty() || trip.getUser().getId() != user.get().getId())){
+            throw  new IllegalAccessError();
+        }
+
+        Set<TripRatingEntity> ratingEntities = trip.getRatings();
+        TripRatingEntity tripRating = rating.toTripEntity(trip);
+        session.save(tripRating);
+
+        if (ratingEntities.isEmpty()) {
+            // new rating is equal to average rating when the list of ratings is empty
+            trip.setAverageRating(tripRating.getRating());
+        } else {
+            // calculate new average rating including the new rating
+            int numberOfRatings = ratingEntities.size();
+            trip.setAverageRating((numberOfRatings * trip.getAverageRating() + tripRating.getRating()) /
+                    (numberOfRatings + 1));
+        }
+
+        ratingEntities.add(tripRating);
+        trip.setRatings(ratingEntities);
+
+        session.merge(trip);
+        return true;
+
     }
 
     @Transactional
