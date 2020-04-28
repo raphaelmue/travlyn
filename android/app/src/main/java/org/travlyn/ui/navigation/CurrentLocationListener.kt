@@ -44,7 +44,7 @@ suspend fun LocationManager.awaitLocation(context: Context): Location =
         requestLocationUpdates(
             LocationManager.GPS_PROVIDER, 5000, 10f, object : CurrentLocationListener() {
                 override fun onLocationChanged(location: Location?) {
-                    if (location != null) {
+                    if (location != null && continuation.isActive) {
                         continuation.resume(location)
                     }
                 }

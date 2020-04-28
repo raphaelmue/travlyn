@@ -32,6 +32,7 @@ open class ApiClient(
             "https://travlyn.raphael-muesseler.de/travlyn/travlyn/1.0.0/"
 
         protected const val ContentType = "Content-Type"
+        protected const val AcceptLanguage = "Accept-Language"
         protected const val Accept = "Accept"
         protected const val JsonMediaType = "application/json"
         protected const val FormDataMediaType = "multipart/form-data"
@@ -152,6 +153,10 @@ open class ApiClient(
         }
 
         headers.forEach { header -> request = request.addHeader(header.key, header.value) }
+        request.addHeader(
+            AcceptLanguage,
+            application.getContext().resources.configuration.locale.language
+        )
         val localStorage = LocalStorage(application.getContext())
         if (localStorage.contains("user")) {
             request.addHeader(

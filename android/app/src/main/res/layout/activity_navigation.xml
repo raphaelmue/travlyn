@@ -37,9 +37,10 @@
                 android:tint="@color/white" />
 
             <TextView
+                android:id="@+id/navigationInstructionDistanceTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/format_distance_meters"
+                android:text="@string/distance_unit_meters"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                 android:textColor="@color/white" />
@@ -53,6 +54,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/navigationInstructionTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/navigation"
@@ -72,8 +74,8 @@
         android:backgroundTint="@color/white"
         android:elevation="10dp"
         android:orientation="vertical"
-        android:paddingVertical="8dp"
-        android:paddingHorizontal="16dp">
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp">
 
         <TextView
             android:id="@+id/navigationTripInformationNameTextView"
@@ -190,12 +192,12 @@
         <Button
             android:id="@+id/skipNextStopButton"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:animateLayoutChanges="true"
             android:text="@string/skip"
+            android:visibility="gone"
             app:icon="@drawable/ic_navigation_tilt"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
