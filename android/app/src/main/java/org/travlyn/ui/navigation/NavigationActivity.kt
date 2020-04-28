@@ -1,11 +1,13 @@
 package org.travlyn.ui.navigation
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
@@ -41,22 +43,23 @@ class NavigationActivity : AppCompatActivity() {
         initMapView()
         initCancelButton()
 
-        window.decorView.rootView.viewTreeObserver.addOnGlobalLayoutListener {
-            val bundle = intent.extras
-            if (bundle != null && bundle.containsKey("trip")) {
-                val trip: Trip = Gson().fromJson(bundle.getString("trip"), Trip::class.java)
-                val executionInfo =
-                    Gson().fromJson(
-                        bundle.getString("executionInfo"),
-                        ExecutionInfo::class.java
-                    )
+        val bundle = intent.extras
+        if (bundle != null && bundle.containsKey("trip")) {
+            val trip: Trip = Gson().fromJson(bundle.getString("trip"), Trip::class.java)
+            val executionInfo =
+                Gson().fromJson(
+                    bundle.getString("executionInfo"),
+                    ExecutionInfo::class.java
+                )
 
+            showRoute(executionInfo)
+            showStops(trip)
+            CoroutineScope(Dispatchers.Main).launch {
                 updateCurrentLocation()
-                showRoute(executionInfo)
-                showStops(trip)
             }
         }
     }
+
 
     private fun showStops(trip: Trip) {
         for (stop in trip.stops!!) {
@@ -86,7 +89,8 @@ class NavigationActivity : AppCompatActivity() {
                 10f
             )
         )
-        navigationMapView.zoomToBoundingBox(BoundingBox.fromGeoPointsSafe(wayPoints), false, 64)
+        val boundingBox = BoundingBox.fromGeoPoints(wayPoints)
+        navigationMapView.focusBoundingBox(boundingBox, borderSize = 64)
         navigationMapView.invalidate()
     }
 
@@ -94,10 +98,14 @@ class NavigationActivity : AppCompatActivity() {
         startNavigationButton.setOnClickListener {
             startNavigationButton.visibility = View.GONE
             navigationHeaderLayout.visibility = View.VISIBLE
-            updateCurrentLocation()
-            navigationMapView.controller.setZoom(18.0)
-            navigationMapView.controller.setCenter(currentGeoPoint)
-            navigationMapView.invalidate()
+            val animation: ObjectAnimator =
+                ObjectAnimator.ofFloat(navigationHeaderLayout, "y", -150f, 16f)
+            animation.duration = 300
+            animation.interpolator = DecelerateInterpolator()
+            animation.start()
+
+            navigationMapView.controller.zoomTo(19.0)
+            navigationMapView.controller.animateTo(currentGeoPoint)
         }
     }
 
@@ -128,7 +136,7 @@ class NavigationActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateCurrentLocation() = CoroutineScope(Dispatchers.Main).launch {
+    private suspend fun updateCurrentLocation() {
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val location: Location = locationManager.fetchLocation(this@NavigationActivity)
 
