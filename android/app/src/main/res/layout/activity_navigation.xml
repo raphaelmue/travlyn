@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/dark_gray"
     tools:context=".ui.navigation.NavigationActivity">
 
     <org.osmdroid.views.MapView
@@ -17,10 +18,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:background="@drawable/navigation_header_background"
+        android:elevation="10dp"
         android:orientation="horizontal"
         android:padding="8dp"
-        android:elevation="10dp"
-        android:visibility="invisible">
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -62,13 +63,76 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/navigationHeaderTripInformationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@drawable/navigation_header_background"
+        android:backgroundTint="@color/white"
+        android:elevation="10dp"
+        android:orientation="vertical"
+        android:paddingVertical="8dp"
+        android:paddingHorizontal="16dp">
+
+        <TextView
+            android:id="@+id/navigationTripInformationNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_lock"
+            android:drawablePadding="8dp"
+            android:text="@string/trips"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/navigationTripInformationCityTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/city"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/pipe_operator"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+
+            <TextView
+                android:id="@+id/navigationTripInformationCreatedByTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/created_by"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/navigationTripInformationNumberOfStopsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:drawableStart="@drawable/ic_location_marker"
+            android:drawablePadding="8dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+
+    </LinearLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@drawable/rounded_corners_bottom"
-        android:orientation="horizontal"
         android:elevation="10dp"
+        android:orientation="horizontal"
         android:padding="16dp">
 
         <Button
@@ -93,6 +157,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
+                android:id="@+id/navigationRemainingTimeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/navigation"
@@ -101,6 +166,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/navigationRemainingDistanceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/navigation"
@@ -116,6 +182,20 @@
             android:layout_gravity="end"
             android:animateLayoutChanges="true"
             android:text="@string/start"
+            app:icon="@drawable/ic_navigation_tilt"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/skipNextStopButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:animateLayoutChanges="true"
+            android:text="@string/skip"
             app:icon="@drawable/ic_navigation_tilt"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

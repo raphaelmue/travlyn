@@ -6,6 +6,7 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.DisplayMetrics
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.app.AlertDialog
@@ -52,6 +53,8 @@ class NavigationActivity : AppCompatActivity() {
                     ExecutionInfo::class.java
                 )
 
+            initTripInformation(trip, executionInfo)
+
             showRoute(executionInfo)
             showStops(trip)
             CoroutineScope(Dispatchers.Main).launch {
@@ -60,6 +63,32 @@ class NavigationActivity : AppCompatActivity() {
         }
     }
 
+    private fun initTripInformation(trip: Trip, executionInfo: ExecutionInfo) {
+        navigationTripInformationNameTextView.text = trip.name
+        if (!trip.private!!) {
+            navigationTripInformationNameTextView.setCompoundDrawablesWithIntrinsicBounds(
+                0, 0, 0, 0
+            )
+        }
+
+        if (trip.city != null) {
+            navigationTripInformationCityTextView.text = trip.city.name
+        }
+
+        if (trip.user != null) {
+            navigationTripInformationCreatedByTextView.text = trip.user.name
+        }
+
+        if (trip.stops != null) {
+            navigationTripInformationNumberOfStopsTextView.text = trip.stops!!.size.toString()
+        }
+
+        val hours: Int = (executionInfo.duration!! / 60.0).toInt()
+        val minutes: Int = (executionInfo.duration % 60.0).toInt()
+        navigationRemainingTimeTextView.text = getString(R.string.time_unit, hours, minutes)
+        navigationRemainingDistanceTextView.text =
+            getString(R.string.distance_unit, executionInfo.distance)
+    }
 
     private fun showStops(trip: Trip) {
         for (stop in trip.stops!!) {
@@ -97,12 +126,29 @@ class NavigationActivity : AppCompatActivity() {
     private fun initStartNavigationButton() {
         startNavigationButton.setOnClickListener {
             startNavigationButton.visibility = View.GONE
+            skipNextStopButton.visibility = View.GONE
             navigationHeaderLayout.visibility = View.VISIBLE
-            val animation: ObjectAnimator =
-                ObjectAnimator.ofFloat(navigationHeaderLayout, "y", -150f, 16f)
-            animation.duration = 300
-            animation.interpolator = DecelerateInterpolator()
-            animation.start()
+
+            val displayMetrics = DisplayMetrics()
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
+            val width = displayMetrics.widthPixels
+
+            val outAnimation: ObjectAnimator =
+                ObjectAnimator.ofFloat(navigationHeaderLayout, "x", -width.toFloat(), 16f)
+            outAnimation.duration = 500
+            outAnimation.interpolator = DecelerateInterpolator()
+            outAnimation.start()
+
+            val inAnimation: ObjectAnimator =
+                ObjectAnimator.ofFloat(
+                    navigationHeaderTripInformationLayout,
+                    "x",
+                    16f,
+                    width.toFloat()
+                )
+            inAnimation.duration = 500
+            inAnimation.interpolator = DecelerateInterpolator()
+            inAnimation.start()
 
             navigationMapView.controller.zoomTo(19.0)
             navigationMapView.controller.animateTo(currentGeoPoint)

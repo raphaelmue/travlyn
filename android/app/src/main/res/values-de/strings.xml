@@ -68,4 +68,7 @@
     <string name="round_trip_description">Nach Beendigung der Reise zurück zum Startpunkt navigieren</string>
     <string name="confirm_cancel_navigation">Bist du sicher, dass du die Navigation beenden möchten?</string>
     <string name="start">Starten</string>
+    <string name="city">Stadt</string>
+    <string name="time_unit">%d std %d min</string>
+    <string name="skip">Überspringen</string>
 </resources>
