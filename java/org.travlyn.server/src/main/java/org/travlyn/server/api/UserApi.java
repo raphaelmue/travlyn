@@ -2,7 +2,6 @@ package org.travlyn.server.api;
 
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.travlyn.shared.model.api.Trip;
 import org.travlyn.shared.model.api.User;
@@ -11,8 +10,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
-
-import static org.travlyn.server.configuration.AuthenticationTokenFilter.REGISTERED_USER_ROLE;
 
 @Api(value = "user")
 public interface UserApi {

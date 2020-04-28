@@ -35,6 +35,7 @@ public class TravlynService {
     public static final int FETCHABLESTOPS = 100;
 
     public TravlynService() {
+        //emtpy controller is needed for autowirering this service in other components
     }
 
     /**

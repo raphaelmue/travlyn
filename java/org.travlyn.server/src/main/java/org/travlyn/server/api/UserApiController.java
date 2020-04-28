@@ -1,8 +1,5 @@
 package org.travlyn.server.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,28 +13,25 @@ import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
 import java.util.List;
 
 @Controller
 public class UserApiController implements UserApi {
-
-    private static final Logger log = LoggerFactory.getLogger(UserApiController.class);
-    private final ObjectMapper objectMapper;
+    private final static String ACCEPT_HEADER = "Accept";
+    private final static String JSON_TYPE = "application/json";
     private final HttpServletRequest request;
 
     @Autowired
     private TravlynService travlynService;
 
     @Autowired
-    public UserApiController(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
+    public UserApiController(HttpServletRequest request) {
         this.request = request;
     }
 
     public ResponseEntity<List<Trip>> getTripsByUserId(@PathVariable("userId") Long userId) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
+        String accept = request.getHeader(ACCEPT_HEADER);
+        if (accept != null && accept.contains(JSON_TYPE)) {
             try {
                 List<Trip> result = travlynService.getTripsPerUser(userId);
                 return new ResponseEntity<>(result, HttpStatus.OK);
@@ -50,8 +44,8 @@ public class UserApiController implements UserApi {
     }
 
     public ResponseEntity<User> loginUser(@NotNull @Valid String email, @NotNull @Valid String password) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
+        String accept = request.getHeader(ACCEPT_HEADER);
+        if (accept != null && accept.contains(JSON_TYPE)) {
             return new ResponseEntity<>(travlynService.checkCredentials(email, password, request.getRemoteAddr()), HttpStatus.OK);
         }
 
@@ -59,8 +53,8 @@ public class UserApiController implements UserApi {
     }
 
     public ResponseEntity<Void> logoutUser(@NotNull @Valid User user) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
+        String accept = request.getHeader(ACCEPT_HEADER);
+        if (accept != null && accept.contains(JSON_TYPE)) {
             travlynService.logoutUser(user);
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
@@ -68,8 +62,8 @@ public class UserApiController implements UserApi {
     }
 
     public ResponseEntity<User> registerUser(@NotNull @Valid String email, @NotNull @Valid String name, @NotNull @Valid String password) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
+        String accept = request.getHeader(ACCEPT_HEADER);
+        if (accept != null && accept.contains(JSON_TYPE)) {
             return new ResponseEntity<>(travlynService.registerUser(email, name, password, request.getRemoteAddr()),
                     HttpStatus.OK);
         }
@@ -78,7 +72,6 @@ public class UserApiController implements UserApi {
     }
 
     public ResponseEntity<Void> updateUser(@NotNull @Valid User user) {
-        String accept = request.getHeader("Accept");
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 }

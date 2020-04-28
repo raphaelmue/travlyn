@@ -1,8 +1,5 @@
 package org.travlyn.server.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,30 +14,27 @@ import org.travlyn.shared.model.api.Stop;
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Controller
 @Validated
 public class StopApiController implements StopApi {
-
-    private static final Logger log = LoggerFactory.getLogger(StopApiController.class);
-    private final ObjectMapper objectMapper;
+    private final static String ACCEPT_HEADER = "Accept";
+    private final static String JSON_TYPE = "application/json";
     private final HttpServletRequest request;
 
     @Autowired
     private TravlynService travlynService;
 
     @Autowired
-    public StopApiController(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
+    public StopApiController(HttpServletRequest request) {
         this.request = request;
     }
 
     @Override
     public ResponseEntity<Void> rateStop(@PathVariable("stopId") int stopId, @NotNull @Valid Rating rating) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
+        String accept = request.getHeader(ACCEPT_HEADER);
+        if (accept != null && accept.contains(JSON_TYPE)) {
             if (this.travlynService.addRatingToStop(stopId, rating)) {
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {
@@ -53,8 +47,8 @@ public class StopApiController implements StopApi {
 
     @Override
     public ResponseEntity<Stop> addPricingStop(@PathVariable("stopId") int stopId, double pricing) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
+        String accept = request.getHeader(ACCEPT_HEADER);
+        if (accept != null && accept.contains(JSON_TYPE)) {
             Stop stop;
             try {
                 stop = this.travlynService.addPricingToStop(stopId, pricing);
@@ -74,8 +68,8 @@ public class StopApiController implements StopApi {
 
     @Override
     public ResponseEntity<Stop> addTimeEffortStop(@PathVariable("stopId") int stopId, double timeEffort) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
+        String accept = request.getHeader(ACCEPT_HEADER);
+        if (accept != null && accept.contains(JSON_TYPE)) {
             Stop stop;
             try {
                 stop = this.travlynService.addTimeEffortToStop(stopId, timeEffort);
@@ -95,8 +89,8 @@ public class StopApiController implements StopApi {
 
     @Override
     public ResponseEntity<Stop> stopStopIdGet(@PathVariable("stopId") Long stopId) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
+        String accept = request.getHeader(ACCEPT_HEADER);
+        if (accept != null && accept.contains(JSON_TYPE)) {
             Stop result = travlynService.getStopById(stopId);
             if (result != null) {
                 return new ResponseEntity<>(result, HttpStatus.OK);

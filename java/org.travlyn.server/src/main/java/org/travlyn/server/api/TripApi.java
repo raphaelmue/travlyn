@@ -2,7 +2,6 @@ package org.travlyn.server.api;
 
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.travlyn.shared.model.api.ExecutionInfo;
 import org.travlyn.shared.model.api.Rating;
@@ -12,8 +11,6 @@ import org.travlyn.shared.model.api.Trip;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-
-import static org.travlyn.server.configuration.AuthenticationTokenFilter.REGISTERED_USER_ROLE;
 
 @Api(value = "trip")
 public interface TripApi {
