@@ -14,6 +14,10 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.travlyn.shared.model.api.*;
+import org.travlyn.server.ApiTest;
+import org.travlyn.server.externalapi.access.DBpediaCityRequest;
+import org.travlyn.server.externalapi.access.DBpediaStopRequest;
+import org.travlyn.server.externalapi.access.OpenRoutePOIRequest;
 import org.travlyn.shared.model.db.*;
 
 import javax.persistence.NoResultException;
@@ -30,7 +34,7 @@ import static org.mockito.Mockito.when;
 @Tag("unit")
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TravlynServiceTest {
+public class TravlynServiceTest extends ApiTest {
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -138,22 +142,32 @@ public class TravlynServiceTest {
 
     @Test
     @Transactional
-    public void testGetCityWithInformation() {
+    public void testGetCityWithInformation() throws Exception {
+        enqueue("dbpedia-response-karlsruhe.json");
+        enqueue("openroute-response-karlsruhe.json");
+        for (int i = 0; i < 8; i++) enqueue("openroute-response-karlsruhe-empty.json");
+        enqueue("dbpedia-response-karlsruhe_palace.json");
+        enqueue("dbpedia-response-empty.json");
+
+        final String url = startServer();
+        DBpediaCityRequest.setBaseUrl(url);
+        OpenRoutePOIRequest.setBaseUrl(url);
+        DBpediaStopRequest.setBaseUrl(url);
+
         //valid search term
-        City cityToAssert = service.getCityWithInformation("Poole");
+        City cityToAssert = service.getCityWithInformation("Karlsruhe");
         Assertions.assertNotNull(cityToAssert);
-        Assertions.assertEquals("Poole /puːl/ is a large coastal town and seaport in the county of Dorset, on the south coast of England. The town is 33 kilometres (21 mi) east of Dorchester, and adjoins Bournemouth to the east. The local council is Borough of Poole and was made a unitary authority in 1997, gaining administrative independence from Dorset County Council. The borough had a population of 147,645 at the 2011 census, making it the second largest in Dorset. Together with Bournemouth and Christchurch, the town forms the South East Dorset conurbation with a total population of over 465,000. Human settlement in the area dates back to before the Iron Age. The earliest recorded use of the town's name was in the 12th century when the town began to emerge as an important port, prospering with the introduction of the wool trade. In later centuries, the town had important trade links with North America and at its peak in the 18th century it was one of the busiest ports in Britain. In the Second World War, the town was one of the main departing points for the Normandy landings. Poole is a tourist resort, attracting visitors with its large natural harbour, history, the Lighthouse arts centre and Blue Flag beaches. The town has a busy commercial port with cross-Channel freight and passenger ferry services. The headquarters of the Royal National Lifeboat Institution (RNLI) are in Poole, and the Royal Marines have a base in the town's harbour. Despite their names, Poole is the home of The Arts University Bournemouth, the Bournemouth Symphony Orchestra and a significant part of Bournemouth University.", cityToAssert.getDescription());
-        Assertions.assertEquals("http://commons.wikimedia.org/wiki/Special:FilePath/Poole_port.jpg?width=300", cityToAssert.getImage());
+        Assertions.assertFalse(cityEntity.isUnfetchedStops());
 
         //test if caching is working
         Session session = sessionFactory.getCurrentSession();
         CityEntity result = session.createQuery("from CityEntity where name = :name", CityEntity.class)
-                .setParameter("name", "Poole")
+                .setParameter("name", "Karlsruhe")
                 .getSingleResult();
         Assertions.assertNotNull(result);
 
         //test if stops are present
-        Assertions.assertNotEquals(0, result.getStops().size());
+        Assertions.assertEquals(1, result.getStops().size());
 
         //invalid search term
         cityToAssert = service.getCityWithInformation("xyz");

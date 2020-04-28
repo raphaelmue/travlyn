@@ -1,0 +1,466 @@
+{
+    "head": {"vars": [
+        "entities",
+        "dboabstract",
+        "dbothumbnail",
+        "georsspoint"
+    ]},
+    "results": {"bindings": [
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0092097 8.4039514"
+            },
+            "dboabstract": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "Karlsruhe (German pronunciation: [ˈkaɐ̯lsˌʁuːə] ; formerly Carlsruhe) is the second-largest city in the state of Baden-Württemberg, in southwest Germany, near the Franco-German border. It has a population of 296,033. The city is the seat of the two highest courts in Germany: the Federal Constitutional Court and the Federal Court of Justice. Its most remarkable building is Karlsruhe Palace, which was built in 1715."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0092097 8.4039514"
+            },
+            "dboabstract": {
+                "xml:lang": "ar",
+                "type": "literal",
+                "value": "25بك المحتوى هنا ينقصه الاستشهاد بمصادر. يرجى إيراد مصادر موثوق بها. أي معلومات غير موثقة يمكن التشكيك بها وإزالتها. (مارس 2016) كارلسروه (بالألمانية: Karlsruhe) هي مدينة تقع ببادن-فورتمبورغ Badenwürttemberg في جنوب ألمانيا. يبلغ عدد سكانها حوالي 286.861 نسمة (إحصاءات عام 2007). بها مقر جامعة، أكاديمية للفنون التشكيلية، معهد عالي للموسيقى والتمثيل ومعاهد تقنية عدة.في بداية عام 2010 تم دمج الجامعة مع معهد للبحوث لينشأ معهد كارلسروه للتكنولوجيا ويعتبر من أرقى جامعات ألمانيا وأكثرها اهتماماً بالبحث العلمي واختصارها KIT."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0092097 8.4039514"
+            },
+            "dboabstract": {
+                "xml:lang": "es",
+                "type": "literal",
+                "value": "Karlsruhe (Acerca de este sonido [ˈkaɐ̯lsˌʁuːə] (?·i); significa «Reposo de Carlos») es la segunda ciudad más grande de Baden-Wurtemberg en el suroeste de Alemania, cerca (15 km) de la frontera con Francia. Karlsruhe fue fundada en 1715 como ciudad barroca y fue capital del Gran Ducado de Baden. Debido al plan urbanístico con arreglo al cual se fundó, sus calles irradian toda la ciudad. Por esta razón se la conoce como Fächerstadt («Ciudad abanico»). Karlsruhe es la capital y ciudad de residencia del antiguo estado de Baden. Karlsruhe también es hoy la capital del Distrito Rural de Karlsruhe, aunque no forma parte de él. Desde 1950, el Tribunal Constitucional Federal Alemán (Bundesverfassungsgericht) y el Tribunal Federal (Bundesgerichtshof) tienen sus sedes en Karlsruhe, por lo que la ciudad es llamada la sede de la justicia."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0092097 8.4039514"
+            },
+            "dboabstract": {
+                "xml:lang": "de",
+                "type": "literal",
+                "value": "Karlsruhe (Aussprache [ˈkaɐ̯lsˌʁuːə]) ist mit mehr als 300.000 Einwohnern die zweitgrößte Stadt des Landes Baden-Württemberg. Sie ist Verwaltungssitz des Regierungsbezirks Karlsruhe und des Landkreises Karlsruhe und bildet selbst einen Stadtkreis (kreisfreie Stadt). Die Stadt ist Oberzentrum für die Region Mittlerer Oberrhein und Teile der Südpfalz. Das 1715 vom heutigen Stadtteil Durlach aus als barocke Planstadt gegründete Karlsruhe war Haupt- und Residenzstadt des ehemaligen Landes Baden. Charakteristisch für den ursprünglichen Stadtplan sind die 32 ringsum vom Schloss in die Parkanlagen und den Hardtwald der Oberrheinebene ausstrahlenden Straßen. Nur das südliche Viertel wurde zentrumsnah bebaut; seinem fächerförmigen Grundriss verdankt Karlsruhe den Beinamen \u201eFächerstadt\u201c. Friedrich Weinbrenners klassizistische Bauten prägen das Bild der Stadterweiterung aus dem frühen 19. Jahrhundert. Seit 1950 ist Karlsruhe Sitz des Bundesgerichtshofs und des Generalbundesanwalts beim Bundesgerichtshof und seit 1951 des Bundesverfassungsgerichts, weshalb die Stadt \u201eResidenz des Rechts\u201c genannt wird. Zahlreiche Behörden und Forschungseinrichtungen mit überregionaler Bedeutung sind in Karlsruhe angesiedelt. Unter den neun Hochschulen der Stadt ist das Karlsruher Institut für Technologie (KIT) die älteste und größte. Großen Infrastruktureinrichtungen wie den beiden Rheinhäfen und der zweitgrößten Raffinerie Deutschlands steht eine ansonsten vorwiegend mittelständisch geprägte Wirtschaft gegenüber. Karlsruhe ist einer der bedeutendsten europäischen Standorte der Informations- und Kommunikationstechnik. Daran knüpft mit dem Zentrum für Kunst und Medien (ZKM) auch eine der wichtigsten Kulturinstitutionen in der Stadt an. Andere, wie das Badische Landesmuseum oder die Staatliche Kunsthalle, gehören zum Erbe der Residenzzeit."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0092097 8.4039514"
+            },
+            "dboabstract": {
+                "xml:lang": "fr",
+                "type": "literal",
+                "value": "Karlsruhe ([ˈkaʁlsˌʁuːə]), ou Carlsruhe, est une ville d'Allemagne, située dans le Land de Bade-Wurtemberg. Elle est le siège de la Cour constitutionnelle allemande et de la Cour fédérale de justice. Au 31 décembre 2011, la ville comptait 297 488 habitants, ce qui en fait la deuxième ville du Bade-Wurtemberg après Stuttgart et avant Mannheim. Fondée en 1715 par le margrave (marquis souverain) Charles-Guillaume de Bade-Durlach, Karlsruhe fut successivement la capitale du margraviat et du Grand-duché de Bade jusqu'en 1918, puis celle de la République de Bade jusqu'en 1945. Elle est aujourd'hui à la tête d'un district comprenant trois aires urbaines (l'aire urbaine Rhin-Neckar, l'aire urbaine Mittlerer Oberrhein et la Technologieregion Karlsruhe (de)). C'est aussi une ville-arrondissement et le chef-lieu de l'arrondissement de Karlsruhe, dont elle ne fait pas partie. Karlsruhe est bordée par le Rhin, qui marque la frontière du Land de Rhénanie-Palatinat. La ville est également proche du nord de l'Alsace. Karlsruhe est une ville nouvelle, elle a été créée ex nihilo au début du XVIIIe siècle selon des canons baroques et néoclassiques. A l'instar de ses pairs, le margrave Charles-Guillaume de Bade-Durlach a d'abord fait construire un château sur le modèle de Versailles, puis la ville a été planifiée autour. Le château se trouve au centre d'un cercle, la moitié nord a été tranformée en parc, tandis que la moitié sud a été lotie selon un plan en éventail, les rues rayonnant autour du château. La ville a été détruite à 80 % durant la Seconde Guerre mondiale, mais lors de la reconstruction, les architectes ont conservé le plan initial."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0092097 8.4039514"
+            },
+            "dboabstract": {
+                "xml:lang": "it",
+                "type": "literal",
+                "value": "Karlsruhe (in tedesco alemanno Karlsrueh, in tedesco palatino Kallsruh) è una città extracircondariale del Baden-Württemberg, in Germania; dopo Stoccarda, è la seconda città più grande del Land, estendendosi su di una superficie di circa 173 km². La città è sede del Distretto governativo di Karlsruhe e confina a nord, ovest e Sud con l'omonimo Circondario e la Regione del medio Reno superiore. Fa inoltre parte della Zona trinazionale metropolitana del Reno Superiore. Fino al 1945, Karlsruhe è stata capitale e sede del governo del vecchio Land del Baden. Dal 1950 ospita invece la Corte di Giustizia Federale (Bundesgerichtshof) e dal 1951 la Corte Costituzionale Federale tedesca (Bundesverfassungsgericht), ragion per cui si è guadagnata l'appellativo di Città del Diritto. La caratteristica disposizione urbanistica della città ha fatto sì che sia anche conosciuta come la Fächerstadt, o città a ventaglio."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0092097 8.4039514"
+            },
+            "dboabstract": {
+                "xml:lang": "ja",
+                "type": "literal",
+                "value": "カールスルーエ（標準ドイツ語：Karlsruhe、アレマン語：Karlsrueh）は、ドイツ連邦共和国の都市。バーデン＝ヴュルテンベルク州に属する。人口は約30万人で、同州ではシュトゥットガルトに続く第二の規模の都市である。 ドイツ連邦共和国の最高裁判所に該当する連邦憲法裁判所（Bundesverfassungsgericht） や連邦裁判所（Bundesgerichtshof）の所在地として、ドイツの「司法首都」となっている。"
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0092097 8.4039514"
+            },
+            "dboabstract": {
+                "xml:lang": "nl",
+                "type": "literal",
+                "value": "Karlsruhe (Nederlands, in onbruik, Karelsrust) is een stad in de Duitse deelstaat Baden-Württemberg.Karlsruhe is na Stuttgart (circa 65 km ten oosten van Karlsruhe) en Mannheim (circa 55 km ten noorden van Karlsruhe) de grootste stad in Baden-Württemberg en heeft een oppervlakte van circa 173 km². Karlsruhe telt 299.103 inwoners en is daarmee de op één na meest bevolkte stad van Baden-Württemberg. Sinds 1950 zetelt in Karlsruhe het zogenaamde Bundesgerichtshof en sinds 1951 het Bundesverfassungsgericht waardoor de stad de bijnaam Residentie van het recht kreeg."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0092097 8.4039514"
+            },
+            "dboabstract": {
+                "xml:lang": "pl",
+                "type": "literal",
+                "value": "Karlsruhe \u2013 miasto na prawach powiatu w południowo-zachodnich Niemczech, w kraju związkowym Badenia-Wirtembergia. Siedziba rejencji Karlsruhe, regionu Mittlerer Oberrhein oraz powiatu Karlsruhe do którego miasto jednak nie należy. Leży na Nizinie Górnoreńskiej, nad rzekami Alb i Pfinz, na wysokości 115 m."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0092097 8.4039514"
+            },
+            "dboabstract": {
+                "xml:lang": "pt",
+                "type": "literal",
+                "value": "Karlsruhe ou, na sua forma aportuguesada, Carlsrue, é uma cidade independente (kreisfreie Stadt) da Alemanha, capital do distrito homónimo e da região administrativa de Karlsruhe, estado de Baden-Württemberg. A cidade destaca-se pelo seu formato em \"leque\". A Universidade de Karlsruhe foi a primeira universidade tecnológica da Alemanha. Cerca de 38 940 estrangeiros vivem na cidade (2004)."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0092097 8.4039514"
+            },
+            "dboabstract": {
+                "xml:lang": "ru",
+                "type": "literal",
+                "value": "Ка́рлсруэ (нем. Karlsruhe [ˈkaʁlsˌʁuːə], алем. Karlsrueh, ю.-франк. и пфальц. Kallsruh) \u2014 город в Германии, в земле Баден-Вюртемберг, расположенный в окрестностях реки Рейн недалеко от французско-германской границы. Карлсруэ является третьим по численности населения (290 736 человек на 31 декабря 2008) городом земли Баден-Вюртемберг и 21-м в Германии. В «резиденции права», как иногда называют Карлсруэ, расположены Федеральный конституционный суд, Верховный суд Германии и Генеральная прокуратура Германии, а также многочисленные федеральные и земельные ведомства. В городе проживает большое количество чиновников и госслужащих."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0092097 8.4039514"
+            },
+            "dboabstract": {
+                "xml:lang": "zh",
+                "type": "literal",
+                "value": "卡尔斯鲁厄（Karlsruhe），是德国巴登-符腾堡州的城市。卡尔斯鲁厄是继斯图加特之后的巴登-符腾堡州第二大城市，面积约173平方千米。卡尔斯鲁厄是德国联邦最高法院和德国联邦宪法法院的所在地。在巴登州与符腾堡州尚未合并为巴登-符腾堡州前，卡尔斯鲁厄曾是巴登州的首府。"
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0 8.4"
+            },
+            "dboabstract": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "Karlsruhe (German pronunciation: [ˈkaɐ̯lsˌʁuːə] ; formerly Carlsruhe) is the second-largest city in the state of Baden-Württemberg, in southwest Germany, near the Franco-German border. It has a population of 296,033. The city is the seat of the two highest courts in Germany: the Federal Constitutional Court and the Federal Court of Justice. Its most remarkable building is Karlsruhe Palace, which was built in 1715."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0 8.4"
+            },
+            "dboabstract": {
+                "xml:lang": "ar",
+                "type": "literal",
+                "value": "25بك المحتوى هنا ينقصه الاستشهاد بمصادر. يرجى إيراد مصادر موثوق بها. أي معلومات غير موثقة يمكن التشكيك بها وإزالتها. (مارس 2016) كارلسروه (بالألمانية: Karlsruhe) هي مدينة تقع ببادن-فورتمبورغ Badenwürttemberg في جنوب ألمانيا. يبلغ عدد سكانها حوالي 286.861 نسمة (إحصاءات عام 2007). بها مقر جامعة، أكاديمية للفنون التشكيلية، معهد عالي للموسيقى والتمثيل ومعاهد تقنية عدة.في بداية عام 2010 تم دمج الجامعة مع معهد للبحوث لينشأ معهد كارلسروه للتكنولوجيا ويعتبر من أرقى جامعات ألمانيا وأكثرها اهتماماً بالبحث العلمي واختصارها KIT."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0 8.4"
+            },
+            "dboabstract": {
+                "xml:lang": "es",
+                "type": "literal",
+                "value": "Karlsruhe (Acerca de este sonido [ˈkaɐ̯lsˌʁuːə] (?·i); significa «Reposo de Carlos») es la segunda ciudad más grande de Baden-Wurtemberg en el suroeste de Alemania, cerca (15 km) de la frontera con Francia. Karlsruhe fue fundada en 1715 como ciudad barroca y fue capital del Gran Ducado de Baden. Debido al plan urbanístico con arreglo al cual se fundó, sus calles irradian toda la ciudad. Por esta razón se la conoce como Fächerstadt («Ciudad abanico»). Karlsruhe es la capital y ciudad de residencia del antiguo estado de Baden. Karlsruhe también es hoy la capital del Distrito Rural de Karlsruhe, aunque no forma parte de él. Desde 1950, el Tribunal Constitucional Federal Alemán (Bundesverfassungsgericht) y el Tribunal Federal (Bundesgerichtshof) tienen sus sedes en Karlsruhe, por lo que la ciudad es llamada la sede de la justicia."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0 8.4"
+            },
+            "dboabstract": {
+                "xml:lang": "de",
+                "type": "literal",
+                "value": "Karlsruhe (Aussprache [ˈkaɐ̯lsˌʁuːə]) ist mit mehr als 300.000 Einwohnern die zweitgrößte Stadt des Landes Baden-Württemberg. Sie ist Verwaltungssitz des Regierungsbezirks Karlsruhe und des Landkreises Karlsruhe und bildet selbst einen Stadtkreis (kreisfreie Stadt). Die Stadt ist Oberzentrum für die Region Mittlerer Oberrhein und Teile der Südpfalz. Das 1715 vom heutigen Stadtteil Durlach aus als barocke Planstadt gegründete Karlsruhe war Haupt- und Residenzstadt des ehemaligen Landes Baden. Charakteristisch für den ursprünglichen Stadtplan sind die 32 ringsum vom Schloss in die Parkanlagen und den Hardtwald der Oberrheinebene ausstrahlenden Straßen. Nur das südliche Viertel wurde zentrumsnah bebaut; seinem fächerförmigen Grundriss verdankt Karlsruhe den Beinamen \u201eFächerstadt\u201c. Friedrich Weinbrenners klassizistische Bauten prägen das Bild der Stadterweiterung aus dem frühen 19. Jahrhundert. Seit 1950 ist Karlsruhe Sitz des Bundesgerichtshofs und des Generalbundesanwalts beim Bundesgerichtshof und seit 1951 des Bundesverfassungsgerichts, weshalb die Stadt \u201eResidenz des Rechts\u201c genannt wird. Zahlreiche Behörden und Forschungseinrichtungen mit überregionaler Bedeutung sind in Karlsruhe angesiedelt. Unter den neun Hochschulen der Stadt ist das Karlsruher Institut für Technologie (KIT) die älteste und größte. Großen Infrastruktureinrichtungen wie den beiden Rheinhäfen und der zweitgrößten Raffinerie Deutschlands steht eine ansonsten vorwiegend mittelständisch geprägte Wirtschaft gegenüber. Karlsruhe ist einer der bedeutendsten europäischen Standorte der Informations- und Kommunikationstechnik. Daran knüpft mit dem Zentrum für Kunst und Medien (ZKM) auch eine der wichtigsten Kulturinstitutionen in der Stadt an. Andere, wie das Badische Landesmuseum oder die Staatliche Kunsthalle, gehören zum Erbe der Residenzzeit."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0 8.4"
+            },
+            "dboabstract": {
+                "xml:lang": "fr",
+                "type": "literal",
+                "value": "Karlsruhe ([ˈkaʁlsˌʁuːə]), ou Carlsruhe, est une ville d'Allemagne, située dans le Land de Bade-Wurtemberg. Elle est le siège de la Cour constitutionnelle allemande et de la Cour fédérale de justice. Au 31 décembre 2011, la ville comptait 297 488 habitants, ce qui en fait la deuxième ville du Bade-Wurtemberg après Stuttgart et avant Mannheim. Fondée en 1715 par le margrave (marquis souverain) Charles-Guillaume de Bade-Durlach, Karlsruhe fut successivement la capitale du margraviat et du Grand-duché de Bade jusqu'en 1918, puis celle de la République de Bade jusqu'en 1945. Elle est aujourd'hui à la tête d'un district comprenant trois aires urbaines (l'aire urbaine Rhin-Neckar, l'aire urbaine Mittlerer Oberrhein et la Technologieregion Karlsruhe (de)). C'est aussi une ville-arrondissement et le chef-lieu de l'arrondissement de Karlsruhe, dont elle ne fait pas partie. Karlsruhe est bordée par le Rhin, qui marque la frontière du Land de Rhénanie-Palatinat. La ville est également proche du nord de l'Alsace. Karlsruhe est une ville nouvelle, elle a été créée ex nihilo au début du XVIIIe siècle selon des canons baroques et néoclassiques. A l'instar de ses pairs, le margrave Charles-Guillaume de Bade-Durlach a d'abord fait construire un château sur le modèle de Versailles, puis la ville a été planifiée autour. Le château se trouve au centre d'un cercle, la moitié nord a été tranformée en parc, tandis que la moitié sud a été lotie selon un plan en éventail, les rues rayonnant autour du château. La ville a été détruite à 80 % durant la Seconde Guerre mondiale, mais lors de la reconstruction, les architectes ont conservé le plan initial."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0 8.4"
+            },
+            "dboabstract": {
+                "xml:lang": "it",
+                "type": "literal",
+                "value": "Karlsruhe (in tedesco alemanno Karlsrueh, in tedesco palatino Kallsruh) è una città extracircondariale del Baden-Württemberg, in Germania; dopo Stoccarda, è la seconda città più grande del Land, estendendosi su di una superficie di circa 173 km². La città è sede del Distretto governativo di Karlsruhe e confina a nord, ovest e Sud con l'omonimo Circondario e la Regione del medio Reno superiore. Fa inoltre parte della Zona trinazionale metropolitana del Reno Superiore. Fino al 1945, Karlsruhe è stata capitale e sede del governo del vecchio Land del Baden. Dal 1950 ospita invece la Corte di Giustizia Federale (Bundesgerichtshof) e dal 1951 la Corte Costituzionale Federale tedesca (Bundesverfassungsgericht), ragion per cui si è guadagnata l'appellativo di Città del Diritto. La caratteristica disposizione urbanistica della città ha fatto sì che sia anche conosciuta come la Fächerstadt, o città a ventaglio."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0 8.4"
+            },
+            "dboabstract": {
+                "xml:lang": "ja",
+                "type": "literal",
+                "value": "カールスルーエ（標準ドイツ語：Karlsruhe、アレマン語：Karlsrueh）は、ドイツ連邦共和国の都市。バーデン＝ヴュルテンベルク州に属する。人口は約30万人で、同州ではシュトゥットガルトに続く第二の規模の都市である。 ドイツ連邦共和国の最高裁判所に該当する連邦憲法裁判所（Bundesverfassungsgericht） や連邦裁判所（Bundesgerichtshof）の所在地として、ドイツの「司法首都」となっている。"
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0 8.4"
+            },
+            "dboabstract": {
+                "xml:lang": "nl",
+                "type": "literal",
+                "value": "Karlsruhe (Nederlands, in onbruik, Karelsrust) is een stad in de Duitse deelstaat Baden-Württemberg.Karlsruhe is na Stuttgart (circa 65 km ten oosten van Karlsruhe) en Mannheim (circa 55 km ten noorden van Karlsruhe) de grootste stad in Baden-Württemberg en heeft een oppervlakte van circa 173 km². Karlsruhe telt 299.103 inwoners en is daarmee de op één na meest bevolkte stad van Baden-Württemberg. Sinds 1950 zetelt in Karlsruhe het zogenaamde Bundesgerichtshof en sinds 1951 het Bundesverfassungsgericht waardoor de stad de bijnaam Residentie van het recht kreeg."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0 8.4"
+            },
+            "dboabstract": {
+                "xml:lang": "pl",
+                "type": "literal",
+                "value": "Karlsruhe \u2013 miasto na prawach powiatu w południowo-zachodnich Niemczech, w kraju związkowym Badenia-Wirtembergia. Siedziba rejencji Karlsruhe, regionu Mittlerer Oberrhein oraz powiatu Karlsruhe do którego miasto jednak nie należy. Leży na Nizinie Górnoreńskiej, nad rzekami Alb i Pfinz, na wysokości 115 m."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0 8.4"
+            },
+            "dboabstract": {
+                "xml:lang": "pt",
+                "type": "literal",
+                "value": "Karlsruhe ou, na sua forma aportuguesada, Carlsrue, é uma cidade independente (kreisfreie Stadt) da Alemanha, capital do distrito homónimo e da região administrativa de Karlsruhe, estado de Baden-Württemberg. A cidade destaca-se pelo seu formato em \"leque\". A Universidade de Karlsruhe foi a primeira universidade tecnológica da Alemanha. Cerca de 38 940 estrangeiros vivem na cidade (2004)."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0 8.4"
+            },
+            "dboabstract": {
+                "xml:lang": "ru",
+                "type": "literal",
+                "value": "Ка́рлсруэ (нем. Karlsruhe [ˈkaʁlsˌʁuːə], алем. Karlsrueh, ю.-франк. и пфальц. Kallsruh) \u2014 город в Германии, в земле Баден-Вюртемберг, расположенный в окрестностях реки Рейн недалеко от французско-германской границы. Карлсруэ является третьим по численности населения (290 736 человек на 31 декабря 2008) городом земли Баден-Вюртемберг и 21-м в Германии. В «резиденции права», как иногда называют Карлсруэ, расположены Федеральный конституционный суд, Верховный суд Германии и Генеральная прокуратура Германии, а также многочисленные федеральные и земельные ведомства. В городе проживает большое количество чиновников и госслужащих."
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        },
+        {
+            "entities": {
+                "type": "uri",
+                "value": "Karlsruhe"
+            },
+            "georsspoint": {
+                "type": "literal",
+                "value": "49.0 8.4"
+            },
+            "dboabstract": {
+                "xml:lang": "zh",
+                "type": "literal",
+                "value": "卡尔斯鲁厄（Karlsruhe），是德国巴登-符腾堡州的城市。卡尔斯鲁厄是继斯图加特之后的巴登-符腾堡州第二大城市，面积约173平方千米。卡尔斯鲁厄是德国联邦最高法院和德国联邦宪法法院的所在地。在巴登州与符腾堡州尚未合并为巴登-符腾堡州前，卡尔斯鲁厄曾是巴登州的首府。"
+            },
+            "dbothumbnail": {
+                "type": "uri",
+                "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Karlsruhe_town_centre_air.jpg?width=300"
+            }
+        }
+    ]}
+}
