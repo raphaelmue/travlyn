@@ -240,6 +240,8 @@ public class TravlynServiceTest extends ApiTest {
 
     }
 
+    @Transactional
+    @Test
     public void testGenerateTrip() {
         //normal case
         ArrayList<Long> stopIds = new ArrayList<>();
@@ -380,6 +382,29 @@ public class TravlynServiceTest extends ApiTest {
 
         result = service.addTimeEffortToStop(stopEntity.getId(), 10);
         Assertions.assertEquals(6.0, result.getTimeEffort(),0.1);
+    }
+
+    @Transactional
+    @Test
+    public void testAddRatingToStop(){
+        Session session = sessionFactory.getCurrentSession();
+        Rating rating = new Rating().rating(0.5).description("Ok!").user(userEntity.toDataTransferObject());
+
+        //normal case
+        boolean result = service.addRatingToStop(stopEntity.getId(),rating);
+
+        Assertions.assertTrue(result);
+        StopEntity stopToAssert = session.createQuery("from StopEntity where id = :id",StopEntity.class)
+                                        .setParameter("id",stopEntity.getId())
+                                        .getSingleResult();
+        Assertions.assertEquals(0.5,stopToAssert.getAverageRating());
+        Assertions.assertEquals(1, stopToAssert.getRatings().size());
+        StopRatingEntity ratingToAssert = stopToAssert.getRatings().iterator().next();
+        Assertions.assertEquals("Ok!",ratingToAssert.getDescription());
+        Assertions.assertEquals(0.5,ratingToAssert.getRating());
+
+        //illegal stop id
+        Assertions.assertThrows(NoResultException.class,() -> service.addRatingToStop(-1,rating));
     }
 
     @Transactional

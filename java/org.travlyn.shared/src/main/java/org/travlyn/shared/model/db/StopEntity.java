@@ -3,6 +3,7 @@ package org.travlyn.shared.model.db;
 import org.travlyn.shared.model.api.Stop;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -30,7 +31,7 @@ public class StopEntity extends Location {
 
     @OneToMany
     @JoinColumn(name = "ratable")
-    private Set<StopRatingEntity> ratings;
+    private Set<StopRatingEntity> ratings = new HashSet<>();
 
 
     @OneToOne(targetEntity = CategoryEntity.class, cascade = CascadeType.PERSIST)
