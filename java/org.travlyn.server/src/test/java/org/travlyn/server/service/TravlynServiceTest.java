@@ -2,6 +2,7 @@ package org.travlyn.server.service;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -23,10 +24,12 @@ import org.travlyn.shared.model.db.*;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.transaction.Transactional;
+import javax.validation.constraints.AssertTrue;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -138,6 +141,34 @@ public class TravlynServiceTest extends ApiTest {
         // wrong email
         userToAssert = service.checkCredentials("test@wrong.com", "password", "192.168.0.1");
         Assertions.assertNull(userToAssert);
+    }
+
+    @Test
+    @Transactional
+    public void testCheckUsersToken(){
+        Session session = sessionFactory.getCurrentSession();
+        //normal case
+        Optional<UserEntity> optionalToAssert = service.checkUsersToken(tokenEntity.getToken());
+        Assertions.assertTrue(optionalToAssert.isPresent());
+        UserEntity userToAssert = optionalToAssert.get();
+        Assertions.assertEquals(userEntity.getId(),userToAssert.getId());
+
+        //invalid token
+        optionalToAssert = service.checkUsersToken("invalidToken");
+        Assertions.assertFalse(optionalToAssert.isPresent());
+
+
+        //create outdated token
+        TokenEntity outdatedToken = new TokenEntity();
+        outdatedToken.setUser(userEntity);
+        outdatedToken.setToken("6406b2e97a97f64910aca76370ee35a92087806da1aa878e8a9ae0f4dc3949aj");
+        outdatedToken.setIpAddress("192.168.0.1");
+        outdatedToken.setExpireDate(LocalDate.now().minusMonths(1));
+
+        outdatedToken.setId((Integer) session.save(outdatedToken));
+
+        optionalToAssert = service.checkUsersToken(outdatedToken.getToken());
+        Assertions.assertFalse(optionalToAssert.isPresent());
     }
 
     @Test
