@@ -13,6 +13,7 @@ import org.travlyn.server.util.Pair;
 import org.travlyn.shared.model.db.UserEntity;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -47,37 +48,43 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
     private TravlynService travlynService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        if (validateToken(request)) {
+            chain.doFilter(request, response);
+        } else {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Failed to authenticate: Token is invalid.");
+        }
+    }
+
+    private boolean validateToken(HttpServletRequest request) {
         final String header = request.getHeader(HEADER_STRING);
 
         if (header != null && header.startsWith(TOKEN_PREFIX)) {
             String tokenString = header.substring(7);
 
-            try {
-                Optional<UserEntity> userOptional = travlynService.checkUsersToken(tokenString);
-                if (userOptional.isPresent()) {
-                    List<GrantedAuthority> authList = new ArrayList<>();
-                    authList.add(new SimpleGrantedAuthority(REGISTERED_USER_ROLE));
+            Optional<UserEntity> userOptional = travlynService.checkUsersToken(tokenString);
+            if (userOptional.isPresent()) {
+                List<GrantedAuthority> authList = new ArrayList<>();
+                authList.add(new SimpleGrantedAuthority(REGISTERED_USER_ROLE));
 
-                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                            new UsernamePasswordAuthenticationToken(userOptional.get(), null, authList);
-                    usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                        new UsernamePasswordAuthenticationToken(userOptional.get(), null, authList);
+                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-                    chain.doFilter(request, response);
-                    return;
-                }
-            } catch (Exception e) {
-                logger.error("Failed to authenticate: Token is invalid.", e);
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                return true;
+            } else {
+                logger.info("Failed to authenticate: Token is invalid.");
             }
         } else {
             logger.info("Failed to authenticate: Token is not present.");
         }
-        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Failed to authenticate: Token is invalid.");
+        return false;
     }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
+        validateToken(request);
         return WHITE_LIST.stream().anyMatch(path ->
                 request.getMethod().equals(path.getKey())
                         && new AntPathMatcher().match(path.getValue(), request.getServletPath()));

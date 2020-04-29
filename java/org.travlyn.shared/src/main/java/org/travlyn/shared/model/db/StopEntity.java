@@ -35,8 +35,14 @@ public class StopEntity implements DataEntity {
     @Column(name = "time_effort")
     private double timeEffort;
 
+    @Column(name = "time_effort_counter")
+    private int numberOfTimeEffortCommitments = 0;
+
     @Column(name = "average_rating")
     private double averageRating;
+
+    @Column(name = "average_pricing_counter")
+    private int numberOfPricingCommitments = 0;
 
     @ManyToOne(targetEntity = CityEntity.class)
     @JoinColumn(name = "city_id", referencedColumnName = "id", nullable = false)
@@ -122,6 +128,22 @@ public class StopEntity implements DataEntity {
 
     public void setAverageRating(double averageRating) {
         this.averageRating = averageRating;
+    }
+
+    public int getNumberOfTimeEffortCommitments() {
+        return numberOfTimeEffortCommitments;
+    }
+
+    public void setNumberOfTimeEffortCommitments(int numberOfTimeEffortCommitments) {
+        this.numberOfTimeEffortCommitments = numberOfTimeEffortCommitments;
+    }
+
+    public int getNumberOfPricingCommitments() {
+        return numberOfPricingCommitments;
+    }
+
+    public void setNumberOfPricingCommitments(int numberOfRatingCommitments) {
+        this.numberOfPricingCommitments = numberOfRatingCommitments;
     }
 
     public Set<StopRatingEntity> getRatings() {

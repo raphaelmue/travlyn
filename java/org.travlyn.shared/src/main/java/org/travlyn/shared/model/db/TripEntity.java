@@ -1,13 +1,11 @@
 package org.travlyn.shared.model.db;
 
+import org.travlyn.shared.model.api.Rating;
 import org.travlyn.shared.model.api.Stop;
 import org.travlyn.shared.model.api.Trip;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "trip")
@@ -35,7 +33,10 @@ public class TripEntity implements DataEntity {
 
     @OneToMany()
     @JoinColumn(name = "ratable")
-    private Set<TripRatingEntity> ratings;
+    private Set<TripRatingEntity> ratings = new HashSet<>();
+
+    @Column(name = "average_rating")
+    private double averageRating;
 
     @OneToMany(mappedBy = "trip", cascade = {CascadeType.ALL})
     private Set<GeoTextEntity> geoTexts;
@@ -107,10 +108,19 @@ public class TripEntity implements DataEntity {
         this.name = name;
     }
 
+    public double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(double averageRating) {
+        this.averageRating = averageRating;
+    }
+
     @Override
     public Trip toDataTransferObject() {
         Trip trip = new Trip();
         trip.setId(this.id);
+        trip.setAverageRating(this.averageRating);
         if (this.city != null) {
             trip.setCity(this.city.toDataTransferObject());
         }
@@ -131,7 +141,11 @@ public class TripEntity implements DataEntity {
         }
         trip.setStops(stops);
         //TODO
-        trip.setRatings(new ArrayList<>());
+        List<Rating> ratings = new ArrayList<>();
+        for (TripRatingEntity rating : this.ratings) {
+            ratings.add(rating.toDataTransferObject());
+        }
+        trip.setRatings(ratings);
         trip.setGeoText(new ArrayList<>());
         return trip;
     }

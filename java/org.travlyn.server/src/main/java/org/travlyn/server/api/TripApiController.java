@@ -68,6 +68,7 @@ public class TripApiController implements TripApi {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
     public ResponseEntity<Trip> getTripByID(Long tripId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -85,11 +86,28 @@ public class TripApiController implements TripApi {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<Void> rateTrip(Long tripId, @NotNull @Valid Rating rating) {
+    @Override
+    public ResponseEntity<Void> rateTrip(@PathVariable("tripId") int tripId, @NotNull @Valid Rating rating) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        if (accept != null && accept.contains("application/json")) {
+            try {
+                if (travlynService.addRatingToTrip(tripId,rating)){
+                 return new ResponseEntity<>(HttpStatus.OK);
+                }
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            } catch (NoResultException e) {
+                log.error("Couldn't find requested trip", e);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } catch (IllegalAccessError e) {
+                log.error(e.getMessage(), e);
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
     public ResponseEntity<Void> updateTrip(@NotNull @RequestBody @Valid Trip trip) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
