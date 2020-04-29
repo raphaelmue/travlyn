@@ -7,27 +7,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "stop")
-public class StopEntity implements DataEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
-
-    @Column(name = "longitude")
-    private double longitude;
-
-    @Column(name = "latitude")
-    private double latitude;
-
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "description", length = 65536)
-    private String description;
-
-    @Column(name = "image")
-    private String image;
+public class StopEntity extends Location {
 
     @Column(name = "pricing")
     private double pricing;
@@ -56,55 +36,6 @@ public class StopEntity implements DataEntity {
     @OneToOne(targetEntity = CategoryEntity.class, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private CategoryEntity category;
-
-    @Override
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
 
     public double getPricing() {
         return pricing;
@@ -165,16 +96,16 @@ public class StopEntity implements DataEntity {
     @Override
     public Stop toDataTransferObject() {
         Stop stop = new Stop();
-        stop.setId(this.id);
-        stop.setName(this.name);
-        stop.setImage(this.image);
+        stop.setId(super.getId());
+        stop.setName(super.getName());
+        stop.setImage(super.getImage());
         stop.setCategory(this.category.toDataTransferObject());
         stop.setTimeEffort(this.timeEffort);
         stop.setPricing(this.pricing);
-        stop.setLatitude(this.latitude);
-        stop.setLongitude(this.longitude);
+        stop.setLatitude(super.getLatitude());
+        stop.setLongitude(super.getLongitude());
         stop.setAverageRating(this.averageRating);
-        stop.description(this.description);
+        stop.description(super.getDescription());
         //stop.city(this.city.toDataTransferObject());
         //TODO
         //stop.setRatings(this.ratings);
