@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.View
 import android.view.animation.DecelerateInterpolator
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.arlib.floatingsearchview.util.Util.getScreenWidth
@@ -26,6 +28,7 @@ import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.overlay.Marker
 import org.travlyn.R
 import org.travlyn.api.CityApi
+import org.travlyn.api.StopApi
 import org.travlyn.api.model.*
 import org.travlyn.infrastructure.dpToPx
 import org.travlyn.local.Application
@@ -60,12 +63,14 @@ class NavigationActivity : AppCompatActivity(), Application {
     private val currentLocation: GeoPoint = GeoPoint(0.0, 0.0)
     private lateinit var locationMarker: Marker
     private lateinit var cityApi: CityApi
+    private lateinit var stopApi: StopApi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navigation)
 
         cityApi = CityApi(this)
+        stopApi = StopApi(this)
 
         initStartNavigationButton()
         initMapView()
@@ -236,7 +241,6 @@ class NavigationActivity : AppCompatActivity(), Application {
     private suspend fun stopReached() {
         this@NavigationActivity.stopReached = true
         initStopInformationLayout(nextStop)
-        updateNextStop()
 
         withContext(Dispatchers.Main) {
 
@@ -244,6 +248,7 @@ class NavigationActivity : AppCompatActivity(), Application {
             continueToNextStopButton.visibility = View.VISIBLE
 
             continueToNextStopButton.setOnClickListener {
+                updateNextStop()
                 this@NavigationActivity.stopReached = false
                 val outAnimation: ObjectAnimator =
                     ObjectAnimator.ofFloat(
@@ -339,6 +344,13 @@ class NavigationActivity : AppCompatActivity(), Application {
         } else {
             navigationStopPricingTextView.text = stop.pricing.toString()
         }
+
+        navigationStopAddPricingButton.setOnClickListener {
+            showPricingDialog()
+        }
+        navigationStopTimeEffortButton.setOnClickListener {
+            showTimeEffortDialog()
+        }
     }
 
     private fun initStartNavigationButton() {
@@ -401,6 +413,62 @@ class NavigationActivity : AppCompatActivity(), Application {
                 .setNegativeButton(getString(R.string.cancel), null)
                 .create().show()
         }
+    }
+
+    private fun showTimeEffortDialog() {
+        val dialogLayout: View = layoutInflater.inflate(R.layout.dialog_add_time_effort, null)
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.navigation))
+            .setView(dialogLayout)
+            .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                val pricingEditText: EditText =
+                    dialogLayout.findViewById(R.id.timeEffortDialogEditText)
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    stopApi.addTimeEffortToStop(
+                        nextStop.id!!,
+                        pricingEditText.text.toString().toDouble()
+                    )
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            this@NavigationActivity,
+                            getString(R.string.successfully_added_time_effort),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+            .setNegativeButton(getString(R.string.cancel), null)
+            .create()
+            .show()
+    }
+
+    private fun showPricingDialog() {
+        val dialogLayout: View = layoutInflater.inflate(R.layout.dialog_add_pricing, null)
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.navigation))
+            .setView(dialogLayout)
+            .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                val pricingEditText: EditText =
+                    dialogLayout.findViewById(R.id.pricingDialogEditText)
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    stopApi.addPricingToStop(
+                        nextStop.id!!,
+                        pricingEditText.text.toString().toDouble()
+                    )
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            this@NavigationActivity,
+                            getString(R.string.successfully_added_pricing),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+            .setNegativeButton(getString(R.string.cancel), null)
+            .create()
+            .show()
     }
 
     private suspend fun updateCurrentLocation() {

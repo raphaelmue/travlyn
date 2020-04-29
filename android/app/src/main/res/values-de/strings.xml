@@ -26,7 +26,7 @@
     <string name="user">Benutzer</string>
     <string name="search">Suche</string>
     <string name="add">Hinzufügen</string>
-    <string name="hours_unit">%1$s std</string>
+    <string name="hours_unit">%.1f  std</string>
     <string name="rate">Bewerten</string>
     <string name="number_of_stop_found">%d Sehenswürdigkeiten gefunden!</string>
     <string name="cancel">Abbrechen</string>
@@ -72,4 +72,10 @@
     <string name="time_unit">%d std %d min</string>
     <string name="skip">Überspringen</string>
     <string name="continue_stop">Fortfahren</string>
+    <string name="add_pricing">Welchen Preis hast du für diese Sehenswürdigkeit bezahlt?</string>
+    <string name="add_time_effort_description">Wie viel Zeit hast du an dieser Sehenswürdigkeit verbracht?</string>
+    <string name="add_price">Preis hinzufügen</string>
+    <string name="add_time_effort">Zeitaufwand hinzufügen</string>
+    <string name="successfully_added_pricing">Preis wurde erfolgreich hinzugefügt!</string>
+    <string name="successfully_added_time_effort">Zeitaufwand wurde erfolgreich hinzugefügt!</string>
 </resources>

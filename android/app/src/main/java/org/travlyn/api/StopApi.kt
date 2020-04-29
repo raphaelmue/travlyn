@@ -55,4 +55,27 @@ class StopApi(
         )
     }
 
+    suspend fun addPricingToStop(stopId: Int, pricing: Double) {
+        val localVariableQuery: MultiValueMap = mapOf("pricing" to listOf("$pricing"))
+        val localVariableConfig = RequestConfig(
+            RequestMethod.POST,
+            "/stop/{stopId}/pricing".replace("{" + "stopId" + "}", "$stopId"),
+            query = localVariableQuery
+        )
+        request<Any?>(
+            localVariableConfig
+        )
+    }
+
+    suspend fun addTimeEffortToStop(stopId: Int, timeEffort: Double) {
+        val localVariableQuery: MultiValueMap = mapOf("timeEffort" to listOf("$timeEffort"))
+        val localVariableConfig = RequestConfig(
+            RequestMethod.POST,
+            "/stop/{stopId}/timeEffort".replace("{" + "stopId" + "}", "$stopId"),
+            query = localVariableQuery
+        )
+        request<Any?>(
+            localVariableConfig
+        )
+    }
 }

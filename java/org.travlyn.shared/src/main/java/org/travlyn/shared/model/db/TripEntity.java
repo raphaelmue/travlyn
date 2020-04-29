@@ -35,7 +35,7 @@ public class TripEntity implements DataEntity {
     @JoinColumn(name = "ratable")
     private Set<TripRatingEntity> ratings = new HashSet<>();
 
-    @Column(name = "average_rating")
+    @Column(name = "average_rating", nullable = false)
     private double averageRating;
 
     @OneToMany(mappedBy = "trip", cascade = {CascadeType.ALL})
