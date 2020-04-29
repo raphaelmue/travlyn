@@ -53,6 +53,6 @@ class RegisterActivity : AppCompatActivity(), Application {
     }
 
     override fun getContext(): Context {
-        TODO("Not yet implemented")
+       return this
     }
 }

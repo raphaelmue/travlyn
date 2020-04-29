@@ -64,6 +64,14 @@ public class DBpediaCityRequest extends DBpediaRequest<City> {
                 String imageURL = englishContent.getAsJsonObject("dbothumbnail").getAsJsonPrimitive("value").getAsString();
                 String[] location = englishContent.getAsJsonObject("georsspoint").getAsJsonPrimitive("value").getAsString().split(" ");
 
+                //fix image URL in case it is broken
+                if (!imageURL.contains("http://commons.wikimedia.org/")) {
+                    imageURL = "http://commons.wikimedia.org/wiki/" + imageURL.substring(5);
+                }
+
+                imageURL = imageURL.replace("http://", "https://");
+
+
                 return new City()
                         .longitude(Double.parseDouble(location[1]))
                         .latitude(Double.parseDouble(location[0]))
