@@ -29,7 +29,7 @@ public class DBpediaStopRequestTest extends ApiTest {
                 "of the First Sea Lord and was used by the Admiralty. Until 2011, the building housed government offices, " +
                 "but in 2012 the government sold a 125-year lease over the building to a property developer (Prime Investors " +
                 "Capital, run by Rafael Serrano) for redevelopment into a luxury hotel, restaurant and apartments.", stop.getDescription());
-        Assertions.assertEquals("http://commons.wikimedia.org/wiki/Special:FilePath/Arco_del_Almirantazgo,_Lond" +
+        Assertions.assertEquals("https://commons.wikimedia.org/wiki/Special:FilePath/Arco_del_Almirantazgo,_Lond" +
                 "res,_Inglaterra,_2014-08-11,_DD_186.JPG?width=300", stop.getImage());
     }
 

@@ -133,7 +133,7 @@ public class TravlynService {
      */
     public Optional<UserEntity> getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() != null) {
+        if (authentication != null && authentication.getPrincipal() != null && !(authentication.getPrincipal() instanceof String)) {
             return Optional.of((UserEntity) authentication.getPrincipal());
         }
         return Optional.empty();

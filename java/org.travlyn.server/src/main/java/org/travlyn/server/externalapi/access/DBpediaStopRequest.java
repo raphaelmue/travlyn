@@ -84,6 +84,8 @@ public class DBpediaStopRequest extends DBpediaRequest<Stop> {
                     imageURL = "http://commons.wikimedia.org/wiki/" + imageURL.substring(5);
                 }
 
+                imageURL = imageURL.replace("http://", "https://");
+
                 return new Stop().name(query)
                         .description(description)
                         .image(imageURL);
