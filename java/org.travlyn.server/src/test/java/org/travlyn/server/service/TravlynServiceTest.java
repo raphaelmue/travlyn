@@ -2,6 +2,7 @@ package org.travlyn.server.service;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -14,10 +15,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.travlyn.server.ApiTest;
-import org.travlyn.server.externalapi.access.DBpediaCityRequest;
-import org.travlyn.server.externalapi.access.DBpediaStopRequest;
-import org.travlyn.server.externalapi.access.OpenRouteDirectionRequest;
-import org.travlyn.server.externalapi.access.OpenRoutePOIRequest;
+import org.travlyn.server.externalapi.access.*;
 import org.travlyn.shared.model.api.*;
 import org.travlyn.shared.model.db.*;
 
@@ -408,6 +406,19 @@ public class TravlynServiceTest extends ApiTest {
 
     @Transactional
     @Test
+    public void testGetStopById(){
+        Stop result = service.getStopById((long)stopEntity.getId());
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(stopEntity.getId(),result.getId());
+        Assertions.assertEquals(stopEntity.getName(),result.getName());
+
+        //invalid id
+        result = service.getStopById(-1L);
+        Assertions.assertNull(result);
+    }
+
+    @Transactional
+    @Test
     public void testAddRatingToTrip() throws NoResultException{
         Session session = sessionFactory.getCurrentSession();
         //normal case
@@ -440,17 +451,31 @@ public class TravlynServiceTest extends ApiTest {
     @Transactional
     public void testGetExecutionInfo() throws Exception {
         //mock api response
-        enqueue("openroute-response-direction.json");
+        enqueue("openroute-response-triproute.json");
         final String url = startServer();
         OpenRouteDirectionRequest.setBaseUrl(url);
 
         ExecutionInfo infoToAssert = service.getExecutionInfo((long)tripEntity.getId(),(long)userEntity.getId(),cityEntity.getLatitude(),cityEntity.getLongitude(),false,true,"en");
-        Assertions.assertEquals(1.11, infoToAssert.getDistance());
-        Assertions.assertEquals(13.32,infoToAssert.getDuration());
+        Assertions.assertEquals(1.5843, infoToAssert.getDistance());
+        Assertions.assertEquals(19.011666666666667,infoToAssert.getDuration());
         Assertions.assertEquals(tripEntity.getId(),infoToAssert.getTripId());
-        Assertions.assertEquals(67,infoToAssert.getWaypoints().size());
-        Assertions.assertEquals(18, infoToAssert.getSteps().size());
+        Assertions.assertEquals(85,infoToAssert.getWaypoints().size());
+        Assertions.assertEquals(26, infoToAssert.getSteps().size());
 
         Assertions.assertThrows(NoResultException.class,()->service.getExecutionInfo((long)-1,(long)userEntity.getId(),cityEntity.getLatitude(),cityEntity.getLongitude(),false,true,"en"));
+    }
+
+    @Test
+    @Transactional
+    public void testGetRedirection() throws Exception{
+        enqueue("openroute-response-redirection.json");
+        OpenRouteRedirectionRequest.setBaseUrl(startServer());
+
+        ExecutionInfo infoToAssert = service.getRedirection(cityEntity.getLatitude(),cityEntity.getLongitude(), (long) stopEntity.getId(),"en");
+        Assertions.assertEquals(0.555, infoToAssert.getDistance());
+        Assertions.assertEquals(35, infoToAssert.getWaypoints().size());
+
+        Assertions.assertThrows(NoResultException.class,()->service.getRedirection(cityEntity.getLatitude(),cityEntity.getLongitude(),-1L,"en"));
+
     }
 }
