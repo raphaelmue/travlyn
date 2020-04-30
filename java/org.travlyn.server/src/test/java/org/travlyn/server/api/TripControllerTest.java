@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,7 +23,7 @@ import org.travlyn.shared.model.api.Trip;
 
 import javax.persistence.NoResultException;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -84,5 +85,42 @@ public class TripControllerTest {
                 .param("startLongitude","0.0")
                 .param("stopId","1"))
                 .andExpect(status().isBadRequest());
+        verify(service,atLeastOnce()).getRedirection(0.0,0.0,1L,"en");
+    }
+
+    @Test
+    public void testGetExecutionInfo() throws Exception {
+        when(service.getExecutionInfo(1L,1L,0.0,0.0,true,true,"en")).thenReturn(new ExecutionInfo().setDuration(10).setTripId(1).setDistance(550.236));
+        when(service.getExecutionInfo(2L,1L,0.0,0.0,true,true,"en")).thenThrow(new NoResultException());
+
+
+        MvcResult result = this.mockMvc.perform(get("/trip/{tripId}/execution","1")
+                .accept(MediaType.APPLICATION_JSON)
+                .param("startLatitude","0.0")
+                .param("startLongitude","0.0")
+                .param("reorderAllowed","true")
+                .param("roundTrip","true")
+                .param("userId","1"))
+                .andExpect(status().isOk())
+                .andReturn();
+        Assertions.assertEquals("{\"trip_id\":1,\"steps\":[],\"distance\":550.236,\"duration\":10.0,\"waypoints\":[]}",result.getResponse().getContentAsString());
+
+        this.mockMvc.perform(get("/trip/{tripId}/execution","2")
+                .accept(MediaType.APPLICATION_JSON)
+                .param("startLatitude","0.0")
+                .param("startLongitude","0.0")
+                .param("reorderAllowed","true")
+                .param("roundTrip","true")
+                .param("userId","1"))
+                .andExpect(status().isNotFound());
+
+        this.mockMvc.perform(get("/trip/{tripId}/execution","1")
+                .param("startLatitude","0.0")
+                .param("startLongitude","0.0")
+                .param("reorderAllowed","true")
+                .param("roundTrip","true")
+                .param("userId","1"))
+                .andExpect(status().isBadRequest());
+        verify(service, times(2)).getExecutionInfo(anyLong(),anyLong(),anyDouble(),anyDouble(),anyBoolean(),anyBoolean(),anyString());
     }
 }
