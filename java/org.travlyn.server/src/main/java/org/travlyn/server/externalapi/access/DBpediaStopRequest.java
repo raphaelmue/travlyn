@@ -68,7 +68,7 @@ public class DBpediaStopRequest extends DBpediaRequest<Stop> {
         try {
             resultArray = gson.fromJson(result, JsonObject.class).getAsJsonObject("results").
                     getAsJsonArray("bindings");
-        } catch (JsonSyntaxException syntaxException) {
+        } catch (JsonSyntaxException | NullPointerException syntaxException) {
             throw new QuotaLimitException("DBpedia quota limit is reached by stop request!");
         }
 

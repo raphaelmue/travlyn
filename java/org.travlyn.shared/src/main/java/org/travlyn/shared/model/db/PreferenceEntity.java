@@ -52,7 +52,7 @@ public class PreferenceEntity implements DataEntity{
     public Preference toDataTransferObject() {
         return new Preference()
                     .setCategory(this.categoryEntity.toDataTransferObject())
-                    .setUser(this.user.toDataTransferObject())
+                    //.setUser(this.user.toDataTransferObject())
                     .setId(this.id);
     }
 }

@@ -98,6 +98,22 @@ public class TravlynService {
         return userEntity.toDataTransferObject().token(token);
     }
 
+    @Transactional
+    public void updateUser(User newUser) throws IllegalAccessException {
+        Session session = sessionFactory.getCurrentSession();
+        //get corresponding user
+        UserEntity user;
+        user = session.get(UserEntity.class, getUserId());
+
+        if(user.getId() != newUser.getId()){
+            //user is trying to change other user--> not allowed
+            throw new IllegalAccessException();
+        }
+        session.clear();
+
+        session.merge(newUser.toEntity());
+    }
+
     /**
      * Checks whether the given token is valid (not expired and existing) and returns the respective user if so.
      *

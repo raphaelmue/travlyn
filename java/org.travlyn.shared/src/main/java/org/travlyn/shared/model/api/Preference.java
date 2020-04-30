@@ -15,7 +15,7 @@ public class Preference extends AbstractDataTransferObject{
     @ApiModelProperty(value = "User", required = true)
     private User user = null;
 
-    @JsonProperty("id")
+    @JsonProperty("category")
     @ApiModelProperty(value = "Category", required = true)
     private Category category = null;
 

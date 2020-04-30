@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -71,6 +72,7 @@ public class TravlynServiceTest extends ApiTest {
         session.save(tokenEntity);
 
         categoryEntity = new CategoryEntity();
+        categoryEntity.setId(10);
         categoryEntity.setName("tourism");
 
         categoryEntity.setId((Integer) session.save(categoryEntity));
@@ -207,6 +209,20 @@ public class TravlynServiceTest extends ApiTest {
         Assertions.assertThrows(NonUniqueResultException.class,
                 () -> service.registerUser("test@email.com", "Second Test User", "password", "192.168.0.1"));
 
+    }
+
+    @Test
+    @Transactional
+    public void testUpdateUser() throws IllegalAccessException {
+        Session session = sessionFactory.getCurrentSession();
+        Set<Preference> preferences = new HashSet<>();
+        preferences.add(new Preference().setCategory(categoryEntity.toDataTransferObject()).setUser(userEntity.toDataTransferObject()));
+        User user = userEntity.toDataTransferObject();
+        user.setPreferences(preferences);
+        service.updateUser(user);
+
+        PreferenceEntity preferenceEntity = session.createQuery("from PreferenceEntity",PreferenceEntity.class).getSingleResult();
+        System.out.println("");
     }
 
     public void testGenerateTrip() {
