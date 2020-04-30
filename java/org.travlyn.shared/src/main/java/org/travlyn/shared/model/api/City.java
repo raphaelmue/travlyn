@@ -160,27 +160,6 @@ public class City extends AbstractDataTransferObject {
     }
 
     @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        City city = (City) o;
-        return Objects.equals(this.id, city.id) &&
-                Objects.equals(this.name, city.name) &&
-                Objects.equals(this.image, city.image) &&
-                Objects.equals(this.stops, city.stops) &&
-                Objects.equals(this.description, city.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, image, description);
-    }
-
-    @Override
     public CityEntity toEntity() {
         CityEntity cityEntity = new CityEntity();
         cityEntity.setId(this.id);
