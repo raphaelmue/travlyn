@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.travlyn.server.configuration.WebSecurityConfiguration;
 import org.travlyn.server.service.TravlynService;
+import org.travlyn.shared.model.api.City;
 import org.travlyn.shared.model.api.ExecutionInfo;
 import org.travlyn.shared.model.api.Trip;
 
@@ -25,6 +26,7 @@ import javax.persistence.NoResultException;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -122,5 +124,36 @@ public class TripControllerTest {
                 .param("userId","1"))
                 .andExpect(status().isBadRequest());
         verify(service, times(2)).getExecutionInfo(anyLong(),anyLong(),anyDouble(),anyDouble(),anyBoolean(),anyBoolean(),anyString());
+    }
+
+    @Test
+    public void testGenerateTrip() throws Exception {
+        when(service.generateTrip(eq(1),anyString(),anyBoolean(),anyList())).thenReturn(new Trip().id(1).city(new City().id(1)));
+        when(service.generateTrip(eq(2),anyString(),anyBoolean(),anyList())).thenThrow(new NoResultException());
+
+        MvcResult result = this.mockMvc.perform(put("/trip")
+                .accept(MediaType.APPLICATION_JSON)
+                .param("cityId","1")
+                .param("tripName","Test")
+                .param("privateFlag","true")
+                .param("stopIds","1"))
+                .andExpect(status().isOk())
+                .andReturn();
+        Assertions.assertEquals("{\"private\":null,\"id\":1,\"user\":null,\"city\":{\"id\":1,\"longitude\":-1.0,\"latitude\":-1.0,\"name\":null,\"image\":null,\"unfetchedStops\":false,\"description\":null,\"stops\":null},\"name\":\"\",\"stops\":null,\"ratings\":null,\"averageRating\":0.0,\"geoText\":null}",result.getResponse().getContentAsString());
+
+        this.mockMvc.perform(put("/trip")
+                .accept(MediaType.APPLICATION_JSON)
+                .param("cityId","2")
+                .param("tripName","Test")
+                .param("privateFlag","true")
+                .param("stopIds","1"))
+                .andExpect(status().isNotFound());
+
+        this.mockMvc.perform(put("/trip")
+                .param("cityId","1")
+                .param("tripName","Test")
+                .param("privateFlag","true")
+                .param("stopIds","1"))
+                .andExpect(status().isBadRequest());
     }
 }
