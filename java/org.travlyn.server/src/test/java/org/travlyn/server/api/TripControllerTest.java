@@ -3,17 +3,12 @@ package org.travlyn.server.api;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -24,7 +19,6 @@ import org.travlyn.server.service.TravlynService;
 import org.travlyn.shared.model.api.City;
 import org.travlyn.shared.model.api.ExecutionInfo;
 import org.travlyn.shared.model.api.Trip;
-import org.travlyn.shared.model.db.UserEntity;
 
 import javax.persistence.NoResultException;
 
