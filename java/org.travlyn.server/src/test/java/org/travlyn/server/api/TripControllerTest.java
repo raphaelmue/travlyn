@@ -11,6 +11,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -21,12 +24,12 @@ import org.travlyn.server.service.TravlynService;
 import org.travlyn.shared.model.api.City;
 import org.travlyn.shared.model.api.ExecutionInfo;
 import org.travlyn.shared.model.api.Trip;
+import org.travlyn.shared.model.db.UserEntity;
 
 import javax.persistence.NoResultException;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -155,5 +158,31 @@ public class TripControllerTest {
                 .param("privateFlag","true")
                 .param("stopIds","1"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testRateTrip() throws Exception {
+        when(service.addRatingToTrip(eq(1),any())).thenReturn(true);
+        when(service.addRatingToTrip(eq(2),any())).thenThrow(new NoResultException());
+        when(service.addRatingToTrip(eq(3),any())).thenThrow(new IllegalAccessError());
+
+        this.mockMvc.perform(post("/trip/{tripId}/rating", "1")
+                .accept(MediaType.APPLICATION_JSON)
+                .param("description","1")
+                .param("rating","0.5")
+                .param("id","-1"))
+                .andExpect(status().isOk());
+        this.mockMvc.perform(post("/trip/{tripId}/rating", "2")
+                .accept(MediaType.APPLICATION_JSON)
+                .param("description","1")
+                .param("rating","0.5")
+                .param("id","-1"))
+                .andExpect(status().isNotFound());
+        this.mockMvc.perform(post("/trip/{tripId}/rating", "3")
+                .accept(MediaType.APPLICATION_JSON)
+                .param("description","1")
+                .param("rating","0.5")
+                .param("id","-1"))
+                .andExpect(status().isUnauthorized());
     }
 }
