@@ -1,8 +1,10 @@
 package org.travlyn.shared.model.db;
 
+import org.travlyn.shared.model.api.Preference;
 import org.travlyn.shared.model.api.User;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -28,6 +30,9 @@ public class UserEntity implements DataEntity {
 
     @OneToMany(mappedBy = "user")
     private Set<TokenEntity> tokens;
+
+    @OneToMany(orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.MERGE},mappedBy = "user")
+    private Set<PreferenceEntity> preferences = new HashSet<>();
 
     @Override
     public int getId() {
@@ -82,8 +87,19 @@ public class UserEntity implements DataEntity {
         this.tokens = tokens;
     }
 
+    public Set<PreferenceEntity> getPreferences() {
+        return preferences;
+    }
+
+    public UserEntity setPreferences(Set<PreferenceEntity> preferences) {
+        this.preferences = preferences;
+        return this;
+    }
+
     @Override
     public User toDataTransferObject() {
-        return new User().id(this.id).email(this.email).name(this.name).token(null);
+        Set<Preference> preferences = new HashSet<>();
+        this.preferences.forEach(preferenceEntity -> preferences.add(preferenceEntity.toDataTransferObject()));
+        return new User().id(this.id).email(this.email).name(this.name).token(null).setPreferences(preferences);
     }
 }
