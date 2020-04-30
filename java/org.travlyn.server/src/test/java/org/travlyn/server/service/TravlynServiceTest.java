@@ -2,7 +2,6 @@ package org.travlyn.server.service;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -14,17 +13,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.travlyn.shared.model.api.*;
 import org.travlyn.server.ApiTest;
 import org.travlyn.server.externalapi.access.DBpediaCityRequest;
 import org.travlyn.server.externalapi.access.DBpediaStopRequest;
+import org.travlyn.server.externalapi.access.OpenRouteDirectionRequest;
 import org.travlyn.server.externalapi.access.OpenRoutePOIRequest;
+import org.travlyn.shared.model.api.*;
 import org.travlyn.shared.model.db.*;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.transaction.Transactional;
-import javax.validation.constraints.AssertTrue;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -81,8 +80,8 @@ public class TravlynServiceTest extends ApiTest {
         cityEntity = new CityEntity();
         cityEntity.setName("Test city");
         cityEntity.setDescription("Test descr");
-        cityEntity.setLongitude(0.0);
-        cityEntity.setLatitude(0.0);
+        cityEntity.setLongitude(8.4039514);
+        cityEntity.setLatitude(49.0092097);
         cityEntity.setImage("https://testurl.com/test.jpg");
 
         cityEntity.setId((Integer) session.save(cityEntity));
@@ -91,8 +90,8 @@ public class TravlynServiceTest extends ApiTest {
         stopEntity.setName("Test Stop");
         stopEntity.setDescription("Test descr");
         stopEntity.setAverageRating(2.0);
-        stopEntity.setLatitude(33.0);
-        stopEntity.setLongitude(5.0);
+        stopEntity.setLatitude(49.009231);
+        stopEntity.setLongitude(8.403905);
         stopEntity.setCategory(categoryEntity);
         stopEntity.setCity(cityEntity);
 
@@ -102,8 +101,8 @@ public class TravlynServiceTest extends ApiTest {
         secondStopEntity.setName("Second Test Stop");
         secondStopEntity.setDescription("Test descr");
         secondStopEntity.setAverageRating(2.0);
-        secondStopEntity.setLatitude(33.0);
-        secondStopEntity.setLongitude(5.0);
+        secondStopEntity.setLatitude(49.007849);
+        secondStopEntity.setLongitude(8.398887);
         secondStopEntity.setCategory(categoryEntity);
         secondStopEntity.setCity(cityEntity);
 
@@ -435,5 +434,23 @@ public class TravlynServiceTest extends ApiTest {
                 new UsernamePasswordAuthenticationToken(null, null));
         SecurityContextHolder.setContext(securityContext);
         Assertions.assertThrows(IllegalAccessError.class,() -> service.addRatingToTrip(tripEntity.getId(),testRating));
+    }
+
+    @Test
+    @Transactional
+    public void testGetExecutionInfo() throws Exception {
+        //mock api response
+        enqueue("openroute-response-direction.json");
+        final String url = startServer();
+        OpenRouteDirectionRequest.setBaseUrl(url);
+
+        ExecutionInfo infoToAssert = service.getExecutionInfo((long)tripEntity.getId(),(long)userEntity.getId(),cityEntity.getLatitude(),cityEntity.getLongitude(),false,true,"en");
+        Assertions.assertEquals(1.11, infoToAssert.getDistance());
+        Assertions.assertEquals(13.32,infoToAssert.getDuration());
+        Assertions.assertEquals(tripEntity.getId(),infoToAssert.getTripId());
+        Assertions.assertEquals(67,infoToAssert.getWaypoints().size());
+        Assertions.assertEquals(18, infoToAssert.getSteps().size());
+
+        Assertions.assertThrows(NoResultException.class,()->service.getExecutionInfo((long)-1,(long)userEntity.getId(),cityEntity.getLatitude(),cityEntity.getLongitude(),false,true,"en"));
     }
 }
