@@ -71,7 +71,7 @@ public class TripApiController implements TripApi {
     }
 
     @Override
-    public ResponseEntity<Trip> getTripByID(Long tripId) {
+    public ResponseEntity<Trip> getTripByID(@PathVariable("tripId") Long tripId) {
         String accept = request.getHeader(ACCEPT_HEADER);
         if (accept != null && accept.contains(JSON_TYPE)) {
             try {
