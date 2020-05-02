@@ -13,14 +13,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.travlyn.shared.model.api.*;
 import org.travlyn.server.ApiTest;
 import org.travlyn.server.externalapi.access.DBpediaCityRequest;
 import org.travlyn.server.externalapi.access.DBpediaStopRequest;
 import org.travlyn.server.externalapi.access.OpenRoutePOIRequest;
-import org.travlyn.shared.model.api.City;
-import org.travlyn.shared.model.api.Token;
-import org.travlyn.shared.model.api.Trip;
-import org.travlyn.shared.model.api.User;
 import org.travlyn.shared.model.db.*;
 
 import javax.persistence.NoResultException;
@@ -308,5 +305,79 @@ public class TravlynServiceTest extends ApiTest {
         Assertions.assertEquals("Updated test Trip", trip.getName());
         Assertions.assertEquals(1, trip.getStops().size());
         Assertions.assertEquals("Test descr", trip.getStops().get(0).getDescription());
+    }
+
+    @Transactional
+    @Test
+    public void testUpdatePricing() throws NoResultException {
+        Session session = sessionFactory.getCurrentSession();
+
+        Stop result = service.addPricingToStop(stopEntity.getId(), 10.0);
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(10.0, result.getPricing());
+
+        StopEntity entity = session.createQuery("from StopEntity where id = :id", StopEntity.class)
+                .setParameter("id", stopEntity.getId())
+                .getSingleResult();
+
+        Assertions.assertEquals(10.0, entity.getPricing());
+
+        Assertions.assertThrows(ValueException.class, () -> service.addPricingToStop(stopEntity.getId(), -20));
+        Assertions.assertThrows(NoResultException.class, () -> service.addPricingToStop(-1, 20));
+
+        result = service.addPricingToStop(stopEntity.getId(), 20);
+        Assertions.assertEquals(15, result.getPricing());
+    }
+
+    @Transactional
+    @Test
+    public void testUpdateTimeEffort() throws NoResultException {
+        Session session = sessionFactory.getCurrentSession();
+
+        Stop result = service.addTimeEffortToStop(stopEntity.getId(), 2.0);
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(2.0, result.getTimeEffort());
+
+        StopEntity entity = session.createQuery("from StopEntity where id = :id", StopEntity.class)
+                .setParameter("id", stopEntity.getId())
+                .getSingleResult();
+
+        Assertions.assertEquals(2.0, entity.getTimeEffort());
+
+        Assertions.assertThrows(ValueException.class, () -> service.addTimeEffortToStop(stopEntity.getId(), -20));
+        Assertions.assertThrows(NoResultException.class, () -> service.addTimeEffortToStop(-1, 2.0));
+
+        result = service.addTimeEffortToStop(stopEntity.getId(), 10);
+        Assertions.assertEquals(6.0, result.getTimeEffort(),0.1);
+    }
+
+    @Transactional
+    @Test
+    public void testAddRatingToTrip() throws NoResultException{
+        Session session = sessionFactory.getCurrentSession();
+        //normal case
+        Rating testRating = new Rating().rating(0.0001).user(userEntity.toDataTransferObject()).description("Sucks!");
+        Assertions.assertTrue(service.addRatingToTrip( tripEntity.getId(),testRating));
+        TripEntity entity = session.get(TripEntity.class,tripEntity.getId());
+        Assertions.assertEquals(1, entity.getRatings().size());
+        Assertions.assertEquals(0.0001,entity.getAverageRating());
+
+        TripRatingEntity savedRating = session.createQuery("from TripRatingEntity where trip.id = :id",TripRatingEntity.class)
+                .setParameter("id",tripEntity.getId())
+                .getSingleResult();
+        Assertions.assertNotNull(savedRating);
+        Assertions.assertEquals(0.0001,savedRating.getRating());
+
+        //try to set ratong for non existing trip
+        Assertions.assertThrows(NoResultException.class,() ->service.addRatingToTrip(-1,testRating));
+
+        //try to set rating for private trip without auth
+        tripEntity.setPrivate(true);
+        service.updateTrip(tripEntity.toDataTransferObject());
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(
+                new UsernamePasswordAuthenticationToken(null, null));
+        SecurityContextHolder.setContext(securityContext);
+        Assertions.assertThrows(IllegalAccessError.class,() -> service.addRatingToTrip(tripEntity.getId(),testRating));
     }
 }
