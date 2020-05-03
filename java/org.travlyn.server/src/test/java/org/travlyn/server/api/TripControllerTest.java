@@ -70,7 +70,7 @@ public class TripControllerTest {
                                                 .param("stopId","1"))
                                                 .andExpect(status().isOk())
                                                 .andReturn();
-        Assertions.assertEquals("{\"trip_id\":1,\"steps\":[],\"distance\":10.0,\"duration\":20.0,\"waypoints\":[]}",result.getResponse().getContentAsString());
+        Assertions.assertEquals("{\"trip_id\":1,\"steps\":[],\"distance\":10.0,\"duration\":20.0,\"waypoints\":[],\"stopIds\":[]}",result.getResponse().getContentAsString());
 
         this.mockMvc.perform(get("/trip/reroute")
                 .accept(MediaType.APPLICATION_JSON)
@@ -102,7 +102,7 @@ public class TripControllerTest {
                 .param("userId","1"))
                 .andExpect(status().isOk())
                 .andReturn();
-        Assertions.assertEquals("{\"trip_id\":1,\"steps\":[],\"distance\":550.236,\"duration\":10.0,\"waypoints\":[]}",result.getResponse().getContentAsString());
+        Assertions.assertEquals("{\"trip_id\":1,\"steps\":[],\"distance\":550.236,\"duration\":10.0,\"waypoints\":[],\"stopIds\":[]}",result.getResponse().getContentAsString());
 
         this.mockMvc.perform(get("/trip/{tripId}/execution","2")
                 .accept(MediaType.APPLICATION_JSON)
