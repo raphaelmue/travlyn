@@ -35,6 +35,7 @@ public class TravlynService {
     public static final int FETCHABLESTOPS = 100;
 
     public TravlynService() {
+        //empty controller is needed for autowirering this service in other components
     }
 
     /**
@@ -196,7 +197,7 @@ public class TravlynService {
      * @return generated Token DTO
      */
     @Transactional
-    Token generateToken(UserEntity user, String ipAddress) {
+    public Token generateToken(UserEntity user, String ipAddress) {
         logger.info("Generating token for user {} (id: {}).", user.getName(), user.getId());
 
         Session session = sessionFactory.getCurrentSession();
@@ -334,7 +335,7 @@ public class TravlynService {
     }
 
     @Transactional
-    protected Set<StopEntity> fetchNumberOfStops(Set<StopEntity> entities) {
+    public Set<StopEntity> fetchNumberOfStops(Set<StopEntity> entities) {
         Session session = sessionFactory.getCurrentSession();
         int requestCount = 2;
         Iterator<StopEntity> stopEntityIterator = entities.iterator();
@@ -586,10 +587,10 @@ public class TravlynService {
                 .getSingleResult();
 
         Trip trip = tripEntity.toDataTransferObject();
+        List<Stop> stops = trip.getStops();
+        // add stop that represents the position of the user
+        stops.add(0, new Stop().id(-1).latitude(lat).longitude(lon));
         if (reorder) {
-            List<Stop> stops = trip.getStops();
-            // add stop that represents the position of the user
-            stops.add(0, new Stop().id(-1).latitude(lat).longitude(lon));
             trip.setStops(new TSPSolver(stops).solve());
         }
         OpenRouteTripDirectionRequest directionRequest = new OpenRouteTripDirectionRequest(trip, isRoundtrip, lang);

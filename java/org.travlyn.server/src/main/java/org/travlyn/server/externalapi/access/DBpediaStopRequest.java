@@ -52,7 +52,7 @@ public class DBpediaStopRequest extends DBpediaRequest<Stop> {
     }
 
     @Override
-    public Stop getResult() throws QuotaLimitException {
+    public Stop getResult() {
         //check for manual name setting
         String manualQuery = this.checkForManualName(query);
         if (manualQuery != null) {
