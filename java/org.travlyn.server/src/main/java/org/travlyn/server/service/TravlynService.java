@@ -374,10 +374,34 @@ public class TravlynService {
     @Transactional
     protected Set<StopEntity> fetchNumberOfStops(Set<StopEntity> entities) {
         Session session = sessionFactory.getCurrentSession();
+        Optional<UserEntity> userOptional = getAuthenticatedUser();
+        Set<StopEntity> preferredStops = new HashSet<>();
+        if (userOptional.isPresent()){
+            UserEntity userEntity = userOptional.get();
+            Set<PreferenceEntity> preferences = userEntity.getPreferences();
+            Set<Integer> categoryIds = new HashSet<>();
+            preferences.forEach(preferenceEntity -> categoryIds.add(preferenceEntity.getCategoryEntity().getId()));
+            for (Iterator<StopEntity> entityIterator = entities.iterator(); entityIterator.hasNext();){
+                StopEntity stopEntity = entityIterator.next();
+                if (categoryIds.contains(stopEntity.getCategory().getId())){
+                    entityIterator.remove();
+                    preferredStops.add(stopEntity);
+                }
+            }
+        }
         int requestCount = 2;
         Iterator<StopEntity> stopEntityIterator = entities.iterator();
-        while (requestCount < FETCHABLESTOPS && stopEntityIterator.hasNext()) {
-            StopEntity entity = stopEntityIterator.next();
+        Iterator<StopEntity> preferredStopIterator = preferredStops.iterator();
+        while (requestCount < FETCHABLESTOPS && (preferredStopIterator.hasNext() || stopEntityIterator.hasNext())) {
+            StopEntity entity;
+            boolean preferredStop;
+            if (preferredStopIterator.hasNext()){
+                entity = preferredStopIterator.next();
+                preferredStop = true;
+            }else{
+                entity = stopEntityIterator.next();
+                preferredStop = false;
+            }
             if (entity.getImage() != null && entity.getDescription() != null) {
                 continue;
             }
@@ -394,10 +418,15 @@ public class TravlynService {
                 entity.setDescription(stop.getDescription());
             } else {
                 session.delete(entity);
-                stopEntityIterator.remove();
+                if (preferredStop){
+                    preferredStopIterator.remove();
+                }else{
+                    stopEntityIterator.remove();
+                }
             }
             requestCount++;
         }
+        entities.addAll(preferredStops);
         return entities;
     }
 
