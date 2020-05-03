@@ -587,10 +587,10 @@ public class TravlynService {
                 .getSingleResult();
 
         Trip trip = tripEntity.toDataTransferObject();
+        List<Stop> stops = trip.getStops();
+        // add stop that represents the position of the user
+        stops.add(0, new Stop().id(-1).latitude(lat).longitude(lon));
         if (reorder) {
-            List<Stop> stops = trip.getStops();
-            // add stop that represents the position of the user
-            stops.add(0, new Stop().id(-1).latitude(lat).longitude(lon));
             trip.setStops(new TSPSolver(stops).solve());
         }
         OpenRouteTripDirectionRequest directionRequest = new OpenRouteTripDirectionRequest(trip, isRoundtrip, lang);
