@@ -1,4 +1,4 @@
-\chapter{Implementierung}
+\chapter{Implementierung}\label{sec:implementierung}
 
 	In diesem Kapitel werden einige Implementationsdetails dargestellt und erläutert, welche entweder einen kritischen Aspekt des Projekts darstellen oder von hoher Relevanz für den Erfolg des Projektes sind. 
 	
@@ -36,43 +36,109 @@
 		
 		Um die zugelassenen Benutzerrollen für einen Endpoint der \acs{API} festzulegen, stellt das Modul Spring Security unter anderem die Annotation \lstinline|@PreAuthorize| zur Verfügung. Als Parameter wird ein in der \ac{SpEL} geschriebener Ausdruck übergeben, wie beispielsweise \lstinline|hasRole(API_USER)| in \autoref{code:CityApi}. So lässt sich die gesendete Authentisierung des Benutzers automatisiert überprüfen.
 		
+	\section{Trip Execution} 
+	
+		Einen großen Teil der Applikation stellt die Ausführung der Trips dar. Diese beinhaltet die Navigation des Benutzers durch die Stadt entlang der einzelnen, zu diesem Trip gehörigen Stops. Wenn der Nutzer einen Stop erreicht hat, werden zusätzliche Informationen zu diesem Stop angezeigt. Sobald die Sehenswürdigkeit nach dem Empfinden des Nutzers ausreichend besichtigt wurde, kann der Nutzer zum nächsten Stop navigieren. 
+		
+		Beim Starten dieser Navigation können zwei zusätzliche Parameter festgelegt werden: \lstinline|roundTrip| und \lstinline|reorderAllowed|. \textit{Travlyn} führt den Nutzer an seine Startposition zurück, wenn der erste Parameter auf \lstinline|true| gesetzt ist. Der zweite Parameter hingegen entscheidet, ob die Stops reorganisiert werden, sodass ein kürzerer Laufweg für den Nutzer entsteht. 
+		
+		Diese Reorganisierung der Stops entstammt aus der Menge der kombinatorischen Optimierungsproblemen und wird auch als \ac{TSP} bezeichnet. Dabei gilt es die kürzeste Strecke durch Rekombination der einzelnen Orte zu finden. Da dem Handlungsreisenden -- bzw. in diesem Fall dem Benutzer -- in jedem Schritt die Stops zur Auswahl stehen, welche noch nicht besucht wurden, existieren $(n - 1)!$ mögliche Touren, wobei $n$ die Anzahl der Orte -- bzw. Stops -- beschreibt. \acs{TSP} ist ein NP-schweres Problem, für welches unter der bisher unbewiesenen Annahme, dass die Komplexitätsklassen P und NP verschieden sind, kein Algorithmus existiert, der das Problem der kürzesten Rundreise in polynomieller Laufzeit lösen kann. \cite{Applegate.2006}
+		
+		\subsection*{Simulated Annealing}
+		
+		Simulated Annealing \cite{S.Kirkpatrick.1983} bezeichnet ein heuristisches Approximationsverfahren, welches das Ziel hat, eine Näherungslösung für Optimierungsprobleme wie \acs{TSP} zu finden. Der Algorithmus von Simulated Annealing ist durch physikalische Überlegungen motiviert: Der langsame Abkühlungsprozess von Metallen nach dem Erhitzen sorgt dafür, dass die Atome ausreichend Zeit haben, sich zu ordnen und stabile Kristalle zu bilden. Der Zustand, der auf diese Weise erzeugt wird, liegt somit nahe am Optimum und ist energiearm. 
+		
+		Wenn man das auf Optimierungsprobleme überträgt, entspricht die Temperatur $T$ der Wahrscheinlichkeit mit der sich ein Zwischenergebnis verschlechtern darf. So kann ein lokales Optimum wieder verlassen werden, was bei der lokalen Suche beispielsweise nicht möglich ist. Es werden also Verschlechterungen akzeptiert, da auf diese Weise die Wahrscheinlichkeit erhöht wird, ein besseres lokales Optimum und im besten Fall das globale Optimum zu erreichen. 
+		
+		Um dieses Verfahren durchzuführen, muss eine Metrik definiert werden, mit der sich die Qualität einer Lösung beschreiben lässt. Diese sog. Energie $E$ beschreibt im Falle von \acs{TSP} die Summe der Distanzen zwischen den einzelnen Stops $s = (x, y)$ einer Lösung $x$, wobei $n$ der Anzahl der Stops und $s_{start}$ dem Startpunkt entspricht:
+		
+		\begin{equation}
+			E(x) = ||\left(s_{start}, s_1 \right)|| + \sum_{i = 1}^{n - 1} ||\left(s_i, s_{i + 1}\right)|| + ||\left(s_n, s_{start} \right)||
+		\end{equation}
+			
+		Um nun festzustellen, ob eine Lösung $x_{2}$ besser oder schlechter als eine andere Lösung $x_{1}$ ist, lässt sich $\varDelta E$ bestimmen mit $\varDelta E = \left\| E\left(x_{2}\right) - E\left(x_{1}\right) \right\|$. 
+		
+		\begin{algorithm}
+			\caption{Simulated Annealing Algorithmus \cite{S.Kirkpatrick.1983}}
+			\label{alg:simulatedAnnealing}
+			\begin{algorithmic}
+				\State $T\gets T_{max}$
+				\State $best\gets$ \textbf{\Call{\color{blue}init}{$ $}}
+				
+				\While{$T>T_{min}$}
+				\State $next\gets $ \textbf{\Call{\color{blue}next}{$T, best$}}
+				\State $\Delta E\gets$ \textbf{\Call{\color{blue}energy}{$next$}} $-$ \textbf{\Call{\color{blue}energy}{$best$}}
+				\If{$\Delta E < 0$}
+				\State $best\gets next$
+				\ElsIf{\textbf{\Call{\color{blue}probability}{$T,\Delta E$}} $>$ {\Call{random}{$ $}}}
+				\State $best\gets next$
+				\EndIf
+				\State $T\gets$ \textbf{\Call{\color{blue}cooling}{$T,best$}}
+				\EndWhile \\
+				\Return $best$
+			\end{algorithmic}
+		\end{algorithm}	
+		
+		
+		\autoref{alg:simulatedAnnealing} beschreibt in Pseudocode die Vorgehensweise von Simulated Annealing. In jedem Iterationsschritt wird zunächst eine alternative Lösung und abhängig davon $\varDelta E$ bestimmt. Ist diese Lösung besser als die bisher beste, so wird sie übernommen. Falls nicht, wird mit einer bestimmten Wahrscheinlichkeit trotzdem zugelassen, dass die Lösung übernommen wird. Somit kann erreicht werden, dass aufgrund einer Verschlechterung ein besseres lokales Optimum gefunden wird. Diese Wahrscheinlichkeit ist definiert als
+		
+		\begin{equation}
+			P \left(x\right) = e^{\frac{\varDelta E}{T}}
+		\end{equation}
+		
+		wobei $T$ die Temperatur definiert. So ist bei hoher Temperatur die Wahrscheinlichkeit sehr hoch, dass eine schlechtere Lösung übernommen wird. Die Wahrscheinlichkeit sinkt jedoch mit fallender Temperatur. Wie bei dem abkühlenden Metall, kühlt die Temperatur mit jedem Iterationsschritt ab. Für diesen Abkühlungsprozess wird häufig eine Exponentialfunktion der Art 
+		
+		\begin{equation}
+			f(T) = T_{max} T^{-\alpha}, 0.8 < \alpha < 1
+		\end{equation}
+				
+		verwendet. Der Algorithmus terminiert, sobald die Temperatur $T$ unter einen Schwellenwert $T_{min}$ fällt. 
+	
+		Um die Distanz zwischen zwei Stops zu berechnen, wird als Näherung die Länge der Luftlinie berechnet: 
+		
+		\begin{equation}
+			||(x_1, x_2)|| = \sqrt{ ( x_{2x} - x_{1x} )^2  + ( x_{2y} - x_{1y} )^2 }
+		\end{equation}
+		
+		Dies entspricht nicht der korrekten Distanz, da diese sich an Straßen und Wegen in einer Stadt orientiert, jedoch müsste andernfalls für jede Distanzberechnung eine \acs{HTTP} Anfrage an Openroute Service (siehe \autoref{sec:openRouteService}) geschickt werden. Dies würde dazuführen, dass zum einen bei einer großen Anzahl an Stops das API Limit erreicht werden könnte und somit keine Anfragen mehr zugelassen werden, und zum anderen würde die Laufzeit für die Reorganisierung deutlich steigen.
+		 
 	\section{Namenzuordnung zwischen den \acs{API}s}
 	
-	(Joshua)
-	
-	Wie in \autoref{sec:datengrundlage} beschrieben werden für \textit{Travlyn} mehrere verschiedene \acs{API}s benutzt um alle relevanten Informationen zu sammeln. Leider ergeben sich bei einer derartigen Parallelbenutzung häufig Inkompatibilitäten, gerade wenn die \acs{API}s nicht von demselben Anbieter stammen.
-	
-	\vspace{0.25cm}
-	
-	Im Fall von \textit{Travlyn} besteht eine solche Inkompatibilität zwischen der OpenRouteService \acs{API}, welche die Positionen und Namen der \acs{POI}s liefert und der DBpedia \acs{API}, welche die entsprechenden Informationen von Wikipedia bezieht: OpenRouteService liefert die Namen der Punkte in der Landessprache z.B. \enquote{Schloss Karlsruhe}. Dem gegenüber können bei DBpedia nur englische Namen abgefragt werden, wie z.B. \enquote{Karlsruhe Palace}. Des Weiteren stehen selbst in englischsprachigen Ländern einige Namen in Konflikt wie z.B. \enquote{Coca Cola London Eye} auf \acs{ORS} zu \enquote{London Eye} auf DBpedia. Durch diese Konflikte fehlen viele Informationen in der \textit{Travlyn} App und müssen manuell nachgepflegt werden.
-	
-	\vspace{0.25cm}
-	
-	Da diese Arbeit nicht darauf ausgelegt ist eine zur Veröffentlichung bereite App zu erstellen, sondern Konzepte und Wege aufzuzeigen, welche verwendet werden können wurde diese Nachpflege lediglich für einige Sehenswürdigkeiten in Karlsruhe durchgeführt und die entsprechende Infrastruktur für eine ausgedehntere Pflege geschaffen. Sollte die App produktiv veröffentlicht werden sind mehrere Möglichkeiten der Pflege vorstellbar: Es werden entsprechende Agenturen gebucht um die Zuordnung manuell in einer Datenbank zu pflegen und für möglichst viele Städte zur Verfügung zu stellen. Außerdem könnte auf einen nutzerbasierten Ansatz gesetzt werden, bei dem die Nutzer die Möglichkeit haben Fehler und fehlende Informationen nachzupflegen, sobald sie auffallen. Dies hätten den Vorteil, dass es für den Hersteller kostenlos ist und gut skaliert. Wahrscheinlich wäre eine Kombination aus beiden Möglichkeiten der beste Weg.
+		(Joshua)
+		
+		Wie in \autoref{sec:datengrundlage} beschrieben werden für \textit{Travlyn} mehrere verschiedene \acs{API}s benutzt um alle relevanten Informationen zu sammeln. Leider ergeben sich bei einer derartigen Parallelbenutzung häufig Inkompatibilitäten, gerade wenn die \acs{API}s nicht von demselben Anbieter stammen.
+		
+		\vspace{0.25cm}
+		
+		Im Fall von \textit{Travlyn} besteht eine solche Inkompatibilität zwischen der OpenRouteService \acs{API}, welche die Positionen und Namen der \acs{POI}s liefert und der DBpedia \acs{API}, welche die entsprechenden Informationen von Wikipedia bezieht: OpenRouteService liefert die Namen der Punkte in der Landessprache z.B. \enquote{Schloss Karlsruhe}. Dem gegenüber können bei DBpedia nur englische Namen abgefragt werden, wie z.B. \enquote{Karlsruhe Palace}. Des Weiteren stehen selbst in englischsprachigen Ländern einige Namen in Konflikt wie z.B. \enquote{Coca Cola London Eye} auf \acs{ORS} zu \enquote{London Eye} auf DBpedia. Durch diese Konflikte fehlen viele Informationen in der \textit{Travlyn} App und müssen manuell nachgepflegt werden.
+		
+		\vspace{0.25cm}
+		
+		Da diese Arbeit nicht darauf ausgelegt ist eine zur Veröffentlichung bereite App zu erstellen, sondern Konzepte und Wege aufzuzeigen, welche verwendet werden können wurde diese Nachpflege lediglich für einige Sehenswürdigkeiten in Karlsruhe durchgeführt und die entsprechende Infrastruktur für eine ausgedehntere Pflege geschaffen. Sollte die App produktiv veröffentlicht werden sind mehrere Möglichkeiten der Pflege vorstellbar: Es werden entsprechende Agenturen gebucht um die Zuordnung manuell in einer Datenbank zu pflegen und für möglichst viele Städte zur Verfügung zu stellen. Außerdem könnte auf einen nutzerbasierten Ansatz gesetzt werden, bei dem die Nutzer die Möglichkeit haben Fehler und fehlende Informationen nachzupflegen, sobald sie auffallen. Dies hätten den Vorteil, dass es für den Hersteller kostenlos ist und gut skaliert. Wahrscheinlich wäre eine Kombination aus beiden Möglichkeiten der beste Weg.
 	
 	\section{Umgehung der API Beschränkung für DBpedia}
 	
-	Der Umgang mit DBpedia für dieses Projekt wurde neben dem oben beschriebenen Mappingproblem auch durch die Abfragebeschränkung erschwert. Trotz eines registrierten persönlichen \acs{API} Schlüssels stehen der \textit{Travlyn} App nur 100 Abfragen pro Minute Verfügung. Außerdem gelten weitere strenge Einschränkungen, wie in \cite{DBpedia.2020} beschrieben. 
+		Der Umgang mit DBpedia für dieses Projekt wurde neben dem oben beschriebenen Mappingproblem auch durch die Abfragebeschränkung erschwert. Trotz eines registrierten persönlichen \acs{API} Schlüssels stehen der \textit{Travlyn} App nur 100 Abfragen pro Minute Verfügung. Außerdem gelten weitere strenge Einschränkungen, wie in \cite{DBpedia.2020} beschrieben. 
+		
+		\vspace{0.25cm}
+		
+		Unter Betrachtung des Umstandes, dass jede neu abgefragte Stadt und jeder in dieser Stadt befindliche \acs{POI} abgefragt werden muss, wenn ein Nutzer sich per \textit{Travlyn} über eine Stadt informieren möchte, ist leicht zu erkennen, dass diese Beschränkung kaum eingehalten werden kann. Beispielsweise liefert \acs{ORS} für die Stadt London ca. 670 \acs{POI}s, die alle in einer für den Nutzer angemessenen Zeit abgefragt werden müssten. Dies kollidiert eindeutig mit der Minutenbeschränkung von DBpedia.
+		Aus diesem Grund wurde für \textit{Travlyn} ein Konzept entwickelt, was ein \textit{lazy fetching} ermöglicht und die nötigen Abfragen erst nach und nach absetzt und den Nutzer möglichst wenig einschränkt:
+		Für eine neue (sich nicht im Cache befindliche) Stadt wird sowohl die Abfrage für die Stadt als auch für bis zu 99 \acs{POI}s durchgeführt. Dies ist konform mit der Beschränkung von DBpedia und versucht den Nutzer möglichst wenig einzuschränken, indem die \acs{POI}s bevorzugt abgefragt werden, für die sich der aktuelle Nutzer laut seiner Präferenzen interessiert. Es wird eine entsprechend reduzierte Antwort an den Client geschickt, mit dem Hinweis, dass einige \acs{POI}s fehlen könnten. Nun hat der Nutzer die Möglichkeit, nach der Durchsicht der vorhandenen Sehenswürdigkeiten, weitere anzufordern und damit weitere Anfragen auf DBpedia auszulösen. Ebenso löst jede weitere Suche nach der vorliegenden Stadt weitere Requests aus. Dieses Verfahren operiert, bis alle \acs{POI}s abgefragt wurden. \autoref{fig:DBpediaFlow} zeigt vereinfacht den allgemeinen Ablauf des Verfahrens.
+		
+		\begin{figure}[ht!]
+			\centering
+			\includegraphics[width=1\textwidth]{images/DBpediaFlow.pdf}
+			\caption{Flussdiagramm zum Ablauf des \textit{lazy fetching} von DBpedia.}
+			\label{fig:DBpediaFlow}
+		\end{figure}
 	
-	\vspace{0.25cm}
-	
-	Unter Betrachtung des Umstandes, dass jede neu abgefragte Stadt und jeder in dieser Stadt befindliche \acs{POI} abgefragt werden muss, wenn ein Nutzer sich per \textit{Travlyn} über eine Stadt informieren möchte, ist leicht zu erkennen, dass diese Beschränkung kaum eingehalten werden kann. Beispielsweise liefert \acs{ORS} für die Stadt London ca. 670 \acs{POI}s, die alle in einer für den Nutzer angemessenen Zeit abgefragt werden müssten. Dies kollidiert eindeutig mit der Minutenbeschränkung von DBpedia.
-	Aus diesem Grund wurde für \textit{Travlyn} ein Konzept entwickelt, was ein \textit{lazy fetching} ermöglicht und die nötigen Abfragen erst nach und nach absetzt und den Nutzer möglichst wenig einschränkt:
-	Für eine neue (sich nicht im Cache befindliche) Stadt wird sowohl die Abfrage für die Stadt als auch für bis zu 99 \acs{POI}s durchgeführt. Dies ist konform mit der Beschränkung von DBpedia und versucht den Nutzer möglichst wenig einzuschränken, indem die \acs{POI}s bevorzugt abgefragt werden, für die sich der aktuelle Nutzer laut seiner Präferenzen interessiert. Es wird eine entsprechend reduzierte Antwort an den Client geschickt, mit dem Hinweis, dass einige \acs{POI}s fehlen könnten. Nun hat der Nutzer die Möglichkeit, nach der Durchsicht der vorhandenen Sehenswürdigkeiten, weitere anzufordern und damit weitere Anfragen auf DBpedia auszulösen. Ebenso löst jede weitere Suche nach der vorliegenden Stadt weitere Requests aus. Dieses Verfahren operiert, bis alle \acs{POI}s abgefragt wurden. \autoref{fig:DBpediaFlow} zeigt vereinfacht den allgemeinen Ablauf des Verfahrens.
-	
-	\begin{figure}[ht!]
-		\centering
-		\includegraphics[width=1\textwidth]{images/DBpediaFlow.pdf}
-		\caption{Flussdiagramm zum Ablauf des \textit{lazy fetching} von DBpedia.}
-		\label{fig:DBpediaFlow}
-	\end{figure}
-
-	Über diesen Mechanismus können die großen Abfragenwellen abgefedert werden und die Beschränkung kann eingehalten werden.
-	
-	\vspace{0.25cm}
-	
-	Aus dem Vorangegangen ergibt sich neben der Notwendigkeit eines \textit{lazy fetchings} eindeutig, dass diese Beschränkungen für einen Produktivbetrieb mit vielen Nutzern nicht ohne Weiteres einhaltbar sind. Für diesen Fall sind zwei mögliche Lösungswege zu betrachten: Wenn für einen Produktivbetrieb mehr und stärkere Rechenressourcen in Form von Servern zur Verfügung stehen, als in diesem Studienprojekt, wäre es möglich, eine Instanz des DBpedia SPARQL Endpoints selber zu betreiben. Dies würde einen Zugangspunkt schaffen, der ohne Beschränkungen genutzt werden könnte. Ein zweiter Ansatz wäre ein \textit{startup-script} zu entwerfen, welches innerhalb der vorgegeben Beschränkungen nach und nach dem Cache mit möglichen Nutzerzielen automatisch füllt, wovor die App freigeschaltet wird. Vorstellbar wäre, den Cache während dieser \textit{Aufwärmphase} z.B. mit allen Hauptstädten zu füllen. Damit würden nur noch weniger Städte im Produktivbetrieb abgefragt und die Beschränkungen könnten, zusammen mit dem \textit{lazy fetching}, eingehalten werden.
-	
-	\vspace{0.25cm}
-	
-	Da beide Lösungsansätze ausschließlich für den Produktivbetrieb und nicht für die grundsätzliche Funktionalität benötigt werden, wurden lediglich die Möglichkeiten für eine spätere Implementation geschaffen. Das hier beschriebene \textit{lazy fetching} wurde komplett umgesetzt, da es systemkritisch ist und die Funktionalität sonst stark eingeschränkt wäre.      
+		Über diesen Mechanismus können die großen Abfragenwellen abgefedert werden und die Beschränkung kann eingehalten werden.
+		
+		\vspace{0.25cm}
+		
+		Aus dem Vorangegangen ergibt sich neben der Notwendigkeit eines \textit{lazy fetchings} eindeutig, dass diese Beschränkungen für einen Produktivbetrieb mit vielen Nutzern nicht ohne Weiteres einhaltbar sind. Für diesen Fall sind zwei mögliche Lösungswege zu betrachten: Wenn für einen Produktivbetrieb mehr und stärkere Rechenressourcen in Form von Servern zur Verfügung stehen, als in diesem Studienprojekt, wäre es möglich, eine Instanz des DBpedia SPARQL Endpoints selber zu betreiben. Dies würde einen Zugangspunkt schaffen, der ohne Beschränkungen genutzt werden könnte. Ein zweiter Ansatz wäre ein \textit{startup-script} zu entwerfen, welches innerhalb der vorgegeben Beschränkungen nach und nach dem Cache mit möglichen Nutzerzielen automatisch füllt, wovor die App freigeschaltet wird. Vorstellbar wäre, den Cache während dieser \textit{Aufwärmphase} z.B. mit allen Hauptstädten zu füllen. Damit würden nur noch weniger Städte im Produktivbetrieb abgefragt und die Beschränkungen könnten, zusammen mit dem \textit{lazy fetching}, eingehalten werden.
+		
+		\vspace{0.25cm}
+		
+		Da beide Lösungsansätze ausschließlich für den Produktivbetrieb und nicht für die grundsätzliche Funktionalität benötigt werden, wurden lediglich die Möglichkeiten für eine spätere Implementation geschaffen. Das hier beschriebene \textit{lazy fetching} wurde komplett umgesetzt, da es systemkritisch ist und die Funktionalität sonst stark eingeschränkt wäre.      

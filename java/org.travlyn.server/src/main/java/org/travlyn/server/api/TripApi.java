@@ -115,12 +115,19 @@ public interface TripApi {
     @GetMapping(
             value = "/trip/{tripId}/execution",
             produces = {"application/json"})
-    ResponseEntity<ExecutionInfo> getTripExecutionInfo(@ApiParam(value = "ID of trip to return", required = true, defaultValue = "-1", example = "123") @PathVariable("tripId") Long tripId,
-                                                       @ApiParam(value = "Id of user that is reading the trip", required = true, defaultValue = "-1", example = "123") @Valid @RequestParam(value = "userId") Long userId,
-                                                       @ApiParam(value = "Latitude where trip should start", required = true, defaultValue = "0.0", example = "-3.25") @Valid @RequestParam(value = "startLatitude") double startLatitude,
-                                                       @ApiParam(value = "Longitude where trip should start", required = true, defaultValue = "0.0", example = "56.0") @Valid @RequestParam(value = "startLongitude") double startLongitude,
-                                                       @ApiParam(value = "Indicates if reordering of stops is allowed", required = true, defaultValue = "false", example = "false") @Valid @RequestParam(value = "reorderAllowed") boolean reorderAllowed,
-                                                       @ApiParam(value = "Indicates if trip should be created as round trip from current position", required = true, defaultValue = "false", example = "true") @Valid @RequestParam(value = "roundTrip") boolean roundTrip);
+    ResponseEntity<ExecutionInfo> getTripExecutionInfo(
+            @ApiParam(value = "ID of trip to return", required = true, defaultValue = "-1", example = "123")
+            @PathVariable("tripId") Long tripId,
+            @ApiParam(value = "Id of user that is reading the trip", required = true, defaultValue = "-1", example = "123")
+            @Valid @RequestParam(value = "userId") Long userId,
+            @ApiParam(value = "Latitude where trip should start", required = true, defaultValue = "0.0", example = "-3.25")
+            @Valid @RequestParam(value = "startLatitude") double startLatitude,
+            @ApiParam(value = "Longitude where trip should start", required = true, defaultValue = "0.0", example = "56.0")
+            @Valid @RequestParam(value = "startLongitude") double startLongitude,
+            @ApiParam(value = "Indicates if reordering of stops is allowed", required = true, defaultValue = "false", example = "false")
+            @Valid @RequestParam(value = "reorderAllowed") boolean reorderAllowed,
+            @ApiParam(value = "Indicates if trip should be created as round trip from current position", required = true, defaultValue = "false", example = "true")
+            @Valid @RequestParam(value = "roundTrip") boolean roundTrip);
 
     @ApiOperation(
             value = "Get rerouting to the next stop",

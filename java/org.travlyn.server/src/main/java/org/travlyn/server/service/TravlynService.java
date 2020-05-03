@@ -582,10 +582,18 @@ public class TravlynService {
     @Transactional
     public ExecutionInfo getExecutionInfo(Long tripId, Long userId, double lat, double lon, boolean reorder, boolean isRoundtrip, String lang) throws NoResultException {
         Session session = sessionFactory.getCurrentSession();
-        TripEntity trip = session.createQuery("from TripEntity where id = :id", TripEntity.class)
+        TripEntity tripEntity = session.createQuery("from TripEntity where id = :id", TripEntity.class)
                 .setParameter("id", toIntExact(tripId))
                 .getSingleResult();
-        OpenRouteTripDirectionRequest directionRequest = new OpenRouteTripDirectionRequest(lat, lon, trip.toDataTransferObject(), isRoundtrip, lang);
+
+        Trip trip = tripEntity.toDataTransferObject();
+        if (reorder) {
+            List<Stop> stops = trip.getStops();
+            // add stop that represents the position of the user
+            stops.add(0, new Stop().id(-1).latitude(lat).longitude(lon));
+            trip.setStops(new TSPSolver(stops).solve());
+        }
+        OpenRouteTripDirectionRequest directionRequest = new OpenRouteTripDirectionRequest(trip, isRoundtrip, lang);
         return directionRequest.getResult();
     }
 
