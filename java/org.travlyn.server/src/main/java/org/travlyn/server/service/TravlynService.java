@@ -175,6 +175,7 @@ public class TravlynService {
             if (entity.isUnfetchedStops()) {
                 entity.setStops(this.fetchNumberOfStops(entity.getStops()));
                 City returnValue = this.removeUnfetchedStops(entity.toDataTransferObject());
+                returnValue.setStops(this.reorderStopsAccordingToPreferences(returnValue.getStops()));
                 entity.setUnfetchedStops(returnValue.isUnfetchedStops());
                 session.update(entity);
                 return returnValue;
@@ -198,6 +199,7 @@ public class TravlynService {
                 entity = this.getStopsForCity(result);
                 session.persist(entity);
                 City returnValue = this.removeUnfetchedStops(entity.toDataTransferObject());
+                returnValue.setStops(this.reorderStopsAccordingToPreferences(returnValue.getStops()));
                 entity.setUnfetchedStops(returnValue.isUnfetchedStops());
                 // valid city was found --> cache result
                 session.update(entity);
