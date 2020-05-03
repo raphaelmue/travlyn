@@ -334,7 +334,7 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
                 holder.stopListTimeEffortTextView.text = context.getString(R.string.no_value)
             } else {
                 holder.stopListTimeEffortTextView.text =
-                    context.getString(R.string.hours_unit, stop.timeEffort.toString())
+                    context.getString(R.string.hours_unit, stop.timeEffort)
             }
 
             if (stop.pricing == null || stop.pricing <= 0) {

@@ -336,7 +336,7 @@ class NavigationActivity : AppCompatActivity(), Application {
             navigationStopTimeEffortTextView.text = getString(R.string.no_value)
         } else {
             navigationStopTimeEffortTextView.text =
-                getString(R.string.hours_unit, stop.timeEffort.toString())
+                getString(R.string.hours_unit, stop.timeEffort)
         }
 
         if (stop.pricing == null || stop.pricing <= 0) {

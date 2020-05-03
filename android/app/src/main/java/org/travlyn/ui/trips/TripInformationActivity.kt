@@ -222,7 +222,7 @@ class TripInformationActivity : AppCompatActivity(), Application {
             } else {
                 holder.stopListTimeEffortTextView.text =
                     application.getContext()
-                        .getString(R.string.hours_unit, stop.timeEffort.toString())
+                        .getString(R.string.hours_unit, stop.timeEffort)
             }
 
             if (stop.pricing == null || stop.pricing <= 0) {
