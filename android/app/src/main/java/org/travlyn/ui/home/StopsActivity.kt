@@ -45,7 +45,7 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
 
     private var city: City? = null
 
-    private val cityApi = CityApi()
+    private lateinit var cityApi: CityApi
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +57,8 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+
+        cityApi = CityApi(this)
 
         toolbar.setNavigationOnClickListener {
             finish()
