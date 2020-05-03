@@ -81,6 +81,41 @@ Da die Durchführung der Befragung sehr einfach alleine online und ohne weitere 
 
 	Der vorliegende Usabilityscore von xxx zeigt, dass ...... TODO
 	
+	\subsubsection{Weitere Hinweise}
+	Wie in \cite{Nielsen.20091993} beschrieben gibt es im Usability-Testing einige Fallstricke und viele Methoden haben Probleme mit Zuverlässlichkeit und Validität. Somit ist nicht zwingend sichergestellt, dass diese Usability-Experimente bei wiederholter Ausführung das gleiche Ergebnis ergibt und ob das Ergebnis des Experiments wirklich die zu testende Eigenschaft widerspiegelt. Somit ist das obenstehende Ergebnis als Orientierung zu erachten und müsste durch weitere Tests, welche wir unter den aktuellen Umständen leider nicht durchführen können, validiert werden.
+	
+	\subsection{Sicherheit}
+	Um die Sicherheit des Codes zu überprüfen wurden diverse Methoden eingesetzt, welche in \autoref{sec:QM} beschrieben wurden. Die erste ebene ist die Testebene: Es wurde Wert auf Tests gelegt, welche möglichst viele Szenarios und vor allem Fehlerfälle abdeckt, damit wird sicher gestellt, dass die einzelnen Einheiten sich im Falle einer unerwarteten Situation richtig verhalten und somit nicht angreifbar sind. Beispielsweise wird auf den entsprechenden Trip Endpoints getestet, dass ein Nutzer nur auf private Trips zugreifen kann, wenn er eingeloggt ist und einen Trip abruft, der seinem Account zugeordnet ist.
+	
+	\vspace{0.25cm}
+	
+	Neben den Tests gibt es mit SonarQube eine weitere technische Kontrollinstanz. Dieses Tool analysiert, wie in \autoref{qm.sonarqube} beschreiben, statisch den Code um nach Fehlern und vor allem Verwundbarkeiten und Bugs zu suchen. Durch diese Analyse sind während der Implementation immer wieder Konstrukte aufgefallen, welche eine Angriffsmöglichkeit dargestellt hätten. Durch die Detektion von SonarQube konnten diese Fehler allerdings behoben werden, sodass \textit{Travlyn} nun den Top zehn Sicherheitsstandards der OWASP Foundation \cite{OWASPFoundation.20200503T01:28:27.000Z} genügt. \autoref{fig:sonarqube_result} zeigt diese Top zehn Liste und dass keine entsprechende Stelle im Code gefunden wurde.
+	
+	\begin{figure}[ht!]
+		\centering
+		\includegraphics[width=1\textwidth]{images/Verwundbarkeiten_SonarQube.png}
+		\caption{Erkannte Verwundbarkeiten durch SonarQube}
+		\label{fig:sonarqube_result}
+	\end{figure}
+
+	Neben den technischen Möglichkeiten wurde der erstellte Code während der Entwicklung regelmäßig durch gemeinsame Reviews durch die Entwickler validiert. Wie in \autoref{sec:QM} beschrieben wurde jeder Pull Request vor dem Einfügen in den Master-Branch reviewed und bei entsprechenden Fehlern und Unklarheiten solange geändert, bis alle Zweifel ausgeräumt waren. Somit genügt der Code dem \enquote{Vier-Augen-Prinzip} und Fehler welche die technischen Hilfsmittel nicht aufdecken konnten wurden in diesem Prozess gefunden.
+	
+	\vspace{0.25cm}
+	
+	Somit gibt es eine ausgiebige Kontrolle des Code, welcher sicherstellt, dass keine Verwundbarkeiten vorliegen. Das Ziel eine gute Sicherheit für \textit{Travlyn} zu garantieren ist damit erreicht, allerdings ist Sicherheit kein dauerhafter Zustand und muss laufend neu beurteilt und erarbeitet werden.
+	
+	\subsection{Wartbarkeit}
+	Neben der Sicherheit ist die Wartbarkeit stark von der Code Qualität abhängig. Die Methoden zur Sicherstellung der Wartbarkeit überschneiden sich teilweise mit denen die Sicherheit sicherstellen und sind in \autoref{sec:QM} dargestellt. Für \textit{Travlyn} spielt SonarQube auch hier eine große Rolle, da es ein Code Quality Gate zur Verfügung stellt, welches von Code erfüllt werden sollte, damit eine hohe Code Qualität und Wartbarkeit gegeben ist.
+	
+	\begin{figure}[ht!]
+		\centering
+		\includegraphics[width=1\textwidth]{images/sonar_passed_QG.png}
+		\caption{Evaluation des Codes im Hinblick auf das Quality Gate in SonarQube}
+		\label{fig:soarqube_QG}
+	\end{figure}
+	
+	
+	
 	\subsection{Datenquellen}
 	Aufgrund der begrenzten Ressourcen war die Auswahl der Datenquellen für dieses Projekt besonders kritisch: Es sollten keine Kosten anfallen und schwierige Lizenzfragen vermieden werden, um die Möglichkeit einer späteren Veröffentlichung der Applikation zu schaffen. Wie bereits in \autoref{sec:datengrundlage} beschrieben wurden die Quellen für \acs{POI}s und weiteren Informationen wie Kartendaten nach den gestellten Zielen ausgewählt. Nach Abschluss des Projekts ist festzuhalten, dass der Großteil der funktionalen Anforderungen mit diesen teilweise begrenzten Informationsquellen umgesetzt werden konnte (siehe \autoref{sec:funktional_evaluation}).
 	
