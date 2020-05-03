@@ -36,7 +36,7 @@ public class User extends AbstractDataTransferObject {
     @JsonProperty("preferences")
     @ApiModelProperty(value = "List of preferences of user", required = true)
     @Valid
-    private Set<Preference> preferences = null;
+    private Set<Preference> preferences = new HashSet<>();
 
     public User id(int id) {
         this.id = id;
