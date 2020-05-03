@@ -31,7 +31,7 @@ public class UserEntity implements DataEntity {
     @OneToMany(mappedBy = "user")
     private Set<TokenEntity> tokens;
 
-    @OneToMany(orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.MERGE},mappedBy = "user")
+    @OneToMany(orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.MERGE},mappedBy = "user",fetch = FetchType.EAGER)
     private Set<PreferenceEntity> preferences = new HashSet<>();
 
     @Override

@@ -4,7 +4,9 @@ import org.travlyn.shared.model.api.City;
 import org.travlyn.shared.model.api.Stop;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -112,7 +114,7 @@ public class CityEntity implements DataEntity {
                 .image(this.image)
                 .description(this.description)
                 .setUnfetchedStops(this.unfetchedStops);
-        HashSet<Stop> stopHashSet = new HashSet<>();
+        List<Stop> stopHashSet = new ArrayList<>();
         for (StopEntity stopEntity : stops) {
             stopHashSet.add(stopEntity.toDataTransferObject());
         }

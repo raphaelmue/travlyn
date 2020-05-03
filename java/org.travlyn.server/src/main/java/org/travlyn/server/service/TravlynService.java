@@ -179,7 +179,9 @@ public class TravlynService {
                 session.update(entity);
                 return returnValue;
             }
-            return entity.toDataTransferObject();
+            City cityDTO = entity.toDataTransferObject();
+            cityDTO.setStops(this.reorderStopsAccordingToPreferences(cityDTO.getStops()));
+            return cityDTO;
         } catch (NoResultException noResult) {
             // city is not cached --> get from api
             DBpediaCityRequest request = new DBpediaCityRequest(city);
@@ -343,10 +345,30 @@ public class TravlynService {
     }
 
     private City removeUnfetchedStops(City city) {
-        Set<Stop> stops = city.getStops();
+        List<Stop> stops = city.getStops();
         boolean removed = stops.removeIf(stop -> stop.getDescription() == null && stop.getImage() == null);
         city.setUnfetchedStops(removed);
         return city;
+    }
+
+    @Transactional
+    public List<Stop> reorderStopsAccordingToPreferences(List<Stop> stops) {
+        Optional<UserEntity> user = getAuthenticatedUser();
+        if (user.isEmpty()){
+            return stops;
+        }
+        UserEntity userEntity = user.get();
+        Set<PreferenceEntity> preferences = userEntity.getPreferences();
+        Set<Integer> categoryIds = new HashSet<>();
+        preferences.forEach(preferenceEntity -> categoryIds.add(preferenceEntity.getCategoryEntity().getId()));
+
+        for (int i = 0; i<stops.size();i++){
+            if (categoryIds.contains(stops.get(i).getCategory().getId())){
+                Stop stop = stops.remove(i);
+                stops.add(0,stop);
+            }
+        }
+        return stops;
     }
 
     @Transactional
