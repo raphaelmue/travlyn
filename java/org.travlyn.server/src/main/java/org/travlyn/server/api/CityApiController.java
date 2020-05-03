@@ -19,16 +19,13 @@ import java.util.List;
 
 @Controller
 public class CityApiController implements CityApi {
-    private static final Logger log = LoggerFactory.getLogger(CityApiController.class);
-    private final ObjectMapper objectMapper;
     private final HttpServletRequest request;
 
     @Autowired
     private TravlynService travlynService;
 
     @Autowired
-    public CityApiController(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
+    public CityApiController(HttpServletRequest request) {
         this.request = request;
     }
 

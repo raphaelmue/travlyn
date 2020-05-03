@@ -1,7 +1,7 @@
 package org.travlyn.server.api;
 
 public class ApiException extends Exception {
-    private int code;
+    private final int code;
 
     public ApiException(int code, String msg) {
         super(msg);

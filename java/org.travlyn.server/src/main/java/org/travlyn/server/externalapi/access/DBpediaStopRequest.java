@@ -52,7 +52,7 @@ public class DBpediaStopRequest extends DBpediaRequest<Stop> {
     }
 
     @Override
-    public Stop getResult() throws QuotaLimitException {
+    public Stop getResult() {
         //check for manual name setting
         String manualQuery = this.checkForManualName(query);
         if (manualQuery != null) {
@@ -83,6 +83,8 @@ public class DBpediaStopRequest extends DBpediaRequest<Stop> {
                 if (!imageURL.contains("http://commons.wikimedia.org/")) {
                     imageURL = "http://commons.wikimedia.org/wiki/" + imageURL.substring(5);
                 }
+
+                imageURL = imageURL.replace("http://", "https://");
 
                 return new Stop().name(query)
                         .description(description)

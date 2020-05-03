@@ -11,15 +11,11 @@ import java.util.List;
 
 public class OpenRouteTripDirectionRequest extends OpenRouteDirectionRequest {
 
-    private final double startLat;
-    private final double startLon;
     private final boolean roundTrip;
     private final Trip trip;
     private final String lang;
 
-    public OpenRouteTripDirectionRequest(double startLat, double startLon, Trip trip, boolean roundTrip, String lang) {
-        this.startLat = startLat;
-        this.startLon = startLon;
+    public OpenRouteTripDirectionRequest(Trip trip, boolean roundTrip, String lang) {
         this.roundTrip = roundTrip;
         this.trip = trip;
         this.lang = lang;
@@ -28,7 +24,6 @@ public class OpenRouteTripDirectionRequest extends OpenRouteDirectionRequest {
     @Override
     public ExecutionInfo getResult() {
         List<Pair<Double, Double>> wayPoints = new ArrayList<>();
-        wayPoints.add(new Pair<>(startLon, startLat));
         List<Integer> stopIds = new ArrayList<>();
         for (Stop stop : trip.getStops()) {
             wayPoints.add(new Pair<>(stop.getLongitude(), stop.getLatitude()));
@@ -37,7 +32,7 @@ public class OpenRouteTripDirectionRequest extends OpenRouteDirectionRequest {
             }
         }
         if (roundTrip) {
-            wayPoints.add(new Pair<>(startLon, startLat));
+            wayPoints.add(new Pair<>(trip.getStops().get(0).getLongitude(), trip.getStops().get(0).getLongitude()));
         }
         JsonObject result = this.makeAPICall(wayPoints, lang);
         ExecutionInfo info = this.extractExecutionInfo(result);
