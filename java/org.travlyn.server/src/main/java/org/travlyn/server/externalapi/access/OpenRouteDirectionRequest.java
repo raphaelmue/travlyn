@@ -21,7 +21,7 @@ public abstract class OpenRouteDirectionRequest implements Request<ExecutionInfo
     private static final String PROFILE = "foot-walking";
     private static String baseUrl = "https://api.openrouteservice.org/v2/directions/" + PROFILE + "/geojson";
     private static final String API_KEY;
-    private static final Logger logger = LoggerFactory.getLogger(OpenRouteRedirectionRequest.class);
+    private static final Logger logger = LoggerFactory.getLogger(OpenRouteDirectionRequest.class);
     private final Gson gson = new Gson();
 
     static {

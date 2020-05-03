@@ -2,22 +2,16 @@ package org.travlyn.server.api;
 
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.travlyn.server.configuration.AuthenticationTokenFilter;
 import org.travlyn.shared.model.api.Rating;
 import org.travlyn.shared.model.api.Stop;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import static org.travlyn.server.configuration.AuthenticationTokenFilter.REGISTERED_USER_ROLE;
 
 @Api(value = "stop")
 @Validated

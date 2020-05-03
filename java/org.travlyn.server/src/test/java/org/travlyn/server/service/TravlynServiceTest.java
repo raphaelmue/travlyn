@@ -2,6 +2,7 @@ package org.travlyn.server.service;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -13,11 +14,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.travlyn.shared.model.api.*;
 import org.travlyn.server.ApiTest;
-import org.travlyn.server.externalapi.access.DBpediaCityRequest;
-import org.travlyn.server.externalapi.access.DBpediaStopRequest;
-import org.travlyn.server.externalapi.access.OpenRoutePOIRequest;
+import org.travlyn.server.externalapi.access.*;
+import org.travlyn.shared.model.api.*;
 import org.travlyn.shared.model.db.*;
 
 import javax.persistence.NoResultException;
@@ -27,6 +26,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -78,8 +78,8 @@ public class TravlynServiceTest extends ApiTest {
         cityEntity = new CityEntity();
         cityEntity.setName("Test city");
         cityEntity.setDescription("Test descr");
-        cityEntity.setLongitude(0.0);
-        cityEntity.setLatitude(0.0);
+        cityEntity.setLongitude(8.4039514);
+        cityEntity.setLatitude(49.0092097);
         cityEntity.setImage("https://testurl.com/test.jpg");
 
         cityEntity.setId((Integer) session.save(cityEntity));
@@ -88,8 +88,8 @@ public class TravlynServiceTest extends ApiTest {
         stopEntity.setName("Test Stop");
         stopEntity.setDescription("Test descr");
         stopEntity.setAverageRating(2.0);
-        stopEntity.setLatitude(33.0);
-        stopEntity.setLongitude(5.0);
+        stopEntity.setLatitude(49.009231);
+        stopEntity.setLongitude(8.403905);
         stopEntity.setCategory(categoryEntity);
         stopEntity.setCity(cityEntity);
 
@@ -99,8 +99,8 @@ public class TravlynServiceTest extends ApiTest {
         secondStopEntity.setName("Second Test Stop");
         secondStopEntity.setDescription("Test descr");
         secondStopEntity.setAverageRating(2.0);
-        secondStopEntity.setLatitude(33.0);
-        secondStopEntity.setLongitude(5.0);
+        secondStopEntity.setLatitude(49.007849);
+        secondStopEntity.setLongitude(8.398887);
         secondStopEntity.setCategory(categoryEntity);
         secondStopEntity.setCity(cityEntity);
 
@@ -138,6 +138,34 @@ public class TravlynServiceTest extends ApiTest {
         // wrong email
         userToAssert = service.checkCredentials("test@wrong.com", "password", "192.168.0.1");
         Assertions.assertNull(userToAssert);
+    }
+
+    @Test
+    @Transactional
+    public void testCheckUsersToken(){
+        Session session = sessionFactory.getCurrentSession();
+        //normal case
+        Optional<UserEntity> optionalToAssert = service.checkUsersToken(tokenEntity.getToken());
+        Assertions.assertTrue(optionalToAssert.isPresent());
+        UserEntity userToAssert = optionalToAssert.get();
+        Assertions.assertEquals(userEntity.getId(),userToAssert.getId());
+
+        //invalid token
+        optionalToAssert = service.checkUsersToken("invalidToken");
+        Assertions.assertFalse(optionalToAssert.isPresent());
+
+
+        //create outdated token
+        TokenEntity outdatedToken = new TokenEntity();
+        outdatedToken.setUser(userEntity);
+        outdatedToken.setToken("6406b2e97a97f64910aca76370ee35a92087806da1aa878e8a9ae0f4dc3949aj");
+        outdatedToken.setIpAddress("192.168.0.1");
+        outdatedToken.setExpireDate(LocalDate.now().minusMonths(1));
+
+        outdatedToken.setId((Integer) session.save(outdatedToken));
+
+        optionalToAssert = service.checkUsersToken(outdatedToken.getToken());
+        Assertions.assertFalse(optionalToAssert.isPresent());
     }
 
     @Test
@@ -209,6 +237,8 @@ public class TravlynServiceTest extends ApiTest {
 
     }
 
+    @Transactional
+    @Test
     public void testGenerateTrip() {
         //normal case
         ArrayList<Long> stopIds = new ArrayList<>();
@@ -353,6 +383,42 @@ public class TravlynServiceTest extends ApiTest {
 
     @Transactional
     @Test
+    public void testAddRatingToStop(){
+        Session session = sessionFactory.getCurrentSession();
+        Rating rating = new Rating().rating(0.5).description("Ok!").user(userEntity.toDataTransferObject());
+
+        //normal case
+        boolean result = service.addRatingToStop(stopEntity.getId(),rating);
+
+        Assertions.assertTrue(result);
+        StopEntity stopToAssert = session.createQuery("from StopEntity where id = :id",StopEntity.class)
+                                        .setParameter("id",stopEntity.getId())
+                                        .getSingleResult();
+        Assertions.assertEquals(0.5,stopToAssert.getAverageRating());
+        Assertions.assertEquals(1, stopToAssert.getRatings().size());
+        StopRatingEntity ratingToAssert = stopToAssert.getRatings().iterator().next();
+        Assertions.assertEquals("Ok!",ratingToAssert.getDescription());
+        Assertions.assertEquals(0.5,ratingToAssert.getRating());
+
+        //illegal stop id
+        Assertions.assertThrows(NoResultException.class,() -> service.addRatingToStop(-1,rating));
+    }
+
+    @Transactional
+    @Test
+    public void testGetStopById(){
+        Stop result = service.getStopById((long)stopEntity.getId());
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(stopEntity.getId(),result.getId());
+        Assertions.assertEquals(stopEntity.getName(),result.getName());
+
+        //invalid id
+        result = service.getStopById(-1L);
+        Assertions.assertNull(result);
+    }
+
+    @Transactional
+    @Test
     public void testAddRatingToTrip() throws NoResultException{
         Session session = sessionFactory.getCurrentSession();
         //normal case
@@ -379,5 +445,37 @@ public class TravlynServiceTest extends ApiTest {
                 new UsernamePasswordAuthenticationToken(null, null));
         SecurityContextHolder.setContext(securityContext);
         Assertions.assertThrows(IllegalAccessError.class,() -> service.addRatingToTrip(tripEntity.getId(),testRating));
+    }
+
+    @Test
+    @Transactional
+    public void testGetExecutionInfo() throws Exception {
+        //mock api response
+        enqueue("openroute-response-triproute.json");
+        final String url = startServer();
+        OpenRouteDirectionRequest.setBaseUrl(url);
+
+        ExecutionInfo infoToAssert = service.getExecutionInfo((long)tripEntity.getId(),(long)userEntity.getId(),cityEntity.getLatitude(),cityEntity.getLongitude(),false,true,"en");
+        Assertions.assertEquals(1.5843, infoToAssert.getDistance());
+        Assertions.assertEquals(19.011666666666667,infoToAssert.getDuration());
+        Assertions.assertEquals(tripEntity.getId(),infoToAssert.getTripId());
+        Assertions.assertEquals(85,infoToAssert.getWaypoints().size());
+        Assertions.assertEquals(26, infoToAssert.getSteps().size());
+
+        Assertions.assertThrows(NoResultException.class,()->service.getExecutionInfo((long)-1,(long)userEntity.getId(),cityEntity.getLatitude(),cityEntity.getLongitude(),false,true,"en"));
+    }
+
+    @Test
+    @Transactional
+    public void testGetRedirection() throws Exception{
+        enqueue("openroute-response-redirection.json");
+        OpenRouteRedirectionRequest.setBaseUrl(startServer());
+
+        ExecutionInfo infoToAssert = service.getRedirection(cityEntity.getLatitude(),cityEntity.getLongitude(), (long) stopEntity.getId(),"en");
+        Assertions.assertEquals(0.555, infoToAssert.getDistance());
+        Assertions.assertEquals(35, infoToAssert.getWaypoints().size());
+
+        Assertions.assertThrows(NoResultException.class,()->service.getRedirection(cityEntity.getLatitude(),cityEntity.getLongitude(),-1L,"en"));
+
     }
 }
