@@ -8,10 +8,53 @@ Die in dieser Arbeit vorgestellte \textit{Travlyn} Applikation wurde parallel zu
 Zuerst sollen die funktionalen Anforderungen betrachtet werden, welche in \autoref{sec:funktionale_eigenschaften} beschrieben sind. Diesen Anforderungen gegenüber stehen die in der Travlyn App implementierten Prozesse:
 
 \begin{itemize}
-	\item \textbf{User Management:} Nutzer können sich in der Travlyn App registrieren und eigene Informationen wie Name und E-Mail festlegen. Dadurch entsteht ein persistenter Account, mit dem sich die Nutzer im System anmelden können und nutzerbasierte Aktionen durchführen können, z.B. einen Trip anlegen oder Sehenswürdigkeiten oder Trips bewerten. Ebenso ist es möglich seine persönlichen Informationen zu bearbeiten und Präferenzen festzulegen, welche genutzt werden um die angezeigten Daten nach potentieller Attraktivität für den Nutzer zu priorisieren. 
-	\item \textbf{Information über Städte:} In diesem Prozess kann ein Nutzer über die verfügbare Suchleiste nach jeder beliebigen Stadt auf der Welt suchen und erhält eine Beschreibung dieses Ortes. Falls es Sehenswürdigkeiten in direkter Nähe dieser Stadt gibt werden diese angezeigt und können in einer Detailliste mit ihren Metainformationen betrachtet werden. Außerdem werden ihm direkt die verfügbaren öffentlichen Trips angezeigt, welche für ihn ausführbar sind. Damit kann sich der Nutzer einen sehr vollständigen Eindruck einer Stadt verschaffen, welcher als Entscheidungsgrundlage für eine Reise dienen kann.
-	\item \textbf{Trip Erstellung:} Ist eine konkrete Reise geplant, kann der Nutzer in der App einen Trip erstellen, welcher seine ausgewählten Sehenswürdigkeiten enthält und damit genau an den Umfang und Aufwand angepasst werden kann, den sich der Nutzer vorstellt. Es stehen ausnahmslos alle Ort und Kombinationen von Orten zur Verfügung. Nach der Auswahl und dem festlegen einiger Metainformationen ist der Trip direkt bereit zur Ausführung.
-	\item \textbf{Trip Ausführung:} Am Urlaubsort angekommen können Trips ausgeführt werden. Es ist irrelevant, ob der auszuführende Trip ein eigener Trip ist oder ein öffentlicher Trip eines anderen Nutzers. Die Ausführung beinhaltet eine Navigation durch die Stadt, Informationen zu den einzelnen besuchten Sehenswürdigkeiten und die Möglichkeit die festgelegte Route zu verlassen und von der App trotzdem zum nächsten Stop geführt zu werden. Damit hat der Nutzer volle Flexibilität und eine sehr persönliche Reiseerfahrung.    
+	\item \textbf{User Management:} Nutzer können sich in der Travlyn App registrieren und eigene Informationen wie Name und E-Mail festlegen. Dadurch entsteht ein persistenter Account, mit dem sich die Nutzer im System anmelden können und nutzerbasierte Aktionen durchführen können, z.B. einen Trip anlegen oder Sehenswürdigkeiten oder Trips bewerten. Ebenso ist es möglich seine persönlichen Informationen zu bearbeiten und Präferenzen festzulegen, welche genutzt werden um die angezeigten Daten nach potentieller Attraktivität für den Nutzer zu priorisieren.
+	
+	
+	\begin{figure}[ht!]
+		\includegraphics[width=0.32\textwidth]{images/travlyn-screenshot-register.png}
+		\includegraphics[width=0.32\textwidth]{images/travlyn-screenshot-login.png}
+		\includegraphics[width=0.32\textwidth]{images/travlyn-screenshot-side-navigation.png}
+		\caption{User Management in der \textit{Travlyn} Applikation}
+		\label{fig:ui_usermanagement}
+	\end{figure}
+
+	\newpage
+
+ 
+	\item \textbf{Information über Städte:} In diesem Prozess kann ein Nutzer über die verfügbare Suchleiste nach jeder beliebigen Stadt auf der Welt suchen und erhält eine Beschreibung dieses Ortes. Falls es Sehenswürdigkeiten in direkter Nähe dieser Stadt gibt werden diese angezeigt und können in einer Detailliste mit ihren Metainformationen betrachtet werden. Außerdem werden ihm direkt die verfügbaren öffentlichen Trips angezeigt, welche für ihn ausführbar sind. Damit kann sich der Nutzer einen sehr vollständigen Eindruck einer Stadt verschaffen, welcher als Entscheidungsgrundlage für eine Reise dienen kann. Siehe \autoref{fig:ui_city_information}.
+	
+	\begin{figure}[ht!]
+		\includegraphics[width=0.32\textwidth]{images/travlyn-screenshot-search-result.png}
+		\includegraphics[width=0.32\textwidth]{images/travlyn-screenshot-city-detail.png}
+		\includegraphics[width=0.32\textwidth]{images/travlyn-screenshot-city-detail-trips.png}
+		\caption{Informationsangebot für eine gesuchte Stadt, in diesem Fall Karlsruhe}
+		\label{fig:ui_city_information}
+	\end{figure}
+
+
+	\item \textbf{Trip Erstellung:} Ist eine konkrete Reise geplant, kann der Nutzer in der App einen Trip erstellen, welcher seine ausgewählten Sehenswürdigkeiten enthält und damit genau an den Umfang und Aufwand angepasst werden kann, den sich der Nutzer vorstellt. Es stehen ausnahmslos alle Ort und Kombinationen von Orten zur Verfügung. Nach der Auswahl und dem festlegen einiger Metainformationen ist der Trip direkt bereit zur Ausführung. Siehe \autoref{fig:ui_trip_creation}.
+	
+	\begin{figure}[ht!]
+		\includegraphics[width=0.32\textwidth]{images/travlyn-screenshot-stops-detail-selection.png}
+		\includegraphics[width=0.32\textwidth]{images/travlyn-screenshot-stops-detail-selection-dialog.png}
+		\includegraphics[width=0.32\textwidth]{images/travlyn-screenshot-trip-detail.png}
+		\caption{Erstellung eines Trips anhand der bereitgestellten Stops}
+		\label{fig:ui_trip_creation}
+	\end{figure}
+
+	\newpage
+	
+	\item \textbf{Trip Ausführung:} Am Urlaubsort angekommen können Trips ausgeführt werden. Es ist irrelevant, ob der auszuführende Trip ein eigener Trip ist oder ein öffentlicher Trip eines anderen Nutzers. Die Ausführung beinhaltet eine Navigation durch die Stadt, Informationen zu den einzelnen besuchten Sehenswürdigkeiten und die Möglichkeit die festgelegte Route zu verlassen und von der App trotzdem zum nächsten Stop geführt zu werden. Damit hat der Nutzer volle Flexibilität und eine sehr persönliche Reiseerfahrung.
+	
+	\begin{figure}[ht!]
+		\includegraphics[width=0.32\textwidth]{images/travlyn-screenshot-start-navigation-dialog.png}
+		\includegraphics[width=0.32\textwidth]{images/travlyn-screenshot-navigation-overview.png}
+		\includegraphics[width=0.32\textwidth]{images/travlyn-screenshot-navigation.png}
+		\caption{Ausführung eines vorher erstellen Trips mit der \textit{Travlyn} App}
+		\label{fig:ui_trip_execution}
+	\end{figure}
+    
 \end{itemize}
 
 Vergleicht man die beschriebenen Prozesse mit \autoref{fig:UCD} können alle Use Cases abgedeckt werden außer \textit{Share Trip}. Dieser Use Case war von Anfang an eher niedrig priorisiert und es hat sich im Verlauf der Arbeit herausgestellt, dass der Aufwand in keinem Verhältnis zum Ergebnis und somit wurde dieser Use Case nicht umgesetzt. Außerdem ist der Punkt \textit{Use API for custom purposes} und \textit{Get Trip Meta Data} nur als teilweise vollständig zu betrachten: Die erstelle API ist öffentlich zugänglich und kann mit einem API Schlüssel genutzt werden, allerdings gibt es keine automatische Generierung des Schlüssels. Diese Funktionalität ist für den Kern der \textit{Travlyn} App nicht von Bedeutung und wurde deshalb hinten angestellt.
