@@ -156,6 +156,26 @@ Da die Durchführung der Befragung sehr einfach alleine online und ohne weitere 
 		\caption{Evaluation des Codes im Hinblick auf das Quality Gate in SonarQube}
 		\label{fig:soarqube_QG}
 	\end{figure}
+
+	\autoref{fig:soarqube_QG} zeigt die Auswertung des \textit{Travlyn} Codes. Es ist zu erkennen, dass der Code dem Quality Gate genügt. Damit sind die folgenden Qualitätsmerkmale für Quellcode sichergestellt:
+	
+	\begin{itemize}
+		\item Der Code beinhaltet keine Bugs oder Verwundbarkeiten (siehe oben).
+		\item Der Code hat eine angemessene Komplexität und nur wenige stellen mit schlecht strukturiertem Code (siehe \textit{Code Smells}).
+		\item Die Testabdeckung ist hoch (hier über 65\%) und kann eine korrekte Funktionsweise des Codes sicherstellen.
+		\item Es gibt kaum duplizierte Code stellen, welche die Pflege erschweren würden. 
+	\end{itemize} 
+	
+	\newpage
+	
+	Neben der technischen Prüfung des Codes ist auch hier die Nutzung der Code Reviews hervorzuheben. Durch das oben beschriebene Verfahren konnte vermieden werden, dass nur der Ersteller eines spezifischen Code Blocks den Aufbau und Ablauf kennt, da mindestens ein zweiter Entwickler sehr tief in den Code eingestiegen ist und eine gute Lesbarkeit für Dritte sichergestellt hat. Damit können mehrere Entwickler die Funktionalität erweitern und Fehler beheben, was für eine gute Wartbarkeit sorgt.
+	
+	\subsubsection{Logger}
+	Zum finden von Fehlern, welche im laufenden Betrieb auftreten wurde auf ein ausgiebiges Logging gesetzt, welches alle Aktionen auf dem Server registriert und persistiert. Die einsehbaren Log-Files können zur Fehleranalyse und der Ursachenfindung genutzt werden. Damit ist die akute Fehlerbehandlung sehr vereinfacht. 
+	
+	\vspace{0.25cm}
+	
+	Insgesamt sind die in \autoref{sec:anforderungen} beschriebenen Ziele zur Wartbarkeit damit gut erfüllt und werden ständig neu überprüft. Wartbarkeit ist ebenso wie Sicherheit kein dauerhafter Zustand und es gilt bei weiteren Entwicklungen die Wartbarkeit weiterhin aktiv und durch regelmäßiges anpassen des Codes sicherzustellen.
 	
 	
 	
@@ -169,3 +189,15 @@ Da die Durchführung der Befragung sehr einfach alleine online und ohne weitere 
 	\vspace{0.25cm}
 	
 	Aufgrund der Durchsetzung der oben genannten Maßnahmen könnte die App im aktuellen Zustand von rechtlicher Perspektive sicher veröffentlicht werden und auch für kommerzielle Zwecke genutzt werden, ohne das Risiko von Ansprüchen der Datenanbieter einzugehen. Trotz dieser Einschränkungen sind ansprechende Nutzungsmöglichkeiten entstanden, denen es nicht an Daten oder Funktionalität mangelt. Damit sind die Ziele für Datenquellen in diesem Projekt vollständig erfüllt.
+	
+	\subsection{Zuverlässigkeit}
+	
+	Die zu Beginn der Arbeit geforderte Zuverlässigkeit der \textit{Travlyn} Applikation liegt nur zum Teil in den Händen der Entwickler. Die Infrastruktur auf der sowohl das Backend, als auch das Frontend laufen sind nicht unter direkter Kontrolle des Entwicklungsteams, sondern in Händen der Serververmietung bzw. der tatsächlichen Nutzer. Somit muss sich grundsätzlich auf diese Gruppen verlassen werden.
+	
+	\vspace{0.25cm}
+	
+	Um diese Gruppen, insbesondere die Nutzer, zu unterstützen wurde bei der Entwicklung des Codes auf eine adäquate Fehlerbehandlung, hohe Kompatibilität und einen angemessenen Ressourcenverbrauch geachtet.
+	
+	\section{Übergeordnete Ziele und Visionen}
+	
+	Neben den granularen Anforderungen soll abschließend auf die übergeordneten Ziele eingegangen werden.    
