@@ -95,7 +95,7 @@ Nach der Durchführung der Umfrage werden alle Ergebnisse anhand eines fest vorg
 Da die Durchführung der Befragung sehr einfach alleine online und ohne weitere Einflussnahme der Tester/Entwickler durchgeführt werden kann und trotzdem ein wissenschaftlich anerkanntes Ergebnis liefert wurde für \textit{Travlyn} ein Test mit der \acs{SUS} durchgeführt. Im Folgenden wird die konkrete Durchführung dieses Verfahrens aufgezeigt.    
 	
 		\subsubsection{Aufbau}
-		Zur Vorbereitung des Experiments wurde ein Server mit dem \textit{Travlyn}-Backend aufgesetzt und die App als \acs{APK}-Datei erstellt. Durch den Jenkins-Buildserver war diese automatische Erstellung sehr einfach und schnell. Des Weiteren wurden geeignete Testpersonen ausgesucht: Da die Zielgruppe der Applikation jeden umfasst der gerne reist, kamen viele Personen aus dem Umfeld des Entwicklungsteams infrage. Ausgewählt wurde schließlich eine Gruppe von TODO Testpersonen, die einen Durchschnitt über das Alter bilden (von 14 bis Ende 50 TODO) und alle Nutzergruppen von praktisch keiner Technikerfahrung bis ausgiebiger täglicher Technikerfahrung abdecken. Für die Online Befragung wurde das zu Google gehörende Tool \textit{Google Forms} verwendet \cite{Google.2020}.
+		Zur Vorbereitung des Experiments wurde ein Server mit dem \textit{Travlyn}-Backend aufgesetzt und die App als \acs{APK}-Datei erstellt. Durch den Jenkins-Buildserver war diese automatische Erstellung sehr einfach und schnell. Des Weiteren wurden geeignete Testpersonen ausgesucht: Da die Zielgruppe der Applikation jeden umfasst der gerne reist, kamen viele Personen aus dem Umfeld des Entwicklungsteams infrage. Ausgewählt wurde schließlich eine Gruppe von 15 Testpersonen, die einen Durchschnitt über das Alter bilden (von 14 bis Ende 50) und alle Nutzergruppen von praktisch keiner Technikerfahrung bis ausgiebiger täglicher Technikerfahrung abdecken. Für die Online Befragung wurde das zu Google gehörende Tool \textit{Google Forms} verwendet \cite{Google.2020}.
 		
 		\subsubsection{Ablauf}
 		Nach der Auswahl und Erstellung aller oben beschrieben Artefakte wurde eine Mail mit der Applikationsdatei und dem Link zur Umfrage an alle Testpersonen verschickt. Alle Testpersonen sollen die Applikation selbständig installieren und nach Belieben ausprobieren. Im direkten Anschluss soll der bereitgestellte Link genutzt werden, um die Onlineumfrage auszufüllen. Bei technischen Problemen standen die Entwickler über digitale Kanäle zur Hilfe bereit.
@@ -104,25 +104,29 @@ Da die Durchführung der Befragung sehr einfach alleine online und ohne weitere 
 		Die abgerufenen Ergebnisse wurden wie oben beschrieben verrechnet, pro Frage wird die durchschnittliche Antwort errechnet und entsprechen der zwei Rechenregeln ein endgültiger Wert bestimmt (Fragen 1, 3, 5, 7 und 9: Antwort minus eins; Fragen 2, 4, 6, 8 und 10: fünf minus den Antwortwert). Damit ergeben sich folgende Werte:
 		
 		\begin{itemize}
-			\item \textbf{Frage 1:} Durchschnitt: 4.714, damit endgültiger Wert: 3.714
-			\item \textbf{Frage 2:} Durchschnitt: 1.166, damit endgültiger Wert: 3.834
-			\item \textbf{Frage 3:} Durchschnitt: 5.0, damit endgültiger Wert: 4.0
-			\item \textbf{Frage 4:} Durchschnitt: 1.0, damit endgültiger Wert: 4.0
-			\item \textbf{Frage 5:} Durchschnitt: 5.0, damit endgültiger Wert: 4.0
-			\item \textbf{Frage 6:} Durchschnitt: 1.166, damit endgültiger Wert: 3.834
-			\item \textbf{Frage 7:} Durchschnitt: 4.333, damit endgültiger Wert: 3.333
+			\item \textbf{Frage 1:} Durchschnitt: 4.666, damit endgültiger Wert: 3.666
+			\item \textbf{Frage 2:} Durchschnitt: 1.467, damit endgültiger Wert: 3.533
+			\item \textbf{Frage 3:} Durchschnitt: 4.467, damit endgültiger Wert: 3.467
+			\item \textbf{Frage 4:} Durchschnitt: 1.267, damit endgültiger Wert: 3.733
+			\item \textbf{Frage 5:} Durchschnitt: 4.733, damit endgültiger Wert: 3.733
+			\item \textbf{Frage 6:} Durchschnitt: 1.333, damit endgültiger Wert: 3.667
+			\item \textbf{Frage 7:} Durchschnitt: 4.667, damit endgültiger Wert: 3.667
 			\item \textbf{Frage 8:} Durchschnitt: 1.333, damit endgültiger Wert: 3.667
-			\item \textbf{Frage 9:} Durchschnitt: 4.5, damit endgültiger Wert: 3.5
-			\item \textbf{Frage 10:} Durchschnitt: 1.333, damit endgültiger Wert: 3.667
+			\item \textbf{Frage 9:} Durchschnitt: 4.4, damit endgültiger Wert: 3.4
+			\item \textbf{Frage 10:} Durchschnitt: 1.067, damit endgültiger Wert: 3.933
 		\end{itemize}
 	
 	Zur Berechnung des Skalawerts zwischen 0 und 100 werden alle endgültigen Werte aufsummiert und mit 2,5 multipliziert:
 	
 	\begin{itemize}
-		\item Summe: 37.8725, damit Usabilityscore: $37.8725*2.5=93.8725$
+		\item Summe: 37.8725, damit Usabilityscore: $36.466*2.5=91.165$
 	\end{itemize}
 
-	Der vorliegende Usabilityscore von xxx zeigt, dass ...... TODO
+	Der vorliegende Usabilityscore von 91.165 liegt im obersten Zehntel der Skala. Dies kann als Zeichen für eine sehr gute Benutzbarkeit gesehen werden. Diese Bewertung zeigt, dass die Testnutzer die Applikation als leicht und intuitiv benutzbar empfunden haben, was eine zwingende Eigenschaft für gute Software-Produkte ist. Die größte Streuung der Antworten ist bei der Frage acht aufgefallen: \enquote{Ich fühle mich sicher, wenn ich die App benutze.}. Um diesem einen Nachteil entgegenzuwirken sollte in Zukunft auf eine adäquate Fehlerbehandlung und vor allem einer guten Nutzerunterstützung im Fehlerfall geachtet werden.
+	
+	\vspace{0.25cm}
+	
+	Trotz der oben genannten Verbesserungsmöglichkeit erfüllt der sehr hohe Usability-Score die Anforderungen an eine gute Benutzbarkeit der \textit{Travlyn} Applikation und somit gilt dieses nicht-funktionale Ziel als erfüllt. 
 	
 	\subsubsection{Weitere Hinweise}
 	Wie in \cite{Nielsen.20091993} beschrieben gibt es im Usability-Testing einige Fallstricke und viele Methoden haben Probleme mit Zuverlässlichkeit und Validität. Somit ist nicht zwingend sichergestellt, dass diese Usability-Experimente bei wiederholter Ausführung das gleiche Ergebnis ergibt und ob das Ergebnis des Experiments wirklich die zu testende Eigenschaft widerspiegelt. Somit ist das obenstehende Ergebnis als Orientierung zu erachten und müsste durch weitere Tests, welche wir unter den aktuellen Umständen leider nicht durchführen können, validiert werden.
@@ -198,6 +202,12 @@ Da die Durchführung der Befragung sehr einfach alleine online und ohne weitere 
 	
 	Um diese Gruppen, insbesondere die Nutzer, zu unterstützen wurde bei der Entwicklung des Codes auf eine adäquate Fehlerbehandlung, hohe Kompatibilität und einen angemessenen Ressourcenverbrauch geachtet.
 	
-	\section{Übergeordnete Ziele und Visionen}
+	\section{Übergeordnete Visionen}
 	
-	Neben den granularen Anforderungen soll abschließend auf die übergeordneten Ziele eingegangen werden.    
+	Neben den granularen Anforderungen soll abschließend auf die übergeordnete Vision eingegangen werden. Diese wurde am Anfang von \autoref{sec:anforderungen} beschrieben:
+	
+	\vspace{0.25cm}
+	
+	\enquote{Durch \textit{Travlyn} sollen Nutzer in der Lage sein, ihre Städtereisen ohne das Mitführen von papierbasierten Reiseführern oder die Nutzung von multiplen mobilen Diensten zu bewältigen, ohne dabei einen Informationsverlust oder eine Beeinträchtigung des Reisespaßes hinnehmen zu müssen.}
+	
+	\vspace{0.25cm}   
