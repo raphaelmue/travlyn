@@ -17,9 +17,11 @@ public class ApiOriginFilter implements javax.servlet.Filter {
 
     @Override
     public void destroy() {
+        //implementation is not needed because no special actions to destroy this filter are needed
     }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        //implementation is not needed because no special actions to initialize this filter are needed
     }
 }

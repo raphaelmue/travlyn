@@ -51,8 +51,7 @@ public class APIRequest {
         this.setHeader(builder);
         okhttp3.Request request = builder.url(requestURL).build();
         Response response = client.newCall(request).execute();
-        final String json = response.body().string();
-        return json;
+        return response.body().string();
     }
 
     public String performAPICallPOST() throws IOException {
