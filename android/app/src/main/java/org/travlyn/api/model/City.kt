@@ -31,6 +31,7 @@ data class City(
     /* URL to image */
     val image: String? = null,
     val description: String? = null,
-    val stops: Array<Stop>? = null
+    val stops: Array<Stop>? = emptyArray(),
+    val unfetchedStops: Boolean? = false
 
 )

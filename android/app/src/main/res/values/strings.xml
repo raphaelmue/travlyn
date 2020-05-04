@@ -64,6 +64,7 @@
     <string name="public_trip">Public Trip</string>
     <string name="successfully_created_trip">Created trip successfully!</string>
     <string name="trip">Trip</string>
+    <string name="swipe_to_update_stops">"Swipe down to update stops. "</string>
     <string name="error_password_too_short">Password is too short. It must have at least 4 characters. </string>
     <string name="navigation">Navigation</string>
     <string name="reorder_description">Reorder trips to reduce trip route</string>
