@@ -62,5 +62,6 @@
     <string name="public_trip">Öffentlicher Trip</string>
     <string name="successfully_created_trip">Trip erfolgreich erstellt!</string>
     <string name="trip">Trip</string>
+    <string name="swipe_to_update_stops">Wische herunter, um neue Stops zu laden.</string>
     <string name="error_password_too_short">Das Passwort ist zu kurz. Es muss mindestens 4 Zeichen haben.</string>
 </resources>
