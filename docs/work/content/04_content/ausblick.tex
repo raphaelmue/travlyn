@@ -36,11 +36,19 @@
 		Um Travlyn zu veröffentlichen und eventuell auch zu kommerzialisieren müssten folgende Überlegungen ausgearbeitet und umgesetzt werden:
 		
 		\begin{itemize}
-			\item \textbf{Serverlandschaft}: Es müsste zunächst sichergestellt sein, dass \textit{Travlyn} auch eine hohe Verfügbarkeit und Performance aufweist. Der Aufbau einer Serverarchitektur bzw. -landschaft ist ein Schritt, um diese beiden nicht-funktionalen Ziele zu gewährleisten. 
-			\item \textbf{Datenbasis}: Außerdem muss die Datenbasis von \textit{Travlyn} vollständig sein, sodass es dem Nutzer möglich ist, für alle Städte dieser Welt, Trips zu generieren. Dies beinhaltet vor allem die bereits beschriebene Namenszuordnung aber eventuell auch das Markieren von Stops.
-			\item \textbf{Externe \acs{API}s}: Bei einer hohen Zahl an Nutzern muss darüber hinaus gewährleistet sein, dass \textit{Travlyn} ein ausreichendes Quota bei externen \acs{API}s, wie OpenRoute Service und DBpedia, hat. 
-			\item \textbf{Veröffentlichung der Android App}: Um eine möglichst große Menge an Kunden zu erreichen, bietet es sich an, die Android App im Google Play Store zu veröffentlichen. Das erzeugt ein Vertrauen zum Kunden, da Apps im Google Play Store auch durch Google verifiziert werden. Dafür müssten jedoch noch ein paar rechtliche Anpassungen erfolgen. 
-			\item \textbf{Marketingkonzept}: Damit \textit{Travlyn} auch Profit erwirtschaftet, muss zum einen ein Preismodell erarbeitet werden -- entweder auf Lösungs- oder Lizenzbasis -- und außerdem ein Marketingkonzept, welches das Schalten von Werbung oder aber auch Marketingkampagnen beinhaltet. 
+			\item \textbf{Serverlandschaft}: 
+				Es müsste zunächst sichergestellt sein, dass \textit{Travlyn} auch eine hohe Verfügbarkeit und Performance aufweist. Der Aufbau einer Serverarchitektur bzw. -landschaft ist ein Schritt, um diese beiden nicht-funktionalen Ziele zu gewährleisten. 
+			\item \textbf{Datenbasis}: 
+				Außerdem muss die Datenbasis von \textit{Travlyn} ausreichend sein, sodass es dem Nutzer möglich ist, für die meisten Städte dieser Welt, Trips zu generieren. Dies beinhaltet vor allem die bereits beschriebene Namenszuordnung aber eventuell auch das Markieren von Stops. \\
+				Wie bereits in \autoref{implementation.apilimits} erwähnt, könnte der Einsatz eines initialen Skriptes dabei helfen, die Datenbasis aufzubauen und eine Grundlage zu schaffen. Sobald das erfolgt ist, werden die restlichen Daten durch Anfragen der Benutzer in die Datenbank von \textit{Travlyn} nachgeladen. \\
+				Es müsste außerdem gewährleistet sein, dass die Daten aktuell bleiben und nicht auf der Datenbasis veralten. Die Aktualisierung könnte entweder über einen Hintergrundprozess laufen, der nach und nach alle Datensätze wiederholt aktualisiert oder über eine Event-basierte Aktualisierung der Daten (durch den \acs{API} Anbieter oder durch den Nutzer). 
+			\item \textbf{Externe \acs{API}s}: 
+				Bei einer hohen Zahl an Nutzern muss darüber hinaus gewährleistet sein, dass \textit{Travlyn} ein ausreichendes Quota bei externen \acs{API}s, wie OpenRoute Service und DBpedia, hat. 
+			\item \textbf{Veröffentlichung der Android App}: 
+				Um eine möglichst große Menge an Kunden zu erreichen, bietet es sich an, die Android App im Google Play Store zu veröffentlichen. Das erzeugt ein Vertrauen zum Kunden, da Apps im Google Play Store auch durch Google verifiziert werden. Dafür müssten jedoch noch ein paar rechtliche Anpassungen erfolgen. 
+			\item \textbf{Marketingkonzept}: 
+				Damit \textit{Travlyn} auch Profit erwirtschaftet, muss zum einen ein Preismodell erarbeitet werden -- entweder auf Lösungs- oder Lizenzbasis -- und außerdem ein Marketingkonzept, welches das Schalten von Werbung oder aber auch Marketingkampagnen beinhaltet.\\
+				\textit{Travlyn} könnte aber auch als Werbeplattform für die entsprechenden Sehenswürdigkeiten fungieren, indem diese Sehenswürdigkeiten explizit angezeigt -- beispielsweise als eine markierte Anzeige oder ganz oben in der Liste der Stops -- oder in die automatisch generierten Trips eingebaut werden. Somit könnte \textit{Travlyn} auf der einen Seite Umsatz erzielen und auf der anderen Seite die Betreiber der Sehenswürdigkeiten unterstützen. 
 		\end{itemize}
 	
 		
