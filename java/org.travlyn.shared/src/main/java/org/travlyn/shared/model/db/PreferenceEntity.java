@@ -17,7 +17,7 @@ public class PreferenceEntity implements DataEntity{
     @ManyToOne(targetEntity = UserEntity.class)
     private UserEntity user;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = CategoryEntity.class)
     private CategoryEntity categoryEntity;
 
 
@@ -52,7 +52,6 @@ public class PreferenceEntity implements DataEntity{
     public Preference toDataTransferObject() {
         return new Preference()
                     .setCategory(this.categoryEntity.toDataTransferObject())
-                    //.setUser(this.user.toDataTransferObject())
                     .setId(this.id);
     }
 }
