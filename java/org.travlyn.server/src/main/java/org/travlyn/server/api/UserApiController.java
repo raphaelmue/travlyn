@@ -72,6 +72,16 @@ public class UserApiController implements UserApi {
     }
 
     public ResponseEntity<Void> updateUser(@NotNull @Valid User user) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            try{
+                travlynService.updateUser(user);
+            }catch (IllegalAccessException e){
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

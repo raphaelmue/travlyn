@@ -99,6 +99,22 @@ public class TravlynService {
         return userEntity.toDataTransferObject().token(token);
     }
 
+    @Transactional
+    public void updateUser(User newUser) throws IllegalAccessException {
+        Session session = sessionFactory.getCurrentSession();
+        //get corresponding user
+        UserEntity user;
+        user = session.get(UserEntity.class, getUserId());
+
+        if(user.getId() != newUser.getId()){
+            //user is trying to change other user--> not allowed
+            throw new IllegalAccessException();
+        }
+        session.clear();
+
+        session.merge(newUser.toEntity());
+    }
+
     /**
      * Checks whether the given token is valid (not expired and existing) and returns the respective user if so.
      *
@@ -160,11 +176,14 @@ public class TravlynService {
             if (entity.isUnfetchedStops()) {
                 entity.setStops(this.fetchNumberOfStops(entity.getStops()));
                 City returnValue = this.removeUnfetchedStops(entity.toDataTransferObject());
+                returnValue.setStops(this.reorderStopsAccordingToPreferences(returnValue.getStops()));
                 entity.setUnfetchedStops(returnValue.isUnfetchedStops());
                 session.update(entity);
                 return returnValue;
             }
-            return entity.toDataTransferObject();
+            City cityDTO = entity.toDataTransferObject();
+            cityDTO.setStops(this.reorderStopsAccordingToPreferences(cityDTO.getStops()));
+            return cityDTO;
         } catch (NoResultException noResult) {
             // city is not cached --> get from api
             DBpediaCityRequest request = new DBpediaCityRequest(city);
@@ -181,6 +200,7 @@ public class TravlynService {
                 entity = this.getStopsForCity(result);
                 session.persist(entity);
                 City returnValue = this.removeUnfetchedStops(entity.toDataTransferObject());
+                returnValue.setStops(this.reorderStopsAccordingToPreferences(returnValue.getStops()));
                 entity.setUnfetchedStops(returnValue.isUnfetchedStops());
                 // valid city was found --> cache result
                 session.update(entity);
@@ -328,19 +348,63 @@ public class TravlynService {
     }
 
     private City removeUnfetchedStops(City city) {
-        Set<Stop> stops = city.getStops();
+        List<Stop> stops = city.getStops();
         boolean removed = stops.removeIf(stop -> stop.getDescription() == null && stop.getImage() == null);
         city.setUnfetchedStops(removed);
         return city;
     }
 
     @Transactional
+    public List<Stop> reorderStopsAccordingToPreferences(List<Stop> stops) {
+        Optional<UserEntity> user = getAuthenticatedUser();
+        if (user.isEmpty()){
+            return stops;
+        }
+        UserEntity userEntity = user.get();
+        Set<PreferenceEntity> preferences = userEntity.getPreferences();
+        Set<Integer> categoryIds = new HashSet<>();
+        preferences.forEach(preferenceEntity -> categoryIds.add(preferenceEntity.getCategoryEntity().getId()));
+
+        for (int i = 0; i<stops.size();i++){
+            if (categoryIds.contains(stops.get(i).getCategory().getId())){
+                Stop stop = stops.remove(i);
+                stops.add(0,stop);
+            }
+        }
+        return stops;
+    }
+
+    @Transactional
     public Set<StopEntity> fetchNumberOfStops(Set<StopEntity> entities) {
         Session session = sessionFactory.getCurrentSession();
+        Optional<UserEntity> userOptional = getAuthenticatedUser();
+        Set<StopEntity> preferredStops = new HashSet<>();
+        if (userOptional.isPresent()){
+            UserEntity userEntity = userOptional.get();
+            Set<PreferenceEntity> preferences = userEntity.getPreferences();
+            Set<Integer> categoryIds = new HashSet<>();
+            preferences.forEach(preferenceEntity -> categoryIds.add(preferenceEntity.getCategoryEntity().getId()));
+            for (Iterator<StopEntity> entityIterator = entities.iterator(); entityIterator.hasNext();){
+                StopEntity stopEntity = entityIterator.next();
+                if (categoryIds.contains(stopEntity.getCategory().getId())){
+                    entityIterator.remove();
+                    preferredStops.add(stopEntity);
+                }
+            }
+        }
         int requestCount = 2;
         Iterator<StopEntity> stopEntityIterator = entities.iterator();
-        while (requestCount < FETCHABLESTOPS && stopEntityIterator.hasNext()) {
-            StopEntity entity = stopEntityIterator.next();
+        Iterator<StopEntity> preferredStopIterator = preferredStops.iterator();
+        while (requestCount < FETCHABLESTOPS && (preferredStopIterator.hasNext() || stopEntityIterator.hasNext())) {
+            StopEntity entity;
+            boolean preferredStop;
+            if (preferredStopIterator.hasNext()){
+                entity = preferredStopIterator.next();
+                preferredStop = true;
+            }else{
+                entity = stopEntityIterator.next();
+                preferredStop = false;
+            }
             if (entity.getImage() != null && entity.getDescription() != null) {
                 continue;
             }
@@ -357,10 +421,15 @@ public class TravlynService {
                 entity.setDescription(stop.getDescription());
             } else {
                 session.delete(entity);
-                stopEntityIterator.remove();
+                if (preferredStop){
+                    preferredStopIterator.remove();
+                }else{
+                    stopEntityIterator.remove();
+                }
             }
             requestCount++;
         }
+        entities.addAll(preferredStops);
         return entities;
     }
 
