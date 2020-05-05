@@ -54,7 +54,7 @@ public class UserControllerTest {
                 .param("password","password"))
                 .andExpect(status().isOk())
                 .andReturn();
-        Assertions.assertEquals("{\"id\":-1,\"email\":\"test@test.de\",\"name\":null,\"token\":null}",result.getResponse().getContentAsString());
+        Assertions.assertEquals("{\"id\":-1,\"email\":\"test@test.de\",\"name\":null,\"token\":null,\"preferences\":[]}",result.getResponse().getContentAsString());
 
         this.mockMvc.perform(get("/user")
                 .param("email","test@test.de")
@@ -84,7 +84,7 @@ public class UserControllerTest {
                 .param("password","password"))
                 .andExpect(status().isOk())
                 .andReturn();
-        Assertions.assertEquals("{\"id\":-1,\"email\":\"test@test.de\",\"name\":null,\"token\":null}",result.getResponse().getContentAsString());
+        Assertions.assertEquals("{\"id\":-1,\"email\":\"test@test.de\",\"name\":null,\"token\":null,\"preferences\":[]}",result.getResponse().getContentAsString());
 
         this.mockMvc.perform(patch("/user")
                 .accept(MediaType.APPLICATION_JSON)

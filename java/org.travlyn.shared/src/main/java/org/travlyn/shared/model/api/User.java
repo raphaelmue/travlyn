@@ -3,12 +3,14 @@ package org.travlyn.shared.model.api;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+import org.travlyn.shared.model.db.PreferenceEntity;
 import org.travlyn.shared.model.db.UserEntity;
 
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * User
@@ -30,6 +32,11 @@ public class User extends AbstractDataTransferObject {
     @JsonProperty("token")
     @ApiModelProperty(value = "Active Token for communication", required = true)
     private Token token = null;
+
+    @JsonProperty("preferences")
+    @ApiModelProperty(value = "List of preferences of user", required = true)
+    @Valid
+    private Set<Preference> preferences = new HashSet<>();
 
     public User id(int id) {
         this.id = id;
@@ -104,6 +111,14 @@ public class User extends AbstractDataTransferObject {
         this.token = token;
     }
 
+    public Set<Preference> getPreferences() {
+        return preferences;
+    }
+
+    public User setPreferences(Set<Preference> preferences) {
+        this.preferences = preferences;
+        return this;
+    }
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -132,6 +147,9 @@ public class User extends AbstractDataTransferObject {
         userEntity.setEmail(this.email);
         userEntity.setName(this.name);
         //userEntity.setTokens(new HashSet<>(Collections.singletonList(this.token.toEntity())));
+        Set<PreferenceEntity> preferenceEntities = new HashSet<>();
+        this.preferences.forEach(preference -> preferenceEntities.add(preference.toEntity()));
+        userEntity.setPreferences(preferenceEntities);
         return userEntity;
     }
 }
