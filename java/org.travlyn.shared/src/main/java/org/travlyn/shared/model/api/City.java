@@ -7,9 +7,7 @@ import org.travlyn.shared.model.db.CityEntity;
 import org.travlyn.shared.model.db.StopEntity;
 
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * City
@@ -48,7 +46,7 @@ public class City extends AbstractDataTransferObject {
     @JsonProperty("stops")
     @ApiModelProperty(value = "List of Stops in city", required = true)
     @Valid
-    private Set<Stop> stops = null;
+    private List<Stop> stops = null;
 
     public City id(int id) {
         this.id = id;
@@ -147,13 +145,13 @@ public class City extends AbstractDataTransferObject {
         this.description = description;
     }
 
-    public Set<Stop> getStops() {
+    public List<Stop> getStops() {
         return stops;
     }
 
-    public City setStops(Set<Stop> stops) {
+    public City setStops(List<Stop> stops) {
         if (this.stops == null) {
-            this.stops = new HashSet<>();
+            this.stops = new ArrayList<>();
         }
         this.stops = stops;
         return this;
