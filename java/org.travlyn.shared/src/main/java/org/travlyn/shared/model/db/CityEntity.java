@@ -16,7 +16,7 @@ public class CityEntity extends Location{
     @Column(name = "unfetched_stops")
     private boolean unfetchedStops;
 
-    @OneToMany(orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "category", orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<StopEntity> stops = new HashSet<>();
 
     public Set<StopEntity> getStops() {

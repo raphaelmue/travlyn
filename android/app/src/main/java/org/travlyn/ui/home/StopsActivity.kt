@@ -425,8 +425,7 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
                 itemView.findViewById(R.id.stopListAddToTripButton)
         }
 
-        private inner class StopFilter(var adapter: StopListViewAdapter) :
-            Filter() {
+        private inner class StopFilter(var adapter: StopListViewAdapter) : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val results = FilterResults()
                 if (constraint != null && constraint.isEmpty()) {
@@ -439,9 +438,9 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
                         val stringIdentifier = context.resources.getIdentifier(
                             "category_" + stop.category?.name, "string", context.packageName
                         )
-                        if (stop.name?.toLowerCase(Locale.ROOT)?.contains(filterPattern)!! ||
-                            context.getString(stringIdentifier).toLowerCase(Locale.ROOT)
-                                .contains(filterPattern)
+                        if (context.getString(stringIdentifier).toLowerCase(Locale.ROOT)
+                                .contains(filterPattern) or stop.name?.toLowerCase(Locale.ROOT)
+                                ?.contains(filterPattern)!!
                         ) {
                             filteredStops.add(stop)
                         }
