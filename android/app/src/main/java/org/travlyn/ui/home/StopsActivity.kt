@@ -25,14 +25,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.travlyn.R
 import org.travlyn.api.CityApi
+import org.travlyn.api.StopApi
 import org.travlyn.api.TripApi
 import org.travlyn.api.UserApi
-import org.travlyn.api.StopApi
-import org.travlyn.api.model.City
-import org.travlyn.api.model.Rating
-import org.travlyn.api.model.Stop
-import org.travlyn.api.model.Trip
-import org.travlyn.api.model.User
+import org.travlyn.api.model.*
 import org.travlyn.components.SelectionToolbar
 import org.travlyn.local.Application
 import org.travlyn.local.LocalStorage
@@ -49,6 +45,9 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
 
     private var city: City? = null
 
+    private lateinit var cityApi: CityApi
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stops)
@@ -59,22 +58,54 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        cityApi = CityApi(this)
+
         toolbar.setNavigationOnClickListener {
             finish()
         }
 
         if (intent != null && intent.extras != null) {
             city = Gson().fromJson(intent.extras.get("city") as String?, City::class.java)
-            val stopsListView: RecyclerView = findViewById(R.id.stopsListView)
+            initListView()
+            if (city != null && city!!.unfetchedStops!!) {
+                Toast.makeText(this, getString(R.string.swipe_to_update_stops), Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
+    }
 
-            if (city != null) {
-                val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-                stopsListView.layoutManager = layoutManager
+    private fun initListView() {
+        if (this.city != null) {
+            stopListSwipeRefreshLayout.setOnRefreshListener {
+                updateCity()
+            }
 
-                stopsListView.adapter = StopListViewAdapter(city!!.stops!!.toList(), this)
+            val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            stopsListView.layoutManager = layoutManager
 
-                stopListNumberOfResultsTextView.text =
-                    this.getString(R.string.number_of_stop_found, city!!.stops?.size)
+            stopsListView.adapter = StopListViewAdapter(city!!.stops!!.toList(), this)
+
+            stopListNumberOfResultsTextView.text =
+                this.getString(R.string.number_of_stop_found, city!!.stops?.size)
+
+        }
+    }
+
+    private fun updateCity() {
+        if (city != null) {
+            if (this.city!!.unfetchedStops!!) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    city = cityApi.getCity(city!!.name!!)
+                    withContext(Dispatchers.Main) {
+                        stopsListView.adapter =
+                            StopListViewAdapter(city!!.stops!!.toList(), this@StopsActivity)
+                        stopListNumberOfResultsTextView.text =
+                            getString(R.string.number_of_stop_found, city!!.stops?.size)
+                        stopListSwipeRefreshLayout.isRefreshing = false
+                    }
+                }
+            } else {
+                stopListSwipeRefreshLayout.isEnabled = false
             }
         }
     }
@@ -187,7 +218,7 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
     }
 
     private inner class StopListViewAdapter(
-        private val stops: List<Stop>,
+        private var stops: List<Stop>,
         private val context: Context
     ) : RecyclerView.Adapter<StopListViewAdapter.ViewHolder>(), Filterable {
 
@@ -276,6 +307,11 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
 
         override fun getItemCount(): Int {
             return filteredStops.size
+        }
+
+        fun updateStops(stops: List<Stop>) {
+            this.stops = stops
+            filteredStops = this.stops.toMutableList();
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
