@@ -200,7 +200,7 @@ Da die Durchführung der Befragung sehr einfach alleine online und ohne weitere 
 	
 	\vspace{0.25cm}
 	
-	Um diese Gruppen, insbesondere die Nutzer, zu unterstützen wurde bei der Entwicklung des Codes auf eine adäquate Fehlerbehandlung, hohe Kompatibilität und einen angemessenen Ressourcenverbrauch geachtet.
+	Um diese Gruppen, insbesondere die Nutzer, zu unterstützen wurde bei der Entwicklung des Codes auf eine adäquate Fehlerbehandlung, hohe Kompatibilität und einen angemessenen Ressourcenverbrauch geachtet. Damit soll zum einen verhindert werden, dass die Infrastruktur durch \textit{Travlyn} überlastet wird und dadurch weniger Zuverlässig wird. Zum anderen sollen sowohl der Server als auch der Client nach einem möglichen Fehler einfach wieder startbar sein, ohne einen großen administrativen Aufwand zu verursachen und beim Nutzer ggf. die Hilfe einer technischen Supportperson erfordern. Damit ist sichergestellt, dass im unwahrscheinlichen Fehlerfall die Ausfallzeit sehr begrenzt ist und schnell behoben werden kann.  
 	
 	\section{Übergeordnete Visionen}
 	
@@ -211,3 +211,16 @@ Da die Durchführung der Befragung sehr einfach alleine online und ohne weitere 
 	\enquote{Durch \textit{Travlyn} sollen Nutzer in der Lage sein, ihre Städtereisen ohne das Mitführen von papierbasierten Reiseführern oder die Nutzung von multiplen mobilen Diensten zu bewältigen, ohne dabei einen Informationsverlust oder eine Beeinträchtigung des Reisespaßes hinnehmen zu müssen.}
 	
 	\vspace{0.25cm}   
+	
+	Rückblickend treten bei der Realisierung einige Probleme auf, welche während der Entwicklung aufgedeckt wurden. So gibt es zwar eine große Anzahl von verfügbaren Datenquellen, welche unterschiedlichen Ansprüchen genügen (z.B. frei verfügbar für kommerzielle Nutzung). Allerdings sind diese Quellen meist entweder lokal oder thematisch begrenzt, was zu der Nutzung von sehr vielen Datenquellen für einen kompletten digitalen Reiseführer führen würde. Zum anderen ist die Verbindung der Informationen von verschiedenen Quellen u.U. schwierig (siehe \autoref{sec:mapping}).
+	Ein zweites gravierendes Problem ist die fehlende Digitalisierung anderer Lebensbereiche. Da viele Informationen, die zum Reisen relevant sind, nicht digital verfügbar sind (z.B. Öffnungszeiten, Preise und \enquote{Geheimtipps} von Ortsansässigen) können sie auch nicht ohne großen redaktionellen Aufwand in einen digitalen Reiseführer integriert werden. Vor allem der Anspruch eines Reiseführers der weltweit nutzbar ist somit noch kritischer zu sehen, da es viele Länder gibt in denen bis jetzt praktisch keine Digitalisierung stattgefunden hat.
+	
+	\vspace{0.25cm}
+	
+	Trotz dieser aufgetretenen Probleme konnte im Zuge dieser Arbeit einen Applikation entwickelt werden, welche zumindest den Weg zu einem digitalerem Reisen aufzeigt, indem mehrere Informationsquellen kombiniert werden, über moderne Infrastruktur verfügbar gemacht werden und über mobile Darstellungsmöglichkeiten von jedem Nutzer mit Smartphone abgerufen werden können.
+	
+	Die App bietet eine Informationsfülle für viele Städte und Sehenswürdigkeiten (mit Ausnahme derer, die unter die oben genannten Probleme fallen) und bietet Fähigkeiten, die kein papierbasierter Reiseführer je bieten kann, wie z.B. die interaktive Navigation durch eine Stadt abhängig von der eigenen Position oder das Zusammenstellen und Speichern von personalisierten Rundtrips. Somit wird auch eine Reise mit der \textit{Travlyn} App einen Reiz und Reisespaß bieten.
+	
+	\vspace{0.25cm}
+	
+	Insgesamt konnte mit dieser Arbeit ein guter Grundstein für eine ausführliche Erfüllung der zugrunde liegenden Vision geschaffen werden, auch wenn sicherlich nicht alle Probleme durch die \textit{Travlyn} Applikation voll umfassend gelöst werden konnten. Somit ist eine Eindeutige Empfehlung zur Nutzung der Applikation zu formulieren,  mit dem eindeutigen Hinweis, dass die Nutzung eines papierbasierten Reiseführers bis jetzt nicht komplett ersetzt werden kann und weiterhin seine Berechtigung behält.
