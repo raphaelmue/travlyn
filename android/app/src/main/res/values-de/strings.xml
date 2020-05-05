@@ -26,7 +26,7 @@
     <string name="user">Benutzer</string>
     <string name="search">Suche</string>
     <string name="add">Hinzufügen</string>
-    <string name="hours_unit">%1$s std</string>
+    <string name="hours_unit">%.1f  std</string>
     <string name="rate">Bewerten</string>
     <string name="number_of_stop_found">%d Sehenswürdigkeiten gefunden!</string>
     <string name="cancel">Abbrechen</string>
@@ -64,4 +64,19 @@
     <string name="trip">Trip</string>
     <string name="swipe_to_update_stops">Wische herunter, um neue Stops zu laden.</string>
     <string name="error_password_too_short">Das Passwort ist zu kurz. Es muss mindestens 4 Zeichen haben.</string>
+    <string name="navigation">Navigation</string>
+    <string name="reorder_description">Reisen neu ordnen, um die Reiseroute zu reduzieren</string>
+    <string name="round_trip_description">Nach Beendigung der Reise zurück zum Startpunkt navigieren</string>
+    <string name="confirm_cancel_navigation">Bist du sicher, dass du die Navigation beenden möchten?</string>
+    <string name="start">Starten</string>
+    <string name="city">Stadt</string>
+    <string name="time_unit">%d std %d min</string>
+    <string name="skip">Überspringen</string>
+    <string name="continue_stop">Fortfahren</string>
+    <string name="add_pricing">Welchen Preis hast du für diese Sehenswürdigkeit bezahlt?</string>
+    <string name="add_time_effort_description">Wie viel Zeit hast du an dieser Sehenswürdigkeit verbracht?</string>
+    <string name="add_price">Preis hinzufügen</string>
+    <string name="add_time_effort">Zeitaufwand hinzufügen</string>
+    <string name="successfully_added_pricing">Preis wurde erfolgreich hinzugefügt!</string>
+    <string name="successfully_added_time_effort">Zeitaufwand wurde erfolgreich hinzugefügt!</string>
 </resources>

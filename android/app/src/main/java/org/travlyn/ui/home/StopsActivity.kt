@@ -374,7 +374,7 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
                 holder.stopListTimeEffortTextView.text = context.getString(R.string.no_value)
             } else {
                 holder.stopListTimeEffortTextView.text =
-                    context.getString(R.string.hours_unit, stop.timeEffort.toString())
+                    context.getString(R.string.hours_unit, stop.timeEffort)
             }
 
             if (stop.pricing == null || stop.pricing <= 0) {
@@ -384,14 +384,12 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
             }
 
             if (holder.stopListImageView.drawable == null) {
-                CoroutineScope(Dispatchers.IO).launch {
+                CoroutineScope(Dispatchers.Main).launch {
                     if (stop.image != null) {
-                        withContext(Dispatchers.Main) {
-                            val bitmap: Bitmap? = cityApi.getImage(stop.image)
-                            if (bitmap != null) {
-                                holder.stopListImageView.setImageBitmap(bitmap)
-                                holder.stopListProgressIndicator.visibility = View.GONE
-                            }
+                        val bitmap: Bitmap? = cityApi.getImage(stop.image)
+                        if (bitmap != null) {
+                            holder.stopListImageView.setImageBitmap(bitmap)
+                            holder.stopListProgressIndicator.visibility = View.GONE
                         }
                     }
                 }
@@ -427,8 +425,7 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
                 itemView.findViewById(R.id.stopListAddToTripButton)
         }
 
-        private inner class StopFilter(var adapter: StopListViewAdapter) :
-            Filter() {
+        private inner class StopFilter(var adapter: StopListViewAdapter) : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val results = FilterResults()
                 if (constraint != null && constraint.isEmpty()) {
@@ -441,9 +438,9 @@ class StopsActivity : AppCompatActivity(), RatingDialogListener, Application {
                         val stringIdentifier = context.resources.getIdentifier(
                             "category_" + stop.category?.name, "string", context.packageName
                         )
-                        if (stop.name?.toLowerCase(Locale.ROOT)?.contains(filterPattern)!! ||
-                            context.getString(stringIdentifier).toLowerCase(Locale.ROOT)
-                                .contains(filterPattern)
+                        if (context.getString(stringIdentifier).toLowerCase(Locale.ROOT)
+                                .contains(filterPattern) or stop.name?.toLowerCase(Locale.ROOT)
+                                ?.contains(filterPattern)!!
                         ) {
                             filteredStops.add(stop)
                         }

@@ -16,13 +16,13 @@ public class StopEntity extends Location {
     @Column(name = "time_effort")
     private double timeEffort;
 
-    @Column(name = "time_effort_counter")
+    @Column(name = "time_effort_counter", nullable = false)
     private int numberOfTimeEffortCommitments = 0;
 
     @Column(name = "average_rating")
     private double averageRating;
 
-    @Column(name = "average_pricing_counter")
+    @Column(name = "average_pricing_counter", nullable = false)
     private int numberOfPricingCommitments = 0;
 
     @ManyToOne(targetEntity = CityEntity.class)

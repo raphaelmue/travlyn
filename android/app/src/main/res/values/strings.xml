@@ -26,7 +26,7 @@
     <string name="user">User</string>
     <string name="search">Search</string>
     <string name="add">Add</string>
-    <string name="hours_unit">%1$s h</string>
+    <string name="hours_unit">%.1f h</string>
     <string name="no_value" translatable="false">---</string>
     <string name="rate">Rate</string>
     <string name="rating_value" translatable="false">%.1f / 5</string>
@@ -66,4 +66,22 @@
     <string name="trip">Trip</string>
     <string name="swipe_to_update_stops">"Swipe down to update stops. "</string>
     <string name="error_password_too_short">Password is too short. It must have at least 4 characters. </string>
+    <string name="navigation">Navigation</string>
+    <string name="reorder_description">Reorder trips to reduce trip route</string>
+    <string name="round_trip_description">Navigate back to start point after trip is finished</string>
+    <string name="confirm_cancel_navigation">Are you sure that you want to cancel the navigation?</string>
+    <string name="start">Start</string>
+    <string name="city">City</string>
+    <string name="pipe_operator" translatable="false">|</string>
+    <string name="time_unit">%d h %d min</string>
+    <string name="skip">Skip</string>
+    <string name="distance_unit" translatable="false">%.2f km</string>
+    <string name="distance_unit_meters" translatable="false">%d m</string>
+    <string name="continue_stop">Continue</string>
+    <string name="add_pricing">What price did you pay for this point of interest?</string>
+    <string name="add_time_effort_description">How much time have you spent at this point of interest?</string>
+    <string name="add_price">Add Pricing</string>
+    <string name="add_time_effort">Add Time effort</string>
+    <string name="successfully_added_pricing">Price was successfully added!</string>
+    <string name="successfully_added_time_effort">Time effort was successfully added!</string>
 </resources>

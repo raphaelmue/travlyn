@@ -11,6 +11,7 @@
  */
 package org.travlyn.api
 
+import org.travlyn.api.model.ExecutionInfo
 import org.travlyn.api.model.Rating
 import org.travlyn.api.model.Trip
 import org.travlyn.infrastructure.ApiClient
@@ -138,6 +139,32 @@ class TripApi(
             query = localVariableQuery
         )
         request<Any?>(
+            localVariableConfig
+        )
+    }
+
+    suspend fun getTripExecutionInfo(
+        reorderAllowed: Boolean,
+        roundTrip: Boolean,
+        startLatitude: Double,
+        startLongitude: Double,
+        tripId: Int,
+        userId: Long
+    ): ExecutionInfo? {
+        val localVariableQuery: MultiValueMap =
+            mapOf(
+                "reorderAllowed" to listOf("$reorderAllowed"),
+                "roundTrip" to listOf("$roundTrip"),
+                "startLatitude" to listOf("$startLatitude"),
+                "startLongitude" to listOf("$startLongitude"),
+                "userId" to listOf("$userId")
+            )
+        val localVariableConfig = RequestConfig(
+            RequestMethod.GET,
+            "/trip/{tripId}/execution".replace("{tripId}", "$tripId"),
+            query = localVariableQuery
+        )
+        return request(
             localVariableConfig
         )
     }
