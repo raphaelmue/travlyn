@@ -8,7 +8,7 @@ Die in dieser Arbeit vorgestellte \textit{Travlyn} Applikation wurde parallel zu
 Zuerst sollen die funktionalen Anforderungen betrachtet werden, welche in \autoref{sec:funktionale_eigenschaften} beschrieben sind. Diesen Anforderungen gegenüber stehen die in der Travlyn App implementierten Prozesse:
 
 \begin{itemize}
-	\item \textbf{User Management:} Nutzer können sich in der Travlyn App registrieren und eigene Informationen wie Name und E-Mail festlegen. Dadurch entsteht ein persistenter Account, mit dem sich die Nutzer im System anmelden können und nutzerbasierte Aktionen durchführen können, z.B. einen Trip anlegen oder Sehenswürdigkeiten oder Trips bewerten. Ebenso ist es möglich seine persönlichen Informationen zu bearbeiten und Präferenzen festzulegen, welche genutzt werden um die angezeigten Daten nach potentieller Attraktivität für den Nutzer zu priorisieren.
+	\item \textbf{User Management:} Nutzer können sich in der Travlyn App registrieren und eigene Informationen wie Name und E-Mail festlegen. Dadurch wird der neue Account persistiert, mit dem sich der jeweilige Nutzer im System anmelden kann und nutzerbasierte Aktionen durchführen kann, z.B. einen Trip anlegen oder Sehenswürdigkeiten oder Trips bewerten. Ebenso ist es möglich seine persönlichen Informationen zu bearbeiten und Präferenzen festzulegen, welche genutzt werden um die angezeigten Daten nach potentieller Attraktivität für den Nutzer zu priorisieren.
 	
 	
 	\begin{figure}[ht!]
@@ -45,7 +45,7 @@ Zuerst sollen die funktionalen Anforderungen betrachtet werden, welche in \autor
 
 	\newpage
 	
-	\item \textbf{Trip Ausführung:} Am Urlaubsort angekommen können Trips ausgeführt werden. Es ist irrelevant, ob der auszuführende Trip ein eigener Trip ist oder ein öffentlicher Trip eines anderen Nutzers. Die Ausführung beinhaltet eine Navigation durch die Stadt, Informationen zu den einzelnen besuchten Sehenswürdigkeiten und die Möglichkeit die festgelegte Route zu verlassen und von der App trotzdem zum nächsten Stop geführt zu werden. Damit hat der Nutzer volle Flexibilität und eine sehr persönliche Reiseerfahrung.
+	\item \textbf{Trip Ausführung:} Am Urlaubsort angekommen, können Trips ausgeführt werden. Es ist irrelevant, ob der auszuführende Trip ein eigener Trip ist oder ein öffentlicher Trip eines anderen Nutzers. Die Ausführung beinhaltet eine Navigation durch die Stadt, Informationen zu den einzelnen besuchten Sehenswürdigkeiten und die Möglichkeit die festgelegte Route zu verlassen und von der App trotzdem zum nächsten Stop geführt zu werden. Damit hat der Nutzer volle Flexibilität und eine sehr persönliche Reiseerfahrung.
 	
 	\begin{figure}[ht!]
 		\includegraphics[width=0.32\textwidth]{images/travlyn-screenshot-start-navigation-dialog.png}
@@ -129,14 +129,14 @@ Da die Durchführung der Befragung sehr einfach alleine online und ohne weitere 
 	Trotz der oben genannten Verbesserungsmöglichkeit erfüllt der sehr hohe Usability-Score die Anforderungen an eine gute Benutzbarkeit der \textit{Travlyn} Applikation und somit gilt dieses nicht-funktionale Ziel als erfüllt. 
 	
 	\subsubsection{Weitere Hinweise}
-	Wie in \cite{Nielsen.20091993} beschrieben gibt es im Usability-Testing einige Fallstricke und viele Methoden haben Probleme mit Zuverlässlichkeit und Validität. Somit ist nicht zwingend sichergestellt, dass diese Usability-Experimente bei wiederholter Ausführung das gleiche Ergebnis ergibt und ob das Ergebnis des Experiments wirklich die zu testende Eigenschaft widerspiegelt. Somit ist das obenstehende Ergebnis als Orientierung zu erachten und müsste durch weitere Tests, welche wir unter den aktuellen Umständen leider nicht durchführen können, validiert werden.
+	Wie in \cite{Nielsen.20091993} beschrieben gibt es im Usability-Testing einige Fallstricke und viele Methoden haben Probleme mit Zuverlässlichkeit und Validität. Dies bedeutet, dass nicht sichergestellt ist, dass diese Usability-Experimente bei wiederholter Ausführung das gleiche Ergebnis ergeben und ob das Ergebnis des Experiments wirklich die zu testende Eigenschaft widerspiegelt. Somit ist das obenstehende Ergebnis als Orientierung zu erachten und müsste durch weitere Tests, welche wir unter den aktuellen Umständen leider nicht durchführen können, validiert werden.
 	
 	\subsection{Sicherheit}
 	Um die Sicherheit des Codes zu überprüfen wurden diverse Methoden eingesetzt, welche in \autoref{sec:QM} beschrieben wurden. Die erste ebene ist die Testebene: Es wurde Wert auf Tests gelegt, welche möglichst viele Szenarios und vor allem Fehlerfälle abdeckt, damit wird sicher gestellt, dass die einzelnen Einheiten sich im Falle einer unerwarteten Situation richtig verhalten und somit nicht angreifbar sind. Beispielsweise wird auf den entsprechenden Trip Endpoints getestet, dass ein Nutzer nur auf private Trips zugreifen kann, wenn er eingeloggt ist und einen Trip abruft, der seinem Account zugeordnet ist.
 	
 	\vspace{0.25cm}
 	
-	Neben den Tests gibt es mit SonarQube eine weitere technische Kontrollinstanz. Dieses Tool analysiert, wie in \autoref{qm.sonarqube} beschreiben, statisch den Code um nach Fehlern und vor allem Verwundbarkeiten und Bugs zu suchen. Durch diese Analyse sind während der Implementation immer wieder Konstrukte aufgefallen, welche eine Angriffsmöglichkeit dargestellt hätten. Durch die Detektion von SonarQube konnten diese Fehler allerdings behoben werden, sodass \textit{Travlyn} nun den Top zehn Sicherheitsstandards der OWASP Foundation \cite{OWASPFoundation.20200503T01:28:27.000Z} genügt. \autoref{fig:sonarqube_result} zeigt diese Top zehn Liste und dass keine entsprechende Stelle im Code gefunden wurde.
+	Neben den Tests gibt es mit SonarQube eine weitere technische Kontrollinstanz. Dieses Tool analysiert, wie in \autoref{qm.sonarqube} beschreiben, statisch den Code, um nach Fehlern und vor allem Verwundbarkeiten und Bugs zu suchen. Durch diese Analyse sind während der Implementation immer wieder Konstrukte aufgefallen, welche eine Angriffsmöglichkeit dargestellt hätten. Durch die Detektion von SonarQube konnten diese Fehler allerdings behoben werden, sodass \textit{Travlyn} nun den Top zehn Sicherheitsstandards der OWASP Foundation \cite{OWASPFoundation.20200503T01:28:27.000Z} genügt. \autoref{fig:sonarqube_result} zeigt diese Top zehn Liste und dass keine entsprechende Stelle im Code gefunden wurde.
 	
 	\begin{figure}[ht!]
 		\centering
@@ -145,11 +145,11 @@ Da die Durchführung der Befragung sehr einfach alleine online und ohne weitere 
 		\label{fig:sonarqube_result}
 	\end{figure}
 
-	Neben den technischen Möglichkeiten wurde der erstellte Code während der Entwicklung regelmäßig durch gemeinsame Reviews durch die Entwickler validiert. Wie in \autoref{sec:QM} beschrieben wurde jeder Pull Request vor dem Einfügen in den Master-Branch reviewed und bei entsprechenden Fehlern und Unklarheiten solange geändert, bis alle Zweifel ausgeräumt waren. Somit genügt der Code dem \enquote{Vier-Augen-Prinzip} und Fehler welche die technischen Hilfsmittel nicht aufdecken konnten wurden in diesem Prozess gefunden.
+	Neben den technischen Möglichkeiten wurde der erstellte Code während der Entwicklung regelmäßig durch gemeinsame Reviews durch die Entwickler validiert. Wie in \autoref{sec:QM} beschrieben wurde jeder Pull Request vor dem Einfügen in den Master-Branch überprüft und bei entsprechenden Fehlern und Unklarheiten solange geändert, bis alle Zweifel ausgeräumt waren. Somit genügt der Code dem \enquote{Vier-Augen-Prinzip} und Fehler welche die technischen Hilfsmittel nicht aufdecken konnten wurden in diesem Prozess gefunden.
 	
 	\vspace{0.25cm}
 	
-	Somit gibt es eine ausgiebige Kontrolle des Code, welcher sicherstellt, dass keine Verwundbarkeiten vorliegen. Das Ziel eine gute Sicherheit für \textit{Travlyn} zu garantieren ist damit erreicht, allerdings ist Sicherheit kein dauerhafter Zustand und muss laufend neu beurteilt und erarbeitet werden.
+	Auf diese Weise gibt es eine ausgiebige Kontrolle des Code, welcher sicherstellt, dass keine Verwundbarkeiten vorliegen. Das Ziel eine gute Sicherheit für \textit{Travlyn} zu garantieren ist damit erreicht, allerdings ist Sicherheit kein dauerhafter Zustand und muss laufend neu beurteilt und erarbeitet werden.
 	
 	\subsection{Wartbarkeit}
 	Neben der Sicherheit ist die Wartbarkeit stark von der Code Qualität abhängig. Die Methoden zur Sicherstellung der Wartbarkeit überschneiden sich teilweise mit denen die Sicherheit sicherstellen und sind in \autoref{sec:QM} dargestellt. Für \textit{Travlyn} spielt SonarQube auch hier eine große Rolle, da es ein Code Quality Gate zur Verfügung stellt, welches von Code erfüllt werden sollte, damit eine hohe Code Qualität und Wartbarkeit gegeben ist.
@@ -165,7 +165,7 @@ Da die Durchführung der Befragung sehr einfach alleine online und ohne weitere 
 	
 	\begin{itemize}
 		\item Der Code beinhaltet keine Bugs oder Verwundbarkeiten (siehe oben).
-		\item Der Code hat eine angemessene Komplexität und nur wenige stellen mit schlecht strukturiertem Code (siehe \textit{Code Smells}).
+		\item Der Code hat eine angemessene Komplexität und nur wenige Stellen mit schlecht strukturiertem Code (siehe \textit{Code Smells}).
 		\item Die Testabdeckung ist hoch (hier über 65\%) und kann eine korrekte Funktionsweise des Codes sicherstellen.
 		\item Es gibt kaum duplizierte Code stellen, welche die Pflege erschweren würden. 
 	\end{itemize} 
@@ -175,7 +175,7 @@ Da die Durchführung der Befragung sehr einfach alleine online und ohne weitere 
 	Neben der technischen Prüfung des Codes ist auch hier die Nutzung der Code Reviews hervorzuheben. Durch das oben beschriebene Verfahren konnte vermieden werden, dass nur der Ersteller eines spezifischen Code Blocks den Aufbau und Ablauf kennt, da mindestens ein zweiter Entwickler sehr tief in den Code eingestiegen ist und eine gute Lesbarkeit für Dritte sichergestellt hat. Damit können mehrere Entwickler die Funktionalität erweitern und Fehler beheben, was für eine gute Wartbarkeit sorgt.
 	
 	\subsubsection{Logger}
-	Zum finden von Fehlern, welche im laufenden Betrieb auftreten wurde auf ein ausgiebiges Logging gesetzt, welches alle Aktionen auf dem Server registriert und persistiert. Die einsehbaren Log-Files können zur Fehleranalyse und der Ursachenfindung genutzt werden. Damit ist die akute Fehlerbehandlung sehr vereinfacht. 
+	Zum Finden von Fehlern, welche im laufenden Betrieb auftreten wurde auf ein ausgiebiges Logging gesetzt, welches alle Aktionen auf dem Server registriert und persistiert. Die einsehbaren Log-Files können zur Fehleranalyse und der Ursachenfindung genutzt werden. Damit ist die akute Fehlerbehandlung sehr vereinfacht. 
 	
 	\vspace{0.25cm}
 	
@@ -212,8 +212,8 @@ Da die Durchführung der Befragung sehr einfach alleine online und ohne weitere 
 	
 	\vspace{0.25cm}   
 	
-	Rückblickend treten bei der Realisierung einige Probleme auf, welche während der Entwicklung aufgedeckt wurden. So gibt es zwar eine große Anzahl von verfügbaren Datenquellen, welche unterschiedlichen Ansprüchen genügen (z.B. frei verfügbar für kommerzielle Nutzung). Allerdings sind diese Quellen meist entweder lokal oder thematisch begrenzt, was zu der Nutzung von sehr vielen Datenquellen für einen kompletten digitalen Reiseführer führen würde. Zum anderen ist die Verbindung der Informationen von verschiedenen Quellen u.U. schwierig (siehe \autoref{sec:mapping}).
-	Ein zweites gravierendes Problem ist die fehlende Digitalisierung anderer Lebensbereiche. Da viele Informationen, die zum Reisen relevant sind, nicht digital verfügbar sind (z.B. Öffnungszeiten, Preise und \enquote{Geheimtipps} von Ortsansässigen) können sie auch nicht ohne großen redaktionellen Aufwand in einen digitalen Reiseführer integriert werden. Vor allem der Anspruch eines Reiseführers der weltweit nutzbar ist somit noch kritischer zu sehen, da es viele Länder gibt in denen bis jetzt praktisch keine Digitalisierung stattgefunden hat.
+	Rückblickend traten bei der Realisierung einige Probleme auf, welche während der Entwicklung aufgedeckt wurden. So gibt es zwar eine große Anzahl von verfügbaren Datenquellen, welche unterschiedlichen Ansprüchen genügen (z.B. frei verfügbar für kommerzielle Nutzung), allerdings sind diese Quellen meist entweder lokal oder thematisch begrenzt, was zu der Nutzung von sehr vielen Datenquellen für einen kompletten digitalen Reiseführer führen würde. Zum anderen ist die Verbindung der Informationen von verschiedenen Quellen u.U. schwierig (siehe \autoref{sec:mapping}).
+	Ein zweites gravierendes Problem ist die fehlende Digitalisierung anderer Lebensbereiche. Da viele Informationen, die zum Reisen relevant sind, nicht digital verfügbar sind (z.B. Öffnungszeiten, Preise und \enquote{Geheimtipps} von Ortsansässigen), können sie auch nicht ohne großen redaktionellen Aufwand in einen digitalen Reiseführer integriert werden. Vor allem der Anspruch eines Reiseführers der weltweit nutzbar ist somit noch kritischer zu sehen, da es viele Länder gibt in denen bis jetzt praktisch keine Digitalisierung stattgefunden hat.
 	
 	\vspace{0.25cm}
 	
@@ -223,4 +223,4 @@ Da die Durchführung der Befragung sehr einfach alleine online und ohne weitere 
 	
 	\vspace{0.25cm}
 	
-	Insgesamt konnte mit dieser Arbeit ein guter Grundstein für eine ausführliche Erfüllung der zugrunde liegenden Vision geschaffen werden, auch wenn sicherlich nicht alle Probleme durch die \textit{Travlyn} Applikation voll umfassend gelöst werden konnten. Somit ist eine Eindeutige Empfehlung zur Nutzung der Applikation zu formulieren,  mit dem eindeutigen Hinweis, dass die Nutzung eines papierbasierten Reiseführers bis jetzt nicht komplett ersetzt werden kann und weiterhin seine Berechtigung behält.
+	Insgesamt konnte mit dieser Arbeit ein guter Grundstein für eine ausführliche Erfüllung der zugrunde liegenden Vision geschaffen werden, auch wenn sicherlich nicht alle Probleme durch die \textit{Travlyn} Applikation voll umfassend gelöst werden konnten. Somit ist eine eindeutige Empfehlung zur Nutzung der Applikation zu formulieren,  mit dem eindeutigen Hinweis, dass die Nutzung eines analogen Reiseführers bis jetzt nicht komplett ersetzt werden kann und weiterhin seine Berechtigung behält.
